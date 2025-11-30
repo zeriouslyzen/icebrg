@@ -10,38 +10,46 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/encyclopedia",
-      "dest": "/api/encyclopedia.js"
+      "source": "/api/encyclopedia",
+      "destination": "/api/encyclopedia.js"
     },
     {
-      "src": "/api/encyclopedia/search/(.*)",
-      "dest": "/api/encyclopedia-search.js?query=$1"
+      "source": "/api/encyclopedia/search/:query",
+      "destination": "/api/encyclopedia-search.js?query=:query"
     },
     {
-      "src": "/api/encyclopedia/(.*)",
-      "dest": "/api/encyclopedia-category.js?category=$1"
+      "source": "/api/encyclopedia/:category",
+      "destination": "/api/encyclopedia-category.js?category=:category"
     },
     {
-      "src": "/api/query",
-      "dest": "/api/query.js"
+      "source": "/api/query",
+      "destination": "/api/query.js"
     },
     {
-      "src": "/api/health",
-      "dest": "/api/health.js"
+      "source": "/api/health",
+      "destination": "/api/health.js"
     },
     {
-      "src": "/encyclopedia",
-      "dest": "/frontend/encyclopedia.html"
+      "source": "/encyclopedia",
+      "destination": "/frontend/encyclopedia.html"
     },
     {
-      "src": "/",
-      "dest": "/frontend/index.html"
+      "source": "/styles.css",
+      "destination": "/frontend/styles.css"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "source": "/main.js",
+      "destination": "/frontend/main.js"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/frontend/public/manifest.json"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
   ],
   "headers": [
@@ -62,20 +70,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/styles.css",
-      "destination": "/frontend/styles.css"
-    },
-    {
-      "source": "/main.js",
-      "destination": "/frontend/main.js"
-    },
-    {
-      "source": "/manifest.json",
-      "destination": "/frontend/manifest.json"
-    }
   ]
 }
-
