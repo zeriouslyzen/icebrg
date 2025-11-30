@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite';
+import { copyFileSync } from 'fs';
+import { resolve } from 'path';
 
 export default defineConfig({
   server: {
@@ -16,7 +18,28 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
-    minify: 'terser'
-  }
+    minify: 'terser',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        encyclopedia: resolve(__dirname, 'encyclopedia.html')
+      }
+    }
+  },
+  plugins: [
+    {
+      name: 'copy-encyclopedia',
+      closeBundle() {
+        // Copy encyclopedia.html to dist after build
+        try {
+          copyFileSync(
+            resolve(__dirname, 'encyclopedia.html'),
+            resolve(__dirname, 'dist', 'encyclopedia.html')
+          );
+        } catch (error) {
+          console.warn('Could not copy encyclopedia.html:', error);
+        }
+      }
+    }
+  ]
 });
-

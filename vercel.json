@@ -26,6 +26,14 @@
       "destination": "/api/health.js"
     },
     {
+      "source": "/encyclopedia",
+      "destination": "/encyclopedia.html"
+    },
+    {
+      "source": "/encyclopedia.html",
+      "destination": "/encyclopedia.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
