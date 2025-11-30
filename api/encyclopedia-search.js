@@ -1,7 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default async function handler(req, res) {
   try {
     const { query } = req.query;
     
@@ -16,32 +20,28 @@ module.exports = async (req, res) => {
       return res.status(404).json({ error: 'Encyclopedia data not found' });
     }
     
-    const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-    const results = [];
-    const searchLower = query.toLowerCase();
+    const encyclopediaData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
     
-    // Search across all categories
-    for (const category in data) {
-      if (category === 'metadata') continue;
-      const categoryData = data[category];
-      if (typeof categoryData !== 'object') continue;
-      
-      for (const entryId in categoryData) {
-        const entry = categoryData[entryId];
-        if (typeof entry !== 'object') continue;
-        
-        const searchableText = JSON.stringify(entry).toLowerCase();
-        if (searchableText.includes(searchLower)) {
-          results.push({...entry, category, id: entryId});
-        }
-      }
-    }
+    // Simple search - filter entries by query string
+    const searchLower = query.toLowerCase();
+    const entries = encyclopediaData.entries || [];
+    const results = entries.filter(entry => {
+      const name = (entry.name || '').toLowerCase();
+      const description = (entry.description || '').toLowerCase();
+      const category = (entry.category || '').toLowerCase();
+      return name.includes(searchLower) || 
+             description.includes(searchLower) || 
+             category.includes(searchLower);
+    });
     
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json(results);
+    return res.status(200).json({
+      query,
+      count: results.length,
+      results: results.slice(0, 50) // Limit to 50 results
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-};
-
+}

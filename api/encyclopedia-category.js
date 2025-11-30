@@ -1,7 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default async function handler(req, res) {
   try {
     const { category } = req.query;
     
@@ -16,17 +20,23 @@ module.exports = async (req, res) => {
       return res.status(404).json({ error: 'Encyclopedia data not found' });
     }
     
-    const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const encyclopediaData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
     
-    if (category in data) {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Content-Type', 'application/json');
-      return res.status(200).json(data[category]);
-    } else {
-      return res.status(404).json({ error: `Category '${category}' not found` });
-    }
+    // Filter by category
+    const categoryData = encyclopediaData.categories?.[category] || 
+                        encyclopediaData.entries?.filter(entry => 
+                          entry.category === category || 
+                          entry.categories?.includes(category)
+                        ) || [];
+    
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).json({
+      category,
+      count: Array.isArray(categoryData) ? categoryData.length : Object.keys(categoryData).length,
+      data: categoryData
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-};
-
+}
