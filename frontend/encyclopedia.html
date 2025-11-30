@@ -962,14 +962,10 @@
     </div>
 
     <script>
-        // Detect network access (mobile/network) vs localhost
-        const isNetworkAccess = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-        const networkIP = isNetworkAccess ? window.location.hostname : 'localhost';
-        
-        // Use environment variables or detect network IP
-        const API_URL = isNetworkAccess 
-            ? `http://${networkIP}:8000` 
-            : 'http://localhost:8000';
+        // Use current origin for API calls (works for both localhost and Vercel)
+        // On localhost: uses http://localhost:3000 (or whatever port)
+        // On Vercel: uses https://your-domain.vercel.app
+        const API_URL = window.location.origin;
         
         console.log('Encyclopedia API URL:', API_URL, 'Hostname:', window.location.hostname);
 
