@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Carousel</title>
+</head>
+<body>
+    <div id="promptCarousel">
+        <div id="promptCarouselContent"></div>
+    </div>
+    <script>
+        const PROMPTS = [
+            "What is the nature of consciousness?",
+            "Design a device that solves climate change",
+            "Analyze the patterns in quantum mechanics"
+        ];
+        const carouselContent = document.getElementById('promptCarouselContent');
+        PROMPTS.forEach((prompt, index) => {
+            const item = document.createElement('div');
+            item.className = 'prompt-item';
+            if (index === 0) item.classList.add('active');
+            item.textContent = prompt;
+            item.style.cssText = 'position: absolute; width: 100%; text-align: center; opacity: ' + (index === 0 ? '1' : '0') + ';';
+            carouselContent.appendChild(item);
+        });
+        console.log('Items created:', carouselContent.children.length);
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+# ICEBURG Unified Configuration
+# Single configuration file consolidating all ICEBURG settings
+
+mode: "unified"  # auto-detect intent
+
+# Performance settings
+performance:
+  redis_enabled: true
+  parallel_execution: true
+  cache_ttl: 3600
+  target_latency_ms: 500
+  fast_path_threshold: 0.3  # Route queries < 0.3 complexity to fast path
+
+# AGI Civilization settings
+civilization:
+  enabled: true
+  max_agents: 100
+  social_learning: true
+  norm_formation: true
+  resource_economy: true
+  world_model: "genie3"  # Foundation world model type
+  simulation_steps: 1000
+  emergence_detection: true
+
+# Learning and memory settings
+learning:
+  autonomous: true
+  human_oversight: true
+  approval_threshold: "major_changes"
+  continuous_learning: true
+  pattern_analysis_window_hours: 24
+  ablation_experiments: true
+
+# Enterprise features
+enterprise:
+  sso_enabled: false
+  runtime_governance: false
+  cloud_deployment: false
+  data_leakage_prevention: false
+  audit_logging: true
+
+# Monitoring and scaling
+monitoring:
+  prometheus: true
+  grafana: true
+  auto_healing: true
+  bottleneck_detection: true
+  metrics_retention_days: 30
+
+# Distributed scaling
+distributed:
+  redis_cluster: false
+  redis_nodes: ["localhost:6379"]
+  load_balancing: true
+  auto_scaling: false
+  max_workers: 4
+
+# Multi-platform templates
+templates:
+  unity_ml: true
+  react_native: true
+  android_studio: true
+  unreal_engine: true
+  flutter: true
+
+# Security settings
+security:
+  red_team_analysis: true
+  review_gate: true
+  code_signing: false
+  notarization: false
+  runtime_telemetry: true
+
+# Web interface
+web:
+  enabled: true
+  port: 8000
+  host: "localhost"
+  cors_enabled: true
+  rate_limiting: true
+
+# Database settings
+database:
+  vector_store: "chroma"
+  knowledge_graph: "neo4j"
+  unified_memory: true
+  persistence: true
+
+# LLM settings
+llm:
+  provider: "ollama"
+  model: "llama3.1"
+  temperature: 0.7
+  max_tokens: 4096
+  embedding_model: "sentence-transformers"
+
+# Agent settings
+agents:
+  architect: true
+  oracle: true
+  think_tank: true
+  emergence_detector: true
+  global_workspace: true
+
+# Protocol settings
+protocol:
+  surveyor: true
+  dissident: true
+  synthesist: true
+  emergence_detection: true
+  parallel_execution: true
+
+# Presets for different use cases
+presets:
+  research:
+    mode: "research"
+    performance.parallel_execution: true
+    civilization.enabled: false
+    learning.autonomous: true
+  
+  chat:
+    mode: "chat"
+    performance.target_latency_ms: 300
+    civilization.enabled: false
+    learning.autonomous: false
+  
+  software:
+    mode: "software"
+    templates.unity_ml: true
+    templates.react_native: true
+    security.red_team_analysis: true
+  
+  science:
+    mode: "science"
+    oracle.enabled: true
+    learning.ablation_experiments: true
+    monitoring.prometheus: true
+  
+  civilization:
+    mode: "civilization"
+    civilization.enabled: true
+    civilization.max_agents: 100
+    learning.autonomous: true
+    monitoring.auto_healing: true
+
+# Development settings
+development:
+  debug: false
+  verbose: false
+  test_mode: false
+  mock_llm: false
+  dry_run: false

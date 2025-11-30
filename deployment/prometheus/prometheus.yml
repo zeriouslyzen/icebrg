@@ -1,0 +1,60 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # ICEBURG Core metrics
+  - job_name: 'iceburg-core'
+    static_configs:
+      - targets: ['iceburg:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 10s
+
+  # Ollama metrics
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama:11434']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Quantum computing metrics
+  - job_name: 'quantum-backend'
+    static_configs:
+      - targets: ['iceburg:8001']
+    metrics_path: '/quantum/metrics'
+    scrape_interval: 5s
+
+  # RL agent metrics
+  - job_name: 'rl-agents'
+    static_configs:
+      - targets: ['iceburg:8002']
+    metrics_path: '/rl/metrics'
+    scrape_interval: 5s
+
+  # Financial data metrics
+  - job_name: 'financial-data'
+    static_configs:
+      - targets: ['iceburg:8003']
+    metrics_path: '/financial/metrics'
+    scrape_interval: 10s

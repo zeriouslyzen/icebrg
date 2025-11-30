@@ -1,0 +1,25 @@
+{
+  "name": "iceburg-frontend",
+  "version": "2.0.0",
+  "description": "ICEBURG 2.0 Mobile-First Web App",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "vite": "^5.0.0",
+    "chart.js": "^4.4.0",
+    "d3": "^7.8.5",
+    "three": "^0.158.0",
+    "plotly.js": "^2.27.0",
+    "cytoscape": "^3.28.1",
+    "vis-network": "^9.1.9"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "terser": "^5.44.1"
+  }
+}

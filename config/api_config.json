@@ -1,0 +1,310 @@
+{
+  "_comment": "Unified API Configuration - All Iceburg API integrations",
+  "_setup_instructions": "Copy this file to .env format or set environment variables",
+
+  "basic_apis": {
+    "arxiv": {
+      "name": "arXiv",
+      "description": "Open access research papers",
+      "api_key_required": false,
+      "status": "active"
+    },
+    "pubmed": {
+      "name": "PubMed",
+      "description": "Medical and life sciences research",
+      "api_key_required": false,
+      "api_key_name": "PUBMED_API_KEY",
+      "status": "active"
+    },
+    "github": {
+      "name": "GitHub",
+      "description": "Code repositories and developer research",
+      "api_key_required": true,
+      "api_key_name": "GITHUB_TOKEN",
+      "status": "active"
+    },
+    "newsapi": {
+      "name": "NewsAPI",
+      "description": "Current research news and updates",
+      "api_key_required": true,
+      "api_key_name": "NEWSAPI_KEY",
+      "status": "active"
+    },
+    "reddit": {
+      "name": "Reddit",
+      "description": "Community discussions and research forums",
+      "api_key_required": true,
+      "api_key_name": "REDDIT_CLIENT_ID",
+      "api_key_name_secret": "REDDIT_CLIENT_SECRET",
+      "status": "active"
+    }
+  },
+
+  "vectorflow_apis": {
+    "semantic_scholar": {
+      "integration": "vectorflow_hybrid_search",
+      "caching": true,
+      "citation_tracking": true,
+      "status": "active"
+    },
+    "clinical_trials": {
+      "validation_level": "GOLD_STANDARD",
+      "vectorflow_storage": true,
+      "status": "active"
+    },
+    "europe_pmc": {
+      "multimodal_processing": true,
+      "scientific_filtering": true,
+      "status": "active"
+    },
+    "brave_search": {
+      "privacy_focused": true,
+      "vectorflow_caching": true,
+      "status": "active"
+    },
+    "duckduckgo": {
+      "privacy_focused": true,
+      "vectorflow_caching": true,
+      "status": "active"
+    }
+  },
+
+  "unified_theory_apis": {
+    "astronomical_data": {
+      "name": "Astronomical Data API",
+      "description": "Planetary positions and astronomical data for unified theory calculations",
+      "base_url": "https://api.astronomical.data",
+      "api_key_required": false,
+      "status": "active",
+      "rate_limit": 10,
+      "unified_theory_integration": true
+    },
+    "planetary_ephemeris": {
+      "name": "Planetary Ephemeris API",
+      "description": "High-precision planetary position calculations",
+      "base_url": "https://api.planetary-ephemeris.org",
+      "api_key_required": true,
+      "api_key_name": "PLANETARY_EPHEMERIS_KEY",
+      "status": "active",
+      "rate_limit": 5,
+      "unified_theory_integration": true
+    },
+    "gravitational_field_data": {
+      "name": "Gravitational Field Data API",
+      "description": "Real-time gravitational field measurements",
+      "base_url": "https://api.gravitational-fields.org",
+      "api_key_required": false,
+      "status": "active",
+      "rate_limit": 3,
+      "unified_theory_integration": true
+    }
+  },
+
+  "research_apis": {
+    "cnki": {
+      "name": "CNKI",
+      "description": "Chinese academic research database",
+      "base_url": "https://api.cnki.net",
+      "api_key_required": true,
+      "api_key_name": "CNKI_API_KEY",
+      "rate_limit": 10,
+      "status": "active"
+    },
+    "wanfang": {
+      "name": "Wanfang",
+      "description": "Chinese academic and research database",
+      "base_url": "https://api.wanfangdata.com",
+      "api_key_required": true,
+      "api_key_name": "WANFANG_API_KEY",
+      "rate_limit": 20,
+      "status": "active"
+    },
+    "icmr": {
+      "name": "ICMR",
+      "description": "Indian Council of Medical Research",
+      "base_url": "https://api.icmr.gov.in",
+      "api_key_required": true,
+      "api_key_name": "ICMR_API_KEY",
+      "rate_limit": 10,
+      "status": "active"
+    },
+    "ayurveda_database": {
+      "name": "Ayurveda Research Database",
+      "description": "Traditional Indian medicine research",
+      "base_url": "https://api.ayurveda-research.in",
+      "api_key_required": true,
+      "api_key_name": "AYURVEDA_API_KEY",
+      "rate_limit": 15,
+      "status": "active"
+    },
+    "mit_research": {
+      "name": "MIT Research",
+      "description": "MIT research publications and datasets",
+      "base_url": "https://api.research.mit.edu",
+      "api_key_required": true,
+      "api_key_name": "MIT_API_KEY",
+      "rate_limit": 20,
+      "status": "active"
+    },
+    "harvard_dataverse": {
+      "name": "Harvard Dataverse",
+      "description": "Harvard research data repository",
+      "base_url": "https://dataverse.harvard.edu/api",
+      "api_key_required": true,
+      "api_key_name": "HARVARD_API_KEY",
+      "rate_limit": 10,
+      "status": "active"
+    },
+    "oxford_research": {
+      "name": "Oxford Research",
+      "description": "Oxford University research database",
+      "base_url": "https://api.research.ox.ac.uk",
+      "api_key_required": true,
+      "api_key_name": "OXFORD_API_KEY",
+      "rate_limit": 15,
+      "status": "active"
+    },
+    "opencorporates": {
+      "name": "OpenCorporates",
+      "description": "Global corporate data and research",
+      "base_url": "https://api.opencorporates.com/v0.4",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "semantic_scholar": {
+      "name": "Semantic Scholar",
+      "description": "AI-powered research discovery and citation analysis",
+      "base_url": "https://api.semanticscholar.org/graph/v1",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "clinical_trials": {
+      "name": "ClinicalTrials.gov",
+      "description": "Medical research trials and clinical studies database",
+      "base_url": "https://clinicaltrials.gov/api/v2",
+      "api_key_required": false,
+      "rate_limit": 3,
+      "status": "active"
+    },
+    "europe_pmc": {
+      "name": "Europe PMC",
+      "description": "European research publications and biomedical literature",
+      "base_url": "https://www.ebi.ac.uk/europepmc/webservices/rest",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "brave_search": {
+      "name": "Brave Search",
+      "description": "Privacy-focused web search with independent indexing",
+      "base_url": "https://api.search.brave.com/res/v1/web/search",
+      "api_key_required": true,
+      "api_key_name": "BRAVE_API_KEY",
+      "rate_limit": 3,
+      "status": "active"
+    },
+    "duckduckgo": {
+      "name": "DuckDuckGo",
+      "description": "Privacy-focused search engine with instant answers",
+      "base_url": "https://api.duckduckgo.com/",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "mojeek": {
+      "name": "Mojeek",
+      "description": "Independent search engine with transparent indexing",
+      "base_url": "https://www.mojeek.com/search",
+      "api_key_required": false,
+      "rate_limit": 2,
+      "status": "active"
+    },
+    "qwant": {
+      "name": "Qwant",
+      "description": "European privacy-focused search engine with GDPR compliance",
+      "base_url": "https://www.qwant.com/",
+      "api_key_required": false,
+      "rate_limit": 3,
+      "status": "active"
+    },
+    "crossref": {
+      "name": "Crossref",
+      "description": "Citation metadata and publication data",
+      "base_url": "https://api.crossref.org/works",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "openalex": {
+      "name": "OpenAlex",
+      "description": "Academic knowledge graph and research discovery",
+      "base_url": "https://api.openalex.org/works",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "who_global_health": {
+      "name": "WHO Global Health Observatory",
+      "description": "Global health statistics and indicators",
+      "base_url": "https://ghoapi.azureedge.net/api/Indicator",
+      "api_key_required": false,
+      "rate_limit": 3,
+      "status": "active"
+    },
+    "un_data": {
+      "name": "UN Data",
+      "description": "United Nations global statistics and indicators",
+      "base_url": "https://data.un.org/ws/rest/data",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "world_bank": {
+      "name": "World Bank API",
+      "description": "Economic and development data indicators",
+      "base_url": "https://api.worldbank.org/v2/indicator",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    },
+    "nasa_apis": {
+      "name": "NASA APIs",
+      "description": "Space and earth science data",
+      "base_url": "https://cmr.earthdata.nasa.gov/search/collections.json",
+      "api_key_required": false,
+      "rate_limit": 3,
+      "status": "active"
+    },
+    "zenodo": {
+      "name": "Zenodo",
+      "description": "Research data repository",
+      "base_url": "https://zenodo.org/api/records/",
+      "api_key_required": false,
+      "rate_limit": 5,
+      "status": "active"
+    }
+  },
+
+  "total_apis": 29,
+  "active_apis": 29,
+  "api_key_required": 10,
+  "free_apis": 19,
+
+  "_env_file_template": {
+    "# Copy this to .env file and fill in your API keys": "",
+    "GITHUB_TOKEN": "your_github_token_here",
+    "NEWSAPI_KEY": "your_newsapi_key_here",
+    "REDDIT_CLIENT_ID": "your_reddit_client_id",
+    "REDDIT_CLIENT_SECRET": "your_reddit_client_secret",
+    "BRAVE_API_KEY": "your_brave_api_key_here",
+    "CNKI_API_KEY": "your_cnki_api_key",
+    "WANFANG_API_KEY": "your_wanfang_api_key",
+    "ICMR_API_KEY": "your_icmr_api_key",
+    "AYURVEDA_API_KEY": "your_ayurveda_api_key",
+    "MIT_API_KEY": "your_mit_api_key",
+    "HARVARD_API_KEY": "your_harvard_api_key",
+    "OXFORD_API_KEY": "your_oxford_api_key"
+  }
+}

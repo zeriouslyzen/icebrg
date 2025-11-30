@@ -1,0 +1,22 @@
+# Real Voice Input/Output Requirements
+# Install with: pip install -r requirements_voice.txt
+
+# Audio Recording and Playback
+PyAudio>=0.2.11
+numpy>=1.21.0
+scipy>=1.7.0
+
+# Speech Recognition (STT)
+SpeechRecognition>=3.8.1
+pyaudio>=0.2.11
+
+# Text-to-Speech (TTS)
+pyttsx3>=2.90
+elevenlabs>=0.2.24
+
+# Audio Processing
+librosa>=0.9.2
+soundfile>=0.10.3
+
+# Optional: Whisper for local STT
+openai-whisper>=20231117

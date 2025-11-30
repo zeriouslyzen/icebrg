@@ -1,0 +1,12 @@
+{
+  "mode": "paper",
+  "symbols": ["BTC/USDC", "ETH/USDC"],
+  "starting_cash_usd": 100000.0,
+  "risk": {
+    "per_trade_risk_pct": 0.005,
+    "daily_loss_cap_pct": 0.02,
+    "max_leverage": 1.5
+  }
+}
+
+

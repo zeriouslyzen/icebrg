@@ -1,0 +1,144 @@
+[
+  {
+    "name": "performance_optimization",
+    "description": "Optimize response time (current: 9.52s) and memory usage (current: 140.00MB)",
+    "inputs": [
+      {
+        "name": "query",
+        "type": "string"
+      },
+      {
+        "name": "context",
+        "type": "object"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "response",
+        "type": "string"
+      },
+      {
+        "name": "performance_metrics",
+        "type": "object"
+      }
+    ],
+    "preconditions": [
+      "query is not empty",
+      "context is valid"
+    ],
+    "postconditions": [
+      "response_time < current_response_time",
+      "memory_usage < current_memory_usage",
+      "response quality maintained"
+    ],
+    "optimization_targets": [
+      "response_time",
+      "memory_usage",
+      "throughput"
+    ],
+    "safety_constraints": [
+      "no data loss",
+      "maintain accuracy",
+      "preserve functionality"
+    ],
+    "metadata": {
+      "current_response_time": 9.52,
+      "current_memory_usage": 140.0,
+      "optimization_type": "performance"
+    }
+  },
+  {
+    "name": "accuracy_improvement",
+    "description": "Improve response accuracy (current: 0.90)",
+    "inputs": [
+      {
+        "name": "query",
+        "type": "string"
+      },
+      {
+        "name": "context",
+        "type": "object"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "response",
+        "type": "string"
+      },
+      {
+        "name": "confidence_score",
+        "type": "float"
+      }
+    ],
+    "preconditions": [
+      "query is not empty",
+      "context is valid"
+    ],
+    "postconditions": [
+      "accuracy > current_accuracy",
+      "confidence_score > 0.8"
+    ],
+    "optimization_targets": [
+      "accuracy",
+      "confidence",
+      "reliability"
+    ],
+    "safety_constraints": [
+      "no hallucination",
+      "maintain factual accuracy",
+      "preserve context understanding"
+    ],
+    "metadata": {
+      "current_accuracy": 0.9000000000000001,
+      "optimization_type": "accuracy"
+    }
+  },
+  {
+    "name": "reliability_improvement",
+    "description": "Improve system reliability (error rate: 0.00%, success rate: 100.00%)",
+    "inputs": [
+      {
+        "name": "query",
+        "type": "string"
+      },
+      {
+        "name": "context",
+        "type": "object"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "response",
+        "type": "string"
+      },
+      {
+        "name": "error_handling",
+        "type": "object"
+      }
+    ],
+    "preconditions": [
+      "query is not empty",
+      "context is valid"
+    ],
+    "postconditions": [
+      "error_rate < current_error_rate",
+      "success_rate > current_success_rate",
+      "robust error handling"
+    ],
+    "optimization_targets": [
+      "error_rate",
+      "success_rate",
+      "reliability"
+    ],
+    "safety_constraints": [
+      "graceful error handling",
+      "no system crashes",
+      "maintain data integrity"
+    ],
+    "metadata": {
+      "current_error_rate": 0.0,
+      "current_success_rate": 100,
+      "optimization_type": "reliability"
+    }
+  }
+]

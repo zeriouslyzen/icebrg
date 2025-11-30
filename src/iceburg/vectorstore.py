@@ -1,0 +1,93 @@
+from __future__ import annotations
+from typing import List, Sequence, Optional, Dict, Any
+from dataclasses import dataclass
+from pathlib import Path
+import uuid
+
+import chromadb
+from chromadb.config import Settings
+from chromadb.api.types import Documents, Embeddings, IDs, Metadatas
+from chromadb.utils import embedding_functions
+
+from .config import IceburgConfig
+from .providers.factory import provider_factory
+
+
+class ProviderEmbeddingFunction(embedding_functions.EmbeddingFunction):
+    def __init__(self, cfg: IceburgConfig):
+        self._provider = provider_factory(cfg)
+        self._model = cfg.embed_model
+
+    def __call__(self, texts: Documents) -> Embeddings:  # type: ignore[override]
+        return self._provider.embed_texts(self._model, list(texts))
+
+
+@dataclass
+class VectorHit:
+    id: str
+    document: str
+    metadata: Dict[str, Any]
+    distance: Optional[float]
+
+
+class VectorStore:
+    def __init__(self, cfg: IceburgConfig):
+        self._cfg = cfg
+        self._persist_dir: Path = cfg.data_dir / "chroma"
+        self._persist_dir.mkdir(parents=True, exist_ok=True)
+        # Singleton PersistentClient with telemetry disabled
+        global _VECTORSTORE_CHROMA_CLIENT
+        try:
+            _VECTORSTORE_CHROMA_CLIENT
+        except NameError:
+            _VECTORSTORE_CHROMA_CLIENT = None  # type: ignore
+        if _VECTORSTORE_CHROMA_CLIENT is None:
+            _VECTORSTORE_CHROMA_CLIENT = chromadb.PersistentClient(
+                path=str(self._persist_dir),
+                settings=Settings(anonymized_telemetry=False),
+            )
+        self._client = _VECTORSTORE_CHROMA_CLIENT
+        self._collection = self._client.get_or_create_collection(
+            name="iceburg",
+            embedding_function=ProviderEmbeddingFunction(cfg),
+            metadata={"hnsw:space": "cosine"},
+        )
+
+    def add(self, texts: Sequence[str], metadatas: Optional[Sequence[Dict[str, Any]]] = None, ids: Optional[Sequence[str]] = None) -> List[str]:
+        if ids is None:
+            ids = [str(uuid.uuid4()) for _ in texts]
+        if metadatas is None:
+            metadatas = [{} for _ in texts]
+        self._collection.add(
+            ids=cast(IDs, list(ids)),
+            documents=cast(Documents, list(texts)),
+            metadatas=cast(Metadatas, list(metadatas)),
+        )
+        return list(ids)
+
+    def semantic_search(self, query: str, k: int = 8, where: Optional[Dict[str, Any]] = None) -> List[VectorHit]:
+        try:
+            res = self._collection.query(
+                query_texts=[query],
+                n_results=k,
+                where=where,
+            )
+        except Exception:
+            return []
+        hits: List[VectorHit] = []
+        docs = res.get("documents", [[]])[0]
+        metadatas = res.get("metadatas", [[]])[0]
+        ids = res.get("ids", [[]])[0]
+        distances = res.get("distances", [[]])
+        for i, doc in enumerate(docs):
+            hits.append(VectorHit(
+                id=ids[i],
+                document=doc,
+                metadata=metadatas[i] if i < len(metadatas) else {},
+                distance=distances[0][i] if distances and distances[0] and i < len(distances[0]) else None,
+            ))
+        return hits
+
+
+# typing helpers without importing typing.cast at top-level repeatedly
+from typing import cast  # noqa: E402

@@ -1,0 +1,121 @@
+# Backups (local only, never sync to iCloud)
+data/_backup_*/
+*_backup_*
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+.env.backup
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+.venv/
+env/
+ENV/
+environments/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.cursor/
+
+# Personal/Sensitive Data (NEVER COMMIT)
+data/conversation_logs/
+data/emotional_memory.db
+data/emergence_memory.db
+data/iceburg_unified.db*
+data/sovereign_library.db*
+data/performance_metrics.db
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/autonomous_test.pid
+data/autonomous_test_results.jsonl
+data/contamination_log.jsonl
+data/profiles/
+data/user_memory/
+data/business/
+data/trading/
+data/checkpoints/
+data/fine_tuning/
+data/lab_runs/
+data/lab_tests/
+data/test_results/
+data/test_runs/
+data/benchmark_results*.json
+data/complex_case_analysis*.json
+data/m1_performance_analysis*.json
+data/quality_report*.json
+data/validated_*.json
+data/vectorflow_impact_analysis*.json
+data/vector_rebuild_report*.json
+data/birth_analysis_results.json
+data/physiology_celestial_chemistry_data.json
+
+# Build artifacts
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.pid
+*.lock
+
+# Keep these data files (public/scientific data)
+!data/celestial_encyclopedia.json
+!data/DO_NOT_DELETE_ICEBURG_DATA.txt
+
+# Exclude large archive/quarantine files
+_quarantine/
+docs/archive/experimental/_quarantine/
+*.tar.gz
+backup_*.tar.gz

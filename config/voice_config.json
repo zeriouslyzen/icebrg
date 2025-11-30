@@ -1,0 +1,67 @@
+{
+  "voice_system": {
+    "enabled": true,
+    "use_whisper": true,
+    "whisper_model": "base",
+    "fallback_to_google": true,
+    "sample_rate": 16000,
+    "chunk_size": 1024,
+    "ambient_mode": true,
+    "touch_activation": true,
+    "context_retention": 10,
+    "max_audio_duration": 30,
+    "confidence_threshold": 0.5,
+    "noise_reduction": true,
+    "echo_cancellation": true,
+    "auto_gain_control": true
+  },
+  "tts": {
+    "engine": "advanced",
+    "voice": "en-US-JennyNeural",
+    "rate": 180,
+    "volume": 0.9,
+    "pitch": 1.1,
+    "streaming": true,
+    "chunk_size": 100,
+    "buffer_size": 1000,
+    "real_time": true
+  },
+  "m1_sensors": {
+    "enabled": true,
+    "touch_detection": true,
+    "physiological_monitoring": true,
+    "background_monitoring": true,
+    "emergence_detection": true,
+    "sample_rate": 1,
+    "buffer_size": 1000,
+    "sensitivity": 0.5,
+    "threshold": 0.7
+  },
+  "performance": {
+    "max_cpu_usage": 25,
+    "max_memory_usage": 500,
+    "optimize_for_speed": true,
+    "enable_caching": true,
+    "cache_size": 100,
+    "parallel_processing": true,
+    "thread_pool_size": 4
+  },
+  "privacy": {
+    "local_processing_only": true,
+    "no_cloud_storage": true,
+    "encrypt_sensitive_data": true,
+    "data_retention_days": 30,
+    "user_consent_required": true,
+    "anonymize_data": true
+  },
+  "advanced": {
+    "enable_emotion_detection": true,
+    "enable_gesture_recognition": true,
+    "enable_eye_tracking": true,
+    "multi_language_support": true,
+    "voice_cloning": true,
+    "predictive_responses": true,
+    "adaptive_learning": true,
+    "context_awareness": true
+  }
+}

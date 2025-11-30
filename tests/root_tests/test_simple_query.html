@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ICEBURG Simple Query Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+        button { padding: 10px 20px; background: #0f0; color: #000; border: none; cursor: pointer; margin: 5px; }
+        #log { background: #111; padding: 10px; margin: 10px 0; max-height: 400px; overflow-y: auto; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>ICEBURG Simple Query Test</h1>
+    <button onclick="testQuery('what do you do')">Test: "what do you do"</button>
+    <button onclick="testQuery('hello')">Test: "hello"</button>
+    <div id="log"></div>
+
+    <script>
+        function log(msg, type = 'info') {
+            const div = document.getElementById('log');
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            div.appendChild(p);
+            div.scrollTop = div.scrollHeight;
+            console.log(msg);
+        }
+
+        async function testQuery(query) {
+            document.getElementById('log').innerHTML = '';
+            log(`Testing query: "${query}"`, 'info');
+            
+            const ws = new WebSocket('ws://localhost:8000/ws');
+            let chunks = [];
+            let done = false;
+            
+            ws.onopen = () => {
+                log('✅ WebSocket connected', 'success');
+                log(`📤 Sending query: "${query}"`, 'info');
+                ws.send(JSON.stringify({
+                    query: query,
+                    mode: 'chat',
+                    agent: 'auto',
+                    settings: {
+                        primaryModel: 'llama3.1:8b',
+                        temperature: 0.7,
+                        maxTokens: 2000
+                    }
+                }));
+            };
+            
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    log(`📥 Received: type=${data.type}`, 'info');
+                    
+                    if (data.type === 'thinking') {
+                        log(`💭 Thinking: ${data.content}`, 'info');
+                    } else if (data.type === 'chunk') {
+                        chunks.push(data.content);
+                        log(`📝 Chunk: "${data.content}" (total: ${chunks.join('').length} chars)`, 'success');
+                    } else if (data.type === 'done') {
+                        done = true;
+                        const fullResponse = chunks.join('');
+                        log(`✅ DONE - Full response (${fullResponse.length} chars):`, 'success');
+                        log(fullResponse, 'success');
+                        ws.close();
+                    } else if (data.type === 'error') {
+                        log(`❌ ERROR: ${data.message}`, 'error');
+                        ws.close();
+                    } else {
+                        log(`📨 Other: ${JSON.stringify(data).substring(0, 100)}`, 'info');
+                    }
+                } catch (e) {
+                    log(`❌ Parse error: ${e.message}`, 'error');
+                }
+            };
+            
+            ws.onerror = (error) => {
+                log(`❌ WebSocket error: ${error}`, 'error');
+            };
+            
+            ws.onclose = (event) => {
+                if (!done) {
+                    log(`⚠️ WebSocket closed unexpectedly (code: ${event.code})`, 'error');
+                    const fullResponse = chunks.join('');
+                    if (fullResponse) {
+                        log(`Partial response (${fullResponse.length} chars):`, 'info');
+                        log(fullResponse, 'info');
+                    }
+                } else {
+                    log('✅ Connection closed normally', 'success');
+                }
+            };
+            
+            // Timeout after 60 seconds
+            setTimeout(() => {
+                if (!done && ws.readyState === WebSocket.OPEN) {
+                    log('⏱️ Timeout after 60s', 'error');
+                    ws.close();
+                }
+            }, 60000);
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  # Redis for caching and message queuing
+  redis:
+    image: redis:7-alpine
+    container_name: iceburg_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+  # Ollama for LLM inference
+  ollama:
+    image: ollama/ollama:latest
+    container_name: iceburg_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # ICEBURG Core Application
+  iceburg:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: iceburg_core
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ../data:/app/data
+      - ../models:/app/models
+      - ../logs:/app/logs
+    environment:
+      - ICEBURG_DATA_DIR=/app/data
+      - ICEBURG_USER=iceburg
+      - ICEBURG_HOME=/app
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_URL=http://ollama:11434
+    depends_on:
+      - redis
+      - ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+
+  # Monitoring Dashboard
+  monitoring:
+    image: grafana/grafana:latest
+    container_name: iceburg_monitoring
+    ports:
+      - "3000:3000"
+    volumes:
+      - monitoring_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: iceburg_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+  # Jupyter Notebook for development
+  jupyter:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.jupyter
+    container_name: iceburg_jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../tutorials:/app/tutorials
+      - ../notebooks:/app/notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=iceburg
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  ollama_data:
+  monitoring_data:
+  prometheus_data:
+
+networks:
+  default:
+    name: iceburg_network

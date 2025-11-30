@@ -1,0 +1,33 @@
+FROM jupyter/scipy-notebook:latest
+
+# Set working directory
+WORKDIR /app
+
+# Install additional dependencies
+RUN pip install --no-cache-dir \
+    pennylane \
+    torchquantum \
+    stable-baselines3 \
+    gymnasium \
+    pettingzoo \
+    ray[rllib] \
+    yfinance \
+    polygon-api-client \
+    redis \
+    prometheus-client
+
+# Copy application code
+COPY src/ ./src/
+COPY tutorials/ ./tutorials/
+COPY notebooks/ ./notebooks/
+
+# Set environment variables
+ENV JUPYTER_ENABLE_LAB=yes
+ENV JUPYTER_TOKEN=iceburg
+ENV PYTHONPATH=/app/src
+
+# Expose port
+EXPOSE 8888
+
+# Start Jupyter Lab
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

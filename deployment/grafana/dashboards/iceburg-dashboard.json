@@ -1,0 +1,129 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Elite Financial AI Oracle - System Dashboard",
+    "tags": ["iceburg", "quantum", "rl", "financial"],
+    "style": "dark",
+    "timezone": "browser",
+    "refresh": "5s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Overview",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"iceburg-core\"}",
+            "legendFormat": "ICEBURG Core"
+          },
+          {
+            "expr": "up{job=\"redis\"}",
+            "legendFormat": "Redis"
+          },
+          {
+            "expr": "up{job=\"ollama\"}",
+            "legendFormat": "Ollama"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Trading Performance",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "trading_total_return",
+            "legendFormat": "Total Return"
+          },
+          {
+            "expr": "trading_sharpe_ratio",
+            "legendFormat": "Sharpe Ratio"
+          },
+          {
+            "expr": "trading_max_drawdown",
+            "legendFormat": "Max Drawdown"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 3,
+        "title": "Quantum Circuit Performance",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "quantum_circuit_execution_time",
+            "legendFormat": "Execution Time"
+          },
+          {
+            "expr": "quantum_circuit_success_rate",
+            "legendFormat": "Success Rate"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "RL Agent Performance",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rl_agent_reward",
+            "legendFormat": "Agent Reward"
+          },
+          {
+            "expr": "rl_agent_episode_length",
+            "legendFormat": "Episode Length"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "id": 5,
+        "title": "System Resources",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "node_cpu_usage",
+            "legendFormat": "CPU Usage"
+          },
+          {
+            "expr": "node_memory_usage",
+            "legendFormat": "Memory Usage"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        }
+      }
+    ]
+  }
+}

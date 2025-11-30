@@ -1,0 +1,48 @@
+{
+  "security": {
+    "encryption_key": "CHANGE_THIS_MILITARY_GRADE_PASSWORD_2025",
+    "ip_whitelist": ["192.168.1.0/24", "10.0.0.0/8"],
+    "max_daily_loss_percent": 5.0,
+    "emergency_stop_threshold": 10.0,
+    "rate_limit": 100,
+    "session_timeout_minutes": 60
+  },
+  "broker": {
+    "type": "binance",
+    "api_key": "YOUR_BINANCE_API_KEY",
+    "secret_key": "YOUR_BINANCE_SECRET_KEY",
+    "base_url": "https://api.binance.com",
+    "testnet": true
+  },
+  "wallet": {
+    "wallet_id": "trading_wallet_001",
+    "wallet_type": "hot",
+    "max_balance": 10000.0,
+    "daily_limit": 1000.0,
+    "withdrawal_limit": 500.0
+  },
+  "trading": {
+    "strategies": [
+      {
+        "name": "BTC_Momentum",
+        "symbols": ["BTCUSDT"],
+        "max_position_size": 1000.0,
+        "stop_loss_percent": 2.0,
+        "take_profit_percent": 5.0,
+        "risk_per_trade": 1.0,
+        "enabled": true
+      },
+      {
+        "name": "ETH_Scalping",
+        "symbols": ["ETHUSDT"],
+        "max_position_size": 500.0,
+        "stop_loss_percent": 1.0,
+        "take_profit_percent": 2.0,
+        "risk_per_trade": 0.5,
+        "enabled": true
+      }
+    ],
+    "monitoring_interval": 1.0,
+    "max_trades_per_day": 50
+  }
+}

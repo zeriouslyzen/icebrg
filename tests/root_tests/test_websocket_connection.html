@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ICEBURG WebSocket Connection Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+        .log { margin: 5px 0; padding: 5px; border-left: 2px solid #0f0; }
+        .error { color: #f00; border-color: #f00; }
+        .success { color: #0f0; border-color: #0f0; }
+        .info { color: #0ff; border-color: #0ff; }
+        button { padding: 10px 20px; margin: 5px; background: #0f0; color: #000; border: none; cursor: pointer; }
+        button:hover { background: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>ICEBURG WebSocket Connection Diagnostic</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="clearLogs()">Clear Logs</button>
+    <div id="logs"></div>
+
+    <script>
+        function addLog(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const log = document.createElement('div');
+            log.className = `log ${type}`;
+            log.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(log);
+            console.log(message);
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        function testConnection() {
+            addLog('🔍 Starting WebSocket connection test...', 'info');
+            
+            const wsUrl = 'ws://localhost:8000/ws';
+            addLog(`📡 Connecting to: ${wsUrl}`, 'info');
+            addLog(`🌐 Origin: ${window.location.origin}`, 'info');
+            addLog(`📍 Hostname: ${window.location.hostname}`, 'info');
+            
+            try {
+                const ws = new WebSocket(wsUrl);
+                
+                let timeout = setTimeout(() => {
+                    if (ws.readyState !== WebSocket.OPEN) {
+                        addLog('⏱️ Connection timeout after 10 seconds', 'error');
+                        ws.close();
+                    }
+                }, 10000);
+                
+                ws.onopen = () => {
+                    clearTimeout(timeout);
+                    addLog('✅ WebSocket connection OPENED successfully!', 'success');
+                    addLog(`📊 ReadyState: ${ws.readyState} (OPEN)`, 'success');
+                    
+                    // Send a test message
+                    const testMessage = {
+                        query: "test",
+                        mode: "chat",
+                        agent: "auto",
+                        degradation_mode: false
+                    };
+                    addLog(`📤 Sending test message: ${JSON.stringify(testMessage)}`, 'info');
+                    ws.send(JSON.stringify(testMessage));
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addLog(`📥 Received: type=${data.type}, content=${(data.content || data.message || '').substring(0, 100)}`, 'success');
+                        
+                        if (data.type === 'connected') {
+                            addLog('✅ Server confirmed connection!', 'success');
+                        }
+                    } catch (e) {
+                        addLog(`📥 Raw message: ${event.data}`, 'info');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    clearTimeout(timeout);
+                    addLog(`❌ WebSocket ERROR: ${error}`, 'error');
+                    addLog(`❌ ReadyState: ${ws.readyState}`, 'error');
+                    addLog(`❌ ReadyState meaning: ${getReadyStateName(ws.readyState)}`, 'error');
+                    
+                    // Try to get more error details
+                    if (error.target) {
+                        addLog(`❌ Error target URL: ${error.target.url}`, 'error');
+                    }
+                };
+                
+                ws.onclose = (event) => {
+                    clearTimeout(timeout);
+                    addLog(`⚠️ WebSocket CLOSED`, 'error');
+                    addLog(`   Code: ${event.code}`, 'error');
+                    addLog(`   Reason: ${event.reason || 'none'}`, 'error');
+                    addLog(`   Was Clean: ${event.wasClean}`, 'error');
+                    addLog(`   ReadyState: ${ws.readyState} (${getReadyStateName(ws.readyState)})`, 'error');
+                    
+                    // Interpret close codes
+                    const codeMeanings = {
+                        1000: 'Normal Closure',
+                        1001: 'Going Away',
+                        1002: 'Protocol Error',
+                        1003: 'Unsupported Data',
+                        1006: 'Abnormal Closure',
+                        1008: 'Policy Violation (CORS/Auth)',
+                        1009: 'Message Too Big',
+                        1011: 'Internal Error'
+                    };
+                    if (codeMeanings[event.code]) {
+                        addLog(`   Meaning: ${codeMeanings[event.code]}`, 'error');
+                    }
+                };
+                
+            } catch (error) {
+                addLog(`❌ Failed to create WebSocket: ${error.message}`, 'error');
+                addLog(`❌ Stack: ${error.stack}`, 'error');
+            }
+        }
+        
+        function getReadyStateName(state) {
+            const states = {
+                0: 'CONNECTING',
+                1: 'OPEN',
+                2: 'CLOSING',
+                3: 'CLOSED'
+            };
+            return states[state] || 'UNKNOWN';
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            addLog('🚀 Page loaded, ready to test', 'info');
+            addLog('💡 Click "Test Connection" button to start', 'info');
+        });
+    </script>
+</body>
+</html>
+
+

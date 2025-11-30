@@ -1,0 +1,499 @@
+"""
+Visual Deployer Extension for ICEBURG
+Extends VisualDeployer to produce .app bundles with full macOS integration.
+"""
+
+import os
+import json
+import logging
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+import subprocess
+import shutil
+
+logger = logging.getLogger(__name__)
+
+
+class VisualDeployerExtension:
+    """
+    Visual Deployer Extension for ICEBURG.
+    
+    Features:
+    - .app bundle generation
+    - macOS integration
+    - Code signing
+    - Notarization
+    - DMG creation
+    """
+    
+    def __init__(self, config: Dict[str, Any] = None):
+        """
+        Initialize Visual Deployer Extension.
+        
+        Args:
+            config: Configuration dictionary
+        """
+        self.config = config or {}
+        self.output_dir = self.config.get("output_dir", "dist")
+        self.app_name = self.config.get("app_name", "ICEBURG App")
+        self.bundle_id = self.config.get("bundle_id", "com.iceburg.app")
+        self.version = self.config.get("version", "1.0.0")
+        
+        # Ensure output directory exists
+        os.makedirs(self.output_dir, exist_ok=True)
+    
+    def generate_app_bundle(self, 
+                          description: str,
+                          app_type: str = "desktop",
+                          features: List[str] = None,
+                          verbose: bool = False) -> str:
+        """
+        Generate .app bundle from description.
+        
+        Args:
+            description: App description
+            app_type: Type of app (desktop, mobile, web)
+            features: Features to include
+            verbose: Enable verbose output
+            
+        Returns:
+            Path to generated .app bundle
+        """
+        if verbose:
+            logger.info(f"Generating .app bundle for: {description}")
+        
+        # Create app bundle structure
+        app_path = self._create_app_bundle_structure()
+        
+        # Generate executable
+        self._generate_executable(app_path, description, app_type, features)
+        
+        # Generate Info.plist
+        self._generate_info_plist(app_path)
+        
+        # Generate entitlements
+        self._generate_entitlements(app_path)
+        
+        # Generate resources
+        self._generate_resources(app_path, features or [])
+        
+        if verbose:
+            logger.info(f"Generated .app bundle: {app_path}")
+        
+        return app_path
+    
+    def _create_app_bundle_structure(self) -> str:
+        """Create .app bundle directory structure."""
+        app_path = os.path.join(self.output_dir, f"{self.app_name}.app")
+        contents_path = os.path.join(app_path, "Contents")
+        macos_path = os.path.join(contents_path, "MacOS")
+        resources_path = os.path.join(contents_path, "Resources")
+        
+        # Create directories
+        os.makedirs(macos_path, exist_ok=True)
+        os.makedirs(resources_path, exist_ok=True)
+        
+        return app_path
+    
+    def _generate_executable(self, app_path: str, description: str, app_type: str, features: List[str]):
+        """Generate executable for the app."""
+        executable_path = os.path.join(app_path, "Contents", "MacOS", self.app_name)
+        
+        # Generate Swift executable
+        swift_code = self._generate_swift_code(description, app_type, features)
+        
+        with open(f"{executable_path}.swift", "w") as f:
+            f.write(swift_code)
+        
+        # Compile Swift code
+        self._compile_swift(f"{executable_path}.swift", executable_path)
+        
+        # Make executable
+        os.chmod(executable_path, 0o755)
+    
+    def _generate_swift_code(self, description: str, app_type: str, features: List[str]) -> str:
+        """Generate Swift code for the app."""
+        return f"""import SwiftUI
+import AppKit
+
+@main
+struct {self.app_name.replace(" ", "")}App: App {{
+    var body: some Scene {{
+        WindowGroup {{
+            ContentView()
+                .frame(minWidth: 800, minHeight: 600)
+        }}
+        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified)
+    }}
+}}
+
+struct ContentView: View {{
+    var body: some View {{
+        VStack(spacing: 20) {{
+            Text("{self.app_name}")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            Text("{description}")
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            // Features
+            VStack(alignment: .leading, spacing: 8) {{
+                ForEach({features or []}, id: \\.self) {{ feature in
+                    HStack {{
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text(feature)
+                    }}
+                }}
+            }}
+            
+            Spacer()
+            
+            Text("Generated by ICEBURG")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }}
+        .padding()
+    }}
+}}
+"""
+    
+    def _compile_swift(self, source_path: str, output_path: str):
+        """Compile Swift source to executable."""
+        try:
+            cmd = [
+                "swiftc",
+                source_path,
+                "-o", output_path,
+                "-framework", "SwiftUI",
+                "-framework", "AppKit"
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            if result.returncode != 0:
+                logger.error(f"Swift compilation failed: {result.stderr}")
+            else:
+                # Clean up source file
+                os.remove(source_path)
+                
+        except Exception as e:
+            logger.error(f"Swift compilation error: {e}")
+    
+    def _generate_info_plist(self, app_path: str):
+        """Generate Info.plist for the app."""
+        info_plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>{self.app_name}</string>
+    <key>CFBundleIdentifier</key>
+    <string>{self.bundle_id}</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>{self.app_name}</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>{self.version}</string>
+    <key>CFBundleVersion</key>
+    <string>{self.version}</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSRequiresAquaSystemAppearance</key>
+    <false/>
+</dict>
+</plist>"""
+        
+        info_plist_path = os.path.join(app_path, "Contents", "Info.plist")
+        with open(info_plist_path, "w") as f:
+            f.write(info_plist_content)
+    
+    def _generate_entitlements(self, app_path: str):
+        """Generate entitlements.plist for the app."""
+        entitlements_content = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    <key>com.apple.security.network.client</key>
+    <true/>
+</dict>
+</plist>"""
+        
+        entitlements_path = os.path.join(app_path, "Contents", "entitlements.plist")
+        with open(entitlements_path, "w") as f:
+            f.write(entitlements_content)
+    
+    def _generate_resources(self, app_path: str, features: List[str]):
+        """Generate resources for the app."""
+        resources_path = os.path.join(app_path, "Contents", "Resources")
+        
+        # Generate app icon
+        self._generate_app_icon(resources_path)
+        
+        # Generate themes if needed
+        if "themes" in features:
+            self._generate_themes(resources_path)
+        
+        # Generate assets if needed
+        if "assets" in features:
+            self._generate_assets(resources_path)
+    
+    def _generate_app_icon(self, resources_path: str):
+        """Generate app icon."""
+        # Create a simple app icon (in real implementation, this would be more sophisticated)
+        icon_content = """# App Icon
+# This would be a proper .icns file in a real implementation
+"""
+        
+        icon_path = os.path.join(resources_path, "AppIcon.icns")
+        with open(icon_path, "w") as f:
+            f.write(icon_content)
+    
+    def _generate_themes(self, resources_path: str):
+        """Generate themes for the app."""
+        themes_dir = os.path.join(resources_path, "Themes")
+        os.makedirs(themes_dir, exist_ok=True)
+        
+        # Generate default theme
+        default_theme = {
+            "name": "Default",
+            "colors": {
+                "background": "#FFFFFF",
+                "text": "#000000",
+                "accent": "#007AFF"
+            }
+        }
+        
+        theme_path = os.path.join(themes_dir, "default.json")
+        with open(theme_path, "w") as f:
+            json.dump(default_theme, f, indent=2)
+    
+    def _generate_assets(self, resources_path: str):
+        """Generate assets for the app."""
+        assets_dir = os.path.join(resources_path, "Assets")
+        os.makedirs(assets_dir, exist_ok=True)
+        
+        # Generate asset catalog
+        asset_catalog = {
+            "info": {
+                "version": 1,
+                "author": "ICEBURG"
+            },
+            "images": [
+                {
+                    "filename": "AppIcon.icns",
+                    "idiom": "mac",
+                    "scale": "1x",
+                    "size": "16x16"
+                }
+            ]
+        }
+        
+        catalog_path = os.path.join(assets_dir, "Contents.json")
+        with open(catalog_path, "w") as f:
+            json.dump(asset_catalog, f, indent=2)
+    
+    def sign_app(self, app_path: str, identity: str = None) -> bool:
+        """Sign the app bundle."""
+        try:
+            identity = identity or "Developer ID Application"
+            
+            cmd = [
+                "codesign",
+                "--force",
+                "--sign", identity,
+                "--options", "runtime",
+                app_path
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                logger.info("App signed successfully")
+                return True
+            else:
+                logger.error(f"Code signing failed: {result.stderr}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Code signing error: {e}")
+            return False
+    
+    def notarize_app(self, app_path: str, apple_id: str = None, password: str = None) -> bool:
+        """Notarize the app bundle."""
+        try:
+            if not apple_id or not password:
+                logger.warning("Apple ID and password required for notarization")
+                return False
+            
+            # Create zip for notarization
+            zip_path = f"{app_path}.zip"
+            subprocess.run(["ditto", "-c", "-k", "--keepParent", app_path, zip_path], check=True)
+            
+            # Submit for notarization
+            cmd = [
+                "xcrun", "notarytool", "submit", zip_path,
+                "--apple-id", apple_id,
+                "--password", password,
+                "--wait"
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                logger.info("App notarized successfully")
+                
+                # Staple the notarization
+                subprocess.run(["xcrun", "stapler", "staple", app_path])
+                
+                # Clean up zip
+                os.remove(zip_path)
+                return True
+            else:
+                logger.error(f"Notarization failed: {result.stderr}")
+                os.remove(zip_path)
+                return False
+                
+        except Exception as e:
+            logger.error(f"Notarization error: {e}")
+            return False
+    
+    def create_dmg(self, app_path: str, dmg_name: str = None) -> str:
+        """Create DMG for distribution."""
+        try:
+            dmg_name = dmg_name or f"{self.app_name}.dmg"
+            dmg_path = os.path.join(self.output_dir, dmg_name)
+            
+            # Create temporary directory for DMG contents
+            temp_dir = os.path.join(self.output_dir, "dmg_temp")
+            os.makedirs(temp_dir, exist_ok=True)
+            
+            # Copy app to temp directory
+            temp_app_path = os.path.join(temp_dir, f"{self.app_name}.app")
+            shutil.copytree(app_path, temp_app_path)
+            
+            # Create DMG
+            cmd = [
+                "hdiutil", "create",
+                "-volname", self.app_name,
+                "-srcfolder", temp_dir,
+                "-ov", "-format", "UDZO",
+                dmg_path
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            # Clean up temp directory
+            shutil.rmtree(temp_dir)
+            
+            if result.returncode == 0:
+                logger.info(f"DMG created: {dmg_path}")
+                return dmg_path
+            else:
+                logger.error(f"DMG creation failed: {result.stderr}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"DMG creation error: {e}")
+            return None
+    
+    def deploy_app(self, 
+                  description: str,
+                  app_type: str = "desktop",
+                  features: List[str] = None,
+                  sign: bool = False,
+                  notarize: bool = False,
+                  dmg: bool = False,
+                  verbose: bool = False) -> Dict[str, Any]:
+        """
+        Deploy app with full pipeline.
+        
+        Args:
+            description: App description
+            app_type: Type of app
+            features: Features to include
+            sign: Whether to sign the app
+            notarize: Whether to notarize the app
+            dmg: Whether to create DMG
+            verbose: Enable verbose output
+            
+        Returns:
+            Deployment result
+        """
+        result = {
+            "success": False,
+            "app_path": None,
+            "dmg_path": None,
+            "errors": []
+        }
+        
+        try:
+            # Generate app bundle
+            app_path = self.generate_app_bundle(description, app_type, features, verbose)
+            result["app_path"] = app_path
+            
+            # Sign app if requested
+            if sign:
+                if not self.sign_app(app_path):
+                    result["errors"].append("Code signing failed")
+                    return result
+            
+            # Notarize app if requested
+            if notarize:
+                apple_id = self.config.get("apple_id")
+                password = self.config.get("app_specific_password")
+                if not self.notarize_app(app_path, apple_id, password):
+                    result["errors"].append("Notarization failed")
+                    return result
+            
+            # Create DMG if requested
+            if dmg:
+                dmg_path = self.create_dmg(app_path)
+                if dmg_path:
+                    result["dmg_path"] = dmg_path
+                else:
+                    result["errors"].append("DMG creation failed")
+                    return result
+            
+            result["success"] = True
+            
+        except Exception as e:
+            result["errors"].append(str(e))
+            logger.error(f"Deployment error: {e}")
+        
+        return result
+
+
+# Convenience functions
+def create_visual_deployer(config: Dict[str, Any] = None) -> VisualDeployerExtension:
+    """Create Visual Deployer Extension."""
+    return VisualDeployerExtension(config)
+
+
+def deploy_app(description: str,
+              app_type: str = "desktop",
+              features: List[str] = None,
+              sign: bool = False,
+              notarize: bool = False,
+              dmg: bool = False,
+              config: Dict[str, Any] = None) -> Dict[str, Any]:
+    """Deploy app with Visual Deployer Extension."""
+    deployer = create_visual_deployer(config)
+    return deployer.deploy_app(description, app_type, features, sign, notarize, dmg)
