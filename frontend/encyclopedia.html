@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Encyclopedia - ICEBURG</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .encyclopedia-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Celestial Background Animation */
+        .celestial-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        #starfieldCanvas {
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .celestial-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-glow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Enhanced Hero Section */
+        .encyclopedia-hero {
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-title-wrapper {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .encyclopedia-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: baseline;
+            line-height: 1.1;
+        }
+
+        .title-main {
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fade-in-up 0.8s ease-out;
+        }
+
+        .title-accent {
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            animation: fade-in-up 0.8s ease-out 0.2s both;
+        }
+
+        .title-underline {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            margin-top: 1rem;
+            animation: expand-width 1s ease-out 0.5s both;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes expand-width {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+            to {
+                width: 120px;
+                opacity: 1;
+            }
+        }
+
+        .encyclopedia-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 700px;
+            animation: fade-in-up 0.8s ease-out 0.4s both;
+        }
+
+        /* Hero Stats */
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            animation: fade-in-up 0.8s ease-out 0.6s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.25rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--border-primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero-stats {
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-divider {
+                height: 30px;
+            }
+        }
+
+        /* Enhanced Search */
+        .encyclopedia-search-wrapper {
+            animation: fade-in-up 0.8s ease-out 0.8s both;
+        }
+
+        .encyclopedia-search {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .encyclopedia-search input {
+            flex: 1;
+            padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-base);
+        }
+
+        .encyclopedia-search input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            background: var(--bg-tertiary);
+        }
+
+        .search-filter-btn {
+            position: absolute;
+            right: 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-filter-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Quick Filters */
+        .quick-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .filter-chip {
+            padding: 0.5rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .filter-chip.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .encyclopedia-search {
+            position: relative;
+            max-width: 600px;
+        }
+
+        .encyclopedia-search input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-base);
+        }
+
+        .encyclopedia-search input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .encyclopedia-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
+        .encyclopedia-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .encyclopedia-categories {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.75rem;
+            }
+        }
+
+        .category-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .category-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-card.active {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .category-card.active::before {
+            opacity: 1;
+        }
+
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+
+        .encyclopedia-content {
+            display: block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .encyclopedia-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .encyclopedia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .encyclopedia-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .encyclopedia-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all var(--transition-base);
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .encyclopedia-item:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .item-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .item-id {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .item-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .item-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .item-section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+        }
+
+        .item-section-content {
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-key-value {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-secondary);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .item-key-value:last-child {
+            border-bottom: none;
+        }
+
+        .item-key {
+            font-weight: 600;
+            color: var(--text-primary);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
+        }
+
+        .item-value {
+            color: var(--text-secondary);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
+        }
+
+        .search-results {
+            margin-top: 2rem;
+        }
+
+        .search-results-header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .search-results-count {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-tertiary);
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #ff6b6b;
+            margin: 2rem 0;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all var(--transition-base);
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(-4px);
+        }
+
+        @media (max-width: 768px) {
+            .encyclopedia-container {
+                padding: 1rem;
+            }
+
+            .encyclopedia-title {
+                font-size: 2rem;
+            }
+
+            .encyclopedia-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .encyclopedia-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-key-value {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .encyclopedia-item {
+                padding: 1.5rem;
+            }
+
+            .item-section {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Prevent text overlap and ensure proper spacing */
+        .source-item, .study-item {
+            margin-bottom: 1rem !important;
+            padding: 0.75rem !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .source-item a, .study-item a {
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .item-section-title {
+            margin-bottom: 0.75rem !important;
+        }
+
+        /* Entry Card Styles */
+        .encyclopedia-item-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 180px;
+        }
+
+        .encyclopedia-item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .encyclopedia-item-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .encyclopedia-item-card:hover::before {
+            opacity: 1;
+        }
+
+        .item-card-header {
+            margin-bottom: 1rem;
+        }
+
+        .item-card-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .item-card-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .item-card-preview {
+            flex: 1;
+            margin-bottom: 1rem;
+        }
+
+        .item-card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .item-card-footer {
+            margin-top: auto;
+        }
+
+        .item-card-view-btn {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .item-card-view-btn:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Modal Styles */
+        .entry-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .entry-modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .entry-modal-content {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 95vh;
+            margin: auto;
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .entry-modal-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .entry-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .entry-modal-close {
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .entry-modal-close:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .entry-modal-body {
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .entry-modal {
+                padding: 0;
+            }
+
+            .entry-modal-content {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .entry-modal-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .entry-modal-title {
+                font-size: 1.25rem;
+            }
+
+            .entry-modal-body {
+                padding: 1.5rem;
+            }
+
+            .encyclopedia-item-card {
+                min-height: 160px;
+                padding: 1.25rem;
+            }
+        }
+
+        /* Celestial Dashboard Features */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Connection Visualization */
+        .connection-graph {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+        }
+
+        .connection-node {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .connection-node:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Celestial Background Animation -->
+    <div class="celestial-background">
+        <canvas id="starfieldCanvas"></canvas>
+        <div class="celestial-glow"></div>
+    </div>
+
+    <div class="encyclopedia-container">
+        <a href="/" class="back-button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to ICEBURG
+        </a>
+
+        <!-- Enhanced Hero Section -->
+        <div class="encyclopedia-hero">
+            <div class="hero-content">
+                <div class="hero-title-wrapper">
+                    <h1 class="encyclopedia-title">
+                        <span class="title-main">Celestial</span>
+                        <span class="title-accent">Encyclopedia</span>
+                    </h1>
+                    <div class="title-underline"></div>
+                </div>
+                <p class="encyclopedia-subtitle">
+                    Mapping the connections between celestial phenomena and biological systems through rigorous scientific research
+                </p>
+                
+                <!-- Quick Stats -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalEntries">0</div>
+                        <div class="stat-label">Entries</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCategories">0</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalSources">0</div>
+                        <div class="stat-label">Sources</div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Search -->
+                <div class="encyclopedia-search-wrapper">
+                    <div class="encyclopedia-search">
+                        <svg class="encyclopedia-search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 19L14.65 14.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search entries, categories, or concepts...">
+                        <button class="search-filter-btn" id="filterToggle" title="Advanced Filters">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M2 4H16M5 9H13M7 14H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Quick Filters -->
+                    <div class="quick-filters" id="quickFilters">
+                        <button class="filter-chip active" data-filter="all">All</button>
+                        <button class="filter-chip" data-filter="celestial_bodies">Celestial</button>
+                        <button class="filter-chip" data-filter="neurotransmitters">Neurotransmitters</button>
+                        <button class="filter-chip" data-filter="hormones">Hormones</button>
+                        <button class="filter-chip" data-filter="tcm_correlations">TCM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="categoriesContainer" class="encyclopedia-categories"></div>
+
+        <div id="contentContainer" class="encyclopedia-content"></div>
+        <div id="searchResults" class="search-results" style="display: none;"></div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">Loading encyclopedia...</div>
+        <div id="errorIndicator" class="error" style="display: none;"></div>
+    </div>
+
+    <!-- Entry Modal -->
+    <div id="entryModal" class="entry-modal">
+        <div class="entry-modal-content">
+            <div class="entry-modal-header">
+                <h2 class="entry-modal-title" id="modalTitle">Entry Details</h2>
+                <button class="entry-modal-close" onclick="closeEntryModal()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="entry-modal-body" id="modalBody">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Detect network access (mobile/network) vs localhost
+        const isNetworkAccess = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        const networkIP = isNetworkAccess ? window.location.hostname : 'localhost';
+        
+        // Use environment variables or detect network IP
+        const API_URL = isNetworkAccess 
+            ? `http://${networkIP}:8000` 
+            : 'http://localhost:8000';
+        
+        console.log('Encyclopedia API URL:', API_URL, 'Hostname:', window.location.hostname);
+
+        let encyclopediaData = null;
+        let currentCategory = null;
+        let searchTimeout = null;
+
+        const categories = [
+            { id: 'celestial_bodies', name: 'Celestial Bodies', description: 'Planets, stars, and their biological correlations' },
+            { id: 'voltage_gates', name: 'Voltage Gates', description: 'Ion channels and neural excitability' },
+            { id: 'neurotransmitters', name: 'Neurotransmitters', description: 'Chemical messengers and neural communication' },
+            { id: 'hormones', name: 'Hormones', description: 'Endocrine system and hormonal regulation' },
+            { id: 'biophysical_parameters', name: 'Biophysical Parameters', description: 'Measurable physiological metrics' },
+            { id: 'molecular_chemistry', name: 'Molecular Chemistry', description: 'Molecular structures and configurations' },
+            { id: 'electromagnetic_environment', name: 'EM Environment', description: 'Electromagnetic fields and frequencies' },
+            { id: 'organ_systems', name: 'Organ Systems', description: 'Cardiovascular, nervous, endocrine, and other major organ systems' },
+            { id: 'cellular_processes', name: 'Cellular Processes', description: 'Cell cycle, apoptosis, DNA replication, and cellular mechanisms' },
+            { id: 'circadian_biology', name: 'Circadian Biology', description: 'Circadian rhythms, clock genes, and temporal biology' },
+            { id: 'quantum_biology', name: 'Quantum Biology', description: 'Quantum effects in biological systems, coherence, and entanglement' },
+            { id: 'research_methodologies', name: 'Research Methodologies', description: 'Study designs, biomarkers, statistical methods, and research approaches' },
+            { id: 'tcm_correlations', name: 'TCM Correlations', description: 'Traditional Chinese Medicine mappings' },
+            { id: 'coherence_systems', name: 'Coherence Systems', description: 'Heart coherence, quantum coherence, biological synchronization' },
+            { id: 'morphic_fields', name: 'Morphic Fields', description: 'Morphic resonance theory and field effects' },
+            { id: 'vedic_knowledge', name: 'Vedic Knowledge', description: 'Ayurveda, Jyotish, Nakshatras, Doshas' },
+            { id: 'schumann_resonance', name: 'Schumann Resonance', description: 'Earth frequency and biological correlations' },
+            { id: 'government_research', name: 'Government Research', description: 'Declassified government programs and consciousness research' },
+        { id: 'patents', name: 'Patents', description: 'Patents related to EM fields, consciousness technologies, and biological effects' },
+        { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' }
+      ];
+
+        async function loadEncyclopedia() {
+            const loadingEl = document.getElementById('loadingIndicator');
+            const errorEl = document.getElementById('errorIndicator');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+
+            try {
+                console.log('Fetching encyclopedia from:', `${API_URL}/api/encyclopedia`);
+                const response = await fetch(`${API_URL}/api/encyclopedia`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
+                }
+                
+                encyclopediaData = await response.json();
+                console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
+                
+                if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
+                    throw new Error('Encyclopedia data is empty');
+                }
+                
+                renderCategories();
+                // Auto-select first category if available
+                if (categories.length > 0 && encyclopediaData[categories[0].id]) {
+                    selectCategory(categories[0].id);
+                }
+                loadingEl.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading encyclopedia:', error);
+                errorEl.innerHTML = `
+                    <div style="padding: 1rem; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 8px; color: #ff6b6b;">
+                        <strong>Error loading encyclopedia:</strong><br>
+                        ${error.message}<br>
+                        <small>API URL: ${API_URL}/api/encyclopedia</small><br>
+                        <small>Hostname: ${window.location.hostname}</small><br>
+                        <small>If on mobile, ensure backend is accessible at ${API_URL}</small>
+                    </div>
+                `;
+                errorEl.style.display = 'block';
+                loadingEl.style.display = 'none';
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = categories.map(cat => {
+                const count = encyclopediaData[cat.id] ? Object.keys(encyclopediaData[cat.id]).length : 0;
+                return `
+                    <div class="category-card" data-category="${cat.id}">
+                        <div class="category-name">${cat.name}</div>
+                        <div class="category-count">${count} entries</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    selectCategory(category);
+                });
+            });
+        }
+
+        function selectCategory(categoryId) {
+            currentCategory = categoryId;
+            
+            // Update active state
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.category === categoryId);
+            });
+
+            // Show content
+            const contentContainer = document.getElementById('contentContainer');
+            const searchResults = document.getElementById('searchResults');
+            contentContainer.style.display = 'block';
+            contentContainer.classList.add('active');
+            searchResults.style.display = 'none';
+
+            if (!encyclopediaData || !encyclopediaData[categoryId]) {
+                contentContainer.innerHTML = '<div class="error">Category data not found</div>';
+                return;
+            }
+
+            const categoryData = encyclopediaData[categoryId];
+            const items = Object.entries(categoryData).map(([id, data]) => ({ id, ...data }));
+
+            contentContainer.innerHTML = `
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">${categories.find(c => c.id === categoryId)?.name || categoryId}</h2>
+                <div class="encyclopedia-grid">
+                    ${items.map(item => renderItem(item, true)).join('')}
+                </div>
+            `;
+        }
+
+        function renderItem(item, isCompact = false) {
+            if (isCompact) {
+                // Compact card view for grid
+                return `
+                    <div class="encyclopedia-item-card" data-item-id="${item.id}" data-category="${item.category || ''}">
+                        <div class="item-card-header">
+                            <div class="item-card-name">${item.name || item.id}</div>
+                            ${item.category ? `<span class="item-card-category">${item.category.replace(/_/g, ' ')}</span>` : ''}
+                        </div>
+                        <div class="item-card-preview">
+                            ${item.description ? `<div class="item-card-description">${item.description.substring(0, 150)}${item.description.length > 150 ? '...' : ''}</div>` : ''}
+                        </div>
+                        <div class="item-card-footer">
+                            <button class="item-card-view-btn" onclick="openEntryModal('${item.id}', '${item.category || ''}')">View Details</button>
+                        </div>
+                    </div>
+                `;
+            }
+            // Full view (legacy, for search results)
+            return `
+                <div class="encyclopedia-item">
+                    <div class="item-header">
+                        <div class="item-id">${item.id || 'N/A'}</div>
+                        <div class="item-name">${item.name || item.id}</div>
+                        ${item.category ? `<span class="item-category">${item.category}</span>` : ''}
+                    </div>
+                    <div class="item-content">
+                        ${renderItemSections(item)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderItemSections(item) {
+            const sections = [];
+            
+            // Description
+            if (item.description) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Description</div>
+                        <div class="item-section-content">${item.description}</div>
+                    </div>
+                `);
+            }
+
+            // Render key-value pairs
+            const excludeKeys = ['id', 'name', 'category', 'description', 'sources', 'studies', 'research_notes', 'origin_story'];
+            const keyValuePairs = Object.entries(item)
+                .filter(([key]) => !excludeKeys.includes(key))
+                .filter(([_, value]) => value !== null && value !== undefined && value !== '');
+
+            if (keyValuePairs.length > 0) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Details</div>
+                        <div class="item-section-content">
+                            ${keyValuePairs.map(([key, value]) => {
+                                if (Array.isArray(value)) {
+                                    const formattedArray = value.map(v => formatValue(v)).join(', ');
+                                    return `
+                                        <div class="item-key-value">
+                                            <div class="item-key">${formatKey(key)}</div>
+                                            <div class="item-value">${formattedArray}</div>
+                                        </div>
+                                    `;
+                                } else if (typeof value === 'object' && value !== null) {
+                                    // Format objects nicely - check if it's a simple object with arrays of numbers (like TCM data)
+                                    const entries = Object.entries(value);
+                                    const isSimpleNumberArrays = entries.every(([k, v]) => Array.isArray(v) && v.every(item => typeof item === 'number'));
+                                    
+                                    if (isSimpleNumberArrays && entries.length > 0) {
+                                        // Display as a clean list of key-value pairs
+                                        return `
+                                            <div class="item-key-value" style="margin-bottom: 8px;">
+                                                <div class="item-key" style="font-weight: 600; margin-bottom: 4px; color: var(--accent-primary);">${formatKey(key)}</div>
+                                                <div class="item-value" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px; font-size: 0.9em;">
+                                                    ${entries.map(([subKey, subValue]) => `
+                                                        <div style="padding: 4px 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                                                            <strong style="color: #ccc;">${formatKey(subKey)}:</strong>
+                                                            <span style="color: #999; margin-left: 4px;">${Array.isArray(subValue) ? subValue.join(', ') : formatValue(subValue)}</span>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                        `;
+                                    } else {
+                                        // Complex object - format as nested structure
+                                        let formattedValue = '';
+                                        if (Array.isArray(value)) {
+                                            formattedValue = value.map((item, idx) => {
+                                                if (typeof item === 'object' && item !== null) {
+                                                    const objStr = Object.entries(item)
+                                                        .map(([k, v]) => {
+                                                            let val = v;
+                                                            if (typeof v === 'object' && v !== null) {
+                                                                if (Array.isArray(v)) {
+                                                                    val = v.map(item => formatValue(item)).join(', ');
+                                                                } else {
+                                                                    val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
+                                                                }
+                                                            } else {
+                                                                val = formatValue(v);
+                                                            }
+                                                            return `${formatKey(k)}: ${val}`;
+                                                        })
+                                                        .join(', ');
+                                                    return `${idx + 1}. ${objStr}`;
+                                                }
+                                                return formatValue(String(item));
+                                            }).join('; ');
+                                        } else {
+                                            // Format object as key-value pairs
+                                            formattedValue = Object.entries(value)
+                                                .map(([k, v]) => {
+                                                    const formattedKey = formatKey(k);
+                                                    let val = v;
+                                                    if (typeof v === 'object' && v !== null) {
+                                                        if (Array.isArray(v)) {
+                                                            val = v.map(item => formatValue(item)).join(', ');
+                                                        } else {
+                                                            val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
+                                                        }
+                                                    } else {
+                                                        val = formatValue(v);
+                                                    }
+                                                    return `${formattedKey}: ${val}`;
+                                                })
+                                                .join('; ');
+                                        }
+                                        return `
+                                            <div class="item-key-value">
+                                                <div class="item-key">${formatKey(key)}</div>
+                                                <div class="item-value">${formattedValue || 'N/A'}</div>
+                                            </div>
+                                        `;
+                                    }
+                                } else {
+                                    return `
+                                        <div class="item-key-value">
+                                            <div class="item-key">${formatKey(key)}</div>
+                                            <div class="item-value">${formatValue(value)}</div>
+                                        </div>
+                                    `;
+                                }
+                            }).join('')}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Evidence Level Badge
+            if (item.evidence_level) {
+                const evidenceColors = {
+                    'measured': { bg: 'rgba(76, 175, 80, 0.2)', color: '#4caf50', border: '#4caf50' },
+                    'theoretical': { bg: 'rgba(33, 150, 243, 0.2)', color: '#2196f3', border: '#2196f3' },
+                    'speculative': { bg: 'rgba(255, 152, 0, 0.2)', color: '#ff9800', border: '#ff9800' },
+                    'documented': { bg: 'rgba(156, 39, 176, 0.2)', color: '#9c27b0', border: '#9c27b0' }
+                };
+                const colors = evidenceColors[item.evidence_level] || evidenceColors.theoretical;
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Evidence Level</div>
+                        <div class="item-section-content">
+                            <span style="display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; background: ${colors.bg}; color: ${colors.color}; border: 1px solid ${colors.border};">
+                                ${item.evidence_level}
+                            </span>
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Related Entries
+            if (item.related_entries && item.related_entries.length > 0) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Related Entries</div>
+                        <div class="item-section-content">
+                            ${item.related_entries.map(relId => {
+                                const relName = relId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                return `<a href="#" class="related-entry-link" data-entry-id="${relId}" style="display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.25rem 0.5rem; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; color: var(--accent-primary); text-decoration: none; font-size: 0.85rem; transition: all 0.2s;">${relName}</a>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Research notes
+            if (item.research_notes) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Research Notes</div>
+                        <div class="item-section-content">${item.research_notes}</div>
+                    </div>
+                `);
+            }
+
+            // Sources
+            if (item.sources && item.sources.length > 0) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Sources</div>
+                        <div class="item-section-content">
+                            ${item.sources.map(source => `
+                                <div class="source-item" style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent-primary);">
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">
+                                        ${source.title || 'Research Paper'}
+                                        ${source.url ? `<a href="${source.url}" target="_blank" style="color: var(--accent-primary); text-decoration: none; margin-left: 0.5rem; font-size: 0.85rem; white-space: nowrap;">[Link]</a>` : ''}
+                                    </div>
+                                    ${source.authors ? `<div style="font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">${Array.isArray(source.authors) ? source.authors.join(', ') : source.authors}</div>` : ''}
+                                    ${source.journal ? `<div style="font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">${source.journal}${source.year ? ` (${source.year})` : ''}</div>` : ''}
+                                    ${source.doi ? `<div style="font-size: 0.8rem; color: var(--text-tertiary); word-break: break-all;">DOI: <a href="https://doi.org/${source.doi}" target="_blank" style="color: var(--accent-primary);">${source.doi}</a></div>` : ''}
+                                    ${source.patent_number ? `<div style="font-size: 0.8rem; color: var(--text-tertiary);">Patent: ${source.patent_number}${source.url ? ` <a href="${source.url}" target="_blank" style="color: var(--accent-primary);">[View Patent]</a>` : ''}</div>` : ''}
+                                    ${source.cern_document_number ? `<div style="font-size: 0.8rem; color: var(--text-tertiary);">CERN Doc: ${source.cern_document_number}${source.url ? ` <a href="${source.url}" target="_blank" style="color: var(--accent-primary);">[View Document]</a>` : ''}</div>` : ''}
+                                    ${source.key_findings ? `<div style="margin-top: 0.5rem; font-size: 0.9rem; font-style: italic;">${source.key_findings}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Studies
+            if (item.studies && item.studies.length > 0) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Studies</div>
+                        <div class="item-section-content">
+                            ${item.studies.map(study => `
+                                <div class="study-item" style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent-secondary);">
+                                    <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                                        ${study.study_type ? study.study_type.replace('_', ' ').toUpperCase() : 'Study'}
+                                        ${study.sample_size ? ` (n=${study.sample_size})` : ''}
+                                        ${study.duration ? ` - ${study.duration}` : ''}
+                                    </div>
+                                    ${study.findings ? `<div style="margin-bottom: 0.5rem;">${study.findings}</div>` : ''}
+                                    ${study.methodology ? `<div style="font-size: 0.85rem; color: var(--text-tertiary);">Methodology: ${study.methodology}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Origin Story
+            if (item.origin_story) {
+                sections.push(`
+                    <div class="item-section">
+                        <div class="item-section-title">Origin Story</div>
+                        <div class="item-section-content" style="font-style: italic; line-height: 1.8;">
+                            ${item.origin_story}
+                        </div>
+                    </div>
+                `);
+            }
+
+            return sections.join('');
+        }
+
+        function formatKey(key) {
+            return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatValue(value) {
+            if (typeof value === 'string') {
+                // Replace underscores with spaces and capitalize
+                return value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            }
+            return value;
+        }
+
+        async function searchEncyclopedia(query) {
+            if (!query || query.length < 2) {
+                document.getElementById('searchResults').style.display = 'none';
+                if (currentCategory) {
+                    selectCategory(currentCategory);
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/encyclopedia/search/${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                displaySearchResults(data);
+            } catch (error) {
+                console.error('Error searching:', error);
+            }
+        }
+
+        function displaySearchResults(data) {
+            const searchResults = document.getElementById('searchResults');
+            const contentContainer = document.getElementById('contentContainer');
+            
+            contentContainer.style.display = 'none';
+            searchResults.style.display = 'block';
+
+            searchResults.innerHTML = `
+                <div class="search-results-header">
+                    Search Results for "${data.query}"
+                    <span class="search-results-count">(${data.count} found)</span>
+                </div>
+                <div class="encyclopedia-grid">
+                    ${data.results.map(result => renderItem(result.data)).join('')}
+                </div>
+            `;
+        }
+
+        // Search input handler
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchEncyclopedia(query);
+            }, 300);
+        });
+
+        // Modal Functions
+        function openEntryModal(itemId, categoryId) {
+            if (!encyclopediaData || !encyclopediaData[categoryId] || !encyclopediaData[categoryId][itemId]) {
+                console.error('Entry not found:', itemId, categoryId);
+                return;
+            }
+
+            const item = { id: itemId, ...encyclopediaData[categoryId][itemId] };
+            const modal = document.getElementById('entryModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = item.name || item.id;
+            modalBody.innerHTML = renderItemSections(item);
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Scroll to top
+            modal.scrollTop = 0;
+        }
+
+        function closeEntryModal() {
+            const modal = document.getElementById('entryModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on background click
+        document.getElementById('entryModal').addEventListener('click', (e) => {
+            if (e.target.id === 'entryModal') {
+                closeEntryModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeEntryModal();
+            }
+        });
+
+        // Starfield Animation
+        function initStarfield() {
+            const canvas = document.getElementById('starfieldCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const stars = [];
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    speed: Math.random() * 0.5 + 0.1,
+                    opacity: Math.random() * 0.5 + 0.3
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                stars.forEach(star => {
+                    star.y += star.speed;
+                    if (star.y > canvas.height) {
+                        star.y = 0;
+                        star.x = Math.random() * canvas.width;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Calculate and display statistics
+        function updateStats() {
+            if (!encyclopediaData) return;
+            
+            let totalEntries = 0;
+            let totalSources = 0;
+            const categories = new Set();
+            
+            Object.keys(encyclopediaData).forEach(category => {
+                if (category === 'metadata') return;
+                const entries = encyclopediaData[category];
+                if (entries && typeof entries === 'object') {
+                    totalEntries += Object.keys(entries).length;
+                    categories.add(category);
+                    
+                    Object.values(entries).forEach(entry => {
+                        if (entry.sources && Array.isArray(entry.sources)) {
+                            totalSources += entry.sources.length;
+                        }
+                    });
+                }
+            });
+            
+            // Animate numbers
+            function animateNumber(element, target) {
+                const duration = 1500;
+                const start = 0;
+                const increment = target / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 16);
+            }
+            
+            animateNumber(document.getElementById('totalEntries'), totalEntries);
+            animateNumber(document.getElementById('totalCategories'), categories.size);
+            animateNumber(document.getElementById('totalSources'), totalSources);
+        }
+
+        // Filter functionality
+        let activeFilter = 'all';
+        
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeFilter = chip.dataset.filter;
+                
+                if (activeFilter === 'all') {
+                    renderCategories();
+                } else {
+                    selectCategory(activeFilter);
+                }
+            });
+        });
+
+        // Enhanced load function
+        async function loadEncyclopedia() {
+            const loadingEl = document.getElementById('loadingIndicator');
+            const errorEl = document.getElementById('errorIndicator');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+
+            try {
+                console.log('Fetching encyclopedia from:', `${API_URL}/api/encyclopedia`);
+                const response = await fetch(`${API_URL}/api/encyclopedia`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
+                }
+                
+                encyclopediaData = await response.json();
+                console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
+                
+                if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
+                    throw new Error('Encyclopedia data is empty');
+                }
+                
+                renderCategories();
+                // Auto-select first category if available
+                if (categories.length > 0 && encyclopediaData[categories[0].id]) {
+                    selectCategory(categories[0].id);
+                }
+                updateStats();
+                loadingEl.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading encyclopedia:', error);
+                errorEl.innerHTML = `
+                    <div style="padding: 1rem; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 8px; color: #ff6b6b;">
+                        <strong>Error loading encyclopedia:</strong><br>
+                        ${error.message}<br>
+                        <small>API URL: ${API_URL}/api/encyclopedia</small><br>
+                        <small>Hostname: ${window.location.hostname}</small><br>
+                        <small>If on mobile, ensure backend is accessible at ${API_URL}</small>
+                    </div>
+                `;
+                errorEl.style.display = 'block';
+                loadingEl.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        initStarfield();
+        loadEncyclopedia();
+    
+        // Related entry click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('related-entry-link')) {
+                e.preventDefault();
+                const entryId = e.target.getAttribute('data-entry-id');
+                if (entryId && encyclopediaData) {
+                    // Find the entry across all categories
+                    for (const category in encyclopediaData) {
+                        if (category === 'metadata') continue;
+                        if (encyclopediaData[category] && encyclopediaData[category][entryId]) {
+                            displayEntry(encyclopediaData[category][entryId], category);
+                            document.getElementById('entryModal').style.display = 'flex';
+                            // Scroll to top of modal
+                            document.querySelector('.modal-content').scrollTop = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    
+    </script>
+</body>
+</html>
+
