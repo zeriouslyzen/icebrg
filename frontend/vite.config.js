@@ -26,20 +26,4 @@ export default defineConfig({
       }
     }
   },
-  plugins: [
-    {
-      name: 'copy-encyclopedia',
-      closeBundle() {
-        // Copy encyclopedia.html to dist after build
-        try {
-          copyFileSync(
-            resolve(__dirname, 'encyclopedia.html'),
-            resolve(__dirname, 'dist', 'encyclopedia.html')
-          );
-        } catch (error) {
-          console.warn('Could not copy encyclopedia.html:', error);
-        }
-      }
-    }
-  ]
 });
