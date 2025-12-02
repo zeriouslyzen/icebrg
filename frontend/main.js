@@ -89,7 +89,7 @@ let conversationContext = {
     lastAssistantResponse: null
 };
 let settings = {
-    primaryModel: 'llama3.1:8b',
+    primaryModel: 'gemini-2.0-flash-exp',  // Default to Gemini Flash (fast, cheap)
     temperature: 0.7,
     maxTokens: 2000
 };
@@ -3242,7 +3242,8 @@ async function sendQuery() {
     const sendButton = document.getElementById('sendButton');
     const modeSelect = document.getElementById('modeSelect');
     const agentSelect = document.getElementById('agentSelect');
-    const degradationMode = document.getElementById('degradationMode');
+    const agentDisplay = document.getElementById('agentDisplay');
+    const agentDisplayValue = document.getElementById('agentDisplayValue');
     const query = input.value.trim();
     
     // Strict validation - don't send empty queries
@@ -3255,8 +3256,14 @@ async function sendQuery() {
     
     // Get selected mode and agent
     const mode = modeSelect.value;
-    const agent = agentSelect.value;
-    const useDegradation = degradationMode.checked;
+    // In chat mode, always use secretary (from display or select)
+    let agent;
+    if (mode === 'chat' && agentDisplay && agentDisplay.style.display !== 'none') {
+        agent = 'secretary'; // Always secretary in chat mode
+    } else {
+        agent = agentSelect ? agentSelect.value : 'auto';
+    }
+    const useDegradation = false; // Removed degradation mode
     
     // Client-side preprocessing (leverages user's device)
     let preprocessedQuery = null;
@@ -3315,7 +3322,7 @@ async function sendQuery() {
     if (agent !== 'auto' || mode !== 'chat') {
         const metaInfo = document.createElement('div');
         metaInfo.className = 'message-meta';
-        metaInfo.textContent = `${mode} mode${agent !== 'auto' ? ` • ${agent}` : ''}${useDegradation ? ' • Degradation' : ''}`;
+        metaInfo.textContent = `${mode} mode${agent !== 'auto' ? ` • ${agent}` : ''}`;
         userMessage.appendChild(metaInfo);
     }
     
@@ -3559,7 +3566,7 @@ async function sendQuery() {
                     query: query, 
                     mode: mode,
                     agent: agent,
-                    degradation_mode: useDegradation,
+                    degradation_mode: false,
                     files: filesData,
                     settings: settings,
                     data: birthData,  // Include birth data and/or algorithmic_data for astro-physiology mode
@@ -3610,7 +3617,7 @@ async function sendQuery() {
                             query: query, 
                             mode: mode,
                             agent: agent,
-                            degradation_mode: useDegradation,
+                            degradation_mode: false,
                             files: filesData,
                             settings: settings
                         };
@@ -3743,7 +3750,7 @@ async function sendQuery() {
                     query: query,
                     mode: mode,
                     agent: agent,
-                    degradation_mode: useDegradation,
+                    degradation_mode: false,
                     settings: settings,
                     stream: true,
                     files: filesData,
@@ -5739,15 +5746,54 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modeSelect && visualizationPanels) {
         console.log('📋 Setting up mode selection handler');
         
-        // Initialize agent options on page load
-        if (modeSelect && typeof updateAgentOptionsForMode === 'function') {
-            const initialMode = modeSelect.value || 'chat';
-            updateAgentOptionsForMode(initialMode);
-        }
+            // Initialize agent options on page load
+            if (modeSelect && typeof updateAgentOptionsForMode === 'function') {
+                const initialMode = modeSelect.value || 'chat';
+                updateAgentOptionsForMode(initialMode);
+                // Initialize agent display for chat mode
+                const agentSelect = document.getElementById('agentSelect');
+                const agentDisplay = document.getElementById('agentDisplay');
+                const agentDisplayValue = document.getElementById('agentDisplayValue');
+                
+                if (initialMode === 'chat') {
+                    if (agentSelect) agentSelect.style.display = 'none';
+                    if (agentDisplay) {
+                        agentDisplay.style.display = 'flex';
+                        if (agentDisplayValue) agentDisplayValue.textContent = 'Secretary';
+                    }
+                    console.log('👔 Initial chat mode: Showing agent display (Secretary)');
+                } else {
+                    if (agentSelect) agentSelect.style.display = 'block';
+                    if (agentDisplay) agentDisplay.style.display = 'none';
+                }
+            }
 
         modeSelect.addEventListener('change', (e) => {
             const selectedMode = e.target.value;
             console.log('🔄 Mode changed to:', selectedMode);
+            
+            const agentSelect = document.getElementById('agentSelect');
+            const agentDisplay = document.getElementById('agentDisplay');
+            const agentDisplayValue = document.getElementById('agentDisplayValue');
+            
+            // In chat mode: Show agent display, hide dropdown
+            if (selectedMode === 'chat') {
+                if (agentSelect) agentSelect.style.display = 'none';
+                if (agentDisplay) {
+                    agentDisplay.style.display = 'flex';
+                    if (agentDisplayValue) agentDisplayValue.textContent = 'Secretary';
+                }
+                console.log('👔 Chat mode: Showing agent display (Secretary)');
+            } else {
+                // Other modes: Show dropdown, hide display
+                if (agentSelect) agentSelect.style.display = 'block';
+                if (agentDisplay) agentDisplay.style.display = 'none';
+                if (agentSelect) {
+                    agentSelect.disabled = false;
+                    agentSelect.title = '';
+                }
+                console.log('🔄 Other mode: Showing agent dropdown');
+            }
             
             // V2: Update agent options based on mode (before visibility check)
             if (typeof updateAgentOptionsForMode === 'function') {
@@ -7596,10 +7642,21 @@ function updateAgentOptionsForMode(mode) {
             <option value="digestive_expert">Digestive Expert</option>
         `;
         console.log(' Updated agent select for astro-physiology mode');
+    } else if (mode === 'chat') {
+        // Chat mode: Show agent display instead of dropdown
+        const agentDisplay = document.getElementById('agentDisplay');
+        const agentDisplayValue = document.getElementById('agentDisplayValue');
+        if (agentSelect) agentSelect.style.display = 'none';
+        if (agentDisplay) {
+            agentDisplay.style.display = 'flex';
+            if (agentDisplayValue) agentDisplayValue.textContent = 'Secretary';
+        }
+        console.log('👔 Chat mode: Showing agent display (Secretary)');
     } else {
         // Other modes: Show standard agents
         agentSelect.innerHTML = `
             <option value="auto">Auto (Full Protocol)</option>
+            <option value="secretary">Secretary (Chat Assistant)</option>
             <option value="surveyor">Surveyor</option>
             <option value="dissident">Dissident</option>
             <option value="synthesist">Synthesist</option>
@@ -7612,6 +7669,9 @@ function updateAgentOptionsForMode(mode) {
             <option value="swarm">Swarm</option>
             <option value="ide">IDE Agent</option>
         `;
+        // Unlock for other modes
+        agentSelect.disabled = false;
+        agentSelect.title = '';
     }
     
     // Restore selection if still valid, otherwise default to auto

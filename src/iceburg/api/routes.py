@@ -199,3 +199,83 @@ async def get_system_status():
     """Get comprehensive system status"""
     return system_integrator.get_system_status()
 
+
+@router.get("/api/encyclopedia/news")
+async def get_encyclopedia_news():
+    """Get relevant news and updates for encyclopedia"""
+    try:
+        from .news_scraper import get_news_with_summaries
+        articles = await get_news_with_summaries(max_results=15)
+        return {
+            "articles": articles,
+            "count": len(articles),
+            "fetched_at": datetime.now().isoformat()
+        }
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error fetching encyclopedia news: {e}")
+        return {
+            "articles": [],
+            "count": 0,
+            "error": str(e),
+            "fetched_at": datetime.now().isoformat()
+        }
+
+
+@router.get("/api/test/ollama")
+async def test_ollama():
+    """
+    Lightweight health check for local Ollama provider.
+
+    - Does NOT change global provider configuration.
+    - Simply attempts a tiny completion using OllamaProvider and reports status.
+    """
+    import logging
+    from ..providers.ollama_provider import OllamaProvider
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        import asyncio
+        provider = OllamaProvider()
+        # Minimal prompt to avoid wasting tokens / time
+        prompt = "Return a 1-sentence confirmation that Ollama is reachable."
+        # Use a model that's likely to be available; try llama3:8b first, fallback to llama3.1:8b
+        model = "llama3:8b"
+        try:
+            content = await asyncio.to_thread(
+                provider.chat_complete,
+                model=model,
+                prompt=prompt,
+                system="You are a diagnostic agent. Respond with a short confirmation only.",
+                temperature=0.0,
+                options={"max_tokens": 32},
+            )
+        except Exception as model_error:
+            # Try fallback model
+            logger.warning(f"Model {model} not available, trying llama3.1:8b: {model_error}")
+            model = "llama3.1:8b"
+            content = await asyncio.to_thread(
+                provider.chat_complete,
+                model=model,
+                prompt=prompt,
+                system="You are a diagnostic agent. Respond with a short confirmation only.",
+                temperature=0.0,
+                options={"max_tokens": 32},
+            )
+
+        return {
+            "status": "ok",
+            "provider": "ollama",
+            "model": model,
+            "message": content.strip() if isinstance(content, str) else str(content),
+            "timestamp": datetime.now().isoformat(),
+        }
+    except Exception as e:
+        logger.error(f"Ollama health check failed: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail=f"Ollama health check failed: {e}",
+        )
+

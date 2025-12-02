@@ -608,6 +608,14 @@ def run(cfg: IceburgConfig, vs: VectorStore, query: str, verbose: bool = False, 
     import logging
     logger = logging.getLogger(__name__)
     
+    # FAST PATH: Simple queries get instant response, no deep research
+    simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
+    if query.lower().strip() in simple_queries:
+        logger.info(f"[SURVEYOR] Simple query '{query}' detected - returning fast response, skipping deep research")
+        if thinking_callback:
+            thinking_callback("Quick response for simple greeting...")
+        return "Hello! How can I help you today?"
+    
     if cfg.fast:
         logger.info(f"[SURVEYOR] FAST MODE ENABLED - Skipping slow operations")
     else:
@@ -681,6 +689,8 @@ def run(cfg: IceburgConfig, vs: VectorStore, query: str, verbose: bool = False, 
     
     # LAYER 1: Check ICEBURG's own data and research
     # FAST MODE: Use fewer search results (k=3 instead of k=10)
+    # CRITICAL: Handle VectorStore errors gracefully - work without it if needed
+    hits = []
     try:
         if thinking_callback:
             thinking_callback("I'm searching ICEBURG's knowledge base...")
@@ -688,9 +698,20 @@ def run(cfg: IceburgConfig, vs: VectorStore, query: str, verbose: bool = False, 
         search_k = 3 if cfg.fast else 10
         if cfg.fast:
             logger.info(f"[SURVEYOR] FAST MODE: Using k={search_k} for semantic search (vs k=10)")
-        hits = vs.semantic_search(query, k=search_k)
-        if hits is None:
+        
+        # Try to use VectorStore, but don't fail if it doesn't work
+        try:
+            hits = vs.semantic_search(query, k=search_k)
+            if hits is None:
+                hits = []
+        except Exception as vs_error:
+            logger.warning(f"[SURVEYOR] VectorStore search failed: {vs_error}. Continuing without knowledge base search.")
             hits = []
+            if thinking_callback:
+                thinking_callback("Working without knowledge base access - using general knowledge...")
+    except Exception as e:
+        logger.warning(f"[SURVEYOR] Error accessing VectorStore: {e}. Continuing without knowledge base.")
+        hits = []
         
         if thinking_callback and hits:
             iceburg_count = len([h for h in hits if any(kw in h.metadata.get('source', '').lower() for kw in ['research_outputs', 'iceburg', 'knowledge_base', 'lab_runs', 'research', 'memory'])])

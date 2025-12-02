@@ -8106,13 +8106,20 @@
       "id": "tcm_five_elements",
       "name": "TCM Five Elements",
       "category": "tcm_correlations",
-      "description": "Traditional Chinese Medicine five element system",
+      "description": "Framework in Traditional Chinese Medicine that groups organs, emotions, and physiological processes into five phases (Wood, Fire, Earth, Metal, Water) used to recognize patterns of imbalance and guide treatment.",
       "biological_functions": [
-        "tcm_diagnosis",
-        "treatment_planning"
+        "pattern_recognition_framework",
+        "symptom_clustering",
+        "treatment_planning",
+        "longitudinal_case_tracking"
       ],
+      "field_model_mapping": [
+        "links organ systems and emotions to characteristic patterns of autonomic and bioelectric activity",
+        "treats the body as a network of interacting functional fields rather than isolated organs"
+      ],
+      "research_notes": "The five-element framework is a high-level clinical pattern system, not a map of anatomical structures. It is used by practitioners to organize observations across multiple domains (symptoms, tongue, pulse, emotional state) into a coherent pattern. Modern research has attempted to correlate some element pairings with autonomic tone, hormonal patterns, and circadian rhythms, but there is no single standardized biomedical mapping. Within this encyclopedia it is treated as a conceptual field model for organizing multiscale patterns, not as a directly measured physical theory.",
       "evidence_level": "theoretical",
-      "origin_story": "TCM five elements are a traditional diagnostic and treatment framework.",
+      "origin_story": "The five elements (Wood, Fire, Earth, Metal, Water) emerged in classical Chinese philosophy as a way of describing cyclical change in nature. Traditional Chinese Medicine adopted this model to describe relationships between organs, emotions, and environmental influences. Over centuries it became a diagnostic language: instead of naming diseases by single causes, it encodes patterns of excess/deficiency and flow between functional systems. In the context of ICEBURG, it is interpreted as an early attempt to model the body as interacting regulatory fields rather than as separate mechanical parts.",
       "sources": [],
       "studies": []
     },
@@ -8120,13 +8127,19 @@
       "id": "tcm_meridians",
       "name": "TCM Meridians",
       "category": "tcm_correlations",
-      "description": "Energy pathways in Traditional Chinese Medicine",
+      "description": "Longitudinal pathways used in Traditional Chinese Medicine to describe how functional signals and symptoms propagate through the body, forming the basis for acupuncture point selection.",
       "biological_functions": [
         "tcm_diagnosis",
-        "acupuncture"
+        "acupuncture",
+        "body_mapping_of_symptoms"
       ],
+      "field_model_mapping": [
+        "hypothesized alignment with connective tissue planes, peripheral nerve bundles, and bioelectric conduction paths",
+        "used as a practical coordinate system for modulating local and systemic fields via needles, pressure, or heat"
+      ],
+      "research_notes": "Meridians are not discrete tubes or vessels that can be dissected. They are a clinical mapping system connecting surface points with internal sensations and organ functions. Biophysical studies have reported correlations between some meridian lines and changes in skin conductance, connective tissue organization, or low-resistance electrical pathways, but results are heterogeneous and far from a unified theory. In this encyclopedia they are treated as a pragmatic field coordinate system for intervention rather than a confirmed anatomical structure.",
       "evidence_level": "theoretical",
-      "origin_story": "TCM meridians are traditional energy pathways used in acupuncture and diagnosis.",
+      "origin_story": "Descriptions of channels and collaterals (jingluo) appear in early Chinese medical texts as a way to explain how needling or pressure at one location can influence distant sensations or organ function. Over time these pathways were standardized into meridian maps used in acupuncture atlases. In a field-based view, these maps approximate recurrent paths where mechanical, neural, and electrical signals can be most effectively modulated.",
       "sources": [],
       "studies": []
     },
@@ -8134,13 +8147,19 @@
       "id": "tcm_qi",
       "name": "TCM Qi",
       "category": "tcm_correlations",
-      "description": "Vital energy in Traditional Chinese Medicine",
+      "description": "Core TCM concept describing the overall vitality, movement, and regulation of processes in the body, often translated as vital energy or functional capacity.",
       "biological_functions": [
-        "tcm_concept",
-        "health_assessment"
+        "integrated_functional_capacity",
+        "systemic_regulation_descriptor",
+        "health_assessment_language"
       ],
+      "field_model_mapping": [
+        "encodes the state of the body's global regulatory fields (autonomic, bioelectric, metabolic)",
+        "distinguishes between free flow, stagnation, deficiency, and excess as patterns of field coherence or blockage"
+      ],
+      "research_notes": "Qi is a summary variable, not a single measurable quantity. In modern terms it overlaps with concepts like overall functional reserve, autonomic balance, and resilience to perturbation. Some research on heart-rate variability, bioelectromagnetic measures, and fatigue syndromes can be mapped to aspects of 'Qi' states, but there is no one-to-one biomarker. Here it is treated as a phenomenological label for the quality of multi-system fields and their ability to adapt.",
       "evidence_level": "theoretical",
-      "origin_story": "Qi is a fundamental concept in TCM, representing vital energy.",
+      "origin_story": "Qi appears in early Chinese texts as a concept linking breath, weather, and life processes. Medical writers used it to describe both material substances (food, air) and more abstract regulatory functions (defensive Qi, nutritive Qi). In this encyclopedia it is interpreted as an early linguistic attempt to describe system-wide field dynamics before the language of electricity, hormones, or networks existed.",
       "sources": [],
       "studies": []
     },
@@ -8148,13 +8167,19 @@
       "id": "tcm_yin_yang",
       "name": "TCM Yin-Yang",
       "category": "tcm_correlations",
-      "description": "Balance of opposing forces in Traditional Chinese Medicine",
+      "description": "Binary-yet-dynamic framework in TCM for describing complementary qualities in the body (hot/cold, active/resting, inner/outer) and how their balance shifts over time.",
       "biological_functions": [
-        "tcm_diagnosis",
-        "health_assessment"
+        "pattern_polarity_classification",
+        "homeostasis_description",
+        "tcm_diagnosis"
       ],
+      "field_model_mapping": [
+        "maps onto sympathetic/parasympathetic balance, anabolic/catabolic states, and excitatory/inhibitory field dynamics",
+        "emphasizes that extremes of either pole and rapid flips between them are signs of dysregulation"
+      ],
+      "research_notes": "Yin-Yang is intentionally qualitative. It compresses complex patterns into simple polarity labels that can still track change over time. Many modern physiological axes (stress vs recovery, day vs night hormone profiles, inflammatory vs resolving phases) can be framed as Yin-Yang style oppositions. The framework itself is not experimentally testable, but it can be used to organize multi-parameter data into more interpretable clusters.",
       "evidence_level": "theoretical",
-      "origin_story": "Yin-Yang is a fundamental concept in TCM, representing balance.",
+      "origin_story": "The Yin-Yang symbol and associated philosophy long predate formal medicine. TCM adapted it to describe physiological balance: organs, tissues, and symptoms are labeled more Yin or more Yang based on qualities like temperature, depth, and activity. In ICEBURG's context it is used as a high-level template for thinking about how opposing field dynamics create stability when balanced and pathology when extreme.",
       "sources": [],
       "studies": []
     },
@@ -8162,13 +8187,19 @@
       "id": "tcm_zang_fu",
       "name": "TCM Zang-Fu",
       "category": "tcm_correlations",
-      "description": "Organ systems in Traditional Chinese Medicine",
+      "description": "Traditional classification of organ systems into Zang (solid, more Yin) and Fu (hollow, more Yang), emphasizing functional relationships rather than pure anatomy.",
       "biological_functions": [
         "tcm_diagnosis",
-        "treatment_planning"
+        "treatment_planning",
+        "functional_organ_networks"
       ],
+      "field_model_mapping": [
+        "groups organs into functional field networks (for example, Liver–Gallbladder, Heart–Small Intestine) that co-vary in symptoms and emotional tone",
+        "encodes directional flow of regulation (storage vs movement, transformation vs transport)"
+      ],
+      "research_notes": "Zang-Fu categories combine physical organs with associated tissues, emotions, and sensory functions. They do not line up exactly with Western organ pathology, but they are internally consistent for tracking symptom clusters and treatment response. This entry treats Zang-Fu as a way of modeling organ networks as coupled fields rather than isolated pumps or glands, while acknowledging that the mapping to specific modern biomarkers is still largely theoretical.",
       "evidence_level": "theoretical",
-      "origin_story": "Zang-Fu are organ systems in TCM, with functions distinct from Western medicine.",
+      "origin_story": "Classical texts describe each Zang organ with a 'sphere of influence' that includes tissues, emotions, and sensory orifices. Fu organs are paired with Zang partners and handle movement, transformation, and transport. Clinically, this network view allowed practitioners to see how disturbances in one area show up in others. In the field-based framing, Zang-Fu networks resemble coupled regulatory fields that share coherent patterns across multiple layers.",
       "sources": [],
       "studies": []
     },
@@ -8176,13 +8207,19 @@
       "id": "tcm_pulse_diagnosis",
       "name": "TCM Pulse Diagnosis",
       "category": "tcm_correlations",
-      "description": "Pulse reading in Traditional Chinese Medicine",
+      "description": "Systematic palpation of the radial pulse at multiple positions and depths to infer patterns in organ networks and overall regulatory state.",
       "biological_functions": [
         "tcm_diagnosis",
-        "health_assessment"
+        "health_assessment",
+        "longitudinal_state_tracking"
       ],
+      "field_model_mapping": [
+        "reads combined information from cardiovascular dynamics, autonomic tone, and vascular stiffness as a proxy for system-wide fields",
+        "classifies pulse qualities (wiry, slippery, weak, rapid) that approximate different field states such as tension, congestion, or depletion"
+      ],
+      "research_notes": "Modern cardiology and hemodynamics measure many of the same underlying signals (waveform shape, variability, stiffness), but with instruments instead of fingers. Studies on inter-rater reliability of traditional pulse diagnosis are mixed, and standardized mapping to specific diseases is limited. However, the idea that the peripheral pulse carries rich information about systemic regulation is well supported; the open question is how much of the traditional pattern language can be grounded in measured signals.",
       "evidence_level": "theoretical",
-      "origin_story": "TCM pulse diagnosis is a traditional diagnostic method.",
+      "origin_story": "Pulse diagnosis developed as one of the core physical examination methods in TCM because it provided a continuous, dynamic signal that could be felt without instruments. Over time, detailed vocabularies of pulse qualities were built to capture subtle differences in tension, depth, and rhythm. In this encyclopedia it is interpreted as an early human-sensor interface for reading complex field dynamics through a single accessible channel.",
       "sources": [],
       "studies": []
     },
@@ -8190,13 +8227,18 @@
       "id": "tcm_tongue_diagnosis",
       "name": "TCM Tongue Diagnosis",
       "category": "tcm_correlations",
-      "description": "Tongue examination in Traditional Chinese Medicine",
+      "description": "Visual inspection of tongue body and coating to assess circulation, fluid status, and digestive and systemic regulation patterns.",
       "biological_functions": [
         "tcm_diagnosis",
         "health_assessment"
       ],
+      "field_model_mapping": [
+        "treats the tongue as a surface projection of internal circulation and fluid fields",
+        "color, shape, and coating thickness are read as indicators of heat/cold, dryness/dampness, and stagnation/free flow"
+      ],
+      "research_notes": "The tongue is richly vascularized and directly exposed, making it a plausible mirror of systemic changes. Some biomedical work has linked tongue color and texture with anemia, cardiovascular status, or digestive disorders, but comprehensive validation of traditional tongue maps is lacking. Here it is treated as a low-cost, qualitative monitoring surface for changes in internal fields, useful for pattern recognition but not a replacement for laboratory diagnostics.",
       "evidence_level": "theoretical",
-      "origin_story": "TCM tongue diagnosis is a traditional diagnostic method.",
+      "origin_story": "Classical medical texts describe regions of the tongue corresponding to different organ networks and note how changes in color, shape, and coating track disease progression. With no imaging technology, the tongue offered a repeatable visual index of internal states. In a modern field-based language it can be seen as a convenient readout plane where microvascular and epithelial changes express deeper regulatory shifts.",
       "sources": [],
       "studies": []
     }

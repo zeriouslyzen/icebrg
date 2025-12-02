@@ -18,7 +18,7 @@ class IceburgConfig:
     oracle_model: str
     embed_model: str
     # Provider abstraction
-    llm_provider: str = "ollama"  # ollama | llama_cpp | vllm
+    llm_provider: str = "google"  # google | anthropic | openai
     provider_url: str = ""        # base URL for HTTP providers
     timeout_s: int = 60
     enable_code_generation: bool = True
@@ -54,7 +54,7 @@ def load_config() -> IceburgConfig:
         synthesist_model=synthesist_m,
         oracle_model=oracle_m,
         embed_model=embed_m,
-        llm_provider=os.getenv("ICEBURG_LLM_PROVIDER", "ollama"),
+        llm_provider=os.getenv("ICEBURG_LLM_PROVIDER", "google"),  # Default to Google/Gemini
         provider_url=os.getenv("ICEBURG_PROVIDER_URL", ""),
         timeout_s=int(os.getenv("ICEBURG_PROVIDER_TIMEOUT_S", "60")),
         enable_code_generation=enable_code_gen,

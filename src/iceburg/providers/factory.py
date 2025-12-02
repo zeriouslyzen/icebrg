@@ -13,7 +13,8 @@ def provider_factory(cfg: Any) -> LLMProvider:
     if _PROVIDER_SINGLETON is not None:
         return _PROVIDER_SINGLETON
     # Respect config, but allow env to prefer high-capacity backends in server contexts
-    provider = (getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER") or "ollama").lower()
+    # Default to Google/Gemini (no fallback)
+    provider = (getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER") or "google").lower()
     prefer_vllm = os.getenv("ICEBURG_PREFER_VLLM", "0") == "1"
     host = getattr(cfg, "provider_host", None) or os.getenv("HOST", "localhost")
     port = getattr(cfg, "provider_port", None) or os.getenv("OLLAMA_PORT", "11434")
@@ -32,14 +33,36 @@ def provider_factory(cfg: Any) -> LLMProvider:
         _PROVIDER_SINGLETON = VLLMProvider(base_url=url, timeout_s=timeout_s)
         return _PROVIDER_SINGLETON
 
+    # Optional: direct Ollama provider (no fallback)
+    if provider == "ollama":
+        from .ollama_provider import OllamaProvider
+
+        _PROVIDER_SINGLETON = OllamaProvider(base_url=url, timeout_s=timeout_s)
+        return _PROVIDER_SINGLETON
+
+    # Try Google/Gemini first (default)
+    if provider == "google" or provider == "gemini" or provider == "auto" or not provider:
+        try:
+            from .google_provider import GoogleProvider
+            _PROVIDER_SINGLETON = GoogleProvider(timeout_s=timeout_s)
+            return _PROVIDER_SINGLETON
+        except (ImportError, ValueError) as e:
+            # No fallback - fail if Google not available
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Google/Gemini provider not available: {e}. Please configure GOOGLE_API_KEY.")
+            raise
+
     if provider == "anthropic" or provider == "claude":
         try:
             from .anthropic_provider import AnthropicProvider
             _PROVIDER_SINGLETON = AnthropicProvider(timeout_s=timeout_s)
             return _PROVIDER_SINGLETON
         except (ImportError, ValueError) as e:
-            # Fallback to Ollama if Anthropic not available
-            pass
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Anthropic provider not available: {e}. Please configure ANTHROPIC_API_KEY.")
+            raise
 
     if provider == "openai" or provider == "gpt":
         try:
@@ -47,21 +70,12 @@ def provider_factory(cfg: Any) -> LLMProvider:
             _PROVIDER_SINGLETON = OpenAIProvider(timeout_s=timeout_s)
             return _PROVIDER_SINGLETON
         except (ImportError, ValueError) as e:
-            # Fallback to Ollama if OpenAI not available
-            pass
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"OpenAI provider not available: {e}. Please configure OPENAI_API_KEY.")
+            raise
 
-    if provider == "google" or provider == "gemini":
-        try:
-            from .google_provider import GoogleProvider
-            _PROVIDER_SINGLETON = GoogleProvider(timeout_s=timeout_s)
-            return _PROVIDER_SINGLETON
-        except (ImportError, ValueError) as e:
-            # Fallback to Ollama if Google not available
-            pass
-
-    from .ollama_provider import OllamaProvider
-
-    _PROVIDER_SINGLETON = OllamaProvider(base_url=url, timeout_s=timeout_s)
-    return _PROVIDER_SINGLETON
+    # No automatic fallback - fail if provider not recognized
+    raise ValueError(f"Unknown LLM provider: {provider}. Supported providers: google, anthropic, openai, ollama, llama_cpp, vllm")
 
 

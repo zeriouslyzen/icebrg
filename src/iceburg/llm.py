@@ -11,7 +11,7 @@ from .providers.factory import provider_factory
 
 
 def _generate_fallback_response(prompt: str, messages: list) -> str:
-    """Generate a basic fallback response when Ollama is unavailable"""
+    """Generate a basic fallback response when LLM provider is unavailable"""
     # Extract the user's query from the messages
     user_query = ""
     for msg in messages:
@@ -20,12 +20,13 @@ def _generate_fallback_response(prompt: str, messages: list) -> str:
             break
     
     # Provide a helpful response indicating the system is in fallback mode
+    provider = os.getenv("ICEBURG_LLM_PROVIDER", "google").upper()
     if "research" in user_query.lower():
-        return "ICEBURG is currently running in fallback mode. For research queries, please ensure Ollama is installed and running. The system can still process structured data and perform basic analysis."
+        return f"ICEBURG is currently running in fallback mode. For research queries, please ensure {provider} is properly configured. The system can still process structured data and perform basic analysis."
     elif "analysis" in user_query.lower():
-        return "ICEBURG is in fallback mode. Analysis capabilities are limited without the full LLM backend. Please install Ollama for complete functionality."
+        return f"ICEBURG is in fallback mode. Analysis capabilities are limited without the full LLM backend. Please configure {provider} for complete functionality."
     else:
-        return f"ICEBURG fallback mode: Unable to process '{user_query[:50]}...' without Ollama. Please install and configure Ollama for full AI capabilities."
+        return f"ICEBURG fallback mode: Unable to process '{user_query[:50]}...' without {provider}. Please configure the LLM provider for full AI capabilities."
 
 
 # LLM Response Caching System
@@ -230,14 +231,24 @@ def chat_complete(
 
     cfg = load_config()
     provider = provider_factory(cfg)
-    content = provider.chat_complete(
-        model=model,
-        prompt=prompt,
-        system=system,
-        temperature=merged_opts.get("temperature", temperature),
-        options=merged_opts,
-        images=images,
-    )
+    
+    # Use primary provider (default: Google/Gemini) - no fallback
+    try:
+        content = provider.chat_complete(
+            model=model,
+            prompt=prompt,
+            system=system,
+            temperature=merged_opts.get("temperature", temperature),
+            options=merged_opts,
+            images=images,
+        )
+    except Exception as e:
+        # No fallback - raise the error directly
+        primary_provider = getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER", "google")
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Primary provider ({primary_provider}) failed: {e}. No fallback available.")
+        raise
 
     # Cache the response
     _llm_cache.set(cache_key, content)

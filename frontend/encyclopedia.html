@@ -273,28 +273,6 @@
             color: var(--text-primary);
         }
 
-        .encyclopedia-search {
-            position: relative;
-            max-width: 600px;
-        }
-
-        .encyclopedia-search input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all var(--transition-base);
-        }
-
-        .encyclopedia-search input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-        }
-
         .encyclopedia-search-icon {
             position: absolute;
             left: 1rem;
@@ -304,22 +282,220 @@
             pointer-events: none;
         }
 
+        /* Introduction Section */
+        .encyclopedia-intro {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(10, 10, 10, 0.7) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            animation: fade-in-up 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .encyclopedia-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .intro-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+
+        .intro-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .intro-content {
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .intro-content p {
+            margin-bottom: 1.25rem;
+        }
+
+        .intro-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .intro-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .intro-section {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .intro-section:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .intro-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+
+        .intro-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .intro-section-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Sidebar Navigation */
+        .encyclopedia-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .encyclopedia-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .sidebar-category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-category-item {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-category-item:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-category-item.active {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-category-name {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .sidebar-category-count {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+
+        .encyclopedia-main {
+            min-width: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .encyclopedia-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .encyclopedia-sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                margin-bottom: 2rem;
+            }
+        }
+
         .encyclopedia-categories {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.25rem;
             margin-bottom: 3rem;
         }
 
         @media (max-width: 768px) {
             .encyclopedia-categories {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 0.75rem;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
+            }
+
+            .encyclopedia-intro {
+                padding: 1.5rem;
+            }
+
+            .intro-features {
+                grid-template-columns: 1fr;
             }
         }
 
         .category-card {
-            background: var(--bg-elevated);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
             border: 1px solid var(--border-primary);
             border-radius: 12px;
             padding: 1.5rem;
@@ -327,6 +503,9 @@
             transition: all var(--transition-base);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 140px;
         }
 
         .category-card::before {
@@ -343,8 +522,9 @@
 
         .category-card:hover {
             border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
         }
 
         .category-card:hover::before {
@@ -353,22 +533,58 @@
 
         .category-card.active {
             border-color: var(--accent-primary);
-            background: var(--bg-tertiary);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
         }
 
         .category-card.active::before {
             opacity: 1;
         }
 
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+
         .category-name {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            flex: 1;
+        }
+
+        .category-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .category-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .category-count {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .category-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .encyclopedia-content {
@@ -561,9 +777,379 @@
             transform: translateX(-4px);
         }
 
+        /* Encyclopedia Navbar */
+        .encyclopedia-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 2rem;
+            margin: -2rem -2rem 0 -2rem;
+        }
+
+        .encyclopedia-back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            margin-top: 0.75rem;
+            margin-left: 2rem;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .encyclopedia-back-button:hover {
+            color: var(--text-primary);
+            transform: translateX(-3px);
+        }
+
+        .encyclopedia-back-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* News Ticker */
+        .news-ticker {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            position: relative;
+            height: 36px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-content {
+            display: inline-flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: ticker-scroll 60s linear infinite;
+            will-change: transform;
+        }
+
+        .ticker-label {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 1.5rem;
+            padding: 0 1rem;
+            flex-shrink: 0;
+        }
+
+        .ticker-item {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-right: 4rem;
+            display: inline-block;
+        }
+
+        .ticker-item::after {
+            content: ' • ';
+            color: var(--text-tertiary);
+            margin: 0 1.5rem;
+        }
+
+        @keyframes ticker-scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .ticker-content:hover {
+            animation-play-state: paused;
+        }
+
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all var(--transition-base);
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .news-toggle {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .news-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent-primary);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* News & Updates Section */
+        .encyclopedia-news-section {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(10, 10, 10, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .news-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .news-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .news-refresh-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-size: 0.9rem;
+        }
+
+        .news-refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .news-filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .news-loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .news-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .news-card.suppressed {
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .news-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .news-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .news-card-source {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .news-card-summary {
+            margin: 1rem 0;
+        }
+
+        .news-card-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .news-card-summary li {
+            padding: 0.5rem 0;
+            padding-left: 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .news-card-summary li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .news-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .news-card-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all var(--transition-base);
+        }
+
+        .news-card-link:hover {
+            text-decoration: underline;
+        }
+
+        .news-card-badge {
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+        }
+
+        .news-card-badge.suppressed {
+            background: rgba(255, 200, 0, 0.2);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        @media (max-width: 768px) {
+            .encyclopedia-navbar {
+                padding: 1rem;
+                margin: -2rem -1rem 2rem -1rem;
+            }
+
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .encyclopedia-container {
                 padding: 1rem;
+            }
+
+            .encyclopedia-navbar {
+                padding: 0.5rem 1rem;
+                margin: -1rem -1rem 0 -1rem;
+            }
+
+            .encyclopedia-back-button {
+                margin-left: 1rem;
+                margin-top: 0.5rem;
             }
 
             .encyclopedia-title {
@@ -682,23 +1268,155 @@
 
         .item-card-footer {
             margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .item-card-view-btn {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background: transparent;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
             border: 1px solid var(--border-primary);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .item-card-view-btn:hover {
             border-color: var(--accent-primary);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .item-card-iceburg-btn {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid var(--border-primary);
+            background: radial-gradient(circle at 30% 0%, rgba(0, 212, 255, 0.35), transparent 55%), rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .item-card-iceburg-btn:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .item-card-iceburg-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Right-side ICEBURG explain panel */
+        .entry-explain-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 85vw;
+            height: 100vh;
+            background: rgba(6, 10, 20, 0.96);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: -16px 0 40px rgba(0, 0, 0, 0.6);
+            z-index: 11000;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease;
+        }
+
+        .entry-explain-panel.active {
+            right: 0;
+        }
+
+        .entry-explain-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .entry-explain-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .entry-explain-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: 1px solid var(--border-primary);
+            background: transparent;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .entry-explain-close:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .entry-explain-body {
+            padding: 1rem 1.25rem 1.5rem;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .explain-section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-tertiary);
+            margin-top: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .explain-section-body {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .explain-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .explain-chip {
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        @media (max-width: 768px) {
+            .entry-explain-panel {
+                width: 100%;
+                right: -100%;
+            }
         }
 
         /* Modal Styles */
@@ -869,13 +1587,24 @@
         <div class="celestial-glow"></div>
     </div>
 
+        <!-- Encyclopedia Navbar -->
+    <nav class="encyclopedia-navbar">
+        <!-- News Ticker -->
+        <div class="news-ticker" id="newsTicker">
+            <div class="ticker-content" id="tickerContent">
+                <span class="ticker-label">Updates:</span>
+                <span class="ticker-item">Loading latest research updates...</span>
+            </div>
+        </div>
+    </nav>
+
+    <button class="encyclopedia-back-button" onclick="window.location.href='/'" aria-label="Back to ICEBURG">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
     <div class="encyclopedia-container">
-        <a href="/" class="back-button">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Back to ICEBURG
-        </a>
 
         <!-- Enhanced Hero Section -->
         <div class="encyclopedia-hero">
@@ -887,10 +1616,6 @@
                     </h1>
                     <div class="title-underline"></div>
                 </div>
-                <p class="encyclopedia-subtitle">
-                    Mapping the connections between celestial phenomena and biological systems through rigorous scientific research
-                </p>
-                
                 <!-- Quick Stats -->
                 <div class="hero-stats">
                     <div class="stat-item">
@@ -935,10 +1660,103 @@
             </div>
         </div>
 
-        <div id="categoriesContainer" class="encyclopedia-categories"></div>
+        <!-- Introduction Section -->
+        <div class="encyclopedia-intro">
+            <div class="intro-header">
+                <h2 class="intro-title">Understanding Celestial-Biological Correlations</h2>
+            </div>
+            <div class="intro-content">
+                <p>The Celestial Encyclopedia represents a systematic investigation into the fundamental patterns connecting celestial phenomena and biological systems. This knowledge base synthesizes rigorous scientific research, empirical observations, and evidence-based correlations to map the intricate relationships between electromagnetic fields, planetary dynamics, cosmic events, and biological processes.</p>
+                
+                <p><strong>Pattern Recognition and Holistic Understanding:</strong> The encyclopedia employs advanced pattern recognition methodologies to identify recurring correlations across multiple domains. Rather than isolated observations, entries are organized to reveal holistic applications—showing how celestial influences manifest across biological systems, from molecular processes to organ function, from cellular rhythms to systemic responses.</p>
+                
+                <p><strong>Evidence-Based Framework:</strong> Every entry is grounded in scientific evidence, with clear distinctions between established findings, theoretical models, and speculative hypotheses. Evidence levels are explicitly marked, allowing users to understand the strength and reliability of each correlation. Research sources, study methodologies, and peer-reviewed publications are documented to enable verification and deeper investigation.</p>
+                
+                <p><strong>Logical Structure and Accessibility:</strong> The knowledge base is organized into 18 distinct domains, each representing a coherent area of investigation. Categories range from fundamental biological systems (neurotransmitters, hormones, cellular processes) to celestial phenomena (electromagnetic environment, Schumann resonance, geomagnetic activity) to advanced research domains (quantum biology, coherence systems, institutional research). This structure enables both targeted exploration and cross-domain pattern discovery.</p>
+                
+                <p><strong>Practical Applications:</strong> Beyond theoretical understanding, the encyclopedia provides insights into practical applications. Entries include information on how celestial-biological correlations can inform health optimization, circadian rhythm alignment, stress management, and environmental adaptation. The holistic approach recognizes that biological systems operate as integrated networks, responding to multiple environmental factors simultaneously.</p>
+            </div>
+            <div class="intro-sections">
+                <div class="intro-section">
+                    <div class="intro-section-header">
+                        <div class="intro-section-title">Pattern Recognition</div>
+                    </div>
+                    <div class="intro-section-content">
+                        Advanced pattern recognition identifies recurring correlations across biological and celestial domains, revealing systemic relationships rather than isolated phenomena.
+                    </div>
+                </div>
+                <div class="intro-section">
+                    <div class="intro-section-header">
+                        <div class="intro-section-title">Evidence-Based</div>
+                    </div>
+                    <div class="intro-section-content">
+                        All entries include explicit evidence levels, research sources, and study methodologies, enabling users to assess the reliability and scientific foundation of each correlation.
+                    </div>
+                </div>
+                <div class="intro-section">
+                    <div class="intro-section-header">
+                        <div class="intro-section-title">Holistic Applications</div>
+                    </div>
+                    <div class="intro-section-content">
+                        Entries reveal how celestial influences manifest across multiple biological systems simultaneously, providing insights for health optimization and environmental adaptation.
+                    </div>
+                </div>
+                <div class="intro-section">
+                    <div class="intro-section-header">
+                        <div class="intro-section-title">Logical Structure</div>
+                    </div>
+                    <div class="intro-section-content">
+                        Organized into 18 coherent knowledge domains with clear categorization, enabling both targeted exploration and cross-domain pattern discovery.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div id="contentContainer" class="encyclopedia-content"></div>
+        <!-- Main Layout with Sidebar -->
+        <div class="encyclopedia-layout">
+            <!-- Sidebar Navigation -->
+            <div class="encyclopedia-sidebar" id="encyclopediaSidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Browse Categories</div>
+                    <div class="sidebar-category-list" id="sidebarCategoryList">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="encyclopedia-main">
+                <div id="categoriesContainer" class="encyclopedia-categories"></div>
+                <div id="contentContainer" class="encyclopedia-content"></div>
+            </div>
+        </div>
         <div id="searchResults" class="search-results" style="display: none;"></div>
+
+        <!-- News & Updates Section -->
+        <section class="encyclopedia-news-section" id="newsSection" style="display: none;">
+            <div class="news-header">
+                <h2 class="news-title">Research News & Updates</h2>
+                <button class="news-refresh-btn" id="newsRefreshBtn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 1V5M9 13V17M1 9H5M13 9H17M3.64 3.64L6.17 6.17M11.83 11.83L14.36 14.36M3.64 14.36L6.17 11.83M11.83 6.17L14.36 3.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+            <div class="news-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="suppressed">Suppressed Research</button>
+                <button class="filter-btn" data-filter="recent">Recent Studies</button>
+                <button class="filter-btn" data-filter="breaking">Breaking News</button>
+            </div>
+            <div class="news-loading" id="newsLoading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Fetching latest research...</p>
+            </div>
+            <div class="news-grid" id="newsGrid">
+                <!-- News articles will be populated here -->
+            </div>
+        </section>
 
         <div id="loadingIndicator" class="loading" style="display: none;">Loading encyclopedia...</div>
         <div id="errorIndicator" class="error" style="display: none;"></div>
@@ -961,11 +1779,27 @@
         </div>
     </div>
 
+    <!-- Right-side ICEBURG explain panel -->
+    <div id="entryExplainPanel" class="entry-explain-panel">
+        <div class="entry-explain-header">
+            <div class="entry-explain-title" id="explainTitle">ICEBURG Explanation</div>
+            <button class="entry-explain-close" onclick="closeExplainPanel()" aria-label="Close explanation">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <div class="entry-explain-body" id="explainBody">
+            <!-- Explanation content will be inserted dynamically -->
+        </div>
+    </div>
+
     <script>
-        // Use current origin for API calls (works for both localhost and Vercel)
-        // On localhost: uses http://localhost:3000 (or whatever port)
-        // On Vercel: uses https://your-domain.vercel.app
-        const API_URL = window.location.origin;
+        // Use backend API URL (port 8000 for localhost, or detect from environment)
+        // On localhost: uses http://localhost:8000 (backend API)
+        // On production: uses same origin or configured API URL
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_URL = isLocalhost ? 'http://localhost:8000' : window.location.origin;
         
         console.log('Encyclopedia API URL:', API_URL, 'Hostname:', window.location.hostname);
 
@@ -1041,23 +1875,94 @@
             }
         }
 
+        // Category icons mapping - SVG icons
+        function getCategoryIcon(categoryId) {
+            const icons = {
+                'celestial_bodies': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
+                'voltage_gates': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>',
+                'neurotransmitters': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1V6M12 18V23M4.22 4.22L7.76 7.76M16.24 16.24L19.78 19.78M1 12H6M18 12H23M4.22 19.78L7.76 16.24M16.24 7.76L19.78 4.22"/></svg>',
+                'hormones': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>',
+                'biophysical_parameters': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3H21V21H3V3Z"/><path d="M3 12H21M12 3V21"/><circle cx="8" cy="8" r="1.5"/><circle cx="16" cy="8" r="1.5"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></svg>',
+                'molecular_chemistry': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
+                'electromagnetic_environment': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/><path d="M12 6V18M6 12H18"/></svg>',
+                'organ_systems': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
+                'cellular_processes': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 1V6M12 18V23M4.22 4.22L7.76 7.76M16.24 16.24L19.78 19.78M1 12H6M18 12H23M4.22 19.78L7.76 16.24M16.24 7.76L19.78 4.22"/></svg>',
+                'circadian_biology': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6V12L16 14"/></svg>',
+                'quantum_biology': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/><circle cx="12" cy="12" r="2"/></svg>',
+                'research_methodologies': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8C21 7.46957 20.7893 6.96086 20.4142 6.58579C20.0391 6.21071 19.5304 6 19 6H5C4.46957 6 3.96086 6.21071 3.58579 6.58579C3.21071 6.96086 3 7.46957 3 8V16C3 16.5304 3.21071 17.0391 3.58579 17.4142C3.96086 17.7893 4.46957 18 5 18H19C19.5304 18 20.0391 17.7893 20.4142 17.4142C20.7893 17.0391 21 16.5304 21 16Z"/><path d="M7 10H17M7 14H12"/></svg>',
+                'tcm_correlations': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 1V6M12 18V23M4.22 4.22L7.76 7.76M16.24 16.24L19.78 19.78M1 12H6M18 12H23"/></svg>',
+                'coherence_systems': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
+                'morphic_fields': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/><path d="M12 6V18M6 12H18"/><circle cx="12" cy="12" r="2"/></svg>',
+                'vedic_knowledge': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
+                'schumann_resonance': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+                'government_research': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>',
+                'patents': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8C21 7.46957 20.7893 6.96086 20.4142 6.58579C20.0391 6.21071 19.5304 6 19 6H5C4.46957 6 3.96086 6.21071 3.58579 6.58579C3.21071 6.96086 3 7.46957 3 8V16C3 16.5304 3.21071 17.0391 3.58579 17.4142C3.96086 17.7893 4.46957 18 5 18H19C19.5304 18 20.0391 17.7893 20.4142 17.4142C20.7893 17.0391 21 16.5304 21 16Z"/></svg>',
+                'cern_research': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/><circle cx="12" cy="12" r="2"/></svg>'
+            };
+            return icons[categoryId] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>';
+        }
+
+        // Category groups for organization
+        const categoryGroups = {
+            'Biological Systems': ['voltage_gates', 'neurotransmitters', 'hormones', 'biophysical_parameters', 'organ_systems', 'cellular_processes'],
+            'Celestial & EM': ['celestial_bodies', 'electromagnetic_environment', 'schumann_resonance'],
+            'Research & Methods': ['research_methodologies', 'quantum_biology', 'circadian_biology', 'molecular_chemistry'],
+            'Traditional Knowledge': ['tcm_correlations', 'vedic_knowledge'],
+            'Advanced Concepts': ['coherence_systems', 'morphic_fields'],
+            'Institutional Research': ['government_research', 'patents', 'cern_research']
+        };
+
         function renderCategories() {
             const container = document.getElementById('categoriesContainer');
+            const sidebarList = document.getElementById('sidebarCategoryList');
+            
+            // Render category cards
             container.innerHTML = categories.map(cat => {
                 const count = encyclopediaData[cat.id] ? Object.keys(encyclopediaData[cat.id]).length : 0;
+                const description = cat.description || 'Explore entries in this category';
+                
                 return `
                     <div class="category-card" data-category="${cat.id}">
-                        <div class="category-name">${cat.name}</div>
-                        <div class="category-count">${count} entries</div>
+                        <div class="category-header">
+                            <div class="category-name">${cat.name}</div>
+                        </div>
+                        <div class="category-description">${description}</div>
+                        <div class="category-footer">
+                            <span class="category-count">${count} entries</span>
+                            <span class="category-badge">Browse</span>
+                        </div>
                     </div>
                 `;
             }).join('');
 
-            // Add click handlers
+            // Render sidebar navigation
+            sidebarList.innerHTML = categories.map(cat => {
+                const count = encyclopediaData[cat.id] ? Object.keys(encyclopediaData[cat.id]).length : 0;
+                return `
+                    <div class="sidebar-category-item" data-category="${cat.id}">
+                        <span class="sidebar-category-name">${cat.name}</span>
+                        <span class="sidebar-category-count">${count}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers for cards
             document.querySelectorAll('.category-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const category = card.dataset.category;
                     selectCategory(category);
+                    // Scroll to content
+                    document.getElementById('contentContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            // Add click handlers for sidebar
+            document.querySelectorAll('.sidebar-category-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const category = item.dataset.category;
+                    selectCategory(category);
+                    // Scroll to content
+                    document.getElementById('contentContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
             });
         }
@@ -1065,9 +1970,14 @@
         function selectCategory(categoryId) {
             currentCategory = categoryId;
             
-            // Update active state
+            // Update active state for cards
             document.querySelectorAll('.category-card').forEach(card => {
                 card.classList.toggle('active', card.dataset.category === categoryId);
+            });
+
+            // Update active state for sidebar
+            document.querySelectorAll('.sidebar-category-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.category === categoryId);
             });
 
             // Show content
@@ -1095,6 +2005,20 @@
 
         function renderItem(item, isCompact = false) {
             if (isCompact) {
+                // Derive a preview text so every entry has a visible summary on the card
+                const previewSource =
+                    item.description ||
+                    item.research_notes ||
+                    item.origin_story ||
+                    (Array.isArray(item.biological_correlations) && item.biological_correlations.length
+                        ? `Biological correlations: ${item.biological_correlations.join(', ')}`
+                        : '') ||
+                    (item.evidence_level ? `Evidence level: ${item.evidence_level}` : '');
+
+                const previewText = previewSource
+                    ? previewSource.toString().substring(0, 220) + (previewSource.length > 220 ? '...' : '')
+                    : '';
+
                 // Compact card view for grid
                 return `
                     <div class="encyclopedia-item-card" data-item-id="${item.id}" data-category="${item.category || ''}">
@@ -1103,10 +2027,17 @@
                             ${item.category ? `<span class="item-card-category">${item.category.replace(/_/g, ' ')}</span>` : ''}
                         </div>
                         <div class="item-card-preview">
-                            ${item.description ? `<div class="item-card-description">${item.description.substring(0, 150)}${item.description.length > 150 ? '...' : ''}</div>` : ''}
+                            ${previewText ? `<div class="item-card-description">${previewText}</div>` : ''}
                         </div>
                         <div class="item-card-footer">
                             <button class="item-card-view-btn" onclick="openEntryModal('${item.id}', '${item.category || ''}')">View Details</button>
+                            <button class="item-card-iceburg-btn" onclick="openExplainPanel('${item.id}', '${item.category || ''}')"
+                                title="Explain with ICEBURG">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 19L10 4.5C10.6 3.3 11.1 3 12 3C12.9 3 13.4 3.3 14 4.5L21 19H3Z"/>
+                                    <path d="M5 19L9 12L12 17L15 11L19 19H5Z"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1129,17 +2060,17 @@
         function renderItemSections(item) {
             const sections = [];
             
-            // Description
-            if (item.description) {
-                sections.push(`
-                    <div class="item-section">
-                        <div class="item-section-title">Description</div>
-                        <div class="item-section-content">${item.description}</div>
+            // Description (always show, even if placeholder)
+            sections.push(`
+                <div class="item-section">
+                    <div class="item-section-title">Description</div>
+                    <div class="item-section-content">
+                        ${item.description || 'Not yet documented for this entry in the current encyclopedia version.'}
                     </div>
-                `);
-            }
+                </div>
+            `);
 
-            // Render key-value pairs
+            // Render key-value pairs (structured details)
             const excludeKeys = ['id', 'name', 'category', 'description', 'sources', 'studies', 'research_notes', 'origin_story'];
             const keyValuePairs = Object.entries(item)
                 .filter(([key]) => !excludeKeys.includes(key))
@@ -1244,26 +2175,25 @@
                 `);
             }
 
-            // Evidence Level Badge
-            if (item.evidence_level) {
-                const evidenceColors = {
+            // Evidence Level Badge (always show, defaulting when missing)
+            const evidenceColors = {
                     'measured': { bg: 'rgba(76, 175, 80, 0.2)', color: '#4caf50', border: '#4caf50' },
                     'theoretical': { bg: 'rgba(33, 150, 243, 0.2)', color: '#2196f3', border: '#2196f3' },
                     'speculative': { bg: 'rgba(255, 152, 0, 0.2)', color: '#ff9800', border: '#ff9800' },
                     'documented': { bg: 'rgba(156, 39, 176, 0.2)', color: '#9c27b0', border: '#9c27b0' }
-                };
-                const colors = evidenceColors[item.evidence_level] || evidenceColors.theoretical;
-                sections.push(`
-                    <div class="item-section">
-                        <div class="item-section-title">Evidence Level</div>
-                        <div class="item-section-content">
-                            <span style="display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; background: ${colors.bg}; color: ${colors.color}; border: 1px solid ${colors.border};">
-                                ${item.evidence_level}
-                            </span>
-                        </div>
+            };
+            const evidenceKey = item.evidence_level || 'theoretical';
+            const colors = evidenceColors[evidenceKey] || evidenceColors.theoretical;
+            sections.push(`
+                <div class="item-section">
+                    <div class="item-section-title">Evidence Level</div>
+                    <div class="item-section-content">
+                        <span style="display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; background: ${colors.bg}; color: ${colors.color}; border: 1px solid ${colors.border};">
+                            ${evidenceKey}
+                        </span>
                     </div>
-                `);
-            }
+                </div>
+            `);
 
             // Related Entries
             if (item.related_entries && item.related_entries.length > 0) {
@@ -1280,15 +2210,15 @@
                 `);
             }
 
-            // Research notes
-            if (item.research_notes) {
-                sections.push(`
-                    <div class="item-section">
-                        <div class="item-section-title">Research Notes</div>
-                        <div class="item-section-content">${item.research_notes}</div>
+            // Research notes (always show, with clear placeholder)
+            sections.push(`
+                <div class="item-section">
+                    <div class="item-section-title">Research Notes</div>
+                    <div class="item-section-content">
+                        ${item.research_notes || 'Research notes for this entry have not yet been written. This indicates an area for future evidence review and synthesis.'}
                     </div>
-                `);
-            }
+                </div>
+            `);
 
             // Sources
             if (item.sources && item.sources.length > 0) {
@@ -1337,17 +2267,15 @@
                 `);
             }
 
-            // Origin Story
-            if (item.origin_story) {
-                sections.push(`
-                    <div class="item-section">
-                        <div class="item-section-title">Origin Story</div>
-                        <div class="item-section-content" style="font-style: italic; line-height: 1.8;">
-                            ${item.origin_story}
-                        </div>
+            // Origin Story (always show, with placeholder when missing)
+            sections.push(`
+                <div class="item-section">
+                    <div class="item-section-title">Origin Story</div>
+                    <div class="item-section-content" style="font-style: italic; line-height: 1.8;">
+                        ${item.origin_story || 'Origin story and historical context for this entry are not yet documented. They will be added as the encyclopedia is expanded.'}
                     </div>
-                `);
-            }
+                </div>
+            `);
 
             return sections.join('');
         }
@@ -1432,6 +2360,227 @@
 
             // Scroll to top
             modal.scrollTop = 0;
+        }
+
+        // ICEBURG Explain side panel
+        function openExplainPanel(itemId, categoryId) {
+            if (!encyclopediaData || !encyclopediaData[categoryId] || !encyclopediaData[categoryId][itemId]) {
+                console.error('Explain entry not found:', itemId, categoryId);
+                return;
+            }
+
+            const item = { id: itemId, ...encyclopediaData[categoryId][itemId] };
+            const panel = document.getElementById('entryExplainPanel');
+            const titleEl = document.getElementById('explainTitle');
+            const bodyEl = document.getElementById('explainBody');
+
+            if (!panel || !titleEl || !bodyEl) return;
+
+            titleEl.textContent = item.name || item.id || 'ICEBURG Explanation';
+            bodyEl.innerHTML = buildExplainContent(item);
+
+            // Kick off LLM-based summary from ICEBURG physiology agent
+            try {
+                loadExplainFromLLM(item);
+            } catch (e) {
+                console.error('Error starting LLM explain:', e);
+            }
+
+            panel.classList.add('active');
+        }
+
+        function closeExplainPanel() {
+            const panel = document.getElementById('entryExplainPanel');
+            if (panel) panel.classList.remove('active');
+        }
+
+        function buildExplainContent(item) {
+            const parts = [];
+
+            // 0. ICEBURG physiology LLM summary placeholder (will be filled asynchronously)
+            parts.push(`
+                <div id="explainLLMSection">
+                    <div class="explain-section-title">ICEBURG Physiology Summary</div>
+                    <div class="explain-section-body">
+                        Connecting to ICEBURG physiology agent for a 3‑point summary...
+                    </div>
+                </div>
+            `);
+
+            // 1. Core idea – local, deterministic explanation as a fallback/context
+            const baseText =
+                item.description ||
+                item.research_notes ||
+                item.origin_story ||
+                'This entry has not yet been fully explained in student-friendly language. It is part of the encyclopedia schema and will be expanded.';
+
+            parts.push(`
+                <div>
+                    <div class="explain-section-title">Core Idea (Local)</div>
+                    <div class="explain-section-body">
+                        ${baseText}
+                    </div>
+                </div>
+            `);
+
+            // 2. How this fits ICEBURG / field model
+            let fieldLines = [];
+            if (Array.isArray(item.field_model_mapping) && item.field_model_mapping.length) {
+                fieldLines = item.field_model_mapping;
+            } else {
+                // Derive a basic mapping from category when explicit mapping is missing
+                if (item.category === 'celestial_bodies') {
+                    fieldLines.push('Connects large-scale celestial cycles to changes in biological fields such as autonomic, cardiovascular, and circadian regulation.');
+                } else if (item.category === 'voltage_gates') {
+                    fieldLines.push('Describes how ion channels shape local electrical fields in cells and tissues, which then participate in larger bioelectric patterns.');
+                } else if (item.category === 'organ_systems') {
+                    fieldLines.push('Represents a macroscopic field network (organ system) that integrates many local cellular and electrical processes.');
+                }
+            }
+
+            if (fieldLines.length) {
+                parts.push(`
+                    <div>
+                        <div class="explain-section-title">Field-Based Interpretation</div>
+                        <div class="explain-section-body">
+                            <ul style="padding-left: 1.1rem; margin: 0;">
+                                ${fieldLines.map(l => `<li style="margin-bottom: 0.25rem;">${l}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `);
+            }
+
+            // 3. Connections and combinations
+            const chips = [];
+
+            if (Array.isArray(item.biological_correlations) && item.biological_correlations.length) {
+                item.biological_correlations.forEach(c => chips.push(c));
+            }
+            if (Array.isArray(item.related_entries) && item.related_entries.length) {
+                item.related_entries.forEach(r => chips.push(r));
+            }
+
+            if (chips.length) {
+                parts.push(`
+                    <div>
+                        <div class="explain-section-title">Connections and Combinations</div>
+                        <div class="explain-section-body">
+                            <div class="explain-chip-row">
+                                ${chips.map(c => `<span class="explain-chip">${c.toString().replace(/_/g, ' ')}</span>`).join('')}
+                            </div>
+                            <div>Use these to trace how this entry might interact with other systems, molecules, or fields in the encyclopedia.</div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            return parts.join('');
+        }
+
+        function getOrCreateConversationId() {
+            let conv = localStorage.getItem('iceburg_conversation_id');
+            if (!conv) {
+                conv = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                try {
+                    localStorage.setItem('iceburg_conversation_id', conv);
+                } catch (e) {
+                    console.warn('Unable to persist conversation id:', e);
+                }
+            }
+            return conv;
+        }
+
+        async function loadExplainFromLLM(item) {
+            const section = document.getElementById('explainLLMSection');
+            if (!section) return;
+
+            const bodyEl = section.querySelector('.explain-section-body');
+            if (!bodyEl) return;
+
+            bodyEl.textContent = 'Thinking with ICEBURG physiology agent...';
+
+            // Build compact context from entry fields – physiology-focused
+            const contextParts = [];
+            contextParts.push(`Name: ${item.name || item.id}`);
+            contextParts.push(`Category: ${item.category || 'unknown'}`);
+            if (item.description) {
+                contextParts.push(`Description: ${item.description}`);
+            }
+            if (item.biological_functions && Array.isArray(item.biological_functions)) {
+                contextParts.push(`Biological functions: ${item.biological_functions.join(', ')}`);
+            }
+            if (item.biological_correlations && Array.isArray(item.biological_correlations)) {
+                contextParts.push(`Biological correlations: ${item.biological_correlations.join(', ')}`);
+            }
+            if (item.research_notes) {
+                contextParts.push(`Research notes: ${item.research_notes}`);
+            }
+
+            const entryContext = contextParts.join('\\n');
+
+            const userPrompt = `
+You are explaining an encyclopedia entry to a student who is learning physiology and field-based biology.
+
+ENTRY CONTEXT:
+${entryContext}
+
+TASK:
+1) Give a precise 3-point summary of what this entry is about, focusing on physiology, fields/bioelectric aspects, and what is actually known vs theoretical.
+2) After the 3 points, add one short paragraph (3–5 sentences) explaining how this fits into the broader astro-physiology / field-based model and any key caveats.
+
+Write in clear, professional language with no emojis and no headings. Use numbered or dashed bullets for the three points, then the paragraph.
+`;
+
+            const conversationId = getOrCreateConversationId();
+
+            const requestBody = {
+                query: userPrompt.trim(),
+                mode: 'chat',
+                agent: 'physiology',
+                degradation_mode: false,
+                settings: {
+                    // Use Ollama model for testing (llama3:8b is available)
+                    // Change back to 'gemini-2.0-flash-exp' when using Gemini provider
+                    primaryModel: 'llama3:8b',
+                    temperature: 0.4,
+                    maxTokens: 700
+                },
+                files: [],
+                data: null,
+                conversation_id: conversationId,
+                metadata: {
+                    source: 'encyclopedia',
+                    entry_id: item.id || null,
+                    category: item.category || null
+                }
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = data.result || data.content || data.results?.content;
+
+                if (content && content.trim()) {
+                    bodyEl.textContent = content.trim();
+                } else {
+                    bodyEl.textContent = 'ICEBURG physiology agent did not return a summary. You can still use the core idea and connections below.';
+                }
+            } catch (error) {
+                console.error('Error calling ICEBURG physiology agent:', error);
+                bodyEl.textContent = 'Unable to reach ICEBURG physiology agent right now. This is usually due to LLM API limits. Local explanation and connections are still available below.';
+            }
         }
 
         function closeEntryModal() {
@@ -1613,9 +2762,193 @@
             }
         }
 
+        // News Ticker Functions
+        let tickerUpdates = [];
+        
+        async function loadTickerUpdates() {
+            try {
+                const response = await fetch(`${API_URL}/api/encyclopedia/news`);
+                if (!response.ok) return;
+                
+                const data = await response.json();
+                const articles = data.articles || [];
+                
+                // Create ticker items from article titles
+                tickerUpdates = articles.slice(0, 10).map(article => {
+                    const suppressed = article.is_suppressed ? '[SUPPRESSED] ' : '';
+                    return `${suppressed}${article.title}`;
+                });
+                
+                if (tickerUpdates.length === 0) {
+                    tickerUpdates = ['No new updates available'];
+                }
+                
+                updateTicker();
+            } catch (error) {
+                console.error('Error loading ticker updates:', error);
+                tickerUpdates = ['Unable to load updates'];
+                updateTicker();
+            }
+        }
+        
+        function updateTicker() {
+            const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent) return;
+            
+            const items = tickerUpdates.map(item => `<span class="ticker-item">${item}</span>`).join('');
+            tickerContent.innerHTML = `<span class="ticker-label">Updates:</span>${items}${items}`; // Duplicate for seamless loop
+        }
+
+        // News & Updates Functions
+        let currentNewsFilter = 'all';
+        let newsArticles = [];
+
+        async function loadNews() {
+            const newsSection = document.getElementById('newsSection');
+            const newsLoading = document.getElementById('newsLoading');
+            const newsGrid = document.getElementById('newsGrid');
+            const newsBadge = document.getElementById('newsBadge');
+
+            try {
+                newsLoading.style.display = 'block';
+                newsGrid.innerHTML = '';
+
+                const response = await fetch(`${API_URL}/api/encyclopedia/news`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                newsArticles = data.articles || [];
+
+                // Update badge
+                if (newsArticles.length > 0) {
+                    newsBadge.textContent = newsArticles.length;
+                    newsBadge.style.display = 'block';
+                } else {
+                    newsBadge.style.display = 'none';
+                }
+
+                renderNews(newsArticles);
+                newsLoading.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading news:', error);
+                newsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                        <p>Unable to load news. Please try again later.</p>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+                newsLoading.style.display = 'none';
+            }
+        }
+
+        function renderNews(articles) {
+            const newsGrid = document.getElementById('newsGrid');
+            
+            if (articles.length === 0) {
+                newsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                        <p>No relevant articles found. Check back later for updates.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            newsGrid.innerHTML = articles.map(article => {
+                const isSuppressed = article.is_suppressed || false;
+                const summaryPoints = article.summary_points || [];
+                const source = article.source || 'Unknown';
+                const type = article.type || 'article';
+
+                return `
+                    <div class="news-card ${isSuppressed ? 'suppressed' : ''}" data-filter="${isSuppressed ? 'suppressed' : 'all'}">
+                        <div class="news-card-header">
+                            <h3 class="news-card-title">${article.title || 'Untitled'}</h3>
+                            <span class="news-card-source">${source}</span>
+                        </div>
+                        ${summaryPoints.length > 0 ? `
+                            <div class="news-card-summary">
+                                <ul>
+                                    ${summaryPoints.map(point => `<li>${point}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        <div class="news-card-footer">
+                            ${article.url ? `
+                                <a href="${article.url}" target="_blank" rel="noopener noreferrer" class="news-card-link">
+                                    Read More
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                        <path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </a>
+                            ` : '<span class="news-card-link" style="opacity: 0.5;">No link available</span>'}
+                            ${isSuppressed ? '<span class="news-card-badge suppressed">Suppressed Research</span>' : ''}
+                            ${type === 'research_paper' ? '<span class="news-card-badge">Research</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterNews(filter) {
+            currentNewsFilter = filter;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+
+            let filtered = newsArticles;
+            if (filter === 'suppressed') {
+                filtered = newsArticles.filter(a => a.is_suppressed);
+            } else if (filter === 'recent') {
+                // Sort by date if available
+                filtered = [...newsArticles].sort((a, b) => {
+                    const dateA = new Date(a.published || a.fetched_at || 0);
+                    const dateB = new Date(b.published || b.fetched_at || 0);
+                    return dateB - dateA;
+                }).slice(0, 10);
+            } else if (filter === 'breaking') {
+                // Filter for recent news (last 7 days)
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                filtered = newsArticles.filter(a => {
+                    if (!a.published) return false;
+                    const pubDate = new Date(a.published);
+                    return pubDate >= weekAgo;
+                });
+            }
+
+            renderNews(filtered);
+        }
+
+        // News event listeners
+        document.getElementById('newsToggle')?.addEventListener('click', () => {
+            const newsSection = document.getElementById('newsSection');
+            const isVisible = newsSection.style.display !== 'none';
+            newsSection.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible && newsArticles.length === 0) {
+                loadNews();
+            }
+        });
+
+        document.getElementById('newsRefreshBtn')?.addEventListener('click', () => {
+            loadNews();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterNews(btn.dataset.filter);
+            });
+        });
+
         // Initialize
         initStarfield();
         loadEncyclopedia();
+        loadTickerUpdates();
+        
+        // Refresh ticker every 5 minutes
+        setInterval(loadTickerUpdates, 5 * 60 * 1000);
     
         // Related entry click handler
         document.addEventListener('click', function(e) {

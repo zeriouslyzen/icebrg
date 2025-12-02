@@ -83,13 +83,25 @@ class UnifiedMemory:
         except NameError:
             _UNIFIED_MEMORY_CHROMA_CLIENT = None  # type: ignore
         if _UNIFIED_MEMORY_CHROMA_CLIENT is None:
-            _UNIFIED_MEMORY_CHROMA_CLIENT = chromadb.PersistentClient(
-                path=str(self._cfg.data_dir / "chroma"),
-                settings=Settings(anonymized_telemetry=False),
-            )
+            try:
+                _UNIFIED_MEMORY_CHROMA_CLIENT = chromadb.PersistentClient(
+                    path=str(self._cfg.data_dir / "chroma"),
+                    settings=Settings(anonymized_telemetry=False),
+                )
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(f"ChromaDB initialization failed for UnifiedMemory: {e}. Continuing without persistent memory.")
+                _UNIFIED_MEMORY_CHROMA_CLIENT = None
         self._client = _UNIFIED_MEMORY_CHROMA_CLIENT
         self._embed_fn = SafeEmbeddingFunction(self._cfg)
         self._collections: Dict[str, Any] = {}
+        
+        # If client is None, we're in mock mode
+        if self._client is None:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning("UnifiedMemory operating in mock mode (no ChromaDB)")
 
     # ---------- JSONL logging ----------
     def _events_file_for_run(self, run_id: str) -> Path:

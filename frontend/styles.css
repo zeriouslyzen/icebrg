@@ -1509,9 +1509,24 @@ body {
     flex-wrap: wrap;
     gap: 0.75rem;
     padding: 1rem 1.25rem;
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-primary);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(10, 10, 10, 0.6) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: none;
+    border-bottom: none;
     animation: controlsMorphIn var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.controls-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    pointer-events: none;
 }
 
 .control-group {
@@ -1520,6 +1535,31 @@ body {
     gap: 0.5rem;
     flex: 1;
     min-width: 120px;
+    position: relative;
+}
+
+.agent-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.agent-display-label {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.agent-display-value {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .control-label {
@@ -1532,21 +1572,26 @@ body {
 
 .control-select {
     padding: 0.625rem 0.875rem;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border: none;
     border-radius: 8px;
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
     transition: all var(--transition-base);
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.control-select:hover {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .control-select:focus {
     outline: none;
-    border-color: var(--accent-primary);
-    background-color: var(--bg-elevated);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .control-toggle {

@@ -511,6 +511,16 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                     stream_agent = request.get("agent", "auto")
                     logger.info(f"🔍🔍🔍 SSE generate_stream: agent from request = '{stream_agent}' (type: {type(stream_agent)})")
                     
+                    # FAST PATH: Check for simple queries FIRST (before any processing)
+                    # This prevents deep research on simple greetings
+                    simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
+                    if query.lower().strip() in simple_queries and (mode == "chat" or mode == "fast"):
+                        logger.info(f"⚡ SSE Fast path for simple query: {query} (mode: {mode})")
+                        # Send instant response for simple queries - NO deep research
+                        yield f"data: {json.dumps({'type': 'chunk', 'content': 'Hello! How can I help you today?', 'timestamp': time.time()})}\n\n"
+                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                        return
+                    
                     # For chat mode, use single agent (same as WebSocket)
                     if mode == "chat":
                         from ..config import load_config_with_model
@@ -522,16 +532,76 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                         
                         logger.info("🌊 SSE chat mode engaged (model=%s, temp=%s, max_tokens=%s, stream_agent=%s)", primary_model, temperature, max_tokens, str(stream_agent))
                         
-                        # Normalize agent value - treat "auto" as "surveyor" for chat mode
+                        # Normalize agent value - treat "auto" as "secretary" for chat mode (faster, no VectorStore needed)
                         agent_normalized = str(stream_agent).lower().strip() if stream_agent else "auto"
                         if agent_normalized == "auto":
-                            agent_normalized = "surveyor"
-                            logger.info(f"🔍 Auto agent in chat mode -> using Surveyor")
+                            agent_normalized = "secretary"
+                            logger.info(f"🔍 Auto agent in chat mode -> using Secretary (fast, no VectorStore)")
                         logger.info(f"🔍 SSE Agent normalization: raw='{stream_agent}' -> normalized='{agent_normalized}'")
-                        logger.info(f"🔍 SSE Agent check: agent_normalized == 'surveyor'? {agent_normalized == 'surveyor'}")
+                        
+                        # Secretary agent - fast, friendly, knows ICEBURG, no VectorStore needed
+                        if agent_normalized == "secretary":
+                            logger.info(f"👔 Secretary agent selected - fast chat mode, no VectorStore needed")
+                            try:
+                                from ..config import load_config_with_model
+                                from ..agents.secretary import run as secretary_run
+                                
+                                # Initialize config
+                                is_fast_mode = mode == "fast" or mode == "chat"
+                                secretary_cfg = await asyncio.to_thread(
+                                    load_config_with_model,
+                                    primary_model=primary_model,
+                                    use_small_models=False,
+                                    fast=is_fast_mode
+                                )
+                                
+                                # Send thinking message
+                                thinking_msg = "I'm thinking about your question..."
+                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
+                                await asyncio.sleep(0.1)
+                                
+                                # Call Secretary agent (no VectorStore needed!)
+                                secretary_response = await asyncio.to_thread(
+                                    secretary_run,
+                                    secretary_cfg,
+                                    query,
+                                    verbose=False,
+                                    thinking_callback=lambda msg: None  # Can add callback if needed
+                                )
+                                
+                                # Stream the response
+                                if secretary_response:
+                                    for word in secretary_response.split():
+                                        yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
+                                        await asyncio.sleep(0.02)
+                                    yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                    logger.info("✅ Secretary response sent successfully")
+                                    return
+                                else:
+                                    yield f"data: {json.dumps({'type': 'error', 'content': 'Secretary did not return a response', 'timestamp': time.time()})}\n\n"
+                                    return
+                                    
+                            except Exception as e:
+                                logger.error(f"❌ Secretary agent error: {e}", exc_info=True)
+                                # Fallback response
+                                fallback = "I'm ICEBURG Secretary, your friendly assistant. I can help you understand ICEBURG's capabilities. How can I assist you?"
+                                for word in fallback.split():
+                                    yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
+                                    await asyncio.sleep(0.02)
+                                yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                return
                         
                         # If Surveyor is selected, use real Surveyor agent with thinking callbacks
+                        # BUT: Skip deep research for simple queries in chat mode
                         if agent_normalized == "surveyor":
+                            # Check if this is a simple query - if so, use fast path instead of deep research
+                            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
+                            if query.lower().strip() in simple_queries:
+                                logger.info(f"⚡ SSE: Simple query '{query}' with Surveyor - using fast path instead of deep research")
+                                yield f"data: {json.dumps({'type': 'chunk', 'content': 'Hello! How can I help you today?', 'timestamp': time.time()})}\n\n"
+                                yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                return
+                            
                             logger.info(f"💭💭💭 SSE: Surveyor selected - ENTERING Surveyor block")
                             
                             # CRITICAL: Send ALL thinking messages IMMEDIATELY - NO BLOCKING OPERATIONS
@@ -583,7 +653,44 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 await asyncio.sleep(0.05)
                                 
                                 logger.info("💭 Config loaded, initializing VectorStore...")
-                                vs = await asyncio.to_thread(VectorStore, surveyor_cfg)
+                                # Try to initialize VectorStore with error handling - if it fails, use mock
+                                # CRITICAL: Catch exception BEFORE it goes into thread to prevent propagation
+                                vs = None
+                                try:
+                                    # Try to create VectorStore in a way that catches the exception immediately
+                                    def init_vectorstore():
+                                        try:
+                                            return VectorStore(surveyor_cfg)
+                                        except Exception as e:
+                                            # DON'T re-raise - return mock instead
+                                            import logging
+                                            thread_logger = logging.getLogger(__name__)
+                                            thread_logger.warning(f"⚠️ VectorStore init failed in thread: {e}. Returning mock.")
+                                            # Return mock VectorStore - never raise exceptions
+                                            class MockVectorStore:
+                                                def semantic_search(self, query: str, k: int = 8, where=None):
+                                                    return []
+                                            return MockVectorStore()
+                                    
+                                    vs = await asyncio.to_thread(init_vectorstore)
+                                    # Check if it's a real VectorStore or mock
+                                    if hasattr(vs, '_collection'):
+                                        if vs._collection is not None:
+                                            logger.info("✅ VectorStore initialized successfully")
+                                        else:
+                                            logger.info("✅ Using mock VectorStore (no ChromaDB)")
+                                    else:
+                                        logger.info("✅ Using mock VectorStore (no ChromaDB)")
+                                except Exception as vs_error:
+                                    error_str = str(vs_error)
+                                    logger.warning(f"⚠️ VectorStore initialization failed: {error_str[:150]}. Using mock VectorStore (LLM-only mode)")
+                                    # Create a mock VectorStore that returns empty results - Surveyor will work fine without it
+                                    class MockVectorStore:
+                                        def semantic_search(self, query: str, k: int = 8, where=None):
+                                            return []  # Empty results - Surveyor will use LLM knowledge only
+                                    vs = MockVectorStore()
+                                    logger.info("✅ Using MockVectorStore - Surveyor will work with LLM knowledge only (no knowledge base)")
+                                    # CRITICAL: Exception is caught and handled - do NOT re-raise
                                 
                                 # Send thinking message after VectorStore init
                                 thinking_msg = "I'm ready to search and analyze..."
@@ -631,11 +738,13 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                             agent_response_container[0] = "I processed your query but couldn't generate a response. This may be due to model limitations or query complexity. Please try rephrasing your question."
                                     except Exception as e:
                                         logger.error(f"❌ Error in surveyor_run: {e}", exc_info=True)
-                                        logger.error(f"❌ Exception type: {type(e).__name__}")
-                                        import traceback
-                                        logger.error(f"❌ Full traceback:\n{traceback.format_exc()}")
-                                        # Try to provide a fallback response instead of None
-                                        agent_response_container[0] = f"I encountered an error while processing your query: {str(e)}. Please try rephrasing your question or try again later."
+                                        error_msg = str(e)
+                                        # If VectorStore error, provide helpful response
+                                        if any(keyword in error_msg.lower() for keyword in ["vectorstore", "chroma", "tenant", "default_tenant", "could not connect"]):
+                                            logger.warning(f"⚠️ VectorStore error in surveyor_run thread: {error_msg[:100]}")
+                                            agent_response_container[0] = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
+                                        else:
+                                            agent_response_container[0] = f"I'm ICEBURG, an AI research assistant. I encountered an issue processing your query, but I can still help. How can I assist you?"
                                     finally:
                                         surveyor_done.set()
                                 
@@ -723,12 +832,59 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 return  # Exit early - we've handled the response
                                 
                             except Exception as e:
+                                error_msg = str(e)
+                                # Check if this is a VectorStore/ChromaDB error - ALWAYS provide fallback
+                                is_vectorstore_error = (
+                                    "VectorStore" in error_msg or 
+                                    "chroma" in error_msg.lower() or 
+                                    "tenant" in error_msg.lower() or 
+                                    "default_tenant" in error_msg or
+                                    "Could not connect" in error_msg or
+                                    "RustBindingsAPI" in error_msg
+                                )
+                                
+                                if is_vectorstore_error:
+                                    logger.warning(f"⚠️ VectorStore/ChromaDB error: {error_msg[:100]}. Providing LLM-only response.")
+                                    # Use Gemini to answer the question directly - no VectorStore needed
+                                    try:
+                                        from ..config import load_config_with_model
+                                        from ..providers.factory import provider_factory
+                                        
+                                        # Get Gemini provider
+                                        fallback_cfg = load_config_with_model(
+                                            primary_model=primary_model,
+                                            use_small_models=False,
+                                            fast=True
+                                        )
+                                        fallback_provider = provider_factory(fallback_cfg)
+                                        
+                                        # Generate response using Gemini directly
+                                        gemini_response = fallback_provider.chat_complete(
+                                            model=primary_model,
+                                            prompt=f"Answer this question: {query}",
+                                            system="You are ICEBURG, an AI research assistant. Answer concisely and helpfully.",
+                                            temperature=0.7
+                                        )
+                                        
+                                        # Stream the response
+                                        for word in gemini_response.split():
+                                            yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
+                                            await asyncio.sleep(0.02)
+                                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                        logger.info("✅ Fallback Gemini response sent successfully")
+                                        return
+                                    except Exception as gemini_error:
+                                        logger.error(f"❌ Fallback Gemini also failed: {gemini_error}")
+                                        # Ultimate fallback
+                                        fallback_response = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
+                                        for word in fallback_response.split():
+                                            yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
+                                            await asyncio.sleep(0.02)
+                                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                        return
+                                
+                                # Non-VectorStore error - log and send error
                                 logger.error(f"❌❌❌ CRITICAL: Error in SSE Surveyor: {e}", exc_info=True)
-                                logger.error(f"❌❌❌ Exception type: {type(e).__name__}")
-                                logger.error(f"❌❌❌ Exception args: {e.args}")
-                                import traceback
-                                logger.error(f"❌❌❌ Full traceback:\n{traceback.format_exc()}")
-                                # DON'T fall through - yield error message instead
                                 yield f"data: {json.dumps({'type': 'error', 'content': f'Surveyor error: {str(e)}', 'timestamp': time.time()})}\n\n"
                                 return
                         
@@ -1060,10 +1216,28 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                     elif agent == "oracle":
                         from ..agents.oracle import ORACLE_SYSTEM
                         system_prompt = ORACLE_SYSTEM
+                    elif agent == "physiology":
+                        system_prompt = (
+                            "You are ICEBURG Physiology Explainer, a fast, precise assistant in the physiological department.\n"
+                            "- Audience: curious students and researchers.\n"
+                            "- Task: given a short context about an encyclopedia entry, first produce a 3-point summary in clear, technical but accessible language.\n"
+                            "- Each point should be 1–2 sentences and focus on physiological mechanisms, fields/bioelectric aspects, and what is actually known vs theoretical.\n"
+                            "- After the 3 bullet points, add one short paragraph (3–5 sentences) that explains how this entry fits into the broader astro‑physiology / field-based model and any key caveats.\n"
+                            "- When answering follow‑up questions, stay anchored to the same entry and its physiology, and keep answers concise and evidence oriented.\n"
+                            "- If the user asks to combine multiple entries or patterns, explain the connection logically and make clear which parts are established, theoretical, or speculative."
+                        )
                     else:
-                        system_prompt = "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers that demonstrate your advanced reasoning capabilities."
+                        system_prompt = (
+                            "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. "
+                            "You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers "
+                            "that demonstrate advanced reasoning while being concise and evidence-oriented."
+                        )
                 else:
-                    system_prompt = "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers that demonstrate your advanced reasoning capabilities."
+                    system_prompt = (
+                        "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. "
+                        "You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers "
+                        "that demonstrate advanced reasoning while being concise and evidence-oriented."
+                    )
                 
                 logger.info(f"🎭 HTTP: Using system prompt for agent: {agent}")
                 
@@ -1977,7 +2151,7 @@ async def websocket_endpoint(websocket: WebSocket):
                             logger.debug(f"✅ Provider created: {type(provider).__name__}")
                         except Exception as provider_error:
                             logger.error(f"❌ Failed to create provider: {provider_error}", exc_info=True)
-                            error_content = f"Error initializing AI provider: {str(provider_error)}. Please check Ollama is running."
+                            error_content = f"Error initializing AI provider: {str(provider_error)}. Please check your LLM provider configuration."
                             chunk_delay = 0.02 if degradation_mode else 0.0001
                             for i in range(0, len(error_content)):
                                 chunk = error_content[i]
@@ -2000,7 +2174,21 @@ async def websocket_endpoint(websocket: WebSocket):
                         
                         # CRITICAL: If Surveyor is selected, actually use the Surveyor agent to access ICEBURG's knowledge
                         # This ensures real access to VectorStore and ICEBURG research, not just a system prompt claim
+                        # BUT: Skip deep research for simple queries
                         if agent_normalized == "surveyor":
+                            # Fast path for simple queries - don't do deep research
+                            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
+                            if query.lower().strip() in simple_queries:
+                                logger.info(f"⚡ WebSocket: Simple query '{query}' with Surveyor - using fast path instead of deep research")
+                                await safe_send_json(websocket, {
+                                    "type": "chunk",
+                                    "content": "Hello! How can I help you today?"
+                                })
+                                await safe_send_json(websocket, {
+                                    "type": "done"
+                                })
+                                continue
+                            
                             logger.info(f"🔍 Surveyor selected in chat mode - using full Surveyor agent to access ICEBURG knowledge")
                             logger.info(f"💭 Will send thinking_stream messages for ICEBURG UI")
                             try:
@@ -2015,7 +2203,20 @@ async def websocket_endpoint(websocket: WebSocket):
                                     use_small_models=use_small_models or is_fast_mode,
                                     fast=is_fast_mode
                                 )
-                                vs = VectorStore(surveyor_cfg)
+                                
+                                # Try to initialize VectorStore with error handling
+                                vs = None
+                                try:
+                                    vs = VectorStore(surveyor_cfg)
+                                    logger.info("✅ WebSocket: VectorStore initialized successfully")
+                                except Exception as vs_error:
+                                    logger.warning(f"⚠️ WebSocket: VectorStore initialization failed: {vs_error}. Using mock VectorStore (LLM-only mode)")
+                                    # Create a mock VectorStore that returns empty results - Surveyor will work fine without it
+                                    class MockVectorStore:
+                                        def semantic_search(self, query: str, k: int = 8, where=None):
+                                            return []  # Empty results - Surveyor will use LLM knowledge only
+                                    vs = MockVectorStore()
+                                    logger.info("✅ WebSocket: Using MockVectorStore - Surveyor will work with LLM knowledge only")
                                 
                                 # Build context from conversation history for Surveyor
                                 # CRITICAL: Don't inject history that contains pseudo-profound patterns - it reinforces bad behavior
@@ -2139,14 +2340,22 @@ async def websocket_endpoint(websocket: WebSocket):
                                 
                                 thinking_task = asyncio.create_task(process_thinking_messages())
                                 
-                                agent_response = await asyncio.to_thread(
-                                    surveyor_run,
-                                    surveyor_cfg,
-                                    vs,
-                                    surveyor_query,
-                                    verbose=False,
-                                    thinking_callback=thinking_callback
-                                )
+                                try:
+                                    agent_response = await asyncio.to_thread(
+                                        surveyor_run,
+                                        surveyor_cfg,
+                                        vs,
+                                        surveyor_query,
+                                        verbose=False,
+                                        thinking_callback=thinking_callback
+                                    )
+                                except Exception as e:
+                                    logger.error(f"❌ Error calling surveyor_run: {e}", exc_info=True)
+                                    error_msg = str(e)
+                                    if "VectorStore" in error_msg or "chroma" in error_msg.lower():
+                                        agent_response = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
+                                    else:
+                                        agent_response = f"I encountered an issue: {error_msg[:100]}. Let me try to answer your question anyway: I'm ICEBURG, an AI research assistant designed to help with knowledge discovery and truth-finding. How can I help you?"
                                 
                                 # Mark surveyor as done and wait for remaining messages
                                 surveyor_done = True
@@ -2403,7 +2612,7 @@ async def websocket_endpoint(websocket: WebSocket):
                                 logger.error(f"Error saving conversation: {e}")
                         except asyncio.TimeoutError:
                             logger.error(f"⏱️ LLM call timed out after 60s for query: {query[:50]}")
-                            timeout_content = "I apologize, but the response timed out. The LLM is taking longer than expected. Please try a simpler query or check if Ollama is running properly."
+                            timeout_content = "I apologize, but the response timed out. The LLM is taking longer than expected. Please try a simpler query or check your LLM provider configuration."
                             
                             # Get chunk delay for streaming
                             chunk_delay = 0.02 if degradation_mode else 0.0001
@@ -2822,7 +3031,7 @@ async def websocket_endpoint(websocket: WebSocket):
                                     result = {
                                         "query": query,
                                         "results": {
-                                            "content": "I apologize, but the query processing timed out. This may indicate the LLM models are not responding. Please try a simpler query or check if Ollama is running.",
+                                            "content": "I apologize, but the query processing timed out. This may indicate the LLM models are not responding. Please try a simpler query or check your LLM provider configuration.",
                                             "mode": "error",
                                             "error": "timeout"
                                         }
@@ -3189,13 +3398,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 logger.error(f"Query processing timed out after {query_timeout} seconds")
                 await safe_send_json(websocket, {
                     "type": "error",
-                    "message": f"Query processing timed out. The LLM may not be responding. Please check if Ollama is running and models are loaded."
+                    "message": f"Query processing timed out. The LLM may not be responding. Please check your LLM provider configuration."
                 })
                 # Send a basic response so the user knows what happened
                 result = {
                     "query": query,
                     "results": {
-                        "content": "Query processing timed out. This usually means the LLM models aren't responding. Please check:\n1. Is Ollama running? (ollama serve)\n2. Are the models loaded? (ollama list)\n3. Try a simpler query first.",
+                        "content": "Query processing timed out. This usually means the LLM models aren't responding. Please check:\n1. Is your LLM provider configured correctly?\n2. Is the API key set? (GOOGLE_API_KEY, OPENAI_API_KEY, etc.)\n3. Try a simpler query first.",
                         "mode": mode,
                         "error": "timeout"
                     }
