@@ -7,6 +7,7 @@ ICEBURG is a comprehensive Enterprise AGI Platform that provides unified access 
 ICEBURG transforms complex AGI research into a unified, production-ready platform with enterprise-grade features including:
 
 - **Unified Interface**: Single entry point with auto-mode detection for research, chat, software generation, and AGI civilization simulation
+- **Enhanced Secretary Agent**: AGI-like capabilities with persistent memory, tool calling, multimodal processing, blackboard integration, and efficiency optimizations
 - **One-Shot App Generation**: Complete macOS app generation pipeline with build, sign, notarize, and DMG creation
 - **AGI Civilization Simulation**: Persistent multi-agent societies with social learning and emergent behaviors
 - **Physiological Interface**: Real-time heart rate, breathing, stress monitoring with Earth connection and consciousness amplification
@@ -183,7 +184,7 @@ Fast-path specifics: beam-scored reflexive routing, provider and Chroma singleto
 
 - **Auto-Mode Detection**: Intelligently routes queries to appropriate processing mode
 - **Research Mode**: Full AGI protocol with emergence detection and multi-agent analysis
-- **Chat Mode**: Fast reflexive responses for simple queries (30s target)
+- **Chat Mode**: Fast reflexive responses for simple queries (30s target) with enhanced Secretary agent featuring memory, tools, and multimodal support
 - **Software Lab**: Autonomous application generation with Architect and Think Tank
 - **Science Lab**: Experimental design and hypothesis testing
 - **AGI Civilization**: Multi-agent society simulation with persistent world models
@@ -461,11 +462,18 @@ cd docs && make html
 
 ### Contributing
 
+We welcome contributions! Please see our contributing guidelines:
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Detailed contribution guidelines, coding standards, and development workflow
+- **[GITHUB_COLLABORATION_GUIDE.md](GITHUB_COLLABORATION_GUIDE.md)** - Guide for project owners and developers on GitHub collaboration workflows
+- **[COLLABORATION_READINESS.md](COLLABORATION_READINESS.md)** - Assessment of project readiness for multi-developer collaboration
+
+Quick start:
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Add tests for new functionality
-5. Submit a pull request
+5. Submit a pull request (see [CONTRIBUTING.md](CONTRIBUTING.md) for details)
 
 ## Documentation
 

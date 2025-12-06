@@ -79,7 +79,7 @@ def sanitize_for_json(obj: Any) -> Any:
         except:
             return None
 
-# Create FastAPI app
+# Create FastAPI app (will be configured by create_app())
 app = FastAPI(
     title="ICEBURG 2.0 API",
     description="Ultimate Truth-Finding AI Civilization API",
@@ -512,31 +512,26 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                     logger.info(f"🔍🔍🔍 SSE generate_stream: agent from request = '{stream_agent}' (type: {type(stream_agent)})")
                     
                     # FAST PATH: Check for simple queries FIRST (before any processing)
-                    # This prevents deep research on simple greetings
-                    simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
-                    if query.lower().strip() in simple_queries and (mode == "chat" or mode == "fast"):
-                        logger.info(f"⚡ SSE Fast path for simple query: {query} (mode: {mode})")
-                        # Send instant response for simple queries - NO deep research
-                        yield f"data: {json.dumps({'type': 'chunk', 'content': 'Hello! How can I help you today?', 'timestamp': time.time()})}\n\n"
-                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
-                        return
-                    
-                    # For chat mode, use single agent (same as WebSocket)
+                    # CHAT MODE: Secretary ONLY - completely isolated from Surveyor and all other agents
                     if mode == "chat":
                         from ..config import load_config_with_model
                         from ..providers.factory import provider_factory
                         
                         primary_model = settings.get("primaryModel", "llama3.1:8b")
+                        # Force Ollama-compatible model for chat mode
+                        if "gemini" in primary_model.lower() or "gpt" in primary_model.lower() or "claude" in primary_model.lower():
+                            primary_model = "llama3.1:8b"
+                            logger.info(f"🔄 Model override: Using {primary_model} for Ollama in chat mode")
                         temperature = settings.get("temperature", 0.7)
                         max_tokens = settings.get("maxTokens", 2000)
                         
                         logger.info("🌊 SSE chat mode engaged (model=%s, temp=%s, max_tokens=%s, stream_agent=%s)", primary_model, temperature, max_tokens, str(stream_agent))
                         
-                        # Normalize agent value - treat "auto" as "secretary" for chat mode (faster, no VectorStore needed)
+                        # Normalize agent value - treat "auto" or "surveyor" as "secretary" for chat mode
                         agent_normalized = str(stream_agent).lower().strip() if stream_agent else "auto"
-                        if agent_normalized == "auto":
+                        if agent_normalized == "auto" or agent_normalized == "surveyor":
                             agent_normalized = "secretary"
-                            logger.info(f"🔍 Auto agent in chat mode -> using Secretary (fast, no VectorStore)")
+                            logger.info(f"🔍 Agent forced to secretary in chat mode (was: {stream_agent})")
                         logger.info(f"🔍 SSE Agent normalization: raw='{stream_agent}' -> normalized='{agent_normalized}'")
                         
                         # Secretary agent - fast, friendly, knows ICEBURG, no VectorStore needed
@@ -546,7 +541,9 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 from ..config import load_config_with_model
                                 from ..agents.secretary import run as secretary_run
                                 
-                                # Initialize config
+                                # Initialize config - force Ollama provider
+                                import os
+                                os.environ["ICEBURG_LLM_PROVIDER"] = "ollama"
                                 is_fast_mode = mode == "fast" or mode == "chat"
                                 secretary_cfg = await asyncio.to_thread(
                                     load_config_with_model,
@@ -554,20 +551,49 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                     use_small_models=False,
                                     fast=is_fast_mode
                                 )
+                                # Ensure Ollama provider is set
+                                from ..config import IceburgConfig
+                                secretary_cfg = IceburgConfig(
+                                    data_dir=secretary_cfg.data_dir,
+                                    surveyor_model=secretary_cfg.surveyor_model,
+                                    dissident_model=secretary_cfg.dissident_model,
+                                    synthesist_model=secretary_cfg.synthesist_model,
+                                    oracle_model=secretary_cfg.oracle_model,
+                                    embed_model=secretary_cfg.embed_model,
+                                    llm_provider="ollama",
+                                    provider_url=secretary_cfg.provider_url,
+                                    timeout_s=secretary_cfg.timeout_s,
+                                    enable_code_generation=secretary_cfg.enable_code_generation,
+                                    disable_memory=secretary_cfg.disable_memory,
+                                    enable_software_lab=secretary_cfg.enable_software_lab,
+                                    max_context_length=secretary_cfg.max_context_length,
+                                    fast=secretary_cfg.fast
+                                )
                                 
                                 # Send thinking message
                                 thinking_msg = "I'm thinking about your question..."
                                 yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
                                 await asyncio.sleep(0.1)
                                 
+                                # Get conversation_id and user_id from request
+                                conversation_id = request.get("conversation_id")
+                                if not conversation_id:
+                                    conversation_id = str(uuid.uuid4())
+                                
+                                user_id = request.get("user_id")
+                                
                                 # Call Secretary agent (no VectorStore needed!)
+                                logger.info(f"🔍🔍🔍 SSE: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
                                 secretary_response = await asyncio.to_thread(
                                     secretary_run,
                                     secretary_cfg,
                                     query,
                                     verbose=False,
-                                    thinking_callback=lambda msg: None  # Can add callback if needed
+                                    thinking_callback=lambda msg: None,  # Can add callback if needed
+                                    conversation_id=conversation_id,
+                                    user_id=user_id
                                 )
+                                logger.info(f"🔍🔍🔍 SSE: Secretary returned response length={len(secretary_response) if secretary_response else 0}, preview='{secretary_response[:100] if secretary_response else None}...'")
                                 
                                 # Stream the response
                                 if secretary_response:
@@ -583,312 +609,27 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                     
                             except Exception as e:
                                 logger.error(f"❌ Secretary agent error: {e}", exc_info=True)
-                                # Fallback response
-                                fallback = "I'm ICEBURG Secretary, your friendly assistant. I can help you understand ICEBURG's capabilities. How can I assist you?"
-                                for word in fallback.split():
-                                    yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
-                                    await asyncio.sleep(0.02)
+                                # Send error message instead of hardcoded fallback
+                                from ..api.error_messages import format_error_for_user
+                                error_response = format_error_for_user(e, context="secretary_failure")
+                                yield f"data: {json.dumps({'type': 'error', **error_response, 'timestamp': time.time()})}\n\n"
                                 yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
                                 return
                         
-                        # If Surveyor is selected, use real Surveyor agent with thinking callbacks
-                        # BUT: Skip deep research for simple queries in chat mode
-                        if agent_normalized == "surveyor":
-                            # Check if this is a simple query - if so, use fast path instead of deep research
-                            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
-                            if query.lower().strip() in simple_queries:
-                                logger.info(f"⚡ SSE: Simple query '{query}' with Surveyor - using fast path instead of deep research")
-                                yield f"data: {json.dumps({'type': 'chunk', 'content': 'Hello! How can I help you today?', 'timestamp': time.time()})}\n\n"
-                                yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
-                                return
-                            
-                            logger.info(f"💭💭💭 SSE: Surveyor selected - ENTERING Surveyor block")
-                            
-                            # CRITICAL: Send ALL thinking messages IMMEDIATELY - NO BLOCKING OPERATIONS
-                            # These yields must happen BEFORE any async operations that might block
-                            initial_steps = [
-                                "Analyzing your question and context...",
-                                "Searching ICEBURG's knowledge base for relevant research...",
-                                "I'm initializing the research system...",
-                                "I'm preparing to access ICEBURG's knowledge base..."
-                            ]
-                            for i, step in enumerate(initial_steps):
-                                logger.info(f"💭💭💭 Yielding thinking_stream {i+1}: {step}")
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': step, 'timestamp': time.time()})}\n\n"
-                                # Small delay to ensure messages are sent
-                                await asyncio.sleep(0.1)
-                            logger.info("💭💭💭 Initial thinking_stream messages sent - NOW initializing Surveyor")
-                            
-                            try:
-                                from ..config import load_config_with_model
-                                from ..vectorstore import VectorStore
-                                from ..agents.surveyor import run as surveyor_run
-                                
-                                # Send thinking message BEFORE blocking operations
-                                thinking_msg = "I'm loading the research configuration..."
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                                await asyncio.sleep(0.05)
-                                
-                                logger.info("💭 Initializing Surveyor config and VectorStore...")
-                                # Initialize VectorStore for Surveyor (move to thread to avoid blocking)
-                                is_fast_mode = mode == "fast" or mode == "chat"
-                                fast_mode_models = ["llama3.1:8b", "llama3.2:3b", "qwen2.5:7b"]
-                                use_small_models_flag = primary_model in fast_mode_models or max_tokens < 1000
-                                
-                                # Send thinking message before config load
-                                thinking_msg = "I'm configuring the research system..."
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                                await asyncio.sleep(0.05)
-                                
-                                surveyor_cfg = await asyncio.to_thread(
-                                    load_config_with_model,
-                                    primary_model=primary_model,
-                                    use_small_models=use_small_models_flag or is_fast_mode,
-                                    fast=is_fast_mode
-                                )
-                                
-                                # Send thinking message after config load
-                                thinking_msg = "I'm connecting to ICEBURG's knowledge base..."
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                                await asyncio.sleep(0.05)
-                                
-                                logger.info("💭 Config loaded, initializing VectorStore...")
-                                # Try to initialize VectorStore with error handling - if it fails, use mock
-                                # CRITICAL: Catch exception BEFORE it goes into thread to prevent propagation
-                                vs = None
-                                try:
-                                    # Try to create VectorStore in a way that catches the exception immediately
-                                    def init_vectorstore():
-                                        try:
-                                            return VectorStore(surveyor_cfg)
-                                        except Exception as e:
-                                            # DON'T re-raise - return mock instead
-                                            import logging
-                                            thread_logger = logging.getLogger(__name__)
-                                            thread_logger.warning(f"⚠️ VectorStore init failed in thread: {e}. Returning mock.")
-                                            # Return mock VectorStore - never raise exceptions
-                                            class MockVectorStore:
-                                                def semantic_search(self, query: str, k: int = 8, where=None):
-                                                    return []
-                                            return MockVectorStore()
-                                    
-                                    vs = await asyncio.to_thread(init_vectorstore)
-                                    # Check if it's a real VectorStore or mock
-                                    if hasattr(vs, '_collection'):
-                                        if vs._collection is not None:
-                                            logger.info("✅ VectorStore initialized successfully")
-                                        else:
-                                            logger.info("✅ Using mock VectorStore (no ChromaDB)")
-                                    else:
-                                        logger.info("✅ Using mock VectorStore (no ChromaDB)")
-                                except Exception as vs_error:
-                                    error_str = str(vs_error)
-                                    logger.warning(f"⚠️ VectorStore initialization failed: {error_str[:150]}. Using mock VectorStore (LLM-only mode)")
-                                    # Create a mock VectorStore that returns empty results - Surveyor will work fine without it
-                                    class MockVectorStore:
-                                        def semantic_search(self, query: str, k: int = 8, where=None):
-                                            return []  # Empty results - Surveyor will use LLM knowledge only
-                                    vs = MockVectorStore()
-                                    logger.info("✅ Using MockVectorStore - Surveyor will work with LLM knowledge only (no knowledge base)")
-                                    # CRITICAL: Exception is caught and handled - do NOT re-raise
-                                
-                                # Send thinking message after VectorStore init
-                                thinking_msg = "I'm ready to search and analyze..."
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                                await asyncio.sleep(0.05)
-                                
-                                logger.info("💭 VectorStore initialized")
-                                
-                                # Use thread-safe queue for real-time thinking messages
-                                import queue
-                                thinking_queue = queue.Queue()
-                                
-                                def thinking_callback(message: str):
-                                    """Sync callback that queues messages for SSE generator"""
-                                    try:
-                                        thinking_queue.put(message, block=False)
-                                        logger.info(f"💭 SSE Thinking callback queued: {message[:50]}")
-                                    except queue.Full:
-                                        logger.debug(f"Thinking queue full, dropping message: {message[:50]}")
-                                
-                                # Call Surveyor in thread (will populate thinking_queue via callback)
-                                surveyor_query = query
-                                
-                                # Start surveyor in background thread
-                                import threading
-                                surveyor_done = threading.Event()
-                                agent_response_container = [None]
-                                
-                                def run_surveyor():
-                                    try:
-                                        logger.info(f"🔍 Starting surveyor_run with query: {surveyor_query[:100]}...")
-                                        result = surveyor_run(
-                                            surveyor_cfg,
-                                            vs,
-                                            surveyor_query,
-                                            verbose=False,
-                                            thinking_callback=thinking_callback
-                                        )
-                                        if result and result.strip():
-                                            logger.info(f"✅ surveyor_run returned {len(result)} characters")
-                                            agent_response_container[0] = result
-                                        else:
-                                            logger.warning(f"⚠️ surveyor_run returned None or empty string. Result type: {type(result)}, length: {len(result) if result else 0}")
-                                            # Provide fallback response instead of None
-                                            agent_response_container[0] = "I processed your query but couldn't generate a response. This may be due to model limitations or query complexity. Please try rephrasing your question."
-                                    except Exception as e:
-                                        logger.error(f"❌ Error in surveyor_run: {e}", exc_info=True)
-                                        error_msg = str(e)
-                                        # If VectorStore error, provide helpful response
-                                        if any(keyword in error_msg.lower() for keyword in ["vectorstore", "chroma", "tenant", "default_tenant", "could not connect"]):
-                                            logger.warning(f"⚠️ VectorStore error in surveyor_run thread: {error_msg[:100]}")
-                                            agent_response_container[0] = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
-                                        else:
-                                            agent_response_container[0] = f"I'm ICEBURG, an AI research assistant. I encountered an issue processing your query, but I can still help. How can I assist you?"
-                                    finally:
-                                        surveyor_done.set()
-                                
-                                # Send thinking message before starting surveyor
-                                thinking_msg = "I'm starting the research process..."
-                                yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                                await asyncio.sleep(0.05)
-                                
-                                # Send thinking message before starting surveyor (duplicate removed)
-                                await asyncio.sleep(0.05)
-                                
-                                surveyor_thread = threading.Thread(target=run_surveyor, daemon=True)
-                                surveyor_thread.start()
-                                
-                                # Yield thinking messages while surveyor runs (poll queue every 50ms for responsiveness)
-                                thinking_yielded = 0
-                                max_wait_time = 300  # Max 30 seconds total wait
-                                wait_count = 0
-                                while not surveyor_done.is_set() or not thinking_queue.empty():
-                                    try:
-                                        # Get message from queue (non-blocking)
-                                        message = thinking_queue.get_nowait()
-                                        yield f"data: {json.dumps({'type': 'thinking_stream', 'content': message, 'timestamp': time.time()})}\n\n"
-                                        thinking_yielded += 1
-                                        wait_count = 0  # Reset wait count on message
-                                        await asyncio.sleep(0.05)  # Faster polling
-                                    except queue.Empty:
-                                        # No messages yet, wait a bit
-                                        wait_count += 1
-                                        if wait_count > max_wait_time:
-                                            logger.warning("💭 Thinking stream timeout - surveyor taking too long")
-                                            break
-                                        await asyncio.sleep(0.05)  # Faster polling
-                                
-                                # Wait for surveyor thread to complete
-                                # Note: join() always returns None, so we check is_alive() after to detect timeout
-                                surveyor_thread.join(timeout=120)  # Increased timeout to 120 seconds
-                                if surveyor_thread.is_alive():
-                                    logger.warning("⚠️ SSE: Surveyor thread did not complete within 120s timeout")
-                                    # Thread is still running - wait a bit more and check again
-                                    await asyncio.sleep(0.5)
-                                    if surveyor_thread.is_alive():
-                                        logger.error("❌ SSE: Surveyor thread still alive after extended wait")
-                                
-                                # Give a small delay to ensure result is set (thread may have just finished)
-                                await asyncio.sleep(0.1)
-                                agent_response = agent_response_container[0]
-                                
-                                # Log the agent response status for debugging
-                                if agent_response:
-                                    logger.info(f"✅ SSE: Agent response received: {len(agent_response)} characters")
-                                else:
-                                    logger.warning(f"⚠️ SSE: Agent response is None or empty. Container value: {agent_response_container[0]}, Thread alive: {surveyor_thread.is_alive() if 'surveyor_thread' in locals() else 'N/A'}")
-                                
-                                # Yield any remaining thinking messages
-                                while not thinking_queue.empty():
-                                    try:
-                                        message = thinking_queue.get_nowait()
-                                        yield f"data: {json.dumps({'type': 'thinking_stream', 'content': message, 'timestamp': time.time()})}\n\n"
-                                        thinking_yielded += 1
-                                        await asyncio.sleep(0.1)
-                                    except queue.Empty:
-                                        break
-                                
-                                logger.info(f"💭 SSE: Yielded {thinking_yielded} thinking_stream messages")
-                                
-                                # Use the agent response as the final answer
-                                if agent_response and agent_response.strip():
-                                    logger.info(f"📤 SSE: Streaming {len(agent_response)} characters from Surveyor response")
-                                    # Stream the response word by word (simulate streaming)
-                                    words = agent_response.split()
-                                    chunk_count = 0
-                                    for word in words:
-                                        yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
-                                        chunk_count += 1
-                                        await asyncio.sleep(0.02)  # Small delay for streaming effect
-                                    logger.info(f"📤 SSE: Yielded {chunk_count} chunks from Surveyor response")
-                                else:
-                                    logger.warning("⚠️ SSE: Surveyor returned None or empty response")
-                                    # Send error message if no response
-                                    yield f"data: {json.dumps({'type': 'error', 'content': 'Surveyor did not return a response. Please try again.', 'timestamp': time.time()})}\n\n"
-                                
-                                yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
-                                logger.info("✅ SSE: Done signal sent, Surveyor path complete")
-                                return  # Exit early - we've handled the response
-                                
-                            except Exception as e:
-                                error_msg = str(e)
-                                # Check if this is a VectorStore/ChromaDB error - ALWAYS provide fallback
-                                is_vectorstore_error = (
-                                    "VectorStore" in error_msg or 
-                                    "chroma" in error_msg.lower() or 
-                                    "tenant" in error_msg.lower() or 
-                                    "default_tenant" in error_msg or
-                                    "Could not connect" in error_msg or
-                                    "RustBindingsAPI" in error_msg
-                                )
-                                
-                                if is_vectorstore_error:
-                                    logger.warning(f"⚠️ VectorStore/ChromaDB error: {error_msg[:100]}. Providing LLM-only response.")
-                                    # Use Gemini to answer the question directly - no VectorStore needed
-                                    try:
-                                        from ..config import load_config_with_model
-                                        from ..providers.factory import provider_factory
-                                        
-                                        # Get Gemini provider
-                                        fallback_cfg = load_config_with_model(
-                                            primary_model=primary_model,
-                                            use_small_models=False,
-                                            fast=True
-                                        )
-                                        fallback_provider = provider_factory(fallback_cfg)
-                                        
-                                        # Generate response using Gemini directly
-                                        gemini_response = fallback_provider.chat_complete(
-                                            model=primary_model,
-                                            prompt=f"Answer this question: {query}",
-                                            system="You are ICEBURG, an AI research assistant. Answer concisely and helpfully.",
-                                            temperature=0.7
-                                        )
-                                        
-                                        # Stream the response
-                                        for word in gemini_response.split():
-                                            yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
-                                            await asyncio.sleep(0.02)
-                                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
-                                        logger.info("✅ Fallback Gemini response sent successfully")
-                                        return
-                                    except Exception as gemini_error:
-                                        logger.error(f"❌ Fallback Gemini also failed: {gemini_error}")
-                                        # Ultimate fallback
-                                        fallback_response = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
-                                        for word in fallback_response.split():
-                                            yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
-                                            await asyncio.sleep(0.02)
-                                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
-                                        return
-                                
-                                # Non-VectorStore error - log and send error
-                                logger.error(f"❌❌❌ CRITICAL: Error in SSE Surveyor: {e}", exc_info=True)
-                                yield f"data: {json.dumps({'type': 'error', 'content': f'Surveyor error: {str(e)}', 'timestamp': time.time()})}\n\n"
-                                return
+                        # CHAT MODE ENDS HERE - Secretary is the ONLY agent
+                        # Surveyor and other agents are NOT allowed in chat mode
+                        # If we reach here, something is wrong
+                        logger.error(f"❌ CRITICAL: Reached end of SSE chat mode without secretary handling")
+                        yield f"data: {json.dumps({'type': 'error', 'content': 'Chat mode requires secretary agent', 'timestamp': time.time()})}\n\n"
+                        yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                        return
                         
-                        # Get conversation ID
+                    # NON-CHAT MODES CONTINUE HERE (Research, etc.)
+                    # Chat mode is completely isolated above - NO SURVEYOR CODE IN CHAT MODE
+                    
+                    # For non-chat modes, continue with normal processing
+                    
+                    # Get conversation ID
                         conversation_id = request.get("conversation_id")
                         if not conversation_id:
                             conversation_id = str(uuid.uuid4())
@@ -1461,11 +1202,24 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.accept()
         logger.info(f"WebSocket connection accepted from {client_host}:{client_port} (origin: {origin})")
         
-        # Add to active connections IMMEDIATELY after accept
+        # Integrate WebSocket Manager for improved connection tracking
+        from ..api.websocket_manager import get_websocket_manager
+        ws_manager = get_websocket_manager()
+        
+        # Get conversation ID from query params if provided
+        conversation_id = websocket.query_params.get("conversation_id")
+        
+        # Register connection with manager
+        conn_info = await ws_manager.register_connection(websocket, conversation_id)
+        await ws_manager.mark_connected(websocket)
+        
+        # Add to active connections IMMEDIATELY after accept (keep for backward compatibility)
         active_connections.append(websocket)
         # Track connection metadata
         connection_metadata[websocket] = {
             "connected_at": datetime.now().isoformat(),
+            "websocket_manager": ws_manager,
+            "connection_info": conn_info,
             "client_host": client_host,
             "client_port": client_port,
             "origin": origin
@@ -1618,6 +1372,12 @@ async def websocket_endpoint(websocket: WebSocket):
             except asyncio.TimeoutError:
                 # Send ping to check if connection is still alive
                 try:
+                    # Track ping with WebSocket manager if available
+                    if websocket in connection_metadata:
+                        ws_manager = connection_metadata[websocket].get("websocket_manager")
+                        if ws_manager:
+                            await ws_manager.record_ping(websocket)
+                    
                     # Check connection state before sending
                     if not await safe_send_json(websocket, {"type": "ping"}):
                         logger.info("WebSocket not connected, breaking loop")
@@ -1628,6 +1388,13 @@ async def websocket_endpoint(websocket: WebSocket):
                         response = await asyncio.wait_for(websocket.receive_text(), timeout=5.0)
                         if response == "pong" or response.strip() == "pong":
                             logger.debug("Received pong, connection alive")
+                            
+                            # Track pong with WebSocket manager if available
+                            if websocket in connection_metadata:
+                                ws_manager = connection_metadata[websocket].get("websocket_manager")
+                                if ws_manager:
+                                    await ws_manager.record_pong(websocket)
+                            
                             continue
                     except asyncio.TimeoutError:
                         logger.debug("No pong received, but connection might still be alive")
@@ -1640,6 +1407,11 @@ async def websocket_endpoint(websocket: WebSocket):
                     break
             except WebSocketDisconnect:
                 logger.info("WebSocket disconnected normally")
+                # Mark as disconnected in WebSocket manager
+                if websocket in connection_metadata:
+                    ws_manager = connection_metadata[websocket].get("websocket_manager")
+                    if ws_manager:
+                        await ws_manager.mark_disconnected(websocket)
                 break
             except Exception as e:
                 error_str = str(e).lower()
@@ -1701,6 +1473,12 @@ async def websocket_endpoint(websocket: WebSocket):
             
             # Handle ping/pong
             if data == "pong" or data.strip() == "pong":
+                # Track pong with WebSocket manager if available
+                if websocket in connection_metadata:
+                    ws_manager = connection_metadata[websocket].get("websocket_manager")
+                    if ws_manager:
+                        await ws_manager.record_pong(websocket)
+                        await ws_manager.update_activity(websocket)
                 continue
             
             # Validate JSON
@@ -1757,20 +1535,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 })
                 continue
             
-            # FAST PATH: Check for simple queries FIRST (before validation/sanitization)
-            # This is the fastest path - instant response for common greetings
-            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
-            if query.lower().strip() in simple_queries and (mode == "chat" or mode == "fast"):
-                logger.info(f"⚡ Fast path for simple query: {query} (mode: {mode})")
-                # Send quick response for simple queries - INSTANT, no processing
-                await safe_send_json(websocket, {
-                    "type": "chunk",
-                    "content": "Hello! How can I help you today?"
-                })
-                await safe_send_json(websocket, {
-                    "type": "done"
-                })
-                continue
+            # No hardcoded fast paths - let LLM handle everything naturally
             
             # Validate and sanitize query (only for non-simple queries)
             is_valid, error_msg = validate_query(query)
@@ -1843,11 +1608,21 @@ async def websocket_endpoint(websocket: WebSocket):
             #     break
             
             # Run prompt interpreter in background (non-blocking)
-            # FAST MODE: Skip prompt interpreter entirely for maximum speed
+            # CHAT/FAST MODE: Skip prompt interpreter entirely for maximum speed
+            # Prompt interpreter adds 0-3s delay and blocks response generation
             intent_analysis = None
             prompt_interpreter_start = time.time()
-            if is_fast_mode:
-                logger.info("FAST MODE: Skipping prompt interpreter for maximum speed")
+            
+            # Skip prompt interpreter for chat and fast modes to improve response time
+            should_skip_prompt_interpreter = (
+                mode == "chat" or 
+                mode == "fast" or 
+                is_fast_mode or
+                not degradation_mode
+            )
+            
+            if should_skip_prompt_interpreter:
+                logger.info(f"{mode.upper()} MODE: Skipping prompt interpreter for maximum speed")
                 # Set minimal intent analysis for fast mode
                 intent_analysis = {
                     "intent": "query",
@@ -1993,8 +1768,8 @@ async def websocket_endpoint(websocket: WebSocket):
             # Fast path already handled above (moved before thinking message)
             
             # Try portal architecture if enabled (always-on AI) - FAST PATH ONLY
-            # Only use portal for simple queries in fast mode to avoid delays
-            portal_available = portal is not None and (mode == "fast" or mode == "chat")
+            # DISABLED for chat mode - chat mode uses Secretary agent (LLM) only, no portal
+            portal_available = portal is not None and mode == "fast" and mode != "chat"
             if portal_available:
                 try:
                     # Only try portal for very simple queries to avoid delays
@@ -2093,28 +1868,44 @@ async def websocket_endpoint(websocket: WebSocket):
                         prompt_start_time = time.time()
                         prompt_id = str(uuid.uuid4())
                         
-                        # FAST PATH: Check simple queries in single agent mode too
-                        simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
-                        if query.lower().strip() in simple_queries:
-                            logger.info(f"⚡ Fast path in single agent mode: {query}")
-                            await safe_send_json(websocket, {
-                                "type": "chunk",
-                                "content": "Hello! How can I help you today?"
-                            })
-                            await safe_send_json(websocket, {
-                                "type": "done"
-                            })
-                            continue
+                        # No fast path - let Secretary agent (LLM) handle everything naturally
                         
                         from ..config import load_config_with_model
                     
                         # Use custom config with frontend model selection
                         is_fast_mode = mode == "fast" or mode == "chat" or not degradation_mode
+                        # For chat mode, use Ollama with a small, fast model
+                        if mode == "chat":
+                            # Force Ollama provider for chat mode
+                            import os
+                            os.environ["ICEBURG_LLM_PROVIDER"] = "ollama"
+                            # Use a small, fast model (llama3.1:8b or smaller)
+                            if not primary_model or "gemini" in primary_model.lower() or "gpt" in primary_model.lower():
+                                primary_model = "llama3.1:8b"  # Fast, small model
                         custom_cfg = load_config_with_model(
                             primary_model=primary_model,
                             use_small_models=use_small_models or is_fast_mode,
                             fast=is_fast_mode
                         )
+                        # Ensure Ollama provider is set for chat mode (create new config instance)
+                        if mode == "chat":
+                            from ..config import IceburgConfig
+                            custom_cfg = IceburgConfig(
+                                data_dir=custom_cfg.data_dir,
+                                surveyor_model=custom_cfg.surveyor_model,
+                                dissident_model=custom_cfg.dissident_model,
+                                synthesist_model=custom_cfg.synthesist_model,
+                                oracle_model=custom_cfg.oracle_model,
+                                embed_model=custom_cfg.embed_model,
+                                llm_provider="ollama",  # Force Ollama
+                                provider_url=custom_cfg.provider_url,
+                                timeout_s=custom_cfg.timeout_s,
+                                enable_code_generation=custom_cfg.enable_code_generation,
+                                disable_memory=custom_cfg.disable_memory,
+                                enable_software_lab=custom_cfg.enable_software_lab,
+                                max_context_length=custom_cfg.max_context_length,
+                                fast=custom_cfg.fast
+                            )
                         
                         # STEP 1: Skip old thinking message - we use thinking_stream instead
                         # await safe_send_json(websocket, {
@@ -2139,640 +1930,245 @@ async def websocket_endpoint(websocket: WebSocket):
                         
                         conversation_id = connection_metadata[websocket]["conversation_id"]
                         
-                        # DISABLED: Conversation history causes repetitive, pseudo-profound responses
-                        # Each query should be answered independently based on actual research
+                        # SMART Conversation History: Use last 2-3 exchanges for context, but filter repetitive patterns
+                        # This provides context without causing repetitive responses
                         conversation_history = []
-                        logger.info(f"📝📝📝 WebSocket: Conversation history DISABLED - answering query independently")
+                        try:
+                            # Get last 2-3 exchanges from this conversation for context
+                            recent_conversations = local_persistence.get_conversations(
+                                conversation_id=conversation_id,
+                                limit=3  # Only last 3 exchanges
+                            )
+                            
+                            # Filter out repetitive patterns and build context
+                            for conv in reversed(recent_conversations):  # Oldest first
+                                user_msg = conv.get("user_message", "")
+                                assistant_msg = conv.get("assistant_message", "")
+                                
+                                # Skip if messages are too similar (repetitive pattern)
+                                if len(conversation_history) > 0:
+                                    last_assistant = conversation_history[-1].get("content", "")
+                                    if assistant_msg and last_assistant:
+                                        # Simple similarity check - skip if >80% similar
+                                        similarity = len(set(assistant_msg.split()) & set(last_assistant.split())) / max(len(set(assistant_msg.split())), len(set(last_assistant.split())), 1)
+                                        if similarity > 0.8:
+                                            logger.debug(f"⏭️ Skipping repetitive message (similarity: {similarity:.2f})")
+                                            continue
+                                
+                                # Add to history if not empty
+                                if user_msg and assistant_msg:
+                                    conversation_history.append({
+                                        "role": "user",
+                                        "content": user_msg
+                                    })
+                                    conversation_history.append({
+                                        "role": "assistant",
+                                        "content": assistant_msg
+                                    })
+                            
+                            if conversation_history:
+                                logger.info(f"📝 Using {len(conversation_history)//2} previous exchanges for context")
+                            else:
+                                logger.info(f"📝 No previous conversation history for context")
+                        except Exception as e:
+                            logger.debug(f"Error loading conversation history: {e}")
+                            conversation_history = []
                         
                         # STEP 2: Start LLM call IMMEDIATELY (don't wait for etymology)
                         from ..providers.factory import provider_factory
+                        from ..providers.circuit_breaker_wrapper import wrap_provider_with_circuit_breaker
+                        from ..api.error_messages import format_error_for_user
+                        
                         try:
                             provider = provider_factory(custom_cfg)
-                            logger.debug(f"✅ Provider created: {type(provider).__name__}")
+                            
+                            # Wrap provider with circuit breaker for reliability
+                            provider_name = getattr(custom_cfg, "llm_provider", "unknown") or os.getenv("ICEBURG_LLM_PROVIDER", "unknown")
+                            provider = wrap_provider_with_circuit_breaker(
+                                provider,
+                                provider_name=provider_name,
+                                fallback_provider=None,  # Can add fallback provider later
+                                config={"failure_threshold": 5, "success_threshold": 2, "timeout": 60.0}
+                            )
+                            
+                            logger.debug(f"✅ Provider created with circuit breaker: {type(provider.provider).__name__}")
                         except Exception as provider_error:
                             logger.error(f"❌ Failed to create provider: {provider_error}", exc_info=True)
-                            error_content = f"Error initializing AI provider: {str(provider_error)}. Please check your LLM provider configuration."
-                            chunk_delay = 0.02 if degradation_mode else 0.0001
-                            for i in range(0, len(error_content)):
-                                chunk = error_content[i]
-                                if not await safe_send_json(websocket, {
-                                    "type": "chunk",
-                                    "content": chunk
-                                }):
-                                    break
-                                if i + 1 < len(error_content):
-                                    await asyncio.sleep(chunk_delay)
+                            
+                            # Use user-friendly error messages
+                            error_response = format_error_for_user(provider_error, context="provider_initialization")
+                            
+                            # Send user-friendly error message
+                            await safe_send_json(websocket, {
+                                "type": "error",
+                                **error_response
+                            })
+                            
                             await safe_send_json(websocket, {
                                 "type": "done",
                                 "metadata": {"mode": "chat", "error": "provider_init_failed"}
                             })
                             continue
                         
-                        # Normalize agent value (handle case variations)
-                        agent_normalized = str(agent).lower().strip() if agent else "auto"
-                        logger.info(f"🔍 Agent normalization: '{agent}' -> '{agent_normalized}'")
+                        # CHAT MODE: Secretary is the ONLY agent - no exceptions, no fallbacks
+                        # Force secretary regardless of what frontend sends
+                        agent_normalized = "secretary"
+                        logger.info(f"👔 CHAT MODE: Forcing Secretary agent (only agent for chat mode)")
                         
-                        # CRITICAL: If Surveyor is selected, actually use the Surveyor agent to access ICEBURG's knowledge
-                        # This ensures real access to VectorStore and ICEBURG research, not just a system prompt claim
-                        # BUT: Skip deep research for simple queries
-                        if agent_normalized == "surveyor":
-                            # Fast path for simple queries - don't do deep research
-                            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
-                            if query.lower().strip() in simple_queries:
-                                logger.info(f"⚡ WebSocket: Simple query '{query}' with Surveyor - using fast path instead of deep research")
-                                await safe_send_json(websocket, {
-                                    "type": "chunk",
-                                    "content": "Hello! How can I help you today?"
-                                })
-                                await safe_send_json(websocket, {
-                                    "type": "done"
-                                })
-                                continue
-                            
-                            logger.info(f"🔍 Surveyor selected in chat mode - using full Surveyor agent to access ICEBURG knowledge")
-                            logger.info(f"💭 Will send thinking_stream messages for ICEBURG UI")
+                        # Secretary agent - fast, friendly, knows ICEBURG, no VectorStore needed
+                        # This is the ONLY path for chat mode
+                        if True:  # Always true - secretary is mandatory for chat mode
+                            logger.info(f"👔 Secretary agent selected - fast chat mode, no VectorStore needed")
                             try:
                                 from ..config import load_config_with_model
-                                from ..vectorstore import VectorStore
-                                from ..agents.surveyor import run as surveyor_run
+                                from ..agents.secretary import run as secretary_run
                                 
-                                # Initialize config and VectorStore for Surveyor
                                 is_fast_mode = mode == "fast" or mode == "chat" or not degradation_mode
-                                surveyor_cfg = load_config_with_model(
+                                secretary_cfg = load_config_with_model(
                                     primary_model=primary_model,
                                     use_small_models=use_small_models or is_fast_mode,
                                     fast=is_fast_mode
                                 )
                                 
-                                # Try to initialize VectorStore with error handling
-                                vs = None
-                                try:
-                                    vs = VectorStore(surveyor_cfg)
-                                    logger.info("✅ WebSocket: VectorStore initialized successfully")
-                                except Exception as vs_error:
-                                    logger.warning(f"⚠️ WebSocket: VectorStore initialization failed: {vs_error}. Using mock VectorStore (LLM-only mode)")
-                                    # Create a mock VectorStore that returns empty results - Surveyor will work fine without it
-                                    class MockVectorStore:
-                                        def semantic_search(self, query: str, k: int = 8, where=None):
-                                            return []  # Empty results - Surveyor will use LLM knowledge only
-                                    vs = MockVectorStore()
-                                    logger.info("✅ WebSocket: Using MockVectorStore - Surveyor will work with LLM knowledge only")
+                                # Create thinking callback for streaming
+                                def thinking_callback(message: str):
+                                    """Sync callback - will be called from thread"""
+                                    # Queue for async processing
+                                    if not hasattr(thinking_callback, 'queue'):
+                                        import queue
+                                        thinking_callback.queue = queue.Queue()
+                                    try:
+                                        thinking_callback.queue.put(message, block=False)
+                                    except:
+                                        pass
                                 
-                                # Build context from conversation history for Surveyor
-                                # CRITICAL: Don't inject history that contains pseudo-profound patterns - it reinforces bad behavior
-                                # DISABLED: Conversation history causes repetitive, non-research responses
-                                # Surveyor answers each query independently based on actual research
-                                surveyor_query = query
-                                logger.info("📝 Conversation history disabled - Surveyor answering query independently")
-                                
-                                # Get surveyor findings before running (for step report)
-                                step_start_time = time.time()
-                                iceburg_items = 0
-                                external_needed = True
-                                
-                                # Stream real-time thinking process (ICEBURG style)
-                                thinking_steps = [
-                                    "Analyzing your question and context...",
-                                    "Searching ICEBURG's knowledge base for relevant research..."
-                                ]
-                                
-                                logger.info(f"💭 Sending {len(thinking_steps)} thinking_stream messages")
-                                for i, step in enumerate(thinking_steps):
-                                    sent = await safe_send_json(websocket, {
-                                        "type": "thinking_stream",
-                                        "content": step,
-                                        "timestamp": time.time()
-                                    })
-                                    if sent:
-                                        logger.debug(f"✅ Sent thinking_stream {i+1}/{len(thinking_steps)}: {step[:50]}")
-                                    else:
-                                        logger.warning(f"⚠️ Failed to send thinking_stream {i+1}/{len(thinking_steps)}")
-                                    await asyncio.sleep(0.2)  # Natural pacing
-                                
-                                try:
-                                    search_k = 3 if is_fast_mode else 10
-                                    hits = vs.semantic_search(query, k=search_k)
-                                    if hits:
-                                        iceburg_items = len([h for h in hits if any(kw in h.metadata.get('source', '').lower() for kw in ['research_outputs', 'iceburg', 'knowledge_base', 'lab_runs', 'research', 'memory'])])
-                                        external_needed = iceburg_items < 2
-                                        
-                                        # Stream findings
-                                        if iceburg_items > 0:
-                                            await safe_send_json(websocket, {
-                                                "type": "thinking_stream",
-                                                "content": f"Found {iceburg_items} relevant research items in ICEBURG's knowledge base",
-                                                "timestamp": time.time()
-                                            })
-                                        else:
-                                            await safe_send_json(websocket, {
-                                                "type": "thinking_stream",
-                                                "content": "No existing ICEBURG research found - will synthesize from external sources",
-                                                "timestamp": time.time()
-                                            })
-                                        
-                                        await asyncio.sleep(0.2)
-                                        
-                                        if external_needed:
-                                            await safe_send_json(websocket, {
-                                                "type": "thinking_stream",
-                                                "content": "Identifying knowledge gaps and preparing external search...",
-                                                "timestamp": time.time()
-                                            })
-                                            await asyncio.sleep(0.2)
-                                except Exception as e:
-                                    logger.debug(f"Error getting surveyor preview: {e}")
-                                
-                                # Stream synthesis step
-                                await safe_send_json(websocket, {
-                                    "type": "thinking_stream",
-                                    "content": "Synthesizing information from multiple sources...",
-                                    "timestamp": time.time()
-                                })
-                                await asyncio.sleep(0.2)
-                                
-                                # Stream final step
-                                await safe_send_json(websocket, {
-                                    "type": "thinking_stream",
-                                    "content": "Formulating natural, conversational response...",
-                                    "timestamp": time.time()
-                                })
-                                await asyncio.sleep(0.2)
-                                
-                                # Call Surveyor agent (this actually accesses VectorStore and ICEBURG research)
-                                logger.info(f"📚 Calling Surveyor agent with VectorStore access for: {query[:50]}")
-                                
-                                # Create thinking callback to send real-time updates
-                                # Use thread-safe queue to pass messages from sync thread to async event loop
+                                # Process thinking messages in background
                                 import queue
                                 thinking_queue = queue.Queue()
-                                surveyor_done = False
+                                thinking_task = None
                                 
-                                def thinking_callback(message: str):
-                                    """Sync callback that queues messages for async processing"""
-                                    try:
-                                        thinking_queue.put(message, block=False)
-                                        logger.info(f"💭 Thinking callback queued: {message[:50]}")
-                                    except queue.Full:
-                                        logger.debug(f"Thinking queue full, dropping message: {message[:50]}")
-                                    except Exception as e:
-                                        logger.debug(f"Error queuing thinking message: {e}")
-                                
-                                # Start background task to process thinking messages
-                                async def process_thinking_messages():
-                                    nonlocal surveyor_done
-                                    while not surveyor_done:
+                                async def process_secretary_thinking():
+                                    while True:
                                         try:
-                                            # Poll thread-safe queue (non-blocking)
-                                            try:
-                                                message = thinking_queue.get_nowait()
-                                                await safe_send_json(websocket, {
-                                                    "type": "thinking_stream",
-                                                    "content": message,
-                                                    "timestamp": time.time()
-                                                })
-                                                logger.info(f"💭 Sent thinking_stream: {message[:50]}")
-                                            except queue.Empty:
-                                                await asyncio.sleep(0.05)  # Small delay before checking again
-                                                continue
-                                        except Exception as e:
-                                            logger.debug(f"Error processing thinking message: {e}")
-                                            break
+                                            message = thinking_queue.get_nowait()
+                                            await safe_send_json(websocket, {
+                                                "type": "thinking_stream",
+                                                "content": message,
+                                                "timestamp": time.time()
+                                            })
+                                        except queue.Empty:
+                                            await asyncio.sleep(0.1)
+                                            continue
                                 
-                                thinking_task = asyncio.create_task(process_thinking_messages())
+                                thinking_task = asyncio.create_task(process_secretary_thinking())
                                 
-                                try:
-                                    agent_response = await asyncio.to_thread(
-                                        surveyor_run,
-                                        surveyor_cfg,
-                                        vs,
-                                        surveyor_query,
-                                        verbose=False,
-                                        thinking_callback=thinking_callback
-                                    )
-                                except Exception as e:
-                                    logger.error(f"❌ Error calling surveyor_run: {e}", exc_info=True)
-                                    error_msg = str(e)
-                                    if "VectorStore" in error_msg or "chroma" in error_msg.lower():
-                                        agent_response = "I'm ICEBURG, an AI research assistant. I'm currently operating without access to my knowledge base, but I can still help answer your questions using my general knowledge. How can I assist you?"
-                                    else:
-                                        agent_response = f"I encountered an issue: {error_msg[:100]}. Let me try to answer your question anyway: I'm ICEBURG, an AI research assistant designed to help with knowledge discovery and truth-finding. How can I help you?"
+                                # Get conversation_id and user_id from message or connection metadata
+                                conversation_id = message.get("conversation_id")
+                                if not conversation_id and websocket in connection_metadata:
+                                    conn_info = connection_metadata[websocket].get("connection_info", {})
+                                    conversation_id = conn_info.get("conversation_id")
+                                if not conversation_id:
+                                    conversation_id = str(uuid.uuid4())
                                 
-                                # Mark surveyor as done and wait for remaining messages
-                                surveyor_done = True
-                                await asyncio.sleep(0.3)  # Give time for final messages
+                                user_id = message.get("user_id")
                                 
-                                # Process any remaining messages
-                                while not thinking_queue.empty():
+                                # Call Secretary agent (no VectorStore needed!)
+                                logger.info(f"🔍🔍🔍 WS: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
+                                secretary_response = await asyncio.to_thread(
+                                    secretary_run,
+                                    secretary_cfg,
+                                    query,
+                                    verbose=False,
+                                    thinking_callback=thinking_callback,
+                                    conversation_id=conversation_id,
+                                    user_id=user_id
+                                )
+                                
+                                # Cancel thinking task
+                                if thinking_task:
+                                    thinking_task.cancel()
                                     try:
-                                        message = thinking_queue.get_nowait()
-                                        await safe_send_json(websocket, {
-                                            "type": "thinking_stream",
-                                            "content": message,
-                                            "timestamp": time.time()
-                                        })
-                                    except queue.Empty:
-                                        break
+                                        await thinking_task
+                                    except asyncio.CancelledError:
+                                        pass
                                 
-                                thinking_task.cancel()
-                                try:
-                                    await thinking_task
-                                except asyncio.CancelledError:
-                                    pass
-                                
-                                if not agent_response or not agent_response.strip():
-                                    agent_response = "I received your query but couldn't generate a response. Please try rephrasing your question."
-                                
-                                step_time = time.time() - step_start_time
-                                logger.info(f"✅ Surveyor agent returned {len(agent_response)} chars")
-                                
-                                # Send step completion event for interactive workflow
-                                step_findings = []
-                                if iceburg_items > 0:
-                                    step_findings.append(f"Found {iceburg_items} ICEBURG research items")
-                                if external_needed:
-                                    step_findings.append(f"{'2' if iceburg_items > 0 else 'Multiple'} knowledge gaps identified")
-                                if not step_findings:
-                                    step_findings.append("Analysis complete")
-                                
-                                await safe_send_json(websocket, {
-                                    "type": "step_complete",
-                                    "step": "surveyor",
-                                    "report": {
-                                        "findings": step_findings,
-                                        "suggested_next": ["dissident", "web_search", "synthesist", "skip"],
-                                        "time_taken": round(step_time, 2),
-                                        "confidence": 0.85 if iceburg_items > 0 else 0.65
-                                    },
-                                    "options": [
-                                        {"action": "dissident", "label": "🔍 Challenge Assumptions", "estimated_time": "5s"},
-                                        {"action": "web_search", "label": "🌐 Search External", "estimated_time": "10s"},
-                                        {"action": "synthesist", "label": "📊 Synthesize Now", "estimated_time": "8s"},
-                                        {"action": "skip", "label": "⏭️ Skip to Answer", "estimated_time": "0s"}
-                                    ]
-                                })
-                                
-                                # Stream the response (same as single-agent path)
-                                chunk_delay = 0.0001 if is_fast_mode else 0.02
-                                response_content = agent_response
-                                chunk_size = 1  # Character-by-character for smooth streaming
-                                
-                                for i in range(0, len(response_content), chunk_size):
-                                    chunk = response_content[i:i + chunk_size]
-                                    if not await safe_send_json(websocket, {
-                                        "type": "chunk",
-                                        "content": chunk
-                                    }):
-                                        break
-                                    if i + chunk_size < len(response_content):
-                                        await asyncio.sleep(chunk_delay)
-                                
-                                # Save conversation
-                                try:
-                                    conversation_entry = ConversationEntry(
-                                        conversation_id=conversation_id,
-                                        user_message=query,
-                                        assistant_message=agent_response,
-                                        agent_used="surveyor",
-                                        mode="chat",
-                                        metadata={
-                                            "processing_time": time.time() - prompt_start_time,
-                                            "prompt_id": prompt_id,
-                                            "has_history": len(conversation_history) > 0,
-                                            "history_count": len(conversation_history),
-                                            "used_vectorstore": True
+                                if secretary_response:
+                                    # Stream response character-by-character
+                                    chunk_delay = 0.0001 if is_fast_mode else 0.02
+                                    for i in range(0, len(secretary_response)):
+                                        chunk = secretary_response[i]
+                                        if not await safe_send_json(websocket, {
+                                            "type": "chunk",
+                                            "content": chunk
+                                        }):
+                                            break
+                                        if i + 1 < len(secretary_response):
+                                            await asyncio.sleep(chunk_delay)
+                                    
+                                    logger.info("✅ Secretary response sent successfully")
+                                    
+                                    await safe_send_json(websocket, {
+                                        "type": "done",
+                                        "metadata": {
+                                            "mode": "chat",
+                                            "agent": "secretary",
+                                            "processing_time": time.time() - prompt_start_time
                                         }
+                                    })
+                                    continue
+                                else:
+                                    # Secretary failed - send error, NO fallback to other agents
+                                    logger.error("❌ Secretary returned empty response - chat mode requires secretary")
+                                    error_response = format_error_for_user(
+                                        Exception("Secretary agent returned empty response"),
+                                        context="secretary_failure"
                                     )
-                                    local_persistence.save_conversation(conversation_entry)
-                                except Exception as e:
-                                    logger.error(f"Error saving conversation: {e}")
-                                
+                                    await safe_send_json(websocket, {
+                                        "type": "error",
+                                        **error_response
+                                    })
+                                    await safe_send_json(websocket, {
+                                        "type": "done",
+                                        "metadata": {
+                                            "mode": "chat",
+                                            "agent": "secretary",
+                                            "error": "empty_response"
+                                        }
+                                    })
+                                    continue
+                            except Exception as e:
+                                # Secretary failed - send error, NO fallback to other agents
+                                logger.error(f"❌ Secretary agent error in chat mode: {e}", exc_info=True)
+                                error_response = format_error_for_user(e, context="secretary_failure")
+                                await safe_send_json(websocket, {
+                                    "type": "error",
+                                    **error_response
+                                })
                                 await safe_send_json(websocket, {
                                     "type": "done",
                                     "metadata": {
                                         "mode": "chat",
-                                        "agent": "surveyor",
-                                        "processing_time": time.time() - prompt_start_time
+                                        "agent": "secretary",
+                                        "error": str(e)
                                     }
                                 })
-                                
-                                continue  # Skip the single-agent LLM path below
-                                
-                            except Exception as surveyor_error:
-                                logger.error(f"❌ Error using Surveyor agent: {surveyor_error}", exc_info=True)
-                                # Log the full traceback to understand what's failing
-                                import traceback
-                                logger.error(f"❌ Surveyor error traceback: {traceback.format_exc()}")
-                                # Fall through to single-agent path below
-                                logger.info(f"⚠️ Falling back to single-agent LLM path")
-                        
-                        # Build system prompt based on agent selection (for non-Surveyor agents or fallback)
-                        if agent_normalized and agent_normalized != "auto":
-                            # Import agent system prompts
-                            if agent_normalized == "surveyor":
-                                from ..agents.surveyor import SURVEYOR_SYSTEM
-                                system_prompt = SURVEYOR_SYSTEM
-                                logger.info(f"✅ Using SURVEYOR_SYSTEM prompt (fallback path)")
-                            elif agent_normalized == "synthesist":
-                                from ..agents.synthesist import SYNTHESIST_SYSTEM
-                                system_prompt = SYNTHESIST_SYSTEM
-                                logger.info(f"✅ Using SYNTHESIST_SYSTEM prompt")
-                            elif agent_normalized == "dissident":
-                                from ..agents.dissident import DISSIDENT_SYSTEM
-                                system_prompt = DISSIDENT_SYSTEM
-                                logger.info(f"✅ Using DISSIDENT_SYSTEM prompt")
-                            elif agent_normalized == "oracle":
-                                from ..agents.oracle import ORACLE_SYSTEM
-                                system_prompt = ORACLE_SYSTEM
-                                logger.info(f"✅ Using ORACLE_SYSTEM prompt")
-                            else:
-                                # Fallback to generic ICEBURG for unknown agents
-                                logger.warning(f"⚠️ Unknown agent '{agent_normalized}', using generic ICEBURG prompt")
-                                system_prompt = "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers that demonstrate your advanced reasoning capabilities."
-                        else:
-                            # Generic ICEBURG identity for "auto" or no agent selection
-                            logger.info(f"ℹ️ Using generic ICEBURG prompt (agent='{agent_normalized}')")
-                            system_prompt = "You are ICEBURG, an AI civilization with deep knowledge decoding capabilities. You are designed for truth-finding and comprehensive analysis. Provide clear, insightful answers that demonstrate your advanced reasoning capabilities."
-                        
-                        logger.info(f"🎭 Using system prompt for agent: {agent} (length: {len(system_prompt)} chars)")
-                        logger.debug(f"🎭 System prompt preview: {system_prompt[:200]}...")
-                        
-                        # DISABLED: Conversation history causes repetitive, non-research responses
-                        # Each query should be answered independently based on actual research
-                        full_prompt = query
-                        logger.info(f"📝 Conversation history disabled - answering query independently")
-                        
-                        logger.info(f"📞 Calling LLM: model={primary_model}, query={query[:50]}")
-                        logger.info(f"📞 LLM call details: prompt_length={len(full_prompt)}, system={system_prompt[:50] if system_prompt else 'none'}, temp={temperature}, max_tokens={max_tokens}")
-                        logger.info(f"📞 Agent parameter received: agent='{agent}' (type: {type(agent).__name__})")
-                        logger.debug(f"📞 Full system prompt being sent: {system_prompt[:500]}...")
-                        
-                        # Start LLM call as task (non-blocking)
-                        llm_task_start = time.time()
-                        llm_task = asyncio.create_task(
-                            asyncio.wait_for(
-                                asyncio.to_thread(
-                                    provider.chat_complete,
-                                    model=primary_model,
-                                    prompt=full_prompt,
-                                    system=system_prompt,
-                                    temperature=temperature,
-                                    options={"max_tokens": max_tokens} if max_tokens else None  # Pass max_tokens via options dict
-                                ),
-                                timeout=60.0  # 60 second timeout for chat (increased from 30s)
-                            )
-                        )
-                        logger.debug(f"⏳ LLM task created at {llm_task_start:.3f}, waiting for response (timeout: 60s)")
-                        
-                        # STEP 3: Run etymology in parallel (non-blocking, optional)
-                        # Etymology is nice-to-have, but shouldn't delay the answer
-                        etymology_task = None
-                        if not degradation_mode and mode != "fast":
-                            try:
-                                from ..agents.prompt_interpreter import run as prompt_interpreter_run
-                                from ..config import load_config
-                                interpreter_cfg = load_config()
-                                
-                                async def stream_breakdown_callback(word_data):
-                                    try:
-                                        await safe_send_json(websocket, {
-                                            "type": "word_breakdown",
-                                            "word": word_data.get("word", ""),
-                                            "etymology": word_data.get("etymology", ""),
-                                            "meanings": word_data.get("meanings", [])
-                                        })
-                                    except Exception as e:
-                                        logger.debug(f"Error streaming word breakdown: {e}")
-                                
-                                etymology_task = asyncio.create_task(
-                                    asyncio.wait_for(
-                                        prompt_interpreter_run(interpreter_cfg, query, verbose=False, stream_breakdown=stream_breakdown_callback),
-                                        timeout=5.0
-                                    )
-                                )
-                            except Exception as e:
-                                logger.debug(f"Etymology task failed: {e}")
-                                etymology_task = None
-                        
-                        # STEP 4: Wait for LLM response (this is what we care about)
-                        try:
-                            agent_response = await llm_task
-                            llm_response_time = time.time() - llm_task_start
-                            logger.info(f"✅ LLM response received: {len(agent_response) if agent_response else 0} chars (took {llm_response_time:.2f}s)")
-                            
-                            # Log reasoning quality indicators (check if response references previous context)
-                            if conversation_history and agent_response:
-                                recent_context = " ".join([msg.get('content', '')[:50] for msg in conversation_history[-6:]])
-                                context_refs = sum(1 for word in recent_context.split()[:20] if word.lower() in agent_response[:500].lower())
-                                logger.info(f"🧠 Reasoning quality: Response may reference {context_refs} context elements from previous {len(conversation_history)} messages")
-                            
-                            if not agent_response or not agent_response.strip():
-                                logger.warning(f"⚠️ LLM returned empty response for query: {query[:50]}")
-                                # Use fallback message if LLM returns empty
-                                agent_response = "I received your query but couldn't generate a response. Please try rephrasing your question or check if the LLM model is working properly."
-                                logger.info("📝 Using fallback message for empty LLM response")
-                            
-                            # Etymology is optional - don't wait for it, but log if it completes
-                            if etymology_task:
-                                try:
-                                    await asyncio.wait_for(etymology_task, timeout=0.1)  # Quick check
-                                    logger.debug("Etymology completed in parallel")
-                                except (asyncio.TimeoutError, Exception):
-                                    # Etymology still running or failed - that's fine, continue
-                                    pass
-                            
-                            result = {
-                                "query": query,
-                                "results": {
-                                    "content": agent_response,
-                                    "mode": "chat",
-                                    "agent": "single_llm",
-                                    "processing_time": time.time() - prompt_start_time
-                                }
-                            }
-                            
-                            # Save conversation to local persistence (for memory)
-                            try:
-                                conversation_entry = ConversationEntry(
-                                    conversation_id=conversation_id,  # Use same ID for continuity
-                                    timestamp=datetime.now().isoformat(),
-                                    user_message=query,
-                                    assistant_message=agent_response,
-                                    agent_used="single_llm",
-                                    mode="chat",
-                                    metadata={
-                                        "processing_time": time.time() - prompt_start_time,
-                                        "prompt_id": prompt_id,
-                                        "has_history": len(conversation_history) > 0,
-                                        "history_count": len(conversation_history)
-                                    }
-                                )
-                                local_persistence.save_conversation(conversation_entry)
-                                logger.debug(f"💾 Saved conversation to memory (ID: {conversation_id})")
-                            except Exception as e:
-                                logger.error(f"Error saving conversation: {e}")
-                        except asyncio.TimeoutError:
-                            logger.error(f"⏱️ LLM call timed out after 60s for query: {query[:50]}")
-                            timeout_content = "I apologize, but the response timed out. The LLM is taking longer than expected. Please try a simpler query or check your LLM provider configuration."
-                            
-                            # Get chunk delay for streaming
-                            chunk_delay = 0.02 if degradation_mode else 0.0001
-                            
-                            # Stream timeout message - ensure WebSocket is still connected
-                            try:
-                                # Check if WebSocket is still open (use try/except for compatibility)
-                                try:
-                                    state = websocket.client_state
-                                    if hasattr(state, 'name') and state.name != "CONNECTED":
-                                        logger.warning("WebSocket disconnected during timeout, cannot send error message")
-                                        continue
-                                except (AttributeError, Exception):
-                                    # If we can't check state, try to send anyway
-                                    pass
-                                
-                                logger.info(f"📤 Streaming timeout message ({len(timeout_content)} chars)")
-                                for i in range(0, len(timeout_content)):
-                                    chunk = timeout_content[i]
-                                    sent = await safe_send_json(websocket, {
-                                        "type": "chunk",
-                                        "content": chunk
-                                    })
-                                    if not sent:
-                                        logger.warning("Failed to send timeout chunk, WebSocket may be closed")
-                                        break
-                                    if i + 1 < len(timeout_content):
-                                        await asyncio.sleep(chunk_delay)
-                                
-                                done_sent = await safe_send_json(websocket, {
-                                    "type": "done",
-                                    "metadata": {"mode": "chat", "error": "timeout"}
-                                })
-                                if done_sent:
-                                    logger.info("✅ Timeout message sent successfully")
-                                else:
-                                    logger.warning("⚠️ Failed to send done signal after timeout")
-                            except Exception as stream_error:
-                                logger.error(f"❌ Error streaming timeout message: {stream_error}", exc_info=True)
-                            
-                            continue
-                        except Exception as e:
-                            logger.error(f"LLM call error: {e}")
-                            error_content = f"I encountered an error: {str(e)}. Please try again."
-                            
-                            # Get chunk delay for streaming
-                            chunk_delay = 0.02 if degradation_mode else 0.0001
-                            
-                            # Stream error message
-                            try:
-                                for i in range(0, len(error_content)):
-                                    chunk = error_content[i]
-                                    if not await safe_send_json(websocket, {
-                                        "type": "chunk",
-                                        "content": chunk
-                                    }):
-                                        break
-                                    if i + 1 < len(error_content):
-                                        await asyncio.sleep(chunk_delay)
-                                
-                                await safe_send_json(websocket, {
-                                    "type": "done",
-                                    "metadata": {"mode": "chat", "error": str(e)}
-                                })
-                            except Exception as stream_error:
-                                logger.error(f"Error streaming error message: {stream_error}")
-                            
-                            continue
-                        
-                        # Stream the result (same as fast path)
-                        # Extract content from result
-                        content = result.get("results", {}).get("content", "")
-                        logger.info(f"📤 Streaming content: {len(content) if content else 0} chars")
-                        
-                        # Ensure content is a string
-                        if content and not isinstance(content, str):
-                            content = str(content)
-                        
-                        # If content is empty, provide fallback
-                        if not content or not content.strip():
-                            content = "I received your query but couldn't generate a response. Please try rephrasing your question."
-                            logger.warning("Single agent returned empty content, using fallback")
-                        
-                        # Stream content character-by-character (GPT-5 speed)
-                        # Get chunk delay (same as main flow)
-                        chunk_delay = 0.02 if degradation_mode else 0.0001  # GPT-5 speed
-                        
-                        logger.info(f"📤 Starting to stream {len(content)} characters")
-                        if content and isinstance(content, str) and len(content.strip()) > 0:
-                            try:
-                                chunks_sent = 0
-                                # Stream character-by-character for GPT-5-like precision
-                                for i in range(0, len(content)):
-                                    chunk = content[i]
-                                    if not await safe_send_json(websocket, {
-                                        "type": "chunk",
-                                        "content": chunk
-                                    }):
-                                        logger.warning("WebSocket not connected, breaking loop")
-                                        break
-                                    chunks_sent += 1
-                                    # Near-zero delay for GPT-5-like instant streaming
-                                    if i + 1 < len(content):
-                                        await asyncio.sleep(chunk_delay)  # 0.0001s = 10,000 chars/sec
-                                logger.info(f"✅ Streamed {chunks_sent} chunks successfully")
-                            except Exception as e:
-                                logger.error(f"❌ Error streaming single agent content: {e}", exc_info=True)
-                                await safe_send_json(websocket, {
-                                    "type": "error",
-                                    "message": f"Error streaming response: {str(e)}"
-                                })
-                        else:
-                            logger.warning(f"⚠️ No content to stream (content={content}, type={type(content)})")
-                        
-                        # Send done signal
-                        logger.debug("📤 Sending done signal")
-                        done_sent = await safe_send_json(websocket, {
-                            "type": "done",
-                            "metadata": {
-                                "mode": "chat",
-                                "agent": "single_llm",
-                                "processing_time": result.get("results", {}).get("processing_time", 0)
-                            }
-                        })
-                        if done_sent:
-                            logger.info(f"✅ Done signal sent successfully")
-                        else:
-                            logger.warning(f"⚠️ Failed to send done signal (WebSocket may be closed)")
-                        
-                        # Continue to next message (skip rest of processing)
-                        continue
+                                continue
                     except Exception as e:
-                        logger.error(f"Error in single agent chat mode: {e}", exc_info=True)
-                        error_content = f"Error processing query: {str(e)}. Please try again."
-                        
-                        # Get chunk delay for streaming
-                        chunk_delay = 0.02 if degradation_mode else 0.0001
-                        
-                        # Stream error message
-                        try:
-                            for i in range(0, len(error_content)):
-                                chunk = error_content[i]
-                                if not await safe_send_json(websocket, {
-                                    "type": "chunk",
-                                    "content": chunk
-                                }):
-                                    break
-                                if i + 1 < len(error_content):
-                                    await asyncio.sleep(chunk_delay)
-                            
-                            await safe_send_json(websocket, {
-                                "type": "done",
-                                "metadata": {"mode": "chat", "error": str(e)}
-                            })
-                        except Exception as stream_error:
-                            logger.error(f"Error streaming error message: {stream_error}")
-                        
-                        # Continue to next message
+                        # Chat mode error handling
+                        logger.error(f"❌ Error in chat mode: {e}", exc_info=True)
+                        error_response = format_error_for_user(e, context="chat_mode_error")
+                        await safe_send_json(websocket, {
+                            "type": "error",
+                            **error_response
+                        })
+                        await safe_send_json(websocket, {
+                            "type": "done",
+                            "metadata": {"mode": "chat", "error": str(e)}
+                        })
                         continue
-                elif mode == "device":
+                
+                # NON-CHAT MODES CONTINUE HERE
+                if mode == "device":
                     # Device generation mode
                     thinking_msg = get_context_message(mode="device", action="device_generator")
                     if not await safe_send_json(websocket, {
@@ -4065,19 +3461,45 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.close(code=1000)
             except:
                 pass
+        # Clean up WebSocket manager connection
+        if websocket in connection_metadata:
+            ws_manager = connection_metadata[websocket].get("websocket_manager")
+            if ws_manager:
+                await ws_manager.remove_connection(websocket)
+        
         logger.info(f"WebSocket connection closed and removed from active connections")
 
 
 @app.get("/api/status")
 async def get_status():
-    """Get system status"""
+    """Get system status with WebSocket health metrics"""
     # Clean up stale connections before reporting status
     await cleanup_stale_connections()
+    
+    # Get WebSocket manager health metrics
+    from ..api.websocket_manager import get_websocket_manager
+    ws_manager = get_websocket_manager()
+    
+    # Collect connection health for all active connections
+    connection_health = []
+    for websocket in active_connections:
+        if websocket in connection_metadata:
+            health = await ws_manager.get_connection_health(websocket)
+            connection_health.append(health)
+    
+    # Get overall WebSocket statistics
+    all_connections = await ws_manager.get_all_connections()
+    total_connections = len(all_connections)
+    
     return {
         "status": "operational",
         "timestamp": datetime.now().isoformat(),
         "system_status": system_integrator.get_system_status(),
         "active_connections": len(active_connections),
+        "websocket_manager": {
+            "total_tracked_connections": total_connections,
+            "connection_health": connection_health
+        },
         "connection_details": [
             {
                 "host": meta.get("client_host", "unknown"),
@@ -4107,15 +3529,19 @@ async def startup_event():
 def create_app() -> FastAPI:
     """Create and configure FastAPI app"""
     # Mount static files for frontend (must be after all routes)
+    # IMPORTANT: This must be the LAST thing before returning app
     try:
         from pathlib import Path
         frontend_dir = Path(__file__).parent.parent.parent.parent / "frontend"
-        if frontend_dir.exists():
-            # Mount static files, but exclude API routes
+        if frontend_dir.exists() and (frontend_dir / "index.html").exists():
+            # Mount static files - this will serve index.html for / and other static files
+            # API routes take precedence because they're defined first
             app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="static")
-            logger.info(f"Mounted static files from {frontend_dir}")
+            logger.info(f"✅ Mounted static files from {frontend_dir}")
+        else:
+            logger.warning(f"⚠️ Frontend directory not found or index.html missing: {frontend_dir}")
     except Exception as e:
-        logger.warning(f"Could not mount static files: {e}")
+        logger.error(f"❌ Could not mount static files: {e}", exc_info=True)
     
     return app
 
