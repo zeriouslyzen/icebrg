@@ -7,7 +7,8 @@ ICEBURG is a comprehensive Enterprise AGI Platform that provides unified access 
 ICEBURG transforms complex AGI research into a unified, production-ready platform with enterprise-grade features including:
 
 - **Unified Interface**: Single entry point with auto-mode detection for research, chat, software generation, and AGI civilization simulation
-- **Enhanced Secretary Agent**: AGI-like capabilities with persistent memory, tool calling, multimodal processing, blackboard integration, and efficiency optimizations
+- **Global Middleware System**: Platform-wide hallucination detection and emergence tracking automatically applied to all agents, with global learning and pattern sharing
+- **Enhanced Secretary Agent**: AGI-like capabilities with persistent memory, tool calling, multimodal processing, blackboard integration, efficiency optimizations, goal-driven autonomy (multi-step task planning), and self-updating knowledge base
 - **One-Shot App Generation**: Complete macOS app generation pipeline with build, sign, notarize, and DMG creation
 - **AGI Civilization Simulation**: Persistent multi-agent societies with social learning and emergent behaviors
 - **Physiological Interface**: Real-time heart rate, breathing, stress monitoring with Earth connection and consciousness amplification

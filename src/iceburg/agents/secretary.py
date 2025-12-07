@@ -117,9 +117,10 @@ class SecretaryAgent:
     - Multimodal processing
     - Blackboard integration
     - Efficiency optimizations
+    - Goal-driven autonomy (multi-step planning)
     """
     
-    def __init__(self, cfg: IceburgConfig, enable_memory: bool = True, enable_tools: bool = True, enable_blackboard: bool = True, enable_cache: bool = True):
+    def __init__(self, cfg: IceburgConfig, enable_memory: bool = True, enable_tools: bool = True, enable_blackboard: bool = True, enable_cache: bool = True, enable_planning: bool = True, enable_knowledge_base: bool = True):
         """
         Initialize Secretary Agent.
         
@@ -129,12 +130,16 @@ class SecretaryAgent:
             enable_tools: Enable tool calling (default: True)
             enable_blackboard: Enable blackboard integration (default: True)
             enable_cache: Enable response caching (default: True)
+            enable_planning: Enable goal-driven planning (default: True)
+            enable_knowledge_base: Enable self-updating knowledge base (default: True)
         """
         self.cfg = cfg
         self.enable_memory = enable_memory
         self.enable_tools = enable_tools
         self.enable_blackboard = enable_blackboard
         self.enable_cache = enable_cache
+        self.enable_planning = enable_planning
+        self.enable_knowledge_base = enable_knowledge_base
         
         # Initialize memory systems
         self.memory = None
@@ -181,6 +186,28 @@ class SecretaryAgent:
                 logger.warning(f"Could not initialize blackboard: {e}. Continuing without blackboard.")
                 self.enable_blackboard = False
         
+        # Initialize planning engine
+        self.planner = None
+        if enable_planning:
+            try:
+                from .secretary_planner import SecretaryPlanner
+                self.planner = SecretaryPlanner(cfg)
+                logger.info("✅ Secretary planning engine initialized")
+            except Exception as e:
+                logger.warning(f"Could not initialize planning engine: {e}. Continuing without planning.")
+                self.enable_planning = False
+        
+        # Initialize knowledge base
+        self.knowledge_base = None
+        if enable_knowledge_base:
+            try:
+                from .secretary_knowledge import SecretaryKnowledgeBase
+                self.knowledge_base = SecretaryKnowledgeBase(cfg)
+                logger.info("✅ Secretary knowledge base initialized")
+            except Exception as e:
+                logger.warning(f"Could not initialize knowledge base: {e}. Continuing without knowledge base.")
+                self.enable_knowledge_base = False
+        
         # Initialize cache
         self.response_cache = {}
         self.cache_max_size = 100 if enable_cache else 0
@@ -217,6 +244,16 @@ class SecretaryAgent:
             logger.info("✅ Cache hit for query")
             return self.response_cache[cache_key]
         
+        # Check if this is a goal-driven task that needs planning
+        if self.enable_planning and self.planner:
+            try:
+                goals = self.planner.extract_goals(query)
+                if goals:
+                    logger.info(f"Detected {len(goals)} goal(s) in query, using planning mode")
+                    return self._handle_goal_driven_query(query, goals, conversation_id, user_id, thinking_callback)
+            except Exception as e:
+                logger.warning(f"Error in goal detection: {e}. Falling back to normal mode.")
+        
         # Check for agent messages from blackboard
         agent_context = ""
         if self.enable_blackboard and self.workspace:
@@ -235,6 +272,29 @@ class SecretaryAgent:
                 memory_context = self._build_memory_context(relevant_memories)
             except Exception as e:
                 logger.warning(f"Error retrieving memories: {e}. Continuing without memory context.")
+        
+        # Retrieve knowledge from knowledge base
+        knowledge_context = ""
+        if self.enable_knowledge_base and self.knowledge_base:
+            try:
+                # Query knowledge base for relevant information
+                kb_results = self.knowledge_base.query_knowledge(query, k=3)
+                if kb_results:
+                    knowledge_context = self._build_knowledge_context(kb_results)
+                
+                # Get user persona if available
+                if user_id:
+                    persona = self.knowledge_base.get_persona(user_id)
+                    if persona:
+                        persona_info = []
+                        if persona.get("preferences"):
+                            persona_info.append(f"Preferences: {', '.join([f'{k}={v}' for k, v in persona['preferences'].items()][:3])}")
+                        if persona.get("expertise"):
+                            persona_info.append(f"Expertise: {', '.join(persona['expertise'][:3])}")
+                        if persona_info:
+                            knowledge_context += f"\nUSER CONTEXT: {'; '.join(persona_info)}\n"
+            except Exception as e:
+                logger.debug(f"Error querying knowledge base: {e}")
         
         # Process multimodal inputs (images, documents)
         multimodal_context = ""
@@ -255,12 +315,14 @@ class SecretaryAgent:
             except Exception as e:
                 logger.warning(f"Error with tool execution: {e}. Continuing without tools.")
         
-        # Build enhanced prompt with ICEBURG knowledge, memory context, tool results, multimodal, and agent context
+        # Build enhanced prompt with ICEBURG knowledge, memory context, tool results, multimodal, agent context, and knowledge base
         enhanced_prompt = f"""User Question: {query}
 
 {agent_context}
 
 {memory_context}
+
+{knowledge_context}
 
 {multimodal_context}
 
@@ -318,6 +380,18 @@ Please answer the user's question directly and naturally. If the question is abo
                         self._store_memory(query, response_text, conversation_id, user_id)
                     except Exception as e:
                         logger.warning(f"Error storing memory: {e}. Continuing without storing.")
+                
+                # Process conversation for knowledge extraction
+                if self.enable_knowledge_base and self.knowledge_base:
+                    try:
+                        self.knowledge_base.process_conversation(
+                            query=query,
+                            response=response_text,
+                            user_id=user_id,
+                            conversation_id=conversation_id
+                        )
+                    except Exception as e:
+                        logger.debug(f"Error processing conversation for knowledge: {e}")
                 
                 # Store tool usage in memory if tools were used
                 if tool_results and self.enable_memory:
@@ -619,6 +693,60 @@ Please answer the user's question directly and naturally. If the question is abo
         
         return "\n".join(context_parts) + "\n"
     
+    def _process_multimodal_input(self, query: str, files: Optional[List[Dict[str, Any]]], multimodal_input: Optional[Any]) -> str:
+        """
+        Process multimodal inputs (images, documents, etc.).
+        
+        Args:
+            query: User query
+            files: List of file dictionaries
+            multimodal_input: Raw multimodal input
+            
+        Returns:
+            Formatted context string
+        """
+        try:
+            from ..vision.multimodal_processor import MultimodalProcessor
+            
+            processor = MultimodalProcessor()
+            context_parts = []
+            
+            # Process files
+            if files:
+                for file_info in files:
+                    file_path = file_info.get("path") or file_info.get("name", "")
+                    file_type = file_info.get("type", "unknown")
+                    
+                    if file_type.startswith("image/"):
+                        analysis = processor.process_image(file_path)
+                        if analysis and not analysis.get("error"):
+                            context_parts.append(f"Image analysis ({file_path}):")
+                            if analysis.get("ocr_text"):
+                                context_parts.append(f"  Text: {analysis['ocr_text'][:200]}")
+                            if analysis.get("scene"):
+                                context_parts.append(f"  Scene: {analysis['scene']}")
+                    elif file_type in ["application/pdf", "text/plain", "application/msword"]:
+                        # Document processing
+                        context_parts.append(f"Document ({file_path}): Content available for analysis")
+            
+            # Process raw multimodal input
+            if multimodal_input:
+                if isinstance(multimodal_input, str):
+                    # Assume it's a file path
+                    analysis = processor.process_image(multimodal_input)
+                    if analysis and not analysis.get("error"):
+                        context_parts.append(f"Multimodal input analysis:")
+                        context_parts.append(f"  {str(analysis)[:300]}")
+            
+            if context_parts:
+                return "MULTIMODAL CONTEXT:\n" + "\n".join(context_parts) + "\n"
+            else:
+                return ""
+                
+        except Exception as e:
+            logger.debug(f"Error processing multimodal input: {e}")
+            return ""
+    
     def _get_agent_context(self, query: str) -> str:
         """Get context from other agents via blackboard"""
         if not self.agent_comm:
@@ -659,6 +787,139 @@ Please answer the user's question directly and naturally. If the question is abo
             del self.response_cache[oldest_key]
         
         self.response_cache[cache_key] = response
+    
+    def _build_knowledge_context(self, kb_results: List[Dict[str, Any]]) -> str:
+        """
+        Build knowledge context string from knowledge base results.
+        
+        Args:
+            kb_results: List of knowledge base result dictionaries
+            
+        Returns:
+            Formatted knowledge context string
+        """
+        if not kb_results:
+            return ""
+        
+        context_parts = ["RELEVANT KNOWLEDGE FROM KNOWLEDGE BASE:"]
+        
+        for result in kb_results[:3]:  # Top 3 results
+            if result.get("type") == "topic":
+                topic = result.get("topic", "Unknown")
+                content = result.get("content", "")[:200]
+                context_parts.append(f"\n  Topic: {topic}")
+                context_parts.append(f"  {content}...")
+            elif result.get("type") == "vector":
+                content = result.get("content", "")[:200]
+                context_parts.append(f"\n  {content}...")
+        
+        return "\n".join(context_parts) + "\n"
+    
+    def _handle_goal_driven_query(self, query: str, goals: List[Dict[str, Any]], conversation_id: Optional[str], user_id: Optional[str], thinking_callback: Optional[callable] = None) -> str:
+        """
+        Handle goal-driven queries with multi-step planning and execution.
+        
+        Args:
+            query: Original user query
+            goals: List of extracted goals
+            conversation_id: Conversation ID
+            user_id: User ID
+            thinking_callback: Optional callback for progress updates
+            
+        Returns:
+            Response string with execution results
+        """
+        from ..civilization.persistent_agents import GoalPriority
+        
+        # Add goals to hierarchy
+        goal_ids = []
+        for goal_data in goals:
+            priority_str = goal_data.get("priority", "medium").lower()
+            priority_map = {
+                "critical": GoalPriority.CRITICAL,
+                "high": GoalPriority.HIGH,
+                "medium": GoalPriority.MEDIUM,
+                "low": GoalPriority.LOW
+            }
+            priority = priority_map.get(priority_str, GoalPriority.MEDIUM)
+            
+            deadline = goal_data.get("deadline")
+            if deadline and isinstance(deadline, str):
+                # Parse deadline if it's a string
+                try:
+                    from datetime import datetime
+                    deadline = datetime.fromisoformat(deadline).timestamp()
+                except:
+                    deadline = None
+            
+            goal_id = self.planner.goal_hierarchy.add_goal(
+                description=goal_data.get("description", ""),
+                priority=priority,
+                deadline=deadline,
+                metadata={"original_query": query}
+            )
+            goal_data["goal_id"] = goal_id
+            goal_ids.append(goal_id)
+        
+        # Plan and execute for each goal
+        all_results = []
+        for goal_data in goals:
+            if thinking_callback:
+                thinking_callback(f"Planning: {goal_data.get('description', '')}")
+            
+            # Create plan
+            tasks = self.planner.plan_task(goal_data)
+            
+            if thinking_callback:
+                thinking_callback(f"Executing {len(tasks)} step(s)...")
+            
+            # Execute plan with progress updates
+            def progress_callback(msg: str):
+                if thinking_callback:
+                    thinking_callback(msg)
+            
+            execution_result = self.planner.execute_plan(tasks, progress_callback=progress_callback)
+            all_results.append({
+                "goal": goal_data.get("description", ""),
+                "tasks": len(tasks),
+                "completed": execution_result.get("completed", 0),
+                "failed": execution_result.get("failed", 0),
+                "results": execution_result.get("results", [])
+            })
+            
+            # Update goal progress
+            goal_id = goal_data.get("goal_id")
+            if goal_id:
+                progress = execution_result.get("completed", 0) / max(len(tasks), 1)
+                self.planner.goal_hierarchy.update_goal_progress(goal_id, progress)
+        
+        # Generate summary response
+        response_parts = ["I've executed your goal-driven task. Here's what was accomplished:\n"]
+        
+        for result in all_results:
+            response_parts.append(f"\n**Goal: {result['goal']}**")
+            response_parts.append(f"- Planned {result['tasks']} step(s)")
+            response_parts.append(f"- Completed: {result['completed']}, Failed: {result['failed']}")
+            
+            # Add task results
+            for task_result in result.get("results", []):
+                if task_result.get("success"):
+                    response_parts.append(f"  ✓ {task_result.get('result', 'Completed')[:100]}")
+                else:
+                    response_parts.append(f"  ✗ Failed: {task_result.get('error', 'Unknown error')}")
+        
+        response_parts.append("\nAll tasks have been executed. Let me know if you need any adjustments!")
+        
+        response = "\n".join(response_parts)
+        
+        # Store in memory
+        if self.enable_memory:
+            try:
+                self._store_memory(query, response, conversation_id, user_id)
+            except Exception as e:
+                logger.debug(f"Could not store goal execution memory: {e}")
+        
+        return response
 
 
 # Backward compatibility: Keep original run() function
@@ -689,7 +950,7 @@ def run(
     Returns:
         Response string
     """
-    # Use enhanced SecretaryAgent if memory, tools, or multimodal is requested
+    # Use enhanced SecretaryAgent if memory, tools, multimodal, or planning is requested
     # But only if we can safely initialize it
     if conversation_id or user_id or files or multimodal_input:
         try:
@@ -699,7 +960,9 @@ def run(
                 enable_memory=bool(conversation_id or user_id), 
                 enable_tools=True,
                 enable_blackboard=False,  # Disable blackboard for now (async issues)
-                enable_cache=True
+                enable_cache=True,
+                enable_planning=True,  # Enable goal-driven planning
+                enable_knowledge_base=True  # Enable self-updating knowledge base
             )
             return agent.run(
                 query=query,

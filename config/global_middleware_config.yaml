@@ -1,0 +1,41 @@
+# Global Agent Middleware Configuration
+# Platform-wide settings for hallucination detection and emergence tracking
+
+# Global enable/disable
+enable_global_middleware: true
+
+# Feature toggles
+enable_hallucination_detection: true
+enable_emergence_tracking: true
+enable_learning: true
+
+# Detection thresholds
+hallucination_threshold: 0.15  # Lower = more sensitive
+confidence_threshold: 0.85
+consistency_threshold: 0.8
+emergence_threshold: 0.6
+
+# Per-agent overrides (optional)
+# Agents not listed here use global settings
+per_agent_overrides:
+  # Example: Disable for a specific agent
+  # secretary:
+  #   enable_hallucination_detection: false
+  
+  # Example: Adjust thresholds for a specific agent
+  # oracle:
+  #   emergence_threshold: 0.7
+  #   enable_learning: true
+
+# Learning settings
+learning:
+  pattern_storage_enabled: true
+  cross_agent_sharing: true
+  pattern_retention_days: 90
+
+# Emergence settings
+emergence:
+  aggregation_enabled: true
+  breakthrough_threshold: 0.8
+  event_retention_days: 180
+

@@ -145,6 +145,17 @@ reflex_agent = ReflexAgent()
 # Initialize local persistence (similar to browser storage but for long-term)
 local_persistence = LocalPersistence()
 
+# Initialize global agent middleware (hallucination detection & emergence tracking)
+global_middleware = None
+try:
+    from ..middleware.global_agent_middleware import GlobalAgentMiddleware
+    from ..config import load_config
+    middleware_cfg = load_config()
+    global_middleware = GlobalAgentMiddleware(middleware_cfg)
+    logger.info("✅ Global agent middleware initialized")
+except Exception as e:
+    logger.warning(f"Could not initialize global middleware: {e}. Continuing without middleware.")
+
 # Initialize bottleneck monitoring and self-healing (disabled by default - can cause errors)
 # Set ICEBURG_ENABLE_MONITORING=1 to enable (may cause evolution pipeline errors)
 ENABLE_MONITORING = os.getenv("ICEBURG_ENABLE_MONITORING", "0") == "1"
@@ -397,6 +408,54 @@ async def get_encyclopedia_category(category: str):
         raise HTTPException(status_code=500, detail=f"Error loading category: {str(e)}")
 
 
+@app.get("/api/middleware/stats")
+async def get_middleware_stats():
+    """Get middleware statistics and analytics."""
+    try:
+        if not global_middleware:
+            return JSONResponse({
+                "error": "Middleware not initialized",
+                "enabled": False
+            })
+        
+        from ..middleware.analytics import MiddlewareAnalytics
+        analytics = MiddlewareAnalytics(
+            registry=global_middleware.registry,
+            learning_system=global_middleware.learning_system,
+            emergence_aggregator=global_middleware.emergence_aggregator
+        )
+        
+        stats = analytics.get_comprehensive_stats()
+        return JSONResponse(stats)
+    except Exception as e:
+        logger.error(f"Error getting middleware stats: {e}", exc_info=True)
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
+@app.get("/api/middleware/agent/{agent_name}")
+async def get_agent_middleware_stats(agent_name: str):
+    """Get middleware statistics for a specific agent."""
+    try:
+        if not global_middleware:
+            return JSONResponse({
+                "error": "Middleware not initialized",
+                "enabled": False
+            })
+        
+        from ..middleware.analytics import MiddlewareAnalytics
+        analytics = MiddlewareAnalytics(
+            registry=global_middleware.registry,
+            learning_system=global_middleware.learning_system,
+            emergence_aggregator=global_middleware.emergence_aggregator
+        )
+        
+        agent_stats = analytics.get_agent_analytics(agent_name)
+        return JSONResponse(agent_stats)
+    except Exception as e:
+        logger.error(f"Error getting agent stats: {e}", exc_info=True)
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
 @app.get("/api/encyclopedia/search/{query}")
 async def search_encyclopedia(query: str):
     """Search Celestial Encyclopedia"""
@@ -584,15 +643,29 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 
                                 # Call Secretary agent (no VectorStore needed!)
                                 logger.info(f"🔍🔍🔍 SSE: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
-                                secretary_response = await asyncio.to_thread(
-                                    secretary_run,
-                                    secretary_cfg,
-                                    query,
-                                    verbose=False,
-                                    thinking_callback=lambda msg: None,  # Can add callback if needed
-                                    conversation_id=conversation_id,
-                                    user_id=user_id
-                                )
+                                
+                                # Wrap with global middleware if available
+                                if global_middleware:
+                                    secretary_response = await global_middleware.execute_agent(
+                                        agent_name="secretary",
+                                        agent_func=secretary_run,
+                                        cfg=secretary_cfg,
+                                        query=query,
+                                        verbose=False,
+                                        thinking_callback=lambda msg: None,
+                                        conversation_id=conversation_id,
+                                        user_id=user_id
+                                    )
+                                else:
+                                    secretary_response = await asyncio.to_thread(
+                                        secretary_run,
+                                        secretary_cfg,
+                                        query,
+                                        verbose=False,
+                                        thinking_callback=lambda msg: None,
+                                        conversation_id=conversation_id,
+                                        user_id=user_id
+                                    )
                                 logger.info(f"🔍🔍🔍 SSE: Secretary returned response length={len(secretary_response) if secretary_response else 0}, preview='{secretary_response[:100] if secretary_response else None}...'")
                                 
                                 # Stream the response
@@ -2074,15 +2147,29 @@ async def websocket_endpoint(websocket: WebSocket):
                                 
                                 # Call Secretary agent (no VectorStore needed!)
                                 logger.info(f"🔍🔍🔍 WS: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
-                                secretary_response = await asyncio.to_thread(
-                                    secretary_run,
-                                    secretary_cfg,
-                                    query,
-                                    verbose=False,
-                                    thinking_callback=thinking_callback,
-                                    conversation_id=conversation_id,
-                                    user_id=user_id
-                                )
+                                
+                                # Wrap with global middleware if available
+                                if global_middleware:
+                                    secretary_response = await global_middleware.execute_agent(
+                                        agent_name="secretary",
+                                        agent_func=secretary_run,
+                                        cfg=secretary_cfg,
+                                        query=query,
+                                        verbose=False,
+                                        thinking_callback=thinking_callback,
+                                        conversation_id=conversation_id,
+                                        user_id=user_id
+                                    )
+                                else:
+                                    secretary_response = await asyncio.to_thread(
+                                        secretary_run,
+                                        secretary_cfg,
+                                        query,
+                                        verbose=False,
+                                        thinking_callback=thinking_callback,
+                                        conversation_id=conversation_id,
+                                        user_id=user_id
+                                    )
                                 
                                 # Cancel thinking task
                                 if thinking_task:
@@ -2555,7 +2642,17 @@ async def websocket_endpoint(websocket: WebSocket):
                             logger.warning("WebSocket not connected, breaking loop")
                             break
                         await asyncio.sleep(sleep_delay)
-                        agent_result = dissident_run(cfg, query, surveyor_result, verbose=True)
+                        if global_middleware:
+                            agent_result = await global_middleware.execute_agent(
+                                agent_name="dissident",
+                                agent_func=dissident_run,
+                                cfg=cfg,
+                                query=query,
+                                surveyor_result=surveyor_result,
+                                verbose=True
+                            )
+                        else:
+                            agent_result = dissident_run(cfg, query, surveyor_result, verbose=True)
                         result = {
                             "query": query,
                             "results": {
@@ -2582,7 +2679,16 @@ async def websocket_endpoint(websocket: WebSocket):
                             "surveyor": surveyor_result,
                             "dissident": dissident_result
                         }
-                        agent_result = synthesist_run(cfg, enhanced_context, verbose=True)
+                        if global_middleware:
+                            agent_result = await global_middleware.execute_agent(
+                                agent_name="synthesist",
+                                agent_func=synthesist_run,
+                                cfg=cfg,
+                                enhanced_context=enhanced_context,
+                                verbose=True
+                            )
+                        else:
+                            agent_result = synthesist_run(cfg, enhanced_context, verbose=True)
                         result = {
                             "query": query,
                             "results": {
@@ -2604,7 +2710,18 @@ async def websocket_endpoint(websocket: WebSocket):
                             break
                         await asyncio.sleep(sleep_delay)
                         # Oracle needs evidence-weighted input (use query as evidence)
-                        agent_result = oracle_run(cfg, kg, vs, query, verbose=True)
+                        if global_middleware:
+                            agent_result = await global_middleware.execute_agent(
+                                agent_name="oracle",
+                                agent_func=oracle_run,
+                                cfg=cfg,
+                                kg=kg,
+                                vs=vs,
+                                query=query,
+                                verbose=True
+                            )
+                        else:
+                            agent_result = oracle_run(cfg, kg, vs, query, verbose=True)
                         result = {
                             "query": query,
                             "results": {

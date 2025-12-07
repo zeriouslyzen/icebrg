@@ -9,6 +9,117 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Global Hallucination & Emergence Middleware System
+- **Major Enhancement**: Platform-wide middleware that automatically applies hallucination detection and emergence tracking to all agents
+- **GlobalAgentMiddleware**: Core middleware class that intercepts all agent outputs
+  - Non-invasive wrapping pattern (no agent code changes)
+  - Handles both sync and async agent functions
+  - Automatic hallucination detection for all agents
+  - Automatic emergence tracking for all agents
+  - Backward compatible with existing functionality
+- **MiddlewareRegistry**: Agent registry and configuration management
+  - Auto-discovers all 39+ agents in the system
+  - Per-agent enable/disable configuration
+  - Global enable/disable switch
+  - Configuration loaded from `config/global_middleware_config.yaml`
+- **HallucinationLearning**: Global learning system
+  - Stores hallucination patterns in vector DB (UnifiedMemory)
+  - Cross-agent pattern matching
+  - Pattern frequency tracking
+  - Agent-specific vs. global patterns
+  - Pattern sharing via GlobalWorkspace
+- **EmergenceAggregator**: Global emergence tracking
+  - Aggregates emergence events from all agents
+  - Builds global emergence patterns
+  - Tracks emergence evolution over time
+  - Breakthrough detection (score > 0.8)
+  - JSONL event storage in `data/emergence/global/`
+- **MiddlewareAnalytics**: Comprehensive analytics system
+  - Hallucination rate per agent
+  - Common hallucination patterns
+  - Emergence frequency and types
+  - Agent contribution tracking
+  - Cached statistics (5-minute TTL)
+- **API Integration**: Integrated into API server
+  - SSE endpoint: Secretary agent wrapped
+  - WebSocket endpoint: Secretary, Surveyor, Dissident, Synthesist, Oracle wrapped
+  - New endpoints: `GET /api/middleware/stats`, `GET /api/middleware/agent/{agent_name}`
+- **Configuration System**: Global configuration file
+  - `config/global_middleware_config.yaml` for all settings
+  - Per-agent overrides supported
+  - Environment variable support
+- **Files Created**:
+  - `src/iceburg/middleware/` - Complete middleware package
+  - `config/global_middleware_config.yaml` - Configuration
+  - `data/hallucinations/patterns/` - Pattern storage
+  - `data/emergence/global/` - Emergence storage
+- **Research Integration**: Implements 2025 best practices
+  - Centralized monitoring system
+  - Middleware pattern for non-invasive interception
+  - Real-time analysis and detection
+  - Cross-agent learning and pattern sharing
+  - Pub/sub architecture via GlobalWorkspace
+
+#### Secretary Agent Next-Gen Evolution - Phase 2: Self-Updating Knowledge Base
+- **Major Enhancement**: Added self-updating knowledge base that extracts, stores, and retrieves knowledge from conversations
+- **Knowledge Base System**: Created `SecretaryKnowledgeBase` class for cognitive archiving
+  - Automatic knowledge extraction from conversations using LLM
+  - Topic-based markdown file creation and management
+  - User persona storage and updates (preferences, expertise, communication style)
+  - Topic indexes and cross-references
+  - Vector store integration for semantic search
+- **Knowledge Base Structure**:
+  - `data/secretary_knowledge/topics/` - Topic-based markdown files
+  - `data/secretary_knowledge/personas/` - User personas and preferences
+  - `data/secretary_knowledge/indexes/` - Topic indexes and cross-references
+  - `data/secretary_knowledge/summaries/` - Vector store summaries
+  - `data/secretary_knowledge/metadata.json` - Knowledge base metadata
+- **Automatic Knowledge Extraction**:
+  - Extracts topics, facts, preferences, and expertise from conversations
+  - Creates topic files automatically
+  - Updates user personas over time
+  - Stores important knowledge in vector store for semantic search
+- **Knowledge Retrieval**:
+  - Semantic search via vector store
+  - Topic-based file search
+  - User persona retrieval for personalized responses
+- **Integration**: Fully integrated into SecretaryAgent
+  - Automatic knowledge extraction after each conversation
+  - Knowledge context included in responses
+  - User persona used for personalization
+- **Testing**: Created comprehensive unit and integration tests
+- **Files Created**:
+  - `src/iceburg/agents/secretary_knowledge.py` - Knowledge base manager
+  - `tests/unit/test_secretary_knowledge.py` - Unit tests
+  - `tests/integration/test_secretary_knowledge_integration.py` - Integration tests
+
+#### Secretary Agent Next-Gen Evolution - Phase 1: Goal-Driven Autonomy
+- **Major Enhancement**: Added goal-driven autonomy and multi-step task planning to Secretary agent
+- **Planning Engine**: Created `SecretaryPlanner` class for goal extraction, task decomposition, and execution
+  - Natural language goal extraction from user queries
+  - Automatic task decomposition using LLM reasoning
+  - Dependency resolution and sequential execution
+  - Progress tracking and status updates
+- **Goal Hierarchy Integration**: Integrated existing `GoalHierarchy` from persistent_agents
+  - Goal prioritization (critical, high, medium, low)
+  - Dependency management between goals
+  - Progress tracking per goal
+  - Goal completion statistics
+- **Multi-Step Execution**: Implemented autonomous task execution
+  - Sequential task execution with dependency resolution
+  - Graceful failure handling
+  - Context passing between tasks
+  - Progress callbacks for user updates
+- **Example Capabilities**:
+  - "Organize my files" → Plans: scan, categorize, move, verify
+  - "Summarize all PDFs in this folder" → Plans: find PDFs, read each, summarize, compile
+  - "Build a research doc connecting these ideas" → Plans: gather sources, analyze connections, structure document, write
+- **Testing**: Created unit tests and integration test structure
+- **Files Created**:
+  - `src/iceburg/agents/secretary_planner.py` - Planning engine
+  - `tests/unit/test_secretary_planner.py` - Unit tests
+  - `tests/integration/test_secretary_planning_integration.py` - Integration tests
+
 #### Secretary Agent AGI Enhancement (Complete Implementation)
 - **Major Enhancement**: Transformed Secretary agent from simple chat assistant into sophisticated AGI-like system
 - **Phase 1: Memory Persistence**
