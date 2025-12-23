@@ -13,6 +13,11 @@ from threading import Lock
 
 from ..config import IceburgConfig
 from ..llm import chat_complete
+try:
+    from ..core.quarantine_manager import get_quarantine_manager
+except ImportError:
+    # Fallback if module structure differs
+    get_quarantine_manager = None
 
 
 # Phase 2.3: Deliberation Result Cache
@@ -89,28 +94,66 @@ def add_deliberation_pause(cfg: IceburgConfig, agent_name: str, agent_output: st
     Uses COCONUT vector-space reasoning if enabled (10-100x faster), 
     otherwise falls back to token-based LLM calls.
     """
+    
     # Check if COCONUT is enabled
     use_coconut = os.getenv("ICEBURG_ENABLE_COCONUT_DELIBERATION", "true").lower() == "true"
     
+    # Phase 2 Metacognition: Semantic checks and Quarantine
+    metacog_insights = ""
+    enable_metacognition = os.getenv("ICEBURG_ENABLE_METACOGNITION", "true").lower() == "true"
+    
+    if enable_metacognition:
+        try:
+            # Lazy init checking wrapper
+            agent = DeliberationAgent(cfg)
+            
+            # 1. Semantic Alignment
+            alignment = agent._calculate_semantic_alignment(query, agent_output)
+            if alignment < 0.3:
+                metacog_insights += f"\n- WARNING: Low semantic alignment ({alignment:.2f}) with query."
+            
+            # 2. Contradiction Detection
+            contradictions = agent._detect_contradictions(agent_output)
+            if contradictions:
+                metacog_insights += f"\n- WARNING: {len(contradictions)} potential contradictions detected."
+                
+                # QUARANTINE: Don't discard, but flag for review
+                if get_quarantine_manager:
+                    qm = get_quarantine_manager()
+                    for c in contradictions:
+                        qm.quarantine_item(
+                            content=c,
+                            source_agent=agent_name,
+                            reason="contradiction_detected",
+                            metadata={"query": query, "alignment_score": alignment}
+                        )
+                    if verbose:
+                        print(f"[DELIBERATION] Quarantined {len(contradictions)} items for review")
+            
+            # 3. Complexity Analysis
+            complexity = agent._analyze_reasoning_complexity(agent_output)
+            metacog_insights += f"\n- Reasoning Complexity: {complexity['complexity'].upper()} (Depth: {complexity['depth_indicators']})"
+            
+        except Exception as e:
+            if verbose:
+                print(f"[DELIBERATION] Metacognition check failed: {e}")
+                # Don't traceback here to keep logs clean in prod, but logic continues
+    
     if use_coconut:
         try:
-            return add_deliberation_pause_coconut(cfg, agent_name, agent_output, query, verbose)
+            # Inject metacognitive insights into query for COCONUT context
+            enhanced_query = query
+            if metacog_insights:
+                enhanced_query += f"\n\n[METACOGNITIVE ANALYSIS]{metacog_insights}"
+                
+            return add_deliberation_pause_coconut(cfg, agent_name, agent_output, enhanced_query, verbose)
         except Exception as e:
             if verbose:
                 print(f"[DELIBERATION] COCONUT failed, falling back to LLM: {e}")
             # Fall through to LLM-based deliberation
     
     # Traditional LLM-based deliberation (fallback)
-    # Phase 2.3: Check deliberation cache first
-    cached_result = _deliberation_cache.get(agent_name, agent_output, query)
-    if cached_result:
-        if verbose:
-            print(f"[DELIBERATION] Cache hit for {agent_name}")
-        return cached_result
-    
-    if verbose:
-        print(f"[DELIBERATION] Adding reflection pause after {agent_name}")
-    
+
     DELIBERATION_SYSTEM = (
         "ROLE: Deliberation Pause and Reflection Specialist\n"
         "MISSION: Add thoughtful reflection pauses between agent stages to enhance deep thinking\n"
@@ -144,6 +187,7 @@ def add_deliberation_pause(cfg: IceburgConfig, agent_name: str, agent_output: st
         f"AGENT: {agent_name}\n"
         f"AGENT OUTPUT:\n{truncated_output}\n\n"
         f"ORIGINAL QUERY: {query}\n\n"
+        f"METACOGNITIVE ANALYSIS:{metacog_insights}\n\n"
         "Perform a thoughtful reflection on this agent's output. Identify key insights, "
         "patterns, implications, and connections. Provide recommendations for the next stages."
     )
