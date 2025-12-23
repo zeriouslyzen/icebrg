@@ -42,6 +42,59 @@
         "badgeText": ""
       }
     ],
+    "mode_templates": {
+      "fast": {
+        "icon": "⚡",
+        "name": "Fast",
+        "description": "Quick chat responses",
+        "agents": [
+          "secretary"
+        ],
+        "metacognition": false
+      },
+      "research": {
+        "icon": "🔬",
+        "name": "Research",
+        "description": "Standard research with metacognition",
+        "agents": [
+          "surveyor",
+          "deliberation",
+          "synthesist"
+        ],
+        "metacognition": true
+      },
+      "deep_research": {
+        "icon": "🧬",
+        "name": "Deep Research",
+        "description": "Comprehensive multi-perspective analysis",
+        "agents": [
+          "surveyor",
+          "dissident",
+          "deliberation",
+          "archaeologist",
+          "synthesist",
+          "oracle"
+        ],
+        "metacognition": true
+      },
+      "unbounded": {
+        "icon": "♾️",
+        "name": "Unbounded",
+        "description": "AGI mode with self-modification",
+        "agents": [
+          "surveyor",
+          "dissident",
+          "deliberation",
+          "archaeologist",
+          "synthesist",
+          "oracle",
+          "self_redesign"
+        ],
+        "metacognition": true,
+        "self_modification": true,
+        "warning": "Experimental - enables self-redesign capabilities"
+      }
+    },
     "unavailableModels": [],
     "defaultFastModelId": "llama3.1:8b",
     "defaultExpertModelId": "llama3.1:8b",

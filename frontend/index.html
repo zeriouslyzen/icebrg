@@ -391,10 +391,15 @@
                 <div class="controls-panel" id="controlsPanel">
                     <div class="control-group">
                         <label class="control-label">Mode</label>
-                        <select class="control-select" id="modeSelect">
-                            <option value="chat">Chat (Fast)</option>
-                            <option value="fast">Fast Mode</option>
-                            <option value="research">Research</option>
+                        <select class="control-select" id="modeSelect" onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
+                            <option value="fast">⚡ Fast (Chat)</option>
+                            <option value="research" selected>🔬 Research</option>
+                            <option value="deep_research">🧬 Deep Research</option>
+                            <option value="unbounded">♾️ Unbounded (AGI)</option>
+                            <option value="chat">Chat (Legacy)</option>
+                            <option value="web_research">Research (Web) 🔍</option>
+                            <option value="local_rag">Local (Code/Docs) 📁</option>
+                            <option value="hybrid">Hybrid (Web + Local) 🌐</option>
                             <option value="device">Device Generation</option>
                             <option value="truth">Truth Finding</option>
                             <option value="swarm">Swarm</option>
@@ -408,7 +413,6 @@
                         <select class="control-select" id="agentSelect">
                             <option value="auto">Auto (Full Protocol)</option>
                             <option value="secretary" selected>Secretary (Chat Assistant)</option>
-                            <option value="surveyor">Surveyor</option>
                             <option value="dissident">Dissident</option>
                             <option value="synthesist">Synthesist</option>
                             <option value="oracle">Oracle</option>
@@ -500,8 +504,8 @@
                 <div class="settings-section">
                     <h3>Model Configuration</h3>
                     <div class="settings-group">
-                        <label class="settings-label">Primary Model</label>
-                        <select class="settings-select" id="primaryModel">
+                        <label class="settings-label">Primary Model (Locked)</label>
+                        <select class="settings-select" id="primaryModel" disabled title="Model selection disabled until Secretary browser integration is complete">
                             <optgroup label="Fast Mode (1B-3B)">
                                 <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
                                 <option value="phi3.5">phi3.5 (Fast)</option>
@@ -595,7 +599,7 @@
     </div>
     <!-- astro_physiology_viz.js removed - visualizations now inline in main answer -->
     <!-- astro_animated_streaming.js removed - not needed -->
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="/main.js?v=2"></script>
 </body>
 </html>
 

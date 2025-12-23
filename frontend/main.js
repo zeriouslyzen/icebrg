@@ -29,7 +29,7 @@ if (DEBUG_MODE) {
 }
 
 // Simple test function (only in debug mode)
-window.testICEBURG = function() {
+window.testICEBURG = function () {
     if (DEBUG_MODE) {
         console.log('🧪 ICEBURG TEST FUNCTION CALLED');
     }
@@ -68,8 +68,17 @@ const isNetworkAccess = window.location.hostname !== 'localhost' && window.locat
 const networkIP = isNetworkAccess ? window.location.hostname : 'localhost';
 
 // Use environment variables or detect network IP
-const API_URL = import.meta.env.VITE_API_URL || (isNetworkAccess ? `http://${networkIP}:8000/api/query` : 'http://localhost:8000/api/query');
-const WS_URL = import.meta.env.VITE_WS_URL || (isNetworkAccess ? `ws://${networkIP}:8000/ws` : 'ws://localhost:8000/ws');
+// Handle both Vite (import.meta.env) and static file serving (no import.meta.env)
+let env = {};
+try {
+    // Try to access import.meta.env (available in Vite)
+    env = import.meta.env || {};
+} catch (e) {
+    // import.meta not available (static file serving) - use empty env
+    env = {};
+}
+const API_URL = env.VITE_API_URL || (isNetworkAccess ? `http://${networkIP}:8000/api/query` : 'http://localhost:8000/api/query');
+const WS_URL = env.VITE_WS_URL || (isNetworkAccess ? `ws://${networkIP}:8000/ws` : 'ws://localhost:8000/ws');
 
 // Always use HTTP/WS in development (never force HTTPS)
 const FINAL_API_URL = API_URL;
@@ -113,7 +122,7 @@ let predictionLab = null;
 
 // Configure marked for markdown rendering
 marked.setOptions({
-    highlight: function(code, lang) {
+    highlight: function (code, lang) {
         if (lang && hljs.getLanguage(lang)) {
             try {
                 return hljs.highlight(code, { language: lang }).value;
@@ -130,7 +139,7 @@ marked.setOptions({
 // Custom renderer for charts
 const renderer = new marked.Renderer();
 const originalCode = renderer.code.bind(renderer);
-renderer.code = function(code, lang, escaped) {
+renderer.code = function (code, lang, escaped) {
     if (lang === 'chart' || lang === 'chartjs') {
         try {
             JSON.parse(code); // Validate JSON
@@ -180,13 +189,13 @@ function initWebSocket() {
         if (DEBUG_MODE) console.log('🔄 Connection attempt already in progress, skipping...');
         return;
     }
-    
+
     // If already connected, don't reconnect
     if (ws && ws.readyState === WebSocket.OPEN && isConnected) {
         if (DEBUG_MODE) console.log('✅ WebSocket already connected, skipping...');
         return;
     }
-    
+
     // Close existing WebSocket if any
     if (ws && ws.readyState !== WebSocket.CLOSED) {
         if (DEBUG_MODE) console.log('🔄 Closing existing WebSocket connection');
@@ -197,32 +206,32 @@ function initWebSocket() {
         }
         ws = null;
     }
-    
+
     // Clear any existing reconnect timeout
     if (reconnectTimeout) {
         clearTimeout(reconnectTimeout);
         reconnectTimeout = null;
     }
-    
+
     // Clear any existing connection attempt timeout
     if (connectionAttemptTimeout) {
         clearTimeout(connectionAttemptTimeout);
         connectionAttemptTimeout = null;
     }
-    
+
     // OPTION: Force HTTP fallback mode (bypass WebSocket)
     // Uncomment the line below to always use HTTP/SSE instead of WebSocket
     // useFallback = true;
-    
+
     // Don't try WebSocket if we're in fallback mode
     if (useFallback) {
         if (DEBUG_MODE) console.log('🔄 Using HTTP fallback mode, skipping WebSocket');
         return;
     }
-    
+
     // Mark that we're attempting to connect
     isConnecting = true;
-    
+
     try {
         // FIX: Include conversation_id in WebSocket URL to maintain context across reconnects
         let conversationId = localStorage.getItem('iceburg_conversation_id');
@@ -230,9 +239,9 @@ function initWebSocket() {
             conversationId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('iceburg_conversation_id', conversationId);
         }
-        
+
         const wsUrlWithContext = FINAL_WS_URL + (FINAL_WS_URL.includes('?') ? '&' : '?') + 'conversation_id=' + encodeURIComponent(conversationId);
-        
+
         if (DEBUG_MODE) {
             console.log('🔌 Attempting WebSocket connection to:', wsUrlWithContext);
             console.log('🔌 Connection details:', {
@@ -246,7 +255,7 @@ function initWebSocket() {
             });
         }
         ws = new WebSocket(wsUrlWithContext);
-        
+
         // Set connection timeout (longer for network connections)
         // Network connections may take longer to establish
         // Increased timeout to 20 seconds to allow WebSocket handshake to complete
@@ -272,7 +281,7 @@ function initWebSocket() {
                 }
             }
         }, connectionTimeoutDuration);
-        
+
         ws.onopen = () => {
             clearTimeout(connectionTimeout);
             isConnecting = false; // Connection attempt completed
@@ -282,12 +291,12 @@ function initWebSocket() {
             isConnected = true; // Set immediately on open
             updateConnectionStatus(true);
             showToast('Connecting to ICEBURG...', 'info');
-            
+
             // Attach neural network to WebSocket
             if (neuralNetwork) {
                 neuralNetwork.attachWebSocket(ws);
             }
-            
+
             // Start client-side keepalive ping (send ping every 20 seconds)
             // This helps keep the connection alive, especially for network connections
             if (ws.keepaliveInterval) {
@@ -315,7 +324,7 @@ function initWebSocket() {
                 }
             }, 20000); // Send ping every 20 seconds
         };
-        
+
         ws.onmessage = (event) => {
             try {
                 // Handle ping/pong (string format)
@@ -325,7 +334,7 @@ function initWebSocket() {
                     }
                     return;
                 }
-                
+
                 // Parse JSON message
                 let data;
                 try {
@@ -334,7 +343,7 @@ function initWebSocket() {
                     console.warn('⚠️ Failed to parse WebSocket message:', event.data);
                     return;
                 }
-                
+
                 // Handle connection confirmation
                 if (data.type === "connected") {
                     console.log('✅ WebSocket connection confirmed:', data.message);
@@ -343,7 +352,7 @@ function initWebSocket() {
                     reconnectAttempts = 0; // Reset reconnect attempts on successful connection
                     useFallback = false; // Disable fallback on successful connection
                     updateConnectionStatus(true);
-                    
+
                     // Show always-on AI status if available
                     if (data.always_on_enabled !== false) {
                         showToast('⚡ Always-On AI Active', 'success');
@@ -351,10 +360,10 @@ function initWebSocket() {
                     } else {
                         updateAlwaysOnStatus(false);
                     }
-                    
+
                     return;
                 }
-                
+
                 // Handle ping/pong messages
                 if (data.type === "ping") {
                     // Respond immediately to keep connection alive
@@ -374,12 +383,12 @@ function initWebSocket() {
                     }
                     return;
                 }
-                
+
                 if (DEBUG_MODE) {
                     console.log('📨 WebSocket message received:', data.type, data);
                     console.log('📨 Full message data:', JSON.stringify(data).substring(0, 500));
                 }
-                
+
                 // Remove loading indicator when we receive ANY message
                 const chatContainer = document.getElementById('chatContainer');
                 if (chatContainer) {
@@ -389,7 +398,7 @@ function initWebSocket() {
                         loadingIndicator.remove();
                     }
                 }
-                
+
                 handleStreamingMessage(data);
             } catch (error) {
                 console.error('❌ Error parsing WebSocket message:', error, event.data);
@@ -403,7 +412,7 @@ function initWebSocket() {
                 }
             }
         };
-        
+
         ws.onerror = (error) => {
             clearTimeout(connectionTimeout);
             isConnecting = false; // Connection attempt failed
@@ -423,10 +432,10 @@ function initWebSocket() {
             });
             isConnected = false;
             updateConnectionStatus(false);
-            
+
             // Show more detailed error message with URL
             showToast(`WebSocket connection error to ${FINAL_WS_URL}. Check console for details.`, 'error');
-            
+
             // Don't immediately switch to fallback - try reconnecting first
             // Only switch to fallback after MAX_RECONNECT_ATTEMPTS failures
             if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
@@ -444,7 +453,7 @@ function initWebSocket() {
                 }, delay);
             }
         };
-        
+
         ws.onclose = (event) => {
             clearTimeout(connectionTimeout);
             isConnecting = false; // Connection attempt completed (failed)
@@ -461,7 +470,7 @@ function initWebSocket() {
             });
             isConnected = false;
             updateConnectionStatus(false);
-            
+
             // Clean close (code 1000) - don't reconnect automatically
             // But also check if it was intentional (user closed) vs server closed
             if (event.code === 1000 && event.wasClean) {
@@ -469,14 +478,14 @@ function initWebSocket() {
                 // Don't show toast for clean closes - might be intentional
                 return;
             }
-            
+
             // Switch to fallback only after MAX_RECONNECT_ATTEMPTS failures
             if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
                 console.warn('⚠️ Max reconnect attempts reached, enabling fallback');
                 enableFallback();
                 return;
             }
-            
+
             // Try to reconnect with exponential backoff
             // Use shorter delays for network connections to reconnect faster
             reconnectAttempts++;
@@ -496,7 +505,7 @@ function initWebSocket() {
         console.error('❌ WebSocket initialization error:', error);
         isConnected = false;
         updateConnectionStatus(false);
-        
+
         // Switch to fallback on initialization error
         if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
             enableFallback();
@@ -514,13 +523,13 @@ function initWebSocket() {
 // Enable HTTP fallback mode
 function enableFallback() {
     if (useFallback) return; // Already in fallback mode
-    
+
     console.log('🔄 Enabling HTTP fallback mode');
     useFallback = true;
     isConnected = false;
     updateConnectionStatus(false);
     showToast('Using HTTP fallback mode', 'info');
-    
+
     // Close WebSocket if open
     if (ws) {
         try {
@@ -548,11 +557,11 @@ function updateAlwaysOnStatus(enabled) {
         statusIndicator = document.createElement('div');
         statusIndicator.id = 'alwaysOnStatus';
         statusIndicator.style.cssText = 'position: fixed; top: 1rem; right: 1rem; padding: 0.5rem 1rem; background: rgba(0, 255, 255, 0.2); border: 1px solid rgba(0, 255, 255, 0.5); border-radius: 8px; font-size: 0.75rem; color: #00ffff; z-index: 1000; display: flex; align-items: center; gap: 0.5rem;';
-        
+
         const header = document.querySelector('header') || document.body;
         header.appendChild(statusIndicator);
     }
-    
+
     if (enabled) {
         statusIndicator.innerHTML = '⚡ <span style="font-weight: bold;">Always-On AI</span> <span style="color: #00ff00;">Active</span>';
         statusIndicator.style.display = 'flex';
@@ -576,11 +585,11 @@ function updateConnectionStatus(connected) {
 function getOrCreateLastMessage() {
     const chatContainer = document.getElementById('chatContainer');
     if (!chatContainer) return null;
-    
+
     // Remove welcome message if present
     const welcomeMessage = chatContainer.querySelector('.welcome-message');
     if (welcomeMessage) welcomeMessage.remove();
-    
+
     // Get or create last assistant message
     let lastMessage = chatContainer.querySelector('.message.assistant:last-child');
     if (!lastMessage) {
@@ -592,11 +601,11 @@ function getOrCreateLastMessage() {
 function removeLoadingIndicators() {
     const chatContainer = document.getElementById('chatContainer');
     if (!chatContainer) return;
-    
+
     // Remove loading messages
     const loadingMessages = chatContainer.querySelectorAll('.message.loading');
     loadingMessages.forEach(msg => msg.remove());
-    
+
     // Remove loading indicators
     const loadingIndicators = chatContainer.querySelectorAll('.loading-indicator');
     loadingIndicators.forEach(indicator => indicator.remove());
@@ -605,7 +614,7 @@ function removeLoadingIndicators() {
 function scrollToBottom(smooth = true) {
     const chatContainer = document.getElementById('chatContainer');
     if (!chatContainer) return;
-    
+
     requestAnimationFrame(() => {
         chatContainer.scrollTo({
             top: chatContainer.scrollHeight,
@@ -620,23 +629,23 @@ function handleStreamingMessage(data) {
     if (data.type === 'chunk') {
         console.log('📝 CHUNK received:', data.content?.substring(0, 50), '...');
     }
-    
+
     const chatContainer = document.getElementById('chatContainer');
     if (!chatContainer) {
         console.error('❌ chatContainer not found!');
         return;
     }
-    
+
     // Get or create last message
     const lastMessage = getOrCreateLastMessage();
     if (!lastMessage) return;
-    
+
     // Remove loading indicators for most message types (but NOT thinking_stream - it needs to stay visible)
     const shouldRemoveLoading = ['action', 'thinking', 'algorithm_step', 'word_breakdown', 'chunk', 'agent_thinking', 'done', 'error'].includes(data.type);
     if (shouldRemoveLoading) {
         removeLoadingIndicators();
     }
-    
+
     if (data.type === 'action') {
         addToStatusCarousel('action', data, lastMessage);
         scrollToBottom();
@@ -649,7 +658,7 @@ function handleStreamingMessage(data) {
         console.log('💭 Received thinking_stream:', data.content);
         console.log('💭 lastMessage element:', lastMessage);
         console.log('💭 lastMessage classes:', lastMessage?.className);
-        
+
         if (!lastMessage) {
             console.error('❌ No lastMessage for thinking_stream! Creating one...');
             lastMessage = getOrCreateLastMessage();
@@ -658,13 +667,13 @@ function handleStreamingMessage(data) {
                 return;
             }
         }
-        
+
         // Ensure message element is visible
         if (lastMessage) {
             lastMessage.style.display = 'flex';
             lastMessage.style.visibility = 'visible';
         }
-        
+
         // Update astro loading state if it exists
         const astroLoading = lastMessage.querySelector('.astro-loading-state');
         if (astroLoading) {
@@ -679,14 +688,14 @@ function handleStreamingMessage(data) {
                     if (icon) icon.textContent = '✓';
                 }
             });
-            
+
             // Also update the main spinner text
             const spinnerText = astroLoading.querySelector('h3');
             if (spinnerText && content) {
                 spinnerText.textContent = '🔬 ' + content;
             }
         }
-        
+
         handleThinkingStream(data, lastMessage);
         scrollToBottom();
     } else if (data.type === 'informatics') {
@@ -706,9 +715,9 @@ function handleStreamingMessage(data) {
             const originalQuery = lastUserMessage ? lastUserMessage.querySelector('.message-content')?.textContent || '' : '';
             wordBreakdownDisplay = createWordBreakdownDisplay(lastMessage, originalQuery);
         }
-        
+
         ensureWordBreakdownVisible(wordBreakdownDisplay);
-        
+
         // Handle based on data structure
         if (data.type === 'algorithm_step' || data.step) {
             addWordBreakdown({
@@ -726,7 +735,7 @@ function handleStreamingMessage(data) {
                 semantic: data.semantic,
                 compression_hints: data.compression_hints
             }, lastMessage);
-            
+
             // Collect linguistic origins after words are added
             setTimeout(() => {
                 const flowingText = wordBreakdownDisplay.querySelector('.word-flowing-text');
@@ -758,7 +767,7 @@ function handleStreamingMessage(data) {
                 }
             }, 1000);
         }
-        
+
         scrollToBottom();
     } else if (data.type === 'reflex_preview') {
         // Display 3-bullet preview from Reflex Agent (FIRST - before chunks)
@@ -781,7 +790,7 @@ function handleStreamingMessage(data) {
                     item.classList.add('complete');
                 });
             }
-            
+
             // GPT-5-style instant rendering - no animation delays
             // Use requestAnimationFrame for smooth, instant updates
             requestAnimationFrame(() => {
@@ -792,10 +801,10 @@ function handleStreamingMessage(data) {
                     // Remove after very short time (50ms for visual feedback only)
                     setTimeout(() => contentDiv.classList.remove('streaming-instant'), 50);
                 }
-                
+
                 // Instant append with requestAnimationFrame for smooth rendering
                 appendToLastMessage(data.content, lastMessage);
-                
+
                 // Smooth scroll (only if near bottom)
                 const chatContainer = document.getElementById('chatContainer');
                 if (chatContainer) {
@@ -829,11 +838,33 @@ function handleStreamingMessage(data) {
     } else if (data.type === 'algorithms') {
         addToStatusCarousel('algorithms', data, lastMessage);
         scrollToBottom();
+    } else if (data.type === 'agent_start') {
+        // Phase 4: Agent Workflow Visualization
+        console.log('🚀 Agent started:', data.agent, `(${data.index + 1}/${data.total})`);
+        updateWorkflowPill(data.agent, 'active', data.index, data.total);
+        showWorkflowPill();
+    } else if (data.type === 'agent_complete') {
+        // Phase 4: Agent completed
+        console.log('✅ Agent completed:', data.agent, `(${data.duration_ms}ms)`);
+        updateWorkflowPill(data.agent, 'completed');
+    } else if (data.type === 'metacog_result') {
+        // Phase 4: Metacognition results
+        console.log('🧠 Metacog result:', data);
+        updateMetacogIndicators({
+            alignment: data.alignment_score,
+            contradictions: data.contradiction_count,
+            complexity: data.complexity,
+            quarantined: data.quarantined || 0
+        });
+    } else if (data.type === 'workflow_complete') {
+        // Phase 4: Entire workflow finished
+        console.log('🏁 Workflow complete:', data.mode, `(${data.total_duration_ms}ms)`);
+        setTimeout(() => hideWorkflowPill(), 2000);
     } else if (data.type === 'done') {
         console.log('✅ Done message received:', data);
         console.log('✅ Done message mode:', data.mode);
         console.log('✅ Done message results:', data.results);
-        
+
         // Remove glitch animation when response is complete
         if (lastMessage) {
             const thoughtsContainer = lastMessage.querySelector('.thoughts-stream-container');
@@ -843,7 +874,7 @@ function handleStreamingMessage(data) {
                     currentDisplay.classList.remove('glitch-active');
                 }
             }
-            
+
             const statusCarousel = lastMessage.querySelector('.status-carousel');
             if (statusCarousel) {
                 const thinkingItems = statusCarousel.querySelectorAll('.status-item.thinking');
@@ -858,7 +889,7 @@ function handleStreamingMessage(data) {
                     }, 500);
                 });
             }
-            
+
             // Force final render of accumulated text when stream completes
             const visibleText = lastMessage.querySelector('.visible-text-content');
             if (visibleText && visibleText.dataset.accumulatedText) {
@@ -866,7 +897,7 @@ function handleStreamingMessage(data) {
                 if (visibleText._renderTimeout) {
                     clearTimeout(visibleText._renderTimeout);
                 }
-                
+
                 // Force immediate final render
                 const finalText = visibleText.dataset.accumulatedText || '';
                 if (finalText.trim()) {
@@ -874,13 +905,13 @@ function handleStreamingMessage(data) {
                     let html = marked.parse(cleanedText);
                     html = renderMath(html);
                     visibleText.innerHTML = html;
-                    
+
                     // Update conversation context with assistant response
                     const userQuery = conversationContext.lastUserMessage;
                     if (userQuery) {
                         updateConversationContext(null, finalText);
                     }
-                    
+
                     // Re-highlight code blocks
                     requestAnimationFrame(() => {
                         visibleText.querySelectorAll('pre code').forEach((block) => {
@@ -894,32 +925,32 @@ function handleStreamingMessage(data) {
                     });
                 }
             }
-            
+
             // Handle astro-physiology results if present
             if (data.mode === 'astrophysiology') {
                 console.log('Astro-physiology done message received:', data);
                 console.log('Results data:', data.results);
                 console.log('Error data:', data.error);
-                
+
                 // Remove loading state
                 const loadingState = lastMessage.querySelector('.astro-loading-state');
                 if (loadingState) {
                     console.log('Removing loading state');
                     loadingState.remove();
                 }
-                
+
                 // Check for errors first
                 if (data.error || (data.results && data.results.error)) {
                     const errorMsg = data.results?.content || data.results?.message || 'An error occurred during calculation';
                     console.error('Astro-physiology error:', errorMsg);
-                    
+
                     // Show error message
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message';
                     errorDiv.style.cssText = 'color: #ff6b6b; padding: 15px; background: rgba(255, 107, 107, 0.1); border-radius: 6px; margin: 15px 0;';
                     errorDiv.textContent = `Error: ${errorMsg}`;
                     lastMessage.querySelector('.message-content')?.appendChild(errorDiv);
-                    
+
                     // If missing birth data, show form
                     if (data.error === 'missing_birth_data' || data.results?.error === 'missing_birth_data') {
                         astro_showBirthDataForm(lastMessage);
@@ -932,7 +963,7 @@ function handleStreamingMessage(data) {
                     console.log('Has interventions:', !!data.results.interventions);
                     console.log('Expert consultations:', data.results.expert_consultations);
                     console.log('Interventions:', data.results.interventions);
-                    
+
                     // Store algorithmic_data for follow-up questions (with timestamp)
                     if (data.results.algorithmic_data) {
                         const algoDataWithTimestamp = {
@@ -943,9 +974,24 @@ function handleStreamingMessage(data) {
                         localStorage.setItem('iceburg_astro_algorithmic_data', JSON.stringify(algoDataWithTimestamp));
                         console.log('Stored algorithmic_data for follow-up questions');
                     }
-                    
+
                     astro_createAstroPhysiologyCard(data.results, lastMessage);
-                    
+
+                    // Store expert registry in message element for access by expert display functions
+                    if (data.results.expert_registry) {
+                        lastMessage.dataset.expertRegistry = JSON.stringify(data.results.expert_registry);
+                    }
+
+                    // Display expert suggestions if available
+                    if (data.results.available_experts && data.results.expert_switching_enabled) {
+                        astro_showExpertSuggestions(data.results.available_experts, lastMessage);
+                    }
+
+                    // Display switch back button if in expert mode
+                    if (data.results.current_expert && data.results.can_switch_back) {
+                        astro_addSwitchBackButton(lastMessage, data.results.current_expert);
+                    }
+
                     // Display expert consultations (Phase 6)
                     if (data.results.expert_consultations) {
                         console.log('Displaying expert consultations...');
@@ -953,7 +999,7 @@ function handleStreamingMessage(data) {
                     } else {
                         console.warn('No expert_consultations in results');
                     }
-                    
+
                     // Display interventions (Phase 7)
                     if (data.results.interventions) {
                         console.log('Displaying interventions...');
@@ -961,19 +1007,19 @@ function handleStreamingMessage(data) {
                     } else {
                         console.warn('No interventions in results');
                     }
-                    
+
                     // V2: Display testable hypotheses (Phase 8: Research Tool Mode)
                     if (data.results.hypotheses && data.results.hypotheses.length > 0) {
                         console.log('Displaying testable hypotheses...');
                         astro_displayHypotheses(data.results.hypotheses, lastMessage);
                     }
-                    
+
                     // Legacy display removed - astro_createAstroPhysiologyCard handles all display
                     // No need for duplicate displayMolecularBlueprint, displayPatternTruth, or addTruthInsight calls
                 }
             }
         }
-        
+
         // Display portal metadata if available (always-on architecture)
         if (data.metadata) {
             const metadata = data.metadata;
@@ -981,12 +1027,12 @@ function handleStreamingMessage(data) {
                 addPortalMetadata(metadata, lastMessage);
             }
         }
-        
+
         // Display monitoring status if available (self-healing systems)
         if (data.monitoring) {
             addMonitoringStatus(data.monitoring, lastMessage);
         }
-        
+
         // Display truth-finding data for astro-physiology mode
         // NOTE: This is handled in the "done" message handler to prevent duplicates
         // Only process here if it's a streaming update, not final results
@@ -995,7 +1041,7 @@ function handleStreamingMessage(data) {
             // Full card creation happens in "done" handler only
             console.log('Streaming update for astro-physiology (skipping full card creation)');
         }
-        
+
         // Mark all action items as complete
         if (lastMessage) {
             const actionItems = lastMessage.querySelectorAll('.action-item.processing');
@@ -1005,13 +1051,13 @@ function handleStreamingMessage(data) {
                 const statusEl = item.querySelector('.action-status');
                 if (statusEl) statusEl.textContent = 'complete';
             });
-            
+
             // Remove duplicate content - check all possible duplicate sources
             const reflexPreview = lastMessage.querySelector('.reflex-preview');
             const visibleText = lastMessage.querySelector('.visible-text-content');
             const streamingText = lastMessage.querySelector('.streaming-text-container');
             const statusCarousel = lastMessage.querySelector('.status-carousel');
-            
+
             // Check if status carousel content matches main content and prevent duplication
             // Only truncate if there's a very close match (not just common words)
             if (statusCarousel && visibleText) {
@@ -1041,7 +1087,7 @@ function handleStreamingMessage(data) {
                     }
                 }
             }
-            
+
             // Remove duplicate from visible text if reflex preview exists
             if (reflexPreview && visibleText) {
                 const previewText = reflexPreview.textContent || '';
@@ -1057,7 +1103,7 @@ function handleStreamingMessage(data) {
                     }
                 }
             }
-            
+
             // Remove duplicate streaming text if visible text exists
             if (visibleText && streamingText) {
                 const visibleTextContent = visibleText.textContent || '';
@@ -1066,7 +1112,7 @@ function handleStreamingMessage(data) {
                     streamingText.style.display = 'none';
                 }
             }
-            
+
             // Convert streaming text to visible text on done
             if (streamingText && !visibleText) {
                 const accumulatedText = streamingText.textContent || '';
@@ -1077,17 +1123,17 @@ function handleStreamingMessage(data) {
                     streamingText.className = 'visible-text-content';
                 }
             }
-            
+
             markMessageComplete(lastMessage);
             addThoughtsTrigger(lastMessage);
-            
+
             // Add export options for substantial responses
             const messageContent = lastMessage.querySelector('.message-content');
             if (messageContent && messageContent.textContent.trim().length > 50) {
                 addExportOptions(lastMessage, data);
             }
         }
-        
+
         // Re-enable input
         reenableInput();
         scrollToBottom();
@@ -1096,15 +1142,63 @@ function handleStreamingMessage(data) {
         if (data.message && data.message.includes("Query must be a non-empty string")) {
             return;
         }
-        
-        // Show error message
+
+        // Handle user-friendly error format with recovery suggestions
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
-        errorDiv.style.cssText = 'color: #ff4444; padding: 0.5rem; border-left: 3px solid #ff4444; margin-top: 0.5rem;';
-        errorDiv.textContent = data.message || 'An error occurred';
+        errorDiv.style.cssText = 'color: #ff4444; padding: 1rem; background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; margin-top: 0.5rem; border-radius: 6px;';
+
+        // Main error message
+        const errorTitle = document.createElement('div');
+        errorTitle.style.cssText = 'font-weight: bold; margin-bottom: 0.5rem; font-size: 1rem;';
+        errorTitle.textContent = data.message || 'An error occurred';
+        errorDiv.appendChild(errorTitle);
+
+        // Recovery suggestions if available
+        if (data.recovery_suggestions && Array.isArray(data.recovery_suggestions) && data.recovery_suggestions.length > 0) {
+            const suggestionsTitle = document.createElement('div');
+            suggestionsTitle.style.cssText = 'margin-top: 0.75rem; margin-bottom: 0.5rem; font-size: 0.9rem; color: #ffaa44; font-weight: 600;';
+            suggestionsTitle.textContent = 'What you can try:';
+            errorDiv.appendChild(suggestionsTitle);
+
+            const suggestionsList = document.createElement('ul');
+            suggestionsList.style.cssText = 'margin: 0; padding-left: 1.5rem; list-style-type: disc;';
+            suggestionsList.style.color = '#ffaa44';
+
+            data.recovery_suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.style.cssText = 'margin: 0.25rem 0; font-size: 0.9rem;';
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+
+            errorDiv.appendChild(suggestionsList);
+        }
+
+        // Technical details (collapsible, for debugging)
+        if (data.technical_details && DEBUG_MODE) {
+            const detailsToggle = document.createElement('button');
+            detailsToggle.textContent = 'Show technical details';
+            detailsToggle.style.cssText = 'margin-top: 0.5rem; padding: 0.25rem 0.5rem; background: rgba(255, 68, 68, 0.2); border: 1px solid #ff4444; border-radius: 4px; color: #ff4444; cursor: pointer; font-size: 0.85rem;';
+            detailsToggle.onclick = () => {
+                const details = errorDiv.querySelector('.technical-details');
+                if (details) {
+                    details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                    detailsToggle.textContent = details.style.display === 'none' ? 'Show technical details' : 'Hide technical details';
+                }
+            };
+            errorDiv.appendChild(detailsToggle);
+
+            const details = document.createElement('div');
+            details.className = 'technical-details';
+            details.style.cssText = 'display: none; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: #aaa;';
+            details.textContent = data.technical_details;
+            errorDiv.appendChild(details);
+        }
+
         const messageContent = lastMessage.querySelector('.message-content');
         if (messageContent) messageContent.appendChild(errorDiv);
-        
+
         reenableInput();
         showToast(data.message || 'An error occurred', 'error');
         scrollToBottom();
@@ -1120,30 +1214,30 @@ function createWordBreakdownDisplay(messageElement, originalQuery) {
     wordBreakdownDisplay.style.setProperty('opacity', '1', 'important');
     wordBreakdownDisplay.innerHTML = '<div class="word-breakdown-header"><strong>Analyzing Prompt:</strong><span class="word-breakdown-collapse">▼</span></div><div class="word-breakdown-content"></div><div class="word-linguistic-origins"></div>';
     wordBreakdownDisplay.setAttribute('data-original-query', originalQuery);
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (messageContent) {
         messageContent.insertBefore(wordBreakdownDisplay, messageContent.firstChild);
     } else {
         messageElement.appendChild(wordBreakdownDisplay);
     }
-    
+
     // Add click handler
     const header = wordBreakdownDisplay.querySelector('.word-breakdown-header');
     header.addEventListener('click', () => toggleThoughtsSlideUp(messageElement));
-    
+
     return wordBreakdownDisplay;
 }
 
 // Helper: Ensure word breakdown is visible
 function ensureWordBreakdownVisible(wordBreakdownDisplay) {
     if (!wordBreakdownDisplay) return;
-    
+
     wordBreakdownDisplay.classList.remove('collapsed');
     wordBreakdownDisplay.style.setProperty('display', 'block', 'important');
     wordBreakdownDisplay.style.setProperty('visibility', 'visible', 'important');
     wordBreakdownDisplay.style.setProperty('opacity', '1', 'important');
-    
+
     const contentDiv = wordBreakdownDisplay.querySelector('.word-breakdown-content');
     if (contentDiv) {
         contentDiv.style.setProperty('display', 'block', 'important');
@@ -1164,7 +1258,7 @@ function reenableInput() {
 // Helper: Add Reflex Agent 3-bullet preview
 function addReflexPreview(bullets, messageElement, compressionRatio) {
     if (!messageElement || !bullets) return;
-    
+
     // Check if preview already exists
     let previewDiv = messageElement.querySelector('.reflex-preview');
     if (!previewDiv) {
@@ -1179,7 +1273,7 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
             font-size: 0.6875rem;
             line-height: 1.2;
         `;
-        
+
         // Insert before message content (FIRST - before chunks)
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
@@ -1188,13 +1282,13 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
             messageElement.appendChild(previewDiv);
         }
     }
-    
+
     // Remove markdown bold formatting and clean text
     const cleanText = (text) => {
         if (!text) return '';
         return text.replace(/\*\*/g, '').replace(/\*/g, '').trim();
     };
-    
+
     // Build preview HTML - compact, no spacing, small font, inline
     const previewHTML = `
         <div class="reflex-preview-header" style="display: inline; font-size: 0.625rem; color: var(--text-tertiary); margin: 0; padding: 0; line-height: 1.2;">
@@ -1205,9 +1299,9 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
             ${bullets.core_insight ? `<span style="display: inline;">${cleanText(bullets.core_insight)}</span>` : ''}
         </div>
     `;
-    
+
     previewDiv.innerHTML = previewHTML;
-    
+
     // Handle actionable guidance and key context as modular items (separate from preview)
     if (bullets.actionable_guidance || bullets.key_context) {
         let modularContainer = messageElement.querySelector('.actionable-modular');
@@ -1223,7 +1317,7 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
                 font-size: 0.6875rem;
                 line-height: 1.2;
             `;
-            
+
             const messageContent = messageElement.querySelector('.message-content');
             if (messageContent) {
                 messageContent.appendChild(modularContainer);
@@ -1231,7 +1325,7 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
                 messageElement.appendChild(modularContainer);
             }
         }
-        
+
         // Add actionable guidance as modular item
         if (bullets.actionable_guidance) {
             const item = document.createElement('div');
@@ -1251,7 +1345,7 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
             item.textContent = cleanText(bullets.actionable_guidance);
             modularContainer.appendChild(item);
         }
-        
+
         // Add key context as modular item
         if (bullets.key_context) {
             const item = document.createElement('div');
@@ -1278,25 +1372,25 @@ function addReflexPreview(bullets, messageElement, compressionRatio) {
 function addMessage(content, type = 'assistant') {
     const chatContainer = document.getElementById('chatContainer');
     const welcomeMessage = chatContainer.querySelector('.welcome-message');
-    
+
     if (welcomeMessage) {
         welcomeMessage.remove();
     }
-    
+
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
     messageDiv.id = `message-${messageId++}`;
-    
+
     const header = document.createElement('div');
     header.className = 'message-header';
     header.innerHTML = `
         <span>${type === 'user' ? 'You' : 'ICEBURG'}</span>
         <span>${new Date().toLocaleTimeString()}</span>
     `;
-    
+
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    
+
     // Render markdown for assistant messages, plain text for user
     if (type === 'assistant' && content) {
         let html = marked.parse(content);
@@ -1313,7 +1407,7 @@ function addMessage(content, type = 'assistant') {
     } else {
         contentDiv.textContent = content;
     }
-    
+
     // Add message actions for assistant messages
     let actionsDiv = null;
     if (type === 'assistant') {
@@ -1332,7 +1426,7 @@ function addMessage(content, type = 'assistant') {
             </button>
         `;
         // Don't append actionsDiv yet - will append after contentDiv
-        
+
         // Copy button handler
         const copyBtn = actionsDiv.querySelector('.copy-btn');
         copyBtn.addEventListener('click', () => {
@@ -1342,7 +1436,7 @@ function addMessage(content, type = 'assistant') {
                 setTimeout(() => copyBtn.classList.remove('copied'), 2000);
             });
         });
-        
+
         // Regenerate button handler
         const regenerateBtn = actionsDiv.querySelector('.regenerate-btn');
         regenerateBtn.addEventListener('click', () => {
@@ -1354,7 +1448,7 @@ function addMessage(content, type = 'assistant') {
             }
         });
     }
-    
+
     messageDiv.appendChild(header);
     messageDiv.appendChild(contentDiv);
     // Append actions AFTER content so buttons appear below the message
@@ -1362,10 +1456,10 @@ function addMessage(content, type = 'assistant') {
         messageDiv.appendChild(actionsDiv);
     }
     chatContainer.appendChild(messageDiv);
-    
+
     // Scroll to bottom
     setTimeout(() => scrollToBottom(), 100);
-    
+
     return messageDiv;
 }
 
@@ -1375,12 +1469,12 @@ function addMessage(content, type = 'assistant') {
 // Unified status carousel - cycles through all status items
 function addToStatusCarousel(type, data, messageElement) {
     console.log(`🔵 addToStatusCarousel called: type=${type}, messageElement=`, messageElement);
-    
+
     if (!messageElement) {
         console.error('❌ No messageElement provided to addToStatusCarousel!');
         return;
     }
-    
+
     // Get or create unified status carousel
     let statusCarousel = messageElement.querySelector('.status-carousel');
     if (!statusCarousel) {
@@ -1392,11 +1486,11 @@ function addToStatusCarousel(type, data, messageElement) {
         statusCarousel.style.setProperty('visibility', 'visible', 'important');
         statusCarousel.style.setProperty('opacity', '1', 'important');
         statusCarousel.innerHTML = '<div class="status-carousel-header"><span class="status-title">Status</span><span class="status-indicator">●</span><span class="status-collapse">▼</span></div><div class="status-carousel-content"></div><div class="status-carousel-expanded" style="display: none;"></div>';
-        
+
         // Insert BEFORE word breakdown display (FIRST) - prompt interpreter appears first
         const wordBreakdown = messageElement.querySelector('.word-breakdown-display');
         const messageContent = messageElement.querySelector('.message-content');
-        
+
         if (messageContent) {
             if (wordBreakdown) {
                 // Insert BEFORE word breakdown (status carousel first)
@@ -1408,7 +1502,7 @@ function addToStatusCarousel(type, data, messageElement) {
             messageElement.appendChild(statusCarousel);
         }
         console.log('✅ Status carousel created and inserted');
-        
+
         // Add click handler to expand/collapse
         const header = statusCarousel.querySelector('.status-carousel-header');
         const collapse = statusCarousel.querySelector('.status-collapse');
@@ -1416,7 +1510,7 @@ function addToStatusCarousel(type, data, messageElement) {
             const expanded = statusCarousel.querySelector('.status-carousel-expanded');
             const content = statusCarousel.querySelector('.status-carousel-content');
             const isExpanded = expanded.style.display !== 'none';
-            
+
             if (isExpanded) {
                 // Collapse - show cycling view
                 expanded.style.display = 'none';
@@ -1431,7 +1525,7 @@ function addToStatusCarousel(type, data, messageElement) {
                 expanded.style.opacity = '1';
                 collapse.textContent = '▲';
                 statusCarousel.classList.add('expanded');
-                
+
                 // Ensure expanded view is visible and not cut off
                 expanded.style.position = 'relative';
                 expanded.style.zIndex = '10';
@@ -1440,11 +1534,11 @@ function addToStatusCarousel(type, data, messageElement) {
                 expanded.style.overflowX = 'hidden';
             }
         });
-        
+
         // Start auto-cycling with transitions
         startStatusCarousel(statusCarousel);
     }
-    
+
     // Check for duplicates - don't add if same type and similar content
     const items = statusCarousel.dataset.items ? JSON.parse(statusCarousel.dataset.items) : [];
     const isDuplicate = items.some(existing => {
@@ -1457,22 +1551,22 @@ function addToStatusCarousel(type, data, messageElement) {
         }
         return false;
     });
-    
+
     if (isDuplicate) {
         console.log(`⏭️ Skipping duplicate ${type} item`);
         return;
     }
-    
+
     // Add item to carousel
     const item = createStatusItem(type, data);
     items.push({ type, data });
     statusCarousel.dataset.items = JSON.stringify(items);
-    
+
     // Add to expanded view
     const expanded = statusCarousel.querySelector('.status-carousel-expanded');
     const expandedItem = createStatusItem(type, data);
     expanded.appendChild(expandedItem);
-    
+
     // Update cycling with transition
     updateStatusCarousel(statusCarousel);
 }
@@ -1481,8 +1575,8 @@ function addToStatusCarousel(type, data, messageElement) {
 function createStatusItem(type, data) {
     const item = document.createElement('div');
     item.className = `status-item status-item-${type}`;
-    
-    switch(type) {
+
+    switch (type) {
         case 'action':
             // Support bullet points for actions - show up to 3 main points
             const actionContent = data.description || data.action || 'Processing...';
@@ -1494,23 +1588,23 @@ function createStatusItem(type, data) {
             } else {
                 actionBullets = [actionContent];
             }
-            
+
             // Limit to first 3 bullets for main points
             const mainPoints = actionBullets.slice(0, 3).map(b => b.trim()).filter(b => b);
-            
+
             // Add loading class if status is processing
             const isProcessing = (data.status || 'processing') === 'processing';
             item.className += isProcessing ? ' loading' : '';
-            
+
             // Action name
-            const actionName = data.action === 'prompt_interpreter' ? 'Prompt Interpreter' : 
-                              data.action ? data.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Processing';
-            
+            const actionName = data.action === 'prompt_interpreter' ? 'Prompt Interpreter' :
+                data.action ? data.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Processing';
+
             // Check for cache status
             const isCached = data.is_cached || data.cache_status?.cache_hit;
             const responseTime = data.response_time || data.cache_status?.response_time;
             const cacheIndicator = isCached ? ' ⚡' : '';
-            
+
             // Build content with exactly 3 bullet points, inline with separators
             let contentHtml = '';
             if (mainPoints.length > 0) {
@@ -1520,7 +1614,7 @@ function createStatusItem(type, data) {
                 // Join with " • " separator for inline display (bullet is in separator, not in each item)
                 contentHtml = `<div class="status-item-content">${displayPoints.map(p => p.substring(0, 40) + (p.length > 40 ? '...' : '')).join(' • ')}${cacheNote}</div>`;
             }
-            
+
             item.innerHTML = `
                 <div class="status-item-header">
                     <span class="status-item-icon">🔍${cacheIndicator}</span>
@@ -1539,19 +1633,19 @@ function createStatusItem(type, data) {
             } else if (typeof thinkingContent === 'string') {
                 thinkingBullets = thinkingContent.split('\n').filter(line => line.trim());
             }
-            
+
             // Limit to first 3 bullets for main points
             const mainThinkingPoints = thinkingBullets.slice(0, 3).map(b => b.trim()).filter(b => b);
-            
+
             // Add thinking class for pulsing animations
             item.className += ' thinking';
-            
+
             // Build content with exactly 3 bullet points, inline with separators
             const displayThinkingPoints = mainThinkingPoints.slice(0, 3);
             const thinkingContentHtml = displayThinkingPoints.length > 0
                 ? `<div class="status-item-content">${displayThinkingPoints.map(p => p.substring(0, 40) + (p.length > 40 ? '...' : '')).join(' • ')}</div>`
                 : '<div class="status-item-content">Thinking...</div>';
-            
+
             item.innerHTML = `
                 <div class="status-item-header">
                     <span class="status-item-icon">💭</span>
@@ -1570,10 +1664,10 @@ function createStatusItem(type, data) {
                 </div>
                 <div class="status-item-content">
                     ${enginesList.map(e => {
-                        const name = e.name || e.engine || e;
-                        const algo = e.algorithm || e.description || '';
-                        return `${name}${algo ? ': ' + algo : ''}`;
-                    }).join('<br>')}
+                const name = e.name || e.engine || e;
+                const algo = e.algorithm || e.description || '';
+                return `${name}${algo ? ': ' + algo : ''}`;
+            }).join('<br>')}
                 </div>
             `;
             break;
@@ -1587,10 +1681,10 @@ function createStatusItem(type, data) {
                 </div>
                 <div class="status-item-content">
                     ${algorithmsList.map(a => {
-                        const name = a.name || a.algorithm || a;
-                        const desc = a.description || '';
-                        return `${name}${desc ? ': ' + desc : ''}`;
-                    }).join('<br>')}
+                const name = a.name || a.algorithm || a;
+                const desc = a.description || '';
+                return `${name}${desc ? ': ' + desc : ''}`;
+            }).join('<br>')}
                 </div>
             `;
             break;
@@ -1607,7 +1701,7 @@ function createStatusItem(type, data) {
             `;
             break;
     }
-    
+
     return item;
 }
 
@@ -1620,19 +1714,19 @@ function startStatusCarousel(carousel) {
     if (carouselIntervals.has(carousel)) {
         clearInterval(carouselIntervals.get(carousel));
     }
-    
+
     const content = carousel.querySelector('.status-carousel-content');
     let currentIndex = 0;
     let currentElement = null;
-    
+
     const morphToNext = () => {
         const items = carousel.dataset.items ? JSON.parse(carousel.dataset.items) : [];
         if (items.length === 0) return;
-        
+
         // Get next item
         const nextItem = items[currentIndex];
         if (!nextItem) return;
-        
+
         // Remove ALL existing items first (ensure only one is visible)
         const existingItems = content.querySelectorAll('.status-item');
         existingItems.forEach(item => {
@@ -1640,7 +1734,7 @@ function startStatusCarousel(carousel) {
             item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
             item.style.opacity = '0';
             item.style.transform = 'translateY(-4px)';
-            
+
             // Remove after fade
             setTimeout(() => {
                 if (item && item.parentNode) {
@@ -1648,23 +1742,23 @@ function startStatusCarousel(carousel) {
                 }
             }, 300);
         });
-        
+
         // Create new element
         const nextElement = createStatusItem(nextItem.type, nextItem.data);
         nextElement.classList.add('active');
         nextElement.style.opacity = '0';
         nextElement.style.transform = 'translateY(4px)';
-        
+
         // Clear content and add new element (ensure only one is visible)
         // Don't clear immediately - wait for fade out
         setTimeout(() => {
             // Clear any remaining items
             const remainingItems = content.querySelectorAll('.status-item');
             remainingItems.forEach(item => item.remove());
-            
+
             // Add new element
             content.appendChild(nextElement);
-            
+
             // Fade in next
             setTimeout(() => {
                 nextElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
@@ -1672,28 +1766,28 @@ function startStatusCarousel(carousel) {
                 nextElement.style.transform = 'translateY(0)';
             }, 10);
         }, 50);
-        
+
         // Update current
         currentElement = nextElement;
-        
+
         // Move to next item
         currentIndex = (currentIndex + 1) % items.length;
     };
-    
+
     // Start morphing
     morphToNext(); // Show first item immediately
     // Cycle every 2 seconds for smooth transitions
     const interval = setInterval(morphToNext, 2000);
     carouselIntervals.set(carousel, interval);
     carouselCurrentElements.set(carousel, currentElement);
-    
+
     // Update status indicator with loading/thinking classes
     const indicator = carousel.querySelector('.status-indicator');
     if (indicator) {
         const items = carousel.dataset.items ? JSON.parse(carousel.dataset.items) : [];
         const hasThinking = items.some(item => item.type === 'thinking');
         const hasLoading = items.some(item => item.type === 'action' && (item.data.status === 'processing' || item.data.status === 'starting'));
-        
+
         if (hasThinking) {
             indicator.classList.add('thinking');
             indicator.classList.remove('loading');
@@ -1717,7 +1811,7 @@ function addThoughtsTrigger(messageElement) {
     if (messageElement.querySelector('.thoughts-trigger')) {
         return;
     }
-    
+
     const trigger = document.createElement('button');
     trigger.className = 'thoughts-trigger';
     trigger.innerHTML = `
@@ -1726,17 +1820,17 @@ function addThoughtsTrigger(messageElement) {
             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     `;
-    
+
     trigger.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleThoughtsSlideUp(messageElement);
     });
-    
+
     // Ensure trigger is clickable and not covered
     trigger.style.pointerEvents = 'auto';
     trigger.style.zIndex = '1000';
-    
+
     // Position relative to message element
     const messageContent = messageElement.querySelector('.message-content');
     if (messageContent) {
@@ -1753,7 +1847,7 @@ function toggleThoughtsSlideUp(messageElement) {
     // Check if slide-up already exists
     let slideUp = document.getElementById('thoughts-slide-up');
     const trigger = messageElement ? messageElement.querySelector('.thoughts-trigger') : document.querySelector('.thoughts-trigger');
-    
+
     if (!slideUp) {
         // Create slide-up panel
         slideUp = document.createElement('div');
@@ -1770,9 +1864,9 @@ function toggleThoughtsSlideUp(messageElement) {
             </div>
             <div class="thoughts-slide-up-content"></div>
         `;
-        
+
         document.body.appendChild(slideUp);
-        
+
         // Close button handler
         const closeBtn = slideUp.querySelector('.thoughts-slide-up-close');
         closeBtn.addEventListener('click', (e) => {
@@ -1781,7 +1875,7 @@ function toggleThoughtsSlideUp(messageElement) {
             slideUp.classList.remove('open');
             if (trigger) trigger.classList.remove('active');
         });
-        
+
         // Close on backdrop click
         slideUp.addEventListener('click', (e) => {
             if (e.target === slideUp) {
@@ -1790,7 +1884,7 @@ function toggleThoughtsSlideUp(messageElement) {
             }
         });
     }
-    
+
     // Toggle open/closed
     const isOpen = slideUp.classList.contains('open');
     if (isOpen) {
@@ -1801,22 +1895,22 @@ function toggleThoughtsSlideUp(messageElement) {
         slideUp.classList.add('open');
         if (trigger) trigger.classList.add('active');
     }
-    
+
     // Populate content when opening
     const content = slideUp.querySelector('.thoughts-slide-up-content');
     content.innerHTML = ''; // Clear previous content
-    
+
     // Collect all data from message
     const wordBreakdown = messageElement.querySelector('.word-breakdown-display');
     const statusCarousel = messageElement.querySelector('.status-carousel');
     const sources = messageElement.querySelector('.sources-display');
-    
+
     // Add word breakdown section
     if (wordBreakdown) {
         const section = document.createElement('div');
         section.className = 'thoughts-slide-up-section';
         section.innerHTML = '<div class="thoughts-slide-up-section-title">Linguistics Breakdown</div>';
-        
+
         const wordText = wordBreakdown.querySelector('.word-flowing-text');
         if (wordText) {
             const item = document.createElement('div');
@@ -1824,7 +1918,7 @@ function toggleThoughtsSlideUp(messageElement) {
             item.innerHTML = wordText.innerHTML;
             section.appendChild(item);
         }
-        
+
         const origins = wordBreakdown.querySelector('.word-linguistic-origins');
         if (origins && origins.textContent.trim()) {
             const item = document.createElement('div');
@@ -1832,18 +1926,18 @@ function toggleThoughtsSlideUp(messageElement) {
             item.textContent = origins.textContent;
             section.appendChild(item);
         }
-        
+
         if (wordText || (origins && origins.textContent.trim())) {
             content.appendChild(section);
         }
     }
-    
+
     // Add status/thinking section
     if (statusCarousel) {
         const section = document.createElement('div');
         section.className = 'thoughts-slide-up-section';
         section.innerHTML = '<div class="thoughts-slide-up-section-title">Thinking & Actions</div>';
-        
+
         const items = statusCarousel.dataset.items ? JSON.parse(statusCarousel.dataset.items) : [];
         if (items.length > 0) {
             items.forEach(item => {
@@ -1886,17 +1980,17 @@ function toggleThoughtsSlideUp(messageElement) {
                     section.appendChild(bullet);
                 }
             });
-            
+
             content.appendChild(section);
         }
     }
-    
+
     // Add sources section
     if (sources) {
         const section = document.createElement('div');
         section.className = 'thoughts-slide-up-section';
         section.innerHTML = '<div class="thoughts-slide-up-section-title">Cited Sources</div>';
-        
+
         const sourceLinks = sources.querySelectorAll('a');
         sourceLinks.forEach(link => {
             const item = document.createElement('div');
@@ -1904,7 +1998,7 @@ function toggleThoughtsSlideUp(messageElement) {
             item.innerHTML = `<a href="${link.href}" target="_blank" style="color: var(--accent-primary); text-decoration: none;">${link.textContent}</a>`;
             section.appendChild(item);
         });
-        
+
         if (sourceLinks.length > 0) {
             content.appendChild(section);
         }
@@ -1917,7 +2011,7 @@ function addExportOptions(messageElement, data) {
     if (messageElement.querySelector('.export-buttons-inline')) {
         return;
     }
-    
+
     // Create export buttons container at bottom of message (but not covering thoughts trigger)
     const exportButtons = document.createElement('div');
     exportButtons.className = 'export-buttons-inline';
@@ -1948,7 +2042,7 @@ function addExportOptions(messageElement, data) {
             </svg>
         </button>
     `;
-    
+
     // Append to message content (at bottom, before thoughts trigger)
     const messageContent = messageElement.querySelector('.message-content');
     if (messageContent) {
@@ -1956,7 +2050,7 @@ function addExportOptions(messageElement, data) {
     } else {
         messageElement.appendChild(exportButtons);
     }
-    
+
     // Add event handlers
     exportButtons.querySelectorAll('.export-btn-small').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1970,9 +2064,9 @@ function addExportOptions(messageElement, data) {
 async function generateExport(messageElement, format) {
     const messageContent = messageElement.querySelector('.message-content');
     const content = messageContent ? messageContent.textContent : '';
-    
+
     showToast(`Generating ${format.toUpperCase()}...`, 'info');
-    
+
     try {
         const response = await fetch('/api/export/generate', {
             method: 'POST',
@@ -1985,13 +2079,13 @@ async function generateExport(messageElement, format) {
                 message_id: messageElement.id
             })
         });
-        
+
         if (!response.ok) {
             throw new Error(`Failed to generate ${format}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.download_url) {
             // Download the file
             const link = document.createElement('a');
@@ -2014,7 +2108,7 @@ async function generateExport(messageElement, format) {
 function displayInlineExport(messageElement, format, content) {
     const exportDisplay = document.createElement('div');
     exportDisplay.className = `export-display export-${format}`;
-    
+
     if (format === 'chart') {
         // Render chart using Chart.js or similar
         exportDisplay.innerHTML = `<canvas id="chart-${Date.now()}"></canvas>`;
@@ -2045,17 +2139,17 @@ function updateInformatics(data, messageElement) {
         informaticsPanel.innerHTML = '<strong>Informatics:</strong>';
         messageElement.appendChild(informaticsPanel);
     }
-    
+
     for (const [key, value] of Object.entries(data)) {
         const item = document.createElement('div');
         item.className = 'informatics-item';
-        
+
         let displayValue = value;
         if (key === 'confidence' && typeof value === 'number') {
             const percentage = Math.round(value * 100);
             displayValue = `${percentage}% <span class="confidence-bar"><span class="confidence-fill" style="width: ${percentage}%"></span></span>`;
         }
-        
+
         item.innerHTML = `
             <span class="informatics-label">${key}:</span>
             <span class="informatics-value">${displayValue}</span>
@@ -2071,7 +2165,7 @@ function addConclusionItem(conclusion, messageElement) {
         if (!text) return '';
         return text.replace(/\*\*/g, '').replace(/\*/g, '').trim();
     };
-    
+
     let conclusionContainer = messageElement.querySelector('.conclusion-modular');
     if (!conclusionContainer) {
         conclusionContainer = document.createElement('div');
@@ -2085,7 +2179,7 @@ function addConclusionItem(conclusion, messageElement) {
             font-size: 0.6875rem;
             line-height: 1.2;
         `;
-        
+
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
             messageContent.appendChild(conclusionContainer);
@@ -2093,7 +2187,7 @@ function addConclusionItem(conclusion, messageElement) {
             messageElement.appendChild(conclusionContainer);
         }
     }
-    
+
     // Create small modular item
     const conclusionItem = document.createElement('div');
     conclusionItem.className = 'conclusion-modular-item';
@@ -2122,16 +2216,16 @@ function appendToLastMessage(content, messageElement) {
         return;
     }
     console.log('✅ Found contentDiv');
-    
+
     // Only skip null/undefined, but preserve spaces (they're important for word separation!)
     if (content === null || content === undefined) {
         console.log('⏭️ Skipping null/undefined content');
         return;
     }
-    
+
     // Allow empty strings and spaces - they're needed for proper text formatting
     // (spaces arrive as separate chunks and must be preserved)
-    
+
     // Use only one container - visible-text-content (remove streaming-text-container to prevent duplicates)
     let visibleText = contentDiv.querySelector('.visible-text-content');
     if (!visibleText) {
@@ -2145,7 +2239,7 @@ function appendToLastMessage(content, messageElement) {
         const wordBreakdown = contentDiv.querySelector('.word-breakdown-display');
         const statusCarousel = contentDiv.querySelector('.status-carousel');
         const insertAfter = thinkingStream || blackboard || statusCarousel || wordBreakdown;
-        
+
         if (insertAfter && insertAfter.nextSibling) {
             contentDiv.insertBefore(visibleText, insertAfter.nextSibling);
         } else if (insertAfter) {
@@ -2154,17 +2248,17 @@ function appendToLastMessage(content, messageElement) {
             contentDiv.insertBefore(visibleText, contentDiv.firstChild);
         }
     }
-    
+
     // Ensure dataset is initialized even if element already exists
     if (!visibleText.dataset.accumulatedText) {
         visibleText.dataset.accumulatedText = visibleText.textContent || '';
     }
-    
+
     // Append text to the container (accumulate as plain text, render as markdown)
     // Always read from dataset.accumulatedText as source of truth (not textContent which may be out of sync after markdown rendering)
     const currentText = visibleText.dataset.accumulatedText || visibleText.textContent || '';
     const accumulatedText = currentText + content;
-    
+
     // Check if this content is already in status carousel (prevent duplication)
     // VERY conservative check - only block exact duplicates from thinking messages
     // This prevents thinking messages from appearing as both status and main content
@@ -2178,7 +2272,7 @@ function appendToLastMessage(content, messageElement) {
                 const text = item.textContent || '';
                 return text.trim();
             }).filter(text => text.length > 0);
-            
+
             // Only block if the chunk content exactly matches a thinking message
             // This prevents thinking messages from duplicating as main content
             const chunkText = content.trim();
@@ -2196,18 +2290,18 @@ function appendToLastMessage(content, messageElement) {
                 }
                 return false;
             });
-            
+
             if (isExactMatch) {
                 console.log('⏭️ Skipping duplicate content (matches thinking message)');
                 return;
             }
         }
     }
-    
+
     // Remove duplicate markdown bold formatting before rendering
     let cleanedText = accumulatedText.replace(/\*\*([^*]+)\*\*/g, '$1'); // Remove **bold** but keep text
     cleanedText = cleanedText.replace(/\*([^*]+)\*/g, '$1'); // Remove *italic* but keep text
-    
+
     // Remove duplicate citations (e.g., "[LLM Knowledge]" appearing multiple times)
     // Pattern: [LLM Knowledge], [Training Knowledge], [ICEBURG Research], etc.
     const citationPatterns = [
@@ -2216,20 +2310,20 @@ function appendToLastMessage(content, messageElement) {
         /\[ICEBURG Research\]/gi,
         /\[External Source\]/gi
     ];
-    
+
     for (const pattern of citationPatterns) {
         // Replace multiple occurrences with a single occurrence
         cleanedText = cleanedText.replace(new RegExp(`(${pattern.source})\\s*\\1+`, 'g'), '$1');
         // Also remove if it appears multiple times in the same sentence/paragraph
         cleanedText = cleanedText.replace(new RegExp(`(${pattern.source})\\s*[^\\]]*\\s*\\1`, 'g'), '$1');
     }
-    
+
     // Remove duplicate phrases (e.g., "Training Knowledge [LLM Knowledge]" appearing twice)
     const duplicatePhrases = [
         /Training Knowledge\s*\[LLM Knowledge\]/gi,
         /\[LLM Knowledge\]\s*Training Knowledge/gi
     ];
-    
+
     for (const pattern of duplicatePhrases) {
         // Keep only the first occurrence
         const matches = cleanedText.match(new RegExp(pattern.source, 'gi'));
@@ -2245,39 +2339,39 @@ function appendToLastMessage(content, messageElement) {
             });
         }
     }
-    
+
     // Store accumulated text in dataset for thread-safe access
     visibleText.dataset.accumulatedText = accumulatedText;
     console.log('💾 Stored accumulated text:', accumulatedText.length, 'chars, preview:', accumulatedText.substring(0, 100));
-    
+
     // GPT-5-style instant rendering: Batch markdown processing for performance
     // FIX: Debounce rendering to prevent race conditions with rapid chunks
     // Clear any pending render timeout
     if (visibleText._renderTimeout) {
         clearTimeout(visibleText._renderTimeout);
     }
-    
+
     // Schedule render after a short delay (debounce)
     visibleText._renderTimeout = setTimeout(() => {
         // Always read the latest text from data attribute (thread-safe)
         // This ensures we render the most up-to-date content even if more chunks arrived
         const textToRender = visibleText.dataset.accumulatedText || '';
         console.log('🎨 Rendering text:', textToRender.length, 'chars, preview:', textToRender.substring(0, 100));
-        
+
         // Use requestAnimationFrame to avoid blocking the UI thread
         requestAnimationFrame(() => {
             // Always render the latest accumulated text (don't skip if more chunks arrived)
             // This ensures the UI stays up-to-date even during rapid streaming
-            
+
             // Post-process markdown: break long paragraphs, ensure proper formatting
             let cleanedText = formatLLMResponse(textToRender);
-            
+
             // Render as markdown for display (instant, non-blocking)
             let html = marked.parse(cleanedText);
             html = renderMath(html);
             visibleText.innerHTML = html;
             console.log('✅ Rendered HTML, length:', html.length);
-            
+
             // Re-highlight code blocks (async, non-blocking)
             requestAnimationFrame(() => {
                 visibleText.querySelectorAll('pre code').forEach((block) => {
@@ -2287,7 +2381,7 @@ function appendToLastMessage(content, messageElement) {
                         // Ignore highlighting errors for speed
                     }
                 });
-                
+
                 // Re-render charts (async)
                 renderCharts(visibleText);
             });
@@ -2308,28 +2402,28 @@ function calculateSimilarity(str1, str2) {
 // Format LLM response: break long paragraphs, ensure proper structure
 function formatLLMResponse(text) {
     if (!text || typeof text !== 'string') return text;
-    
+
     // Break long paragraphs (over 500 chars) into shorter ones
     const lines = text.split('\n');
     const formattedLines = [];
-    
+
     for (const line of lines) {
         if (line.trim().length === 0) {
             formattedLines.push(line);
             continue;
         }
-        
+
         // If line is a heading, list item, or code block, keep as is
         if (line.match(/^#{1,6}\s/) || line.match(/^[-*+]\s/) || line.match(/^\d+\.\s/) || line.match(/^```/) || line.match(/^`/)) {
             formattedLines.push(line);
             continue;
         }
-        
+
         // If line is very long (over 500 chars), break it into shorter paragraphs
         if (line.length > 500) {
             const words = line.split(' ');
             let currentParagraph = '';
-            
+
             for (const word of words) {
                 if ((currentParagraph + ' ' + word).length > 300) {
                     if (currentParagraph) {
@@ -2341,7 +2435,7 @@ function formatLLMResponse(text) {
                     currentParagraph = currentParagraph ? currentParagraph + ' ' + word : word;
                 }
             }
-            
+
             if (currentParagraph) {
                 formattedLines.push(currentParagraph.trim());
             }
@@ -2349,7 +2443,7 @@ function formatLLMResponse(text) {
             formattedLines.push(line);
         }
     }
-    
+
     return formattedLines.join('\n');
 }
 
@@ -2363,16 +2457,16 @@ function markMessageComplete(messageElement) {
 // Add portal metadata display (always-on architecture) - More visible UX
 function addMonitoringStatus(monitoring, messageElement) {
     if (!monitoring || !messageElement) return;
-    
+
     // Only show if monitoring is enabled and has status
     if (!monitoring.enabled || !monitoring.status) return;
-    
+
     let statusDisplay = messageElement.querySelector('.monitoring-status');
     if (!statusDisplay) {
         statusDisplay = document.createElement('div');
         statusDisplay.className = 'monitoring-status';
         statusDisplay.style.cssText = 'font-size: 0.75rem; color: #00ff88; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 6px; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;';
-        
+
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
             messageContent.appendChild(statusDisplay);
@@ -2380,45 +2474,45 @@ function addMonitoringStatus(monitoring, messageElement) {
             messageElement.appendChild(statusDisplay);
         }
     }
-    
+
     // Clear existing content
     statusDisplay.innerHTML = '';
-    
+
     const status = monitoring.status;
-    
+
     // Add header
     const header = document.createElement('span');
     header.style.cssText = 'font-weight: bold; color: #00ff88; margin-right: 0.5rem;';
     header.textContent = '🔧 Self-Healing:';
     statusDisplay.appendChild(header);
-    
+
     // Add status badges
     const badges = [];
-    
+
     if (status.monitoring_active) {
         badges.push(`Active`);
     }
-    
+
     if (status.total_alerts > 0) {
         badges.push(`${status.total_alerts} alerts`);
     }
-    
+
     if (status.resolved_alerts > 0) {
         badges.push(`${status.resolved_alerts} resolved`);
     }
-    
+
     if (status.auto_healing_success_rate > 0) {
         badges.push(`${(status.auto_healing_success_rate * 100).toFixed(0)}% success`);
     }
-    
+
     if (status.llm_analyses > 0) {
         badges.push(`${status.llm_analyses} LLM analyses`);
     }
-    
+
     if (status.cached_analyses > 0) {
         badges.push(`${status.cached_analyses} cached`);
     }
-    
+
     // Add badges
     badges.forEach(badge => {
         const badgeEl = document.createElement('span');
@@ -2430,14 +2524,14 @@ function addMonitoringStatus(monitoring, messageElement) {
 
 function addPortalMetadata(metadata, messageElement) {
     if (!metadata || !messageElement) return;
-    
+
     let metadataDisplay = messageElement.querySelector('.portal-metadata');
     if (!metadataDisplay) {
         metadataDisplay = document.createElement('div');
         metadataDisplay.className = 'portal-metadata';
         // More visible styling
         metadataDisplay.style.cssText = 'font-size: 0.8rem; color: #00ffff; margin-top: 0.75rem; padding: 0.5rem; background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 6px; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;';
-        
+
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
             messageContent.appendChild(metadataDisplay);
@@ -2445,33 +2539,33 @@ function addPortalMetadata(metadata, messageElement) {
             messageElement.appendChild(metadataDisplay);
         }
     }
-    
+
     // Clear existing content
     metadataDisplay.innerHTML = '';
-    
+
     // Add header
     const header = document.createElement('span');
     header.style.cssText = 'font-weight: bold; color: #00ffff; margin-right: 0.5rem;';
     header.textContent = '⚡ Always-On AI:';
     metadataDisplay.appendChild(header);
-    
+
     // Add metadata badges
     const badges = [];
-    
+
     if (metadata.source) {
         const sourceBadge = document.createElement('span');
         sourceBadge.style.cssText = 'padding: 0.25rem 0.5rem; background: rgba(0, 255, 255, 0.2); border-radius: 4px; font-size: 0.75rem;';
         sourceBadge.textContent = `Source: ${metadata.source}`;
         badges.push(sourceBadge);
     }
-    
+
     if (metadata.layer) {
         const layerBadge = document.createElement('span');
         layerBadge.style.cssText = 'padding: 0.25rem 0.5rem; background: rgba(0, 255, 0, 0.2); border-radius: 4px; font-size: 0.75rem;';
         layerBadge.textContent = `Layer: ${metadata.layer}`;
         badges.push(layerBadge);
     }
-    
+
     if (metadata.response_time !== undefined) {
         const timeBadge = document.createElement('span');
         const timeColor = metadata.response_time < 0.1 ? '#00ff00' : metadata.response_time < 1 ? '#ffff00' : '#ff8800';
@@ -2479,17 +2573,17 @@ function addPortalMetadata(metadata, messageElement) {
         timeBadge.textContent = `${metadata.response_time.toFixed(3)}s`;
         badges.push(timeBadge);
     }
-    
+
     if (metadata.cached) {
         const cachedBadge = document.createElement('span');
         cachedBadge.style.cssText = 'padding: 0.25rem 0.5rem; background: rgba(255, 255, 0, 0.3); border-radius: 4px; font-size: 0.75rem; color: #ffff00; font-weight: bold;';
         cachedBadge.textContent = '⚡ Cached';
         badges.push(cachedBadge);
     }
-    
+
     // Add badges to display
     badges.forEach(badge => metadataDisplay.appendChild(badge));
-    
+
     if (badges.length > 0) {
         metadataDisplay.style.display = 'flex';
     } else {
@@ -2501,13 +2595,13 @@ function addPortalMetadata(metadata, messageElement) {
 // Display deep knowledge decoding results
 function addTotalKnowledgeDisplay(totalKnowledge, messageElement) {
     if (!totalKnowledge || !messageElement) return;
-    
+
     let knowledgeDiv = messageElement.querySelector('.total-knowledge-display');
     if (!knowledgeDiv) {
         knowledgeDiv = document.createElement('div');
         knowledgeDiv.className = 'total-knowledge-display';
         knowledgeDiv.style.cssText = 'margin-top: 1rem; padding: 1rem; background: rgba(0, 255, 255, 0.05); border-left: 3px solid #00ffff; border-radius: 4px;';
-        
+
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
             messageContent.appendChild(knowledgeDiv);
@@ -2515,66 +2609,66 @@ function addTotalKnowledgeDisplay(totalKnowledge, messageElement) {
             messageElement.appendChild(knowledgeDiv);
         }
     }
-    
+
     // Compact collapsible display - documents pop out instead of cluttering
     const hasContent = (totalKnowledge.etymology_traces && totalKnowledge.etymology_traces.length > 0) ||
-                      (totalKnowledge.occult_connections && totalKnowledge.occult_connections.length > 0) ||
-                      (totalKnowledge.secret_society_connections && totalKnowledge.secret_society_connections.length > 0) ||
-                      (totalKnowledge.suppressed_knowledge && totalKnowledge.suppressed_knowledge.length > 0) ||
-                      (totalKnowledge.historical_patterns && totalKnowledge.historical_patterns.length > 0);
-    
+        (totalKnowledge.occult_connections && totalKnowledge.occult_connections.length > 0) ||
+        (totalKnowledge.secret_society_connections && totalKnowledge.secret_society_connections.length > 0) ||
+        (totalKnowledge.suppressed_knowledge && totalKnowledge.suppressed_knowledge.length > 0) ||
+        (totalKnowledge.historical_patterns && totalKnowledge.historical_patterns.length > 0);
+
     if (!hasContent) return;
-    
+
     let html = `<div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" class="knowledge-header">
         <div style="color: #00ffff; font-weight: bold; font-size: 0.9em;">🔍 Deep Knowledge Decoding</div>
         <span class="knowledge-toggle" style="color: #00ffff; font-size: 0.8em;">▼</span>
     </div>
     <div class="knowledge-content" style="display: none; margin-top: 0.5rem; max-height: 300px; overflow-y: auto;">`;
-    
+
     // Etymology traces - compact
     if (totalKnowledge.etymology_traces && totalKnowledge.etymology_traces.length > 0) {
         html += `<div style="margin: 0.25rem 0; font-size: 0.85em;"><strong style="color: #00ff00;">Etymology:</strong> `;
         html += totalKnowledge.etymology_traces.slice(0, 2).map(t => t.term).join(', ');
-        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({type: 'knowledge', section: 'etymology', data: totalKnowledge.etymology_traces})}' style="padding: 2px 6px; margin-left: 4px; background: rgba(0,255,255,0.2); border: 1px solid #00ffff; border-radius: 3px; color: #00ffff; cursor: pointer; font-size: 0.75em;">View</button></div>`;
+        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({ type: 'knowledge', section: 'etymology', data: totalKnowledge.etymology_traces })}' style="padding: 2px 6px; margin-left: 4px; background: rgba(0,255,255,0.2); border: 1px solid #00ffff; border-radius: 3px; color: #00ffff; cursor: pointer; font-size: 0.75em;">View</button></div>`;
     }
-    
+
     // Occult connections - compact
     if (totalKnowledge.occult_connections && totalKnowledge.occult_connections.length > 0) {
         html += `<div style="margin: 0.25rem 0; font-size: 0.85em;"><strong style="color: #ff00ff;">Occult:</strong> `;
         html += totalKnowledge.occult_connections.slice(0, 2).map(c => c.term).join(', ');
-        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({type: 'knowledge', section: 'occult', data: totalKnowledge.occult_connections})}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,0,255,0.2); border: 1px solid #ff00ff; border-radius: 3px; color: #ff00ff; cursor: pointer; font-size: 0.75em;">View</button></div>`;
+        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({ type: 'knowledge', section: 'occult', data: totalKnowledge.occult_connections })}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,0,255,0.2); border: 1px solid #ff00ff; border-radius: 3px; color: #ff00ff; cursor: pointer; font-size: 0.75em;">View</button></div>`;
     }
-    
+
     // Secret society connections - compact
     if (totalKnowledge.secret_society_connections && totalKnowledge.secret_society_connections.length > 0) {
         html += `<div style="margin: 0.25rem 0; font-size: 0.85em;"><strong style="color: #ffff00;">Societies:</strong> `;
         html += totalKnowledge.secret_society_connections.slice(0, 2).map(s => s.term).join(', ');
-        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({type: 'knowledge', section: 'societies', data: totalKnowledge.secret_society_connections})}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,255,0,0.2); border: 1px solid #ffff00; border-radius: 3px; color: #ffff00; cursor: pointer; font-size: 0.75em;">View</button></div>`;
+        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({ type: 'knowledge', section: 'societies', data: totalKnowledge.secret_society_connections })}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,255,0,0.2); border: 1px solid #ffff00; border-radius: 3px; color: #ffff00; cursor: pointer; font-size: 0.75em;">View</button></div>`;
     }
-    
+
     // Suppressed knowledge - compact
     if (totalKnowledge.suppressed_knowledge && totalKnowledge.suppressed_knowledge.length > 0) {
         html += `<div style="margin: 0.25rem 0; font-size: 0.85em;"><strong style="color: #ff4444;">Suppressed:</strong> `;
         html += totalKnowledge.suppressed_knowledge.slice(0, 2).map(s => s.term).join(', ');
-        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({type: 'knowledge', section: 'suppressed', data: totalKnowledge.suppressed_knowledge})}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,68,68,0.2); border: 1px solid #ff4444; border-radius: 3px; color: #ff4444; cursor: pointer; font-size: 0.75em;">View</button></div>`;
+        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({ type: 'knowledge', section: 'suppressed', data: totalKnowledge.suppressed_knowledge })}' style="padding: 2px 6px; margin-left: 4px; background: rgba(255,68,68,0.2); border: 1px solid #ff4444; border-radius: 3px; color: #ff4444; cursor: pointer; font-size: 0.75em;">View</button></div>`;
     }
-    
+
     // Historical patterns - compact
     if (totalKnowledge.historical_patterns && totalKnowledge.historical_patterns.length > 0) {
         html += `<div style="margin: 0.25rem 0; font-size: 0.85em;"><strong style="color: #00ff00;">Patterns:</strong> `;
         html += totalKnowledge.historical_patterns.slice(0, 2).map(p => p.term).join(', ');
-        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({type: 'knowledge', section: 'patterns', data: totalKnowledge.historical_patterns})}' style="padding: 2px 6px; margin-left: 4px; background: rgba(0,255,0,0.2); border: 1px solid #00ff00; border-radius: 3px; color: #00ff00; cursor: pointer; font-size: 0.75em;">View</button></div>`;
+        html += ` <button class="view-doc-btn" data-doc='${JSON.stringify({ type: 'knowledge', section: 'patterns', data: totalKnowledge.historical_patterns })}' style="padding: 2px 6px; margin-left: 4px; background: rgba(0,255,0,0.2); border: 1px solid #00ff00; border-radius: 3px; color: #00ff00; cursor: pointer; font-size: 0.75em;">View</button></div>`;
     }
-    
+
     html += '</div>';
-    
+
     knowledgeDiv.innerHTML = html;
-    
+
     // Add toggle functionality
     const header = knowledgeDiv.querySelector('.knowledge-header');
     const content = knowledgeDiv.querySelector('.knowledge-content');
     const toggle = knowledgeDiv.querySelector('.knowledge-toggle');
-    
+
     if (header && content && toggle) {
         header.addEventListener('click', () => {
             const isHidden = content.style.display === 'none';
@@ -2582,7 +2676,7 @@ function addTotalKnowledgeDisplay(totalKnowledge, messageElement) {
             toggle.textContent = isHidden ? '▲' : '▼';
         });
     }
-    
+
     // Add document viewer handlers
     knowledgeDiv.querySelectorAll('.view-doc-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -2611,12 +2705,12 @@ function addSourcesDisplay(sources, messageElement) {
         sourcesDisplay.style.display = 'none'; /* Hide from main message, show in slide-up */
         sourcesDisplay.innerHTML = '<div class="sources-header"><strong>Websites Browsed:</strong><span class="sources-collapse">▼</span></div><div class="sources-content"></div>';
         messageElement.appendChild(sourcesDisplay);
-        
+
         // Add click handler to collapse/expand
         const header = sourcesDisplay.querySelector('.sources-header');
         const content = sourcesDisplay.querySelector('.sources-content');
         const collapse = sourcesDisplay.querySelector('.sources-collapse');
-        
+
         header.addEventListener('click', () => {
             const isCollapsed = sourcesDisplay.classList.contains('collapsed');
             if (isCollapsed) {
@@ -2630,28 +2724,28 @@ function addSourcesDisplay(sources, messageElement) {
             }
         });
     }
-    
+
     const content = sourcesDisplay.querySelector('.sources-content');
-    
+
     if (Array.isArray(sources)) {
         sources.forEach((source, index) => {
             const sourceItem = document.createElement('div');
             sourceItem.className = 'source-item';
-            
+
             const sourceLink = document.createElement('a');
             sourceLink.href = source.url || '#';
             sourceLink.target = '_blank';
             sourceLink.rel = 'noopener noreferrer';
             sourceLink.textContent = source.title || source.url || `Source ${index + 1}`;
             sourceLink.className = 'source-link';
-            
+
             if (source.source_type) {
                 const sourceType = document.createElement('span');
                 sourceType.className = 'source-type';
                 sourceType.textContent = ` (${source.source_type})`;
                 sourceLink.appendChild(sourceType);
             }
-            
+
             sourceItem.appendChild(sourceLink);
             content.appendChild(sourceItem);
         });
@@ -2666,7 +2760,7 @@ function addAgentThinkingItem(agentName, thought, messageElement) {
         agentThinkingDisplay.className = 'agent-thinking-display';
         messageElement.appendChild(agentThinkingDisplay);
     }
-    
+
     let agentSection = agentThinkingDisplay.querySelector(`[data-agent="${agentName}"]`);
     if (!agentSection) {
         agentSection = document.createElement('div');
@@ -2675,12 +2769,12 @@ function addAgentThinkingItem(agentName, thought, messageElement) {
         agentSection.innerHTML = `<strong>${agentName} thinking:</strong>`;
         agentThinkingDisplay.appendChild(agentSection);
     }
-    
+
     const thinkingItem = document.createElement('div');
     thinkingItem.className = 'thinking-item agent-thinking-item';
     thinkingItem.textContent = thought;
     agentSection.appendChild(thinkingItem);
-    
+
     // Scroll to show new thinking item
     const chatContainer = document.getElementById('chatContainer');
     setTimeout(() => {
@@ -2700,7 +2794,7 @@ function addActionItemBullet(actionData, messageElement) {
         actionTracking.innerHTML = '<strong>Thoughts & Actions:</strong>';
         messageElement.appendChild(actionTracking);
     }
-    
+
     const actionItem = document.createElement('div');
     actionItem.className = 'action-item bullet-item';
     if (actionData.status === 'processing' || actionData.status === 'starting') {
@@ -2711,32 +2805,32 @@ function addActionItemBullet(actionData, messageElement) {
         actionItem.classList.add('error');
     }
     actionItem.setAttribute('data-action-id', Date.now());
-    
+
     // Create bullet point with summary
     const bulletContent = document.createElement('div');
     bulletContent.className = 'bullet-content';
-    
+
     // Summarize action description
     let summary = actionData.description || actionData.action || 'Processing...';
     if (summary.length > 60) {
         summary = summary.substring(0, 60) + '...';
     }
-    
+
     bulletContent.innerHTML = `
         <span class="bullet">•</span>
         <span class="bullet-text">${summary}</span>
         <span class="bullet-status">${actionData.status || 'processing'}</span>
     `;
-    
+
     actionItem.appendChild(bulletContent);
     actionTracking.appendChild(actionItem);
-    
+
     // Animate bullet appearance (flip through effect)
     setTimeout(() => {
         actionItem.style.opacity = '1';
         actionItem.style.transform = 'translateX(0)';
     }, 50);
-    
+
     // Auto-remove after showing (cycling effect)
     if (actionData.status === 'complete') {
         setTimeout(() => {
@@ -2747,7 +2841,7 @@ function addActionItemBullet(actionData, messageElement) {
             }
         }, 2000); // Show for 2 seconds then fade out
     }
-    
+
     // Scroll to show new action item
     const chatContainer = document.getElementById('chatContainer');
     requestAnimationFrame(() => {
@@ -2767,7 +2861,7 @@ function addActionItem(actionData, messageElement) {
         actionTracking.innerHTML = '<strong>Actions & Thoughts:</strong>';
         messageElement.appendChild(actionTracking);
     }
-    
+
     const actionItem = document.createElement('div');
     actionItem.className = 'action-item';
     if (actionData.status === 'processing' || actionData.status === 'starting') {
@@ -2778,10 +2872,10 @@ function addActionItem(actionData, messageElement) {
         actionItem.classList.add('error');
     }
     actionItem.setAttribute('data-action-id', Date.now());
-    
+
     const actionIcon = document.createElement('span');
     actionIcon.className = 'action-icon';
-    
+
     // Set icon based on action type
     if (actionData.action === 'prompt_interpreter') {
         actionIcon.textContent = '🔍';
@@ -2792,27 +2886,27 @@ function addActionItem(actionData, messageElement) {
     } else {
         actionIcon.textContent = '⚙️';
     }
-    
+
     const actionContent = document.createElement('div');
     actionContent.className = 'action-content';
-    
+
     const actionTitle = document.createElement('div');
     actionTitle.className = 'action-title';
     actionTitle.textContent = actionData.description || actionData.action || 'Processing...';
-    
+
     const actionStatus = document.createElement('div');
     actionStatus.className = 'action-status';
     actionStatus.textContent = actionData.status || 'processing';
-    
+
     actionContent.appendChild(actionTitle);
     actionContent.appendChild(actionStatus);
-    
+
     // Add details if available
     if (actionData.intent || actionData.domain || actionData.complexity) {
         const actionDetails = document.createElement('div');
         actionDetails.className = 'action-details';
         actionDetails.style.display = 'none';
-        
+
         if (actionData.intent) {
             const intentDiv = document.createElement('div');
             intentDiv.innerHTML = `<strong>Intent:</strong> ${actionData.intent} (${Math.round((actionData.confidence || 0.5) * 100)}%)`;
@@ -2867,16 +2961,16 @@ function addActionItem(actionData, messageElement) {
             docDiv.innerHTML = `<strong>Document:</strong> <button class="view-doc-btn" data-doc="${encodeURIComponent(JSON.stringify(actionData.document))}">View Document</button>`;
             actionDetails.appendChild(docDiv);
         }
-        
+
         actionContent.appendChild(actionDetails);
-        
+
         // Make action item clickable to toggle details
         actionItem.addEventListener('click', () => {
             const isExpanded = actionDetails.style.display !== 'none';
             actionDetails.style.display = isExpanded ? 'none' : 'block';
             actionItem.classList.toggle('expanded', !isExpanded);
         });
-        
+
         // Handle document viewer button
         actionItem.querySelectorAll('.view-doc-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -2886,19 +2980,19 @@ function addActionItem(actionData, messageElement) {
             });
         });
     }
-    
+
     actionItem.appendChild(actionIcon);
     actionItem.appendChild(actionContent);
-    
+
     // Add status indicator
     if (actionData.status === 'complete') {
         actionItem.classList.add('complete');
     } else if (actionData.status === 'error') {
         actionItem.classList.add('error');
     }
-    
+
     actionTracking.appendChild(actionItem);
-    
+
     // Scroll to show new action item (smooth and fast)
     const chatContainer = document.getElementById('chatContainer');
     requestAnimationFrame(() => {
@@ -2912,7 +3006,7 @@ function addActionItem(actionData, messageElement) {
 // Add word breakdown visualization with animated cycling
 function addWordBreakdown(data, messageElement) {
     console.log('🎨 addWordBreakdown called with:', data); // Debug log
-    
+
     let wordBreakdownDisplay = messageElement.querySelector('.word-breakdown-display');
     if (!wordBreakdownDisplay) {
         // This should not happen - word breakdown display should be created in handleStreamingMessage
@@ -2924,7 +3018,7 @@ function addWordBreakdown(data, messageElement) {
         wordBreakdownDisplay.style.setProperty('visibility', 'visible', 'important');
         wordBreakdownDisplay.style.setProperty('opacity', '1', 'important');
         wordBreakdownDisplay.innerHTML = '<div class="word-breakdown-header"><strong>Analyzing Prompt:</strong><span class="word-breakdown-collapse">▼</span></div><div class="word-breakdown-content"></div>';
-        
+
         // Insert at the beginning of message content (hidden)
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
@@ -2932,12 +3026,12 @@ function addWordBreakdown(data, messageElement) {
         } else {
             messageElement.appendChild(wordBreakdownDisplay);
         }
-        
+
         // Add click handler to collapse/expand
         const header = wordBreakdownDisplay.querySelector('.word-breakdown-header');
         const content = wordBreakdownDisplay.querySelector('.word-breakdown-content');
         const collapse = wordBreakdownDisplay.querySelector('.word-breakdown-collapse');
-        
+
         header.addEventListener('click', () => {
             const isCollapsed = wordBreakdownDisplay.classList.contains('collapsed');
             if (isCollapsed) {
@@ -2951,13 +3045,13 @@ function addWordBreakdown(data, messageElement) {
             }
         });
     }
-    
+
     const content = wordBreakdownDisplay.querySelector('.word-breakdown-content');
     if (!content) {
         console.error('❌ Word breakdown content not found!');
         return;
     }
-    
+
     if (data.type === 'algorithm_step') {
         // Show algorithm step briefly (quick cycle) - fade in/out
         const stepDiv = document.createElement('div');
@@ -2967,7 +3061,7 @@ function addWordBreakdown(data, messageElement) {
             <div class="step-status ${data.status}">${data.status}</div>
         `;
         content.appendChild(stepDiv);
-        
+
         // Auto-remove after animation (cycling effect)
         setTimeout(() => {
             if (stepDiv.parentNode) {
@@ -2976,14 +3070,14 @@ function addWordBreakdown(data, messageElement) {
                 setTimeout(() => stepDiv.remove(), 300);
             }
         }, 1200); // Show for 1.2s then fade out
-        
+
     } else if (data.type === 'word_breakdown') {
         // Ensure content div is visible
         if (content) {
             content.style.setProperty('display', 'block', 'important');
             content.style.setProperty('visibility', 'visible', 'important');
         }
-        
+
         // Get or create the flowing text display
         let flowingText = content.querySelector('.word-flowing-text');
         if (!flowingText) {
@@ -2997,7 +3091,7 @@ function addWordBreakdown(data, messageElement) {
             flowingText.style.setProperty('display', 'block', 'important');
             flowingText.style.setProperty('visibility', 'visible', 'important');
         }
-        
+
         const word = data.word;
         const prefix = data.morphological?.prefix || '';
         const root = data.morphological?.root || word;
@@ -3007,17 +3101,17 @@ function addWordBreakdown(data, messageElement) {
         const linguisticRoots = etymology.linguistic_roots || [];
         const wordOrigins = etymology.word_origins || {};
         const semantic = data.semantic || {};
-        
+
         // Create word container (inline, normal sentence flow)
         const wordContainer = document.createElement('span');
         wordContainer.className = 'word-neon-container';
-        
+
         // Main word display (inline, normal sentence flow)
         const wordSpan = document.createElement('span');
         wordSpan.className = 'word-inline-neon';
         wordSpan.setAttribute('data-word', word);
         wordSpan.setAttribute('data-origin', likelyOrigin);
-        
+
         // Build word with neon color-coded parts (inline, normal spacing) with slow flash
         let wordHTML = '';
         if (prefix && prefix !== word) {
@@ -3031,25 +3125,25 @@ function addWordBreakdown(data, messageElement) {
         if (suffix && suffix !== word) {
             wordHTML += `<span class="word-part-neon suffix slow-flash" data-part="suffix">${suffix}</span>`;
         }
-        
+
         // If no prefix/suffix, just show the word
         if (!prefix && !suffix) {
             wordHTML = `<span class="word-part-neon root slow-flash" data-part="root">${word}</span>`;
         }
-        
+
         wordSpan.innerHTML = wordHTML;
         wordContainer.appendChild(wordSpan);
-        
+
         // Store etymology data for later display below sentence
         wordContainer.setAttribute('data-origin', likelyOrigin);
         wordContainer.setAttribute('data-roots', linguisticRoots.join(', '));
-        
+
         flowingText.appendChild(wordContainer);
-        
+
         // Add space after word (normal sentence spacing)
         const space = document.createTextNode(' ');
         flowingText.appendChild(space);
-        
+
         // Ensure word breakdown is visible and force display
         if (wordBreakdownDisplay) {
             wordBreakdownDisplay.style.setProperty('display', 'block', 'important');
@@ -3061,16 +3155,16 @@ function addWordBreakdown(data, messageElement) {
             content.style.setProperty('display', 'block', 'important');
             content.style.setProperty('visibility', 'visible', 'important');
         }
-        
+
         // Fast machine-like pattern matching animation with neon flash
         requestAnimationFrame(() => {
             const prefixEl = wordSpan.querySelector('.prefix');
             const rootEl = wordSpan.querySelector('.root');
             const suffixEl = wordSpan.querySelector('.suffix');
-            
+
             // Light up parts simultaneously or sequentially (fast)
             const parts = [prefixEl, rootEl, suffixEl].filter(el => el);
-            
+
             // Option 1: Light up simultaneously (machine pattern matching)
             parts.forEach((part, index) => {
                 setTimeout(() => {
@@ -3084,7 +3178,7 @@ function addWordBreakdown(data, messageElement) {
                     }, 150); // Fast flash
                 }, index * 50); // Very fast sequence (50ms between parts)
             });
-            
+
             // Show etymology colors after morphological (only if not unknown)
             if (likelyOrigin && likelyOrigin !== 'unknown') {
                 setTimeout(() => {
@@ -3102,9 +3196,9 @@ function addWordBreakdown(data, messageElement) {
 function openDocumentViewer(docData) {
     const viewer = document.createElement('div');
     viewer.className = 'document-viewer';
-    
+
     let bodyContent = '';
-    
+
     // Handle PDF files
     if (docData.type === 'application/pdf' || docData.url?.endsWith('.pdf') || docData.filename?.endsWith('.pdf')) {
         bodyContent = `
@@ -3125,7 +3219,7 @@ function openDocumentViewer(docData) {
     } else {
         bodyContent = 'No content available';
     }
-    
+
     viewer.innerHTML = `
         <div class="document-viewer-content">
             <div class="document-viewer-header">
@@ -3141,14 +3235,14 @@ function openDocumentViewer(docData) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(viewer);
-    
+
     // Close button handler
     viewer.querySelector('.document-viewer-close').addEventListener('click', () => {
         viewer.remove();
     });
-    
+
     // Close on escape key
     const closeHandler = (e) => {
         if (e.key === 'Escape') {
@@ -3157,14 +3251,14 @@ function openDocumentViewer(docData) {
         }
     };
     document.addEventListener('keydown', closeHandler);
-    
+
     // Close on backdrop click
     viewer.addEventListener('click', (e) => {
         if (e.target === viewer) {
             viewer.remove();
         }
     });
-    
+
     // Highlight code blocks if markdown was rendered
     if (docData.format === 'markdown' || bodyContent.includes('<pre')) {
         setTimeout(() => {
@@ -3184,7 +3278,7 @@ function addEnginesDisplay(engines, messageElement) {
         enginesDisplay.innerHTML = '<strong>Engines Active:</strong>';
         messageElement.appendChild(enginesDisplay);
     }
-    
+
     engines.forEach(engine => {
         const engineItem = document.createElement('div');
         engineItem.className = 'engine-item';
@@ -3195,7 +3289,7 @@ function addEnginesDisplay(engines, messageElement) {
         `;
         enginesDisplay.appendChild(engineItem);
     });
-    
+
     // Scroll to show new engine
     const chatContainer = document.getElementById('chatContainer');
     setTimeout(() => {
@@ -3215,7 +3309,7 @@ function addAlgorithmsDisplay(algorithms, messageElement) {
         algorithmsDisplay.innerHTML = '<strong>Algorithms Used:</strong>';
         messageElement.appendChild(algorithmsDisplay);
     }
-    
+
     algorithms.forEach(algorithm => {
         const algorithmItem = document.createElement('div');
         algorithmItem.className = 'algorithm-item';
@@ -3225,7 +3319,7 @@ function addAlgorithmsDisplay(algorithms, messageElement) {
         `;
         algorithmsDisplay.appendChild(algorithmItem);
     });
-    
+
     // Scroll to show new algorithm
     const chatContainer = document.getElementById('chatContainer');
     setTimeout(() => {
@@ -3245,7 +3339,7 @@ async function sendQuery() {
     const agentDisplay = document.getElementById('agentDisplay');
     const agentDisplayValue = document.getElementById('agentDisplayValue');
     const query = input.value.trim();
-    
+
     // Strict validation - don't send empty queries
     if (!query || query.length === 0) {
         if (attachedFiles.length === 0) {
@@ -3253,18 +3347,19 @@ async function sendQuery() {
             return;
         }
     }
-    
+
     // Get selected mode and agent
     const mode = modeSelect.value;
-    // In chat mode, always use secretary (from display or select)
+    // v5: Handle new search modes (web_research, local_rag, hybrid)
+    // In chat mode or v5 search modes, ALWAYS use secretary
     let agent;
-    if (mode === 'chat' && agentDisplay && agentDisplay.style.display !== 'none') {
-        agent = 'secretary'; // Always secretary in chat mode
+    if (mode === 'chat' || mode === 'web_research' || mode === 'local_rag' || mode === 'hybrid') {
+        agent = 'secretary'; // ALWAYS secretary in chat/search modes
     } else {
         agent = agentSelect ? agentSelect.value : 'auto';
     }
     const useDegradation = false; // Removed degradation mode
-    
+
     // Client-side preprocessing (leverages user's device)
     let preprocessedQuery = null;
     if (clientProcessor) {
@@ -3284,27 +3379,49 @@ async function sendQuery() {
             console.warn('Client-side preprocessing failed:', e);
         }
     }
-    
+
     // Disable input and button
     input.disabled = true;
     sendButton.disabled = true;
-    
-    // Prepare files data
+
+    // Phase 2: Upload files using multipart/form-data instead of Base64
     const filesData = [];
     for (const file of attachedFiles) {
-        const reader = new FileReader();
-        const fileData = await new Promise((resolve) => {
-            reader.onload = (e) => resolve({
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                data: e.target.result.split(',')[1] // Base64 without prefix
+        try {
+            // Upload file to /api/upload endpoint
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const uploadResponse = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
             });
-            reader.readAsDataURL(file);
-        });
-        filesData.push(fileData);
+
+            if (!uploadResponse.ok) {
+                const error = await uploadResponse.json().catch(() => ({ detail: 'Upload failed' }));
+                throw new Error(error.detail || 'File upload failed');
+            }
+
+            const uploadResult = await uploadResponse.json();
+
+            // Store file_id reference instead of Base64 data
+            filesData.push({
+                file_id: uploadResult.file_id,
+                name: uploadResult.filename,
+                type: uploadResult.content_type,
+                size: uploadResult.size
+            });
+        } catch (error) {
+            console.error(`Error uploading file ${file.name}:`, error);
+            // Show error to user
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'error-message';
+            errorMsg.textContent = `Failed to upload ${file.name}: ${error.message}`;
+            messagesContainer.appendChild(errorMsg);
+            // Continue with other files
+        }
     }
-    
+
     // Check for image generation request
     if (detectImageGenerationRequest(query)) {
         const imagePrompt = query.replace(/^(generate|create|draw|show me|image:)\s*(an |a )?(image |of |showing )?/i, '').trim();
@@ -3313,10 +3430,10 @@ async function sendQuery() {
             return;
         }
     }
-    
+
     // Update conversation context with user message
     updateConversationContext(query, null);
-    
+
     // Add user message with mode/agent info
     const userMessage = addMessage(query || `[${attachedFiles.length} file(s) attached]`, 'user');
     if (agent !== 'auto' || mode !== 'chat') {
@@ -3325,12 +3442,12 @@ async function sendQuery() {
         metaInfo.textContent = `${mode} mode${agent !== 'auto' ? ` • ${agent}` : ''}`;
         userMessage.appendChild(metaInfo);
     }
-    
+
     // Add web search indicator if enabled
     if (enableWebSearch) {
         addWebSearchIndicator(userMessage);
     }
-    
+
     // Display attached files in message
     if (attachedFiles.length > 0) {
         const filesDisplay = document.createElement('div');
@@ -3351,14 +3468,14 @@ async function sendQuery() {
         });
         userMessage.querySelector('.message-content').appendChild(filesDisplay);
     }
-    
+
     // Clear input and files
     input.value = '';
     clearAttachedFiles();
-    
+
     // Create assistant message immediately (ICEBURG instant response)
     const assistantMessage = addMessage('', 'assistant');
-    
+
     // Make sure the message is visible even if empty
     const messageContent = assistantMessage.querySelector('.message-content');
     if (messageContent && !messageContent.textContent.trim()) {
@@ -3366,13 +3483,13 @@ async function sendQuery() {
         messageContent.style.minHeight = '20px';
         // DO NOT add loading dots - live event animations will show progress
         // The status carousel will display thinking/processing status
-        
+
         // Add mode-specific loading for astro-physiology
         if (mode === 'astrophysiology') {
             astro_showLoadingState(messageContent);
         }
     }
-    
+
     // Immediately add a thinking status to show something is happening
     // This replaces the loading dots with live animations
     setTimeout(() => {
@@ -3382,11 +3499,11 @@ async function sendQuery() {
         //     addToStatusCarousel('thinking', { content: 'Preparing response...' }, lastMsg);
         // }
     }, 100);
-    
+
     // Show animations IMMEDIATELY (before backend response) - ICEBURG style
     // Add prompt interpreter action immediately (will be added to status carousel)
     // No separate thinking container - thinking goes to status carousel
-    
+
     // Scroll to show new content immediately
     const chatContainer = document.getElementById('chatContainer');
     requestAnimationFrame(() => {
@@ -3395,7 +3512,7 @@ async function sendQuery() {
             behavior: 'smooth'
         });
     });
-    
+
     try {
         // Try WebSocket first - check both readyState and isConnected flag
         console.log('🔍 Checking WebSocket state:', {
@@ -3405,7 +3522,7 @@ async function sendQuery() {
             isConnected: isConnected,
             isConnecting: isConnecting
         });
-        
+
         if (ws && ws.readyState === WebSocket.OPEN && isConnected) {
             console.log('✅ WebSocket connected, sending query:', { query: query.substring(0, 50) + '...', mode, agent }); // Debug log
             showToast('Sending query...', 'info', 2000);
@@ -3416,20 +3533,20 @@ async function sendQuery() {
                 if (mode === 'astrophysiology') {
                     // First, try to parse from query
                     const parsedFromQuery = astro_parseBirthDataFromQuery(query);
-                    
+
                     // Try to get from form inputs
                     const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
                     const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
                     const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-                    
+
                     if (birthDateInput && birthDateInput.value) {
                         // Get birth date and time from form
                         const birthDate = birthDateInput.value;
                         const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
-                        
+
                         // Combine date and time
                         const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                        
+
                         // Get location
                         let location = null;
                         if (locationInput && locationInput.value) {
@@ -3446,7 +3563,7 @@ async function sendQuery() {
                                 location = locationStr;
                             }
                         }
-                        
+
                         birthData = {
                             birth_date: birthDateTime,
                             location: location
@@ -3456,7 +3573,7 @@ async function sendQuery() {
                         const birthDate = parsedFromQuery.birth_date;
                         const birthTime = parsedFromQuery.birth_time || '12:00';
                         const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                        
+
                         birthData = {
                             birth_date: birthDateTime,
                             location: parsedFromQuery.location
@@ -3474,7 +3591,7 @@ async function sendQuery() {
                                     const timestamp = savedData.timestamp || 0;
                                     const age = Date.now() - timestamp;
                                     const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-                                    
+
                                     if (!timestamp || age < maxAge) {
                                         birthData = savedData;
                                         console.log(' Using cached birth data from localStorage (fallback)');
@@ -3490,14 +3607,14 @@ async function sendQuery() {
                             console.log(' Query contains birth data, skipping localStorage fallback to avoid stale data');
                         }
                     }
-                    
+
                     // Save to localStorage for persistence (with timestamp)
                     if (birthData) {
                         try {
                             // Add timestamp to track data freshness
                             birthData.timestamp = Date.now();
                             localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
-                            
+
                             // If new birth data detected (from form or query), clear old algorithmic results
                             // This ensures fresh calculations are performed
                             if (birthDateInput?.value || parsedFromQuery?.birth_date) {
@@ -3508,7 +3625,7 @@ async function sendQuery() {
                             console.warn('Could not save birth data to localStorage:', e);
                         }
                     }
-                    
+
                     // Check for existing algorithmic data (for follow-up questions)
                     // Only include if no birth data in current query (follow-up question)
                     if (!birthData) {
@@ -3516,12 +3633,12 @@ async function sendQuery() {
                             const existingAlgoData = localStorage.getItem('iceburg_astro_algorithmic_data');
                             if (existingAlgoData) {
                                 const algoData = JSON.parse(existingAlgoData);
-                                
+
                                 // Validate algorithmic data is recent (within 7 days)
                                 const timestamp = algoData.timestamp || 0;
                                 const age = Date.now() - timestamp;
                                 const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
-                                
+
                                 if (!timestamp || age < maxAge) {
                                     if (!birthData) birthData = {};
                                     birthData.algorithmic_data = algoData;
@@ -3536,7 +3653,7 @@ async function sendQuery() {
                         }
                     }
                 }
-                
+
                 // For astro-physiology mode, include algorithmic_data for follow-up conversations
                 if (mode === 'astrophysiology' && !birthData?.birth_date) {
                     try {
@@ -3547,7 +3664,7 @@ async function sendQuery() {
                             const timestamp = algoData.timestamp || 0;
                             const age = Date.now() - timestamp;
                             const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
-                            
+
                             if (!timestamp || age < maxAge) {
                                 if (!birthData) birthData = {};
                                 birthData.algorithmic_data = algoData;
@@ -3561,9 +3678,9 @@ async function sendQuery() {
                         console.warn('Could not load algorithmic_data for follow-up:', e);
                     }
                 }
-                
-                const message = { 
-                    query: query, 
+
+                const message = {
+                    query: query,
                     mode: mode,
                     agent: agent,
                     degradation_mode: false,
@@ -3585,7 +3702,7 @@ async function sendQuery() {
                 console.log('📤 Settings being sent:', JSON.stringify(settings));
                 ws.send(JSON.stringify(message));
                 console.log('✅ Query sent via WebSocket, waiting for response...');
-                
+
                 // Set a timeout to check if we receive any response
                 setTimeout(() => {
                     const loadingIndicator = chatContainer.querySelector('.loading-indicator');
@@ -3613,8 +3730,8 @@ async function sendQuery() {
                     console.log('✅ Connection confirmed, sending query...');
                     // Retry sending query
                     try {
-                        const message = { 
-                            query: query, 
+                        const message = {
+                            query: query,
                             mode: mode,
                             agent: agent,
                             degradation_mode: false,
@@ -3636,7 +3753,7 @@ async function sendQuery() {
                     // Fall through to HTTP fallback
                 }
             }, 100);
-            
+
             // If still not connected after timeout, use HTTP fallback
             setTimeout(() => {
                 clearInterval(waitForConnection);
@@ -3654,12 +3771,12 @@ async function sendQuery() {
             });
             // Use HTTP fallback with SSE streaming
             console.warn('⚠️ WebSocket not connected, using HTTP fallback with SSE streaming');
-            
+
             // Try SSE streaming first
             try {
                 // Include conversation_id for context continuity
                 const conversationId = localStorage.getItem('iceburg_conversation_id') || 'current';
-                
+
                 // Collect birth data for astro-physiology mode (same logic as WebSocket)
                 let birthData = null;
                 if (mode === 'astrophysiology') {
@@ -3667,13 +3784,13 @@ async function sendQuery() {
                     const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
                     const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
                     const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-                    
+
                     // Priority 1: Form inputs (most explicit)
                     if (birthDateInput && birthDateInput.value) {
                         const birthDate = birthDateInput.value;
                         const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
                         const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                        
+
                         let location = null;
                         if (locationInput && locationInput.value) {
                             const locationStr = locationInput.value.trim();
@@ -3687,7 +3804,7 @@ async function sendQuery() {
                                 location = locationStr;
                             }
                         }
-                        
+
                         birthData = {
                             birth_date: birthDateTime,
                             location: location
@@ -3695,13 +3812,13 @@ async function sendQuery() {
                         // Clear old cache when new form data is provided
                         console.log(' New birth data from form - clearing old cache');
                         localStorage.removeItem('iceburg_astro_birth_data');
-                    } 
+                    }
                     // Priority 2: Parsed from query (user typed it)
                     else if (parsedFromQuery && parsedFromQuery.birth_date) {
                         const birthDate = parsedFromQuery.birth_date;
                         const birthTime = parsedFromQuery.birth_time || '12:00';
                         const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                        
+
                         birthData = {
                             birth_date: birthDateTime,
                             location: parsedFromQuery.location
@@ -3709,7 +3826,7 @@ async function sendQuery() {
                         // Clear old cache when new query data is parsed
                         console.log(' New birth data parsed from query - clearing old cache');
                         localStorage.removeItem('iceburg_astro_birth_data');
-                    } 
+                    }
                     // Priority 3: Cached data (only if no new data found)
                     else {
                         try {
@@ -3720,7 +3837,7 @@ async function sendQuery() {
                                 const timestamp = parsedSaved.timestamp || 0;
                                 const age = Date.now() - timestamp;
                                 const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-                                
+
                                 if (!timestamp || age < maxAge) {
                                     birthData = parsedSaved;
                                     console.log(' Using cached birth data (recent)');
@@ -3733,7 +3850,7 @@ async function sendQuery() {
                             console.warn('Could not load birth data from localStorage:', e);
                         }
                     }
-                    
+
                     // Save new birth data with timestamp
                     if (birthData && (birthDateInput?.value || parsedFromQuery?.birth_date)) {
                         try {
@@ -3745,7 +3862,7 @@ async function sendQuery() {
                         }
                     }
                 }
-                
+
                 const requestBody = {
                     query: query,
                     mode: mode,
@@ -3757,7 +3874,7 @@ async function sendQuery() {
                     data: birthData,  // Include birth data for astro-physiology mode
                     conversation_id: conversationId  // Include conversation ID for HTTP mode
                 };
-                
+
                 console.log('📤 Sending HTTP SSE request to', FINAL_API_URL, 'with body:', requestBody);
                 const response = await fetch(FINAL_API_URL, {
                     method: 'POST',
@@ -3767,40 +3884,40 @@ async function sendQuery() {
                     },
                     body: JSON.stringify(requestBody)
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 // Check if response is SSE
                 const contentType = response.headers.get('content-type');
                 console.log('📡 Response content-type:', contentType);
                 console.log('📡 Response status:', response.status);
                 console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
-                
+
                 if (contentType && contentType.includes('text/event-stream')) {
                     console.log('✅ SSE stream detected, starting to read...');
                     // Remove loading indicators immediately when SSE starts
                     removeLoadingIndicators();
-                    
+
                     // Handle SSE streaming
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     let buffer = '';
                     let chunkCount = 0;
-                    
+
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) {
                             console.log('✅ SSE stream complete, received', chunkCount, 'chunks');
                             break;
                         }
-                        
+
                         chunkCount++;
                         buffer += decoder.decode(value, { stream: true });
                         const lines = buffer.split('\n');
                         buffer = lines.pop() || ''; // Keep incomplete line in buffer
-                        
+
                         for (const line of lines) {
                             if (line.startsWith('data: ')) {
                                 try {
@@ -3816,7 +3933,7 @@ async function sendQuery() {
                             }
                         }
                     }
-                    
+
                     // Remove ALL loading indicators (dots, spinners, etc.)
                     removeLoadingIndicators();
                     return;
@@ -3826,13 +3943,13 @@ async function sendQuery() {
             } catch (sseError) {
                 console.warn('SSE streaming failed, trying regular HTTP:', sseError);
             }
-            
+
             // Fallback to regular HTTP (non-streaming)
             showToast('Using HTTP fallback (non-streaming)', 'warning');
-            
+
             // Include conversation_id for context continuity
             const conversationId = localStorage.getItem('iceburg_conversation_id') || 'current';
-            
+
             // Collect birth data for astro-physiology mode (same logic as WebSocket)
             let birthData = null;
             if (mode === 'astrophysiology') {
@@ -3840,12 +3957,12 @@ async function sendQuery() {
                 const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
                 const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
                 const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-                
+
                 if (birthDateInput && birthDateInput.value) {
                     const birthDate = birthDateInput.value;
                     const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
                     const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                    
+
                     let location = null;
                     if (locationInput && locationInput.value) {
                         const locationStr = locationInput.value.trim();
@@ -3859,7 +3976,7 @@ async function sendQuery() {
                             location = locationStr;
                         }
                     }
-                    
+
                     birthData = {
                         birth_date: birthDateTime,
                         location: location
@@ -3868,7 +3985,7 @@ async function sendQuery() {
                     const birthDate = parsedFromQuery.birth_date;
                     const birthTime = parsedFromQuery.birth_time || '12:00';
                     const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-                    
+
                     birthData = {
                         birth_date: birthDateTime,
                         location: parsedFromQuery.location
@@ -3883,7 +4000,7 @@ async function sendQuery() {
                         console.warn('Could not load birth data from localStorage:', e);
                     }
                 }
-                
+
                 if (birthData) {
                     try {
                         localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
@@ -3892,7 +4009,7 @@ async function sendQuery() {
                     }
                 }
             }
-            
+
             const requestBody = {
                 query: query,
                 mode: mode,
@@ -3903,7 +4020,7 @@ async function sendQuery() {
                 data: birthData,  // Include birth data for astro-physiology mode
                 conversation_id: conversationId  // Include conversation ID for HTTP mode
             };
-            
+
             console.log('📤 Sending HTTP fallback (non-streaming) request to', FINAL_API_URL, 'with body:', requestBody);
             const response = await fetch(FINAL_API_URL, {
                 method: 'POST',
@@ -3912,28 +4029,28 @@ async function sendQuery() {
                 },
                 body: JSON.stringify(requestBody)
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
-            
+
             // Remove loading indicator
             const loadingIndicator = chatContainer.querySelector('.loading-indicator');
             if (loadingIndicator) {
                 loadingIndicator.remove();
             }
-            
+
             // Add response
             if (data.result || data.content) {
                 const responseMessage = addMessage(data.result || data.content, 'assistant');
-                
+
                 // Add informatics if available
                 if (data.informatics) {
                     updateInformatics(data.informatics, responseMessage);
                 }
-                
+
                 // Add conclusions if available
                 if (data.conclusions && Array.isArray(data.conclusions)) {
                     data.conclusions.forEach(conclusion => {
@@ -3971,11 +4088,11 @@ function handleFileSelect(event) {
 function updateAttachedFilesDisplay() {
     const container = document.getElementById('attachedFiles');
     container.innerHTML = '';
-    
+
     attachedFiles.forEach((file, index) => {
         const fileItem = document.createElement('div');
         fileItem.className = 'attached-file-item';
-        
+
         if (file.type.startsWith('image/')) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
@@ -3985,7 +4102,7 @@ function updateAttachedFilesDisplay() {
         } else {
             fileItem.innerHTML = `<span>📄 ${file.name}</span>`;
         }
-        
+
         const removeBtn = document.createElement('button');
         removeBtn.className = 'attached-file-remove';
         removeBtn.innerHTML = '×';
@@ -4011,14 +4128,14 @@ function saveConversation() {
         content: msg.querySelector('.message-content').textContent || msg.querySelector('.message-content').innerText,
         timestamp: msg.querySelector('.message-header span:last-child').textContent
     }));
-    
+
     const conversation = {
         id: currentConversationId,
         title: messages[0]?.content?.substring(0, 50) || 'New Conversation',
         messages: messages,
         updated: new Date().toISOString()
     };
-    
+
     conversations = conversations.filter(c => c.id !== currentConversationId);
     conversations.unshift(conversation);
     localStorage.setItem('iceburg_conversations', JSON.stringify(conversations));
@@ -4028,14 +4145,14 @@ function saveConversation() {
 function loadConversation(conversationId) {
     const conversation = conversations.find(c => c.id === conversationId);
     if (!conversation) return;
-    
+
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.innerHTML = '';
-    
+
     conversation.messages.forEach(msg => {
         addMessage(msg.content, msg.type);
     });
-    
+
     currentConversationId = conversationId;
     updateConversationsList();
 }
@@ -4055,34 +4172,34 @@ function newConversation() {
 function updateConversationsList() {
     const list = document.getElementById('conversationsList');
     if (!list) return;
-    
+
     list.innerHTML = `
         <div class="conversation-item ${currentConversationId === 'current' ? 'active' : ''}" data-id="current">
             <span class="conversation-title">Current Conversation</span>
             <button class="conversation-delete" aria-label="Delete conversation">×</button>
         </div>
     `;
-    
+
     let filteredConversations = conversations;
     if (searchQuery) {
-        filteredConversations = conversations.filter(conv => 
+        filteredConversations = conversations.filter(conv =>
             conv.title.toLowerCase().includes(searchQuery) ||
             conv.messages.some(msg => msg.content.toLowerCase().includes(searchQuery))
         );
     }
-    
+
     filteredConversations.slice(0, 10).forEach(conv => {
         const item = document.createElement('div');
         item.className = `conversation-item ${currentConversationId === conv.id ? 'active' : ''}`;
         item.setAttribute('data-id', conv.id);
-        
+
         // Highlight search query in title
         let title = conv.title;
         if (searchQuery) {
             const regex = new RegExp(`(${searchQuery})`, 'gi');
             title = title.replace(regex, '<mark>$1</mark>');
         }
-        
+
         item.innerHTML = `
             <span class="conversation-title">${title}</span>
             <button class="conversation-delete" aria-label="Delete conversation">×</button>
@@ -4104,7 +4221,7 @@ function updateConversationsList() {
         });
         list.appendChild(item);
     });
-    
+
     // Show "no results" message if search has no matches
     if (searchQuery && filteredConversations.length === 0) {
         const noResults = document.createElement('div');
@@ -4137,7 +4254,7 @@ function applySettings() {
     const temperatureValue = document.getElementById('temperatureValue');
     const maxTokens = document.getElementById('maxTokens');
     const maxTokensValue = document.getElementById('maxTokensValue');
-    
+
     if (primaryModel) primaryModel.value = settings.primaryModel;
     if (temperature) {
         temperature.value = settings.temperature;
@@ -4176,13 +4293,13 @@ function exportConversation() {
         content: msg.querySelector('.message-content').textContent || msg.querySelector('.message-content').innerText,
         timestamp: msg.querySelector('.message-header span:last-child')?.textContent || ''
     }));
-    
+
     const conversation = {
         title: messages[0]?.content?.substring(0, 50) || 'ICEBURG Conversation',
         exported: new Date().toISOString(),
         messages: messages
     };
-    
+
     const dataStr = JSON.stringify(conversation, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
@@ -4199,9 +4316,9 @@ function shareConversation() {
         type: msg.classList.contains('user') ? 'user' : 'assistant',
         content: msg.querySelector('.message-content').textContent || msg.querySelector('.message-content').innerText
     }));
-    
+
     const text = messages.map(msg => `${msg.type === 'user' ? 'You' : 'ICEBURG'}: ${msg.content}`).join('\n\n');
-    
+
     if (navigator.share) {
         navigator.share({
             title: 'ICEBURG Conversation',
@@ -4239,17 +4356,17 @@ function updateConversationContext(userMessage, assistantResponse) {
         const words = userMessage.toLowerCase().split(/\s+/);
         const importantWords = words.filter(w => w.length > 4 && !['what', 'when', 'where', 'which', 'about', 'think', 'would', 'could', 'should'].includes(w));
         conversationContext.topics.push(...importantWords.slice(0, 5));
-        
+
         // Keep only recent topics (last 20)
         if (conversationContext.topics.length > 20) {
             conversationContext.topics = conversationContext.topics.slice(-20);
         }
     }
-    
+
     if (assistantResponse) {
         conversationContext.lastAssistantResponse = assistantResponse;
     }
-    
+
     // Store previous discussion points
     if (userMessage && assistantResponse) {
         conversationContext.previousPoints.push({
@@ -4257,7 +4374,7 @@ function updateConversationContext(userMessage, assistantResponse) {
             assistant: assistantResponse,
             timestamp: Date.now()
         });
-        
+
         // Keep only recent context (last 10 exchanges)
         if (conversationContext.previousPoints.length > 10) {
             conversationContext.previousPoints.shift();
@@ -4277,9 +4394,9 @@ function handleThinkingStream(data, messageElement) {
         console.error('❌ handleThinkingStream: messageElement is null!');
         return;
     }
-    
+
     let thoughtsContainer = messageElement.querySelector('.thoughts-stream-container');
-    
+
     if (!thoughtsContainer) {
         thoughtsContainer = document.createElement('div');
         thoughtsContainer.className = 'thoughts-stream-container';
@@ -4294,7 +4411,7 @@ function handleThinkingStream(data, messageElement) {
             </div>
             <div class="thoughts-stream-items" style="display: none;"></div>
         `;
-        
+
         // Toggle dropdown
         const toggleBtn = thoughtsContainer.querySelector('.thoughts-stream-toggle');
         const itemsContainer = thoughtsContainer.querySelector('.thoughts-stream-items');
@@ -4303,7 +4420,7 @@ function handleThinkingStream(data, messageElement) {
             itemsContainer.style.display = isHidden ? 'block' : 'none';
             toggleBtn.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
         });
-        
+
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
             // Insert at the VERY BEGINNING - before everything (status carousel, answer text, etc.)
@@ -4325,29 +4442,29 @@ function handleThinkingStream(data, messageElement) {
             thoughtsContainer.style.opacity = '1';
         }
     }
-    
+
     const currentDisplay = thoughtsContainer.querySelector('.thoughts-stream-current');
     const itemsContainer = thoughtsContainer.querySelector('.thoughts-stream-items');
-    
+
     // Update current line (single line display) with glitch effect
     if (currentDisplay) {
         const text = data.content + ' >';
         currentDisplay.textContent = text;
         currentDisplay.dataset.text = text; // For glitch animation
-        
+
         // Keep glitch animation active continuously while loading
         // Only toggle if not already active to avoid flicker
         if (!currentDisplay.classList.contains('glitch-active')) {
             currentDisplay.classList.add('glitch-active');
         }
     }
-    
+
     // Add to dropdown list (no glitchy switching - just append)
     const thoughtItem = document.createElement('div');
     thoughtItem.className = 'thoughts-stream-item';
     thoughtItem.textContent = data.content + ' >';
     itemsContainer.appendChild(thoughtItem);
-    
+
     // Mark previous items as complete (but don't remove them - prevents glitchy switching)
     const allItems = itemsContainer.querySelectorAll('.thoughts-stream-item');
     allItems.forEach((item, index) => {
@@ -4364,17 +4481,17 @@ function handleThinkingStream(data, messageElement) {
 // Handle step completion for interactive workflow
 function handleStepComplete(data, messageElement) {
     console.log('📊 Step complete:', data);
-    
+
     const workflowContainer = getOrCreateWorkflowContainer(messageElement);
     const stepCard = createInteractiveStepCard(data);
     workflowContainer.appendChild(stepCard);
-    
+
     // Auto-advance after 3 seconds if no user action
     const autoAdvanceTimeout = setTimeout(() => {
         const recommendedAction = data.report?.suggested_next?.[0] || 'skip';
         routeToNextStep(recommendedAction, messageElement);
     }, 3000);
-    
+
     // Store timeout so user can cancel it
     stepCard.dataset.autoAdvanceTimeout = autoAdvanceTimeout;
 }
@@ -4400,11 +4517,11 @@ function createInteractiveStepCard(stepData) {
     const card = document.createElement('div');
     card.className = 'interactive-step-card active';
     card.dataset.step = stepData.step;
-    
+
     const report = stepData.report || {};
     const findings = report.findings || [];
     const options = stepData.options || [];
-    
+
     card.innerHTML = `
         <div class="step-header">
             <span class="step-name">${capitalizeFirst(stepData.step)}</span>
@@ -4425,7 +4542,7 @@ function createInteractiveStepCard(stepData) {
             Auto-advancing in <span class="countdown">3</span>s...
         </div>
     `;
-    
+
     // Add click handlers
     card.querySelectorAll('.route-button').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -4434,7 +4551,7 @@ function createInteractiveStepCard(stepData) {
             routeToNextStep(btn.dataset.action, card.closest('.message'));
         });
     });
-    
+
     // Countdown animation
     let countdown = 3;
     const countdownEl = card.querySelector('.countdown');
@@ -4445,14 +4562,14 @@ function createInteractiveStepCard(stepData) {
             clearInterval(countdownInterval);
         }
     }, 1000);
-    
+
     return card;
 }
 
 // Route to next step
 function routeToNextStep(action, messageElement) {
     console.log('🔄 Routing to next step:', action);
-    
+
     // Mark current step as completed
     const activeCard = messageElement?.querySelector('.interactive-step-card.active');
     if (activeCard) {
@@ -4460,12 +4577,12 @@ function routeToNextStep(action, messageElement) {
         activeCard.classList.add('completed');
         activeCard.querySelector('.auto-advance-indicator').style.display = 'none';
     }
-    
+
     if (action === 'skip') {
         // Skip to answer - no additional steps
         return;
     }
-    
+
     // For now, just log the action
     // In future, this would trigger the next agent
     // For example: send websocket message to trigger next agent
@@ -4486,19 +4603,19 @@ function capitalizeFirst(str) {
 // Render charts
 function renderCharts(container) {
     if (typeof Chart === 'undefined') return;
-    
+
     container.querySelectorAll('.chart-container canvas').forEach((canvas) => {
         if (canvas.chart) return; // Already rendered
-        
+
         const chartData = canvas.getAttribute('data-chart');
         if (!chartData) return;
-        
+
         try {
             // Decode HTML entities and parse JSON
             const decodedData = chartData.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
             const config = JSON.parse(decodedData);
             const ctx = canvas.getContext('2d');
-            
+
             // Apply dark theme
             const darkTheme = {
                 backgroundColor: '#1a1a1a',
@@ -4506,7 +4623,7 @@ function renderCharts(container) {
                 color: '#ffffff',
                 gridColor: '#333333'
             };
-            
+
             if (config.data && config.data.datasets) {
                 config.data.datasets = config.data.datasets.map(dataset => ({
                     ...dataset,
@@ -4515,12 +4632,12 @@ function renderCharts(container) {
                     color: dataset.color || darkTheme.color
                 }));
             }
-            
+
             if (!config.options) config.options = {};
             config.options.plugins = config.options.plugins || {};
             config.options.plugins.legend = {
                 ...config.options.plugins.legend,
-                labels: { 
+                labels: {
                     color: darkTheme.color,
                     ...config.options.plugins.legend?.labels
                 }
@@ -4537,11 +4654,11 @@ function renderCharts(container) {
                     color: darkTheme.gridColor
                 };
             });
-            
+
             // Set default responsive and maintain aspect ratio
             config.options.responsive = config.options.responsive !== false;
             config.options.maintainAspectRatio = config.options.maintainAspectRatio !== false;
-            
+
             canvas.chart = new Chart(ctx, config);
         } catch (e) {
             console.error('Error rendering chart:', e);
@@ -4557,24 +4674,24 @@ function initVoiceRecognition() {
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
-        
+
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             const input = document.getElementById('queryInput');
             input.value = transcript;
             input.focus();
         };
-        
+
         recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
             stopVoiceRecording();
         };
-        
+
         recognition.onend = () => {
             stopVoiceRecording();
         };
     }
-    
+
     if ('speechSynthesis' in window) {
         synthesis = window.speechSynthesis;
     }
@@ -4585,12 +4702,12 @@ function startVoiceRecording() {
         alert('Speech recognition is not supported in your browser.');
         return;
     }
-    
+
     if (isRecording) {
         stopVoiceRecording();
         return;
     }
-    
+
     try {
         recognition.start();
         isRecording = true;
@@ -4624,15 +4741,15 @@ function speakText(text) {
         alert('Text-to-speech is not supported in your browser.');
         return;
     }
-    
+
     // Cancel any ongoing speech
     synthesis.cancel();
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
-    
+
     synthesis.speak(utterance);
 }
 
@@ -4640,11 +4757,11 @@ function speakText(text) {
 function showToast(message, type = 'info', duration = 3000, onClick = null) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
-    
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
-    
+
     // Add click handler if provided
     if (onClick) {
         toast.style.cursor = 'pointer';
@@ -4654,14 +4771,14 @@ function showToast(message, type = 'info', duration = 3000, onClick = null) {
             setTimeout(() => toast.remove(), 300);
         });
     }
-    
+
     container.appendChild(toast);
-    
+
     // Trigger animation
     setTimeout(() => {
         toast.classList.add('show');
     }, 10);
-    
+
     // Remove after duration (only if no click handler or longer duration)
     if (!onClick || duration > 0) {
         setTimeout(() => {
@@ -4678,7 +4795,7 @@ function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
         const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
         const ctrlKey = isMac ? e.metaKey : e.ctrlKey;
-        
+
         // Ctrl/Cmd + K: Focus search
         if (ctrlKey && e.key === 'k') {
             e.preventDefault();
@@ -4689,7 +4806,7 @@ function setupKeyboardShortcuts() {
                 searchInput.focus();
             }
         }
-        
+
         // Ctrl/Cmd + /: Toggle settings
         if (ctrlKey && e.key === '/') {
             e.preventDefault();
@@ -4702,7 +4819,7 @@ function setupKeyboardShortcuts() {
                 }
             }
         }
-        
+
         // Ctrl/Cmd + N: New conversation
         if (ctrlKey && e.key === 'n') {
             e.preventDefault();
@@ -4710,7 +4827,7 @@ function setupKeyboardShortcuts() {
             newConversation();
             showToast('New conversation started', 'success');
         }
-        
+
         // Esc: Close panels
         if (e.key === 'Escape') {
             const settingsPanel = document.getElementById('settingsPanel');
@@ -4727,7 +4844,7 @@ function setupKeyboardShortcuts() {
 // Web search indicator
 function addWebSearchIndicator(messageElement) {
     if (!enableWebSearch) return;
-    
+
     const indicator = document.createElement('div');
     indicator.className = 'web-search-indicator';
     indicator.innerHTML = `
@@ -4745,9 +4862,9 @@ async function generateImage(prompt) {
         showToast('Image generation is disabled. Enable it in settings.', 'warning');
         return;
     }
-    
+
     showToast('Generating image...', 'info', 5000);
-    
+
     try {
         // This would call the backend API when implemented
         const imageAPI = `${FINAL_API_URL.replace('/api/query', '/api/image/generate')}`;
@@ -4758,13 +4875,13 @@ async function generateImage(prompt) {
             },
             body: JSON.stringify({ prompt: prompt })
         });
-        
+
         if (!response.ok) {
             throw new Error('Image generation failed');
         }
-        
+
         const data = await response.json();
-        
+
         // Display generated image
         if (data.image_url || data.image_data) {
             const imageUrl = data.image_url || `data:image/png;base64,${data.image_data}`;
@@ -4792,7 +4909,7 @@ function detectImageGenerationRequest(query) {
         /show me (an |a )?image (of |showing )?/i,
         /^image:/i
     ];
-    
+
     return imagePatterns.some(pattern => pattern.test(query));
 }
 
@@ -4829,7 +4946,7 @@ function initPromptCarousel() {
     const nextButton = document.getElementById('promptCarouselNext');
     const queryInput = document.getElementById('queryInput');
     const carousel = document.getElementById('promptCarousel');
-    
+
     if (!carouselContent || !carousel) {
         console.error('Prompt carousel elements not found:', {
             carousel: !!carousel,
@@ -4837,26 +4954,26 @@ function initPromptCarousel() {
         });
         return;
     }
-    
+
     // Clear any existing items
     carouselContent.innerHTML = '';
-    
+
     // Ensure carousel is visible
     carousel.style.display = 'flex';
     carousel.style.visibility = 'visible';
     carousel.style.opacity = '1';
-    
+
     // Ensure content is visible
     carouselContent.style.display = 'flex';
     carouselContent.style.visibility = 'visible';
     carouselContent.style.opacity = '1';
-    
+
     // Check if PROMPTS exists
     if (!PROMPTS || PROMPTS.length === 0) {
         console.error('PROMPTS array is empty or undefined');
         return;
     }
-    
+
     // Create prompt items
     PROMPTS.forEach((prompt, index) => {
         const item = document.createElement('div');
@@ -4865,7 +4982,7 @@ function initPromptCarousel() {
             item.classList.add('active');
         }
         item.textContent = prompt;
-        
+
         // Set visibility for first item - ensure it's visible
         if (index === 0) {
             item.style.cssText = `
@@ -4903,7 +5020,7 @@ function initPromptCarousel() {
                 text-overflow: ellipsis;
             `;
         }
-        
+
         item.addEventListener('click', () => {
             if (queryInput) {
                 queryInput.value = prompt;
@@ -4912,10 +5029,10 @@ function initPromptCarousel() {
         });
         carouselContent.appendChild(item);
     });
-    
+
     const itemsCreated = carouselContent.querySelectorAll('.prompt-item').length;
     let firstItem = carouselContent.querySelector('.prompt-item.active');
-    
+
     console.log('Prompt carousel initialized:', {
         itemsCreated: itemsCreated,
         firstItem: !!firstItem,
@@ -4955,7 +5072,7 @@ function initPromptCarousel() {
         carouselContent.appendChild(fallbackItem);
         if (DEBUG_MODE) console.log('Fallback prompt item created');
     }
-    
+
     // If no items created, try creating a test item
     if (itemsCreated === 0) {
         if (DEBUG_MODE) console.error('No items created! Creating test item...');
@@ -4966,7 +5083,7 @@ function initPromptCarousel() {
         carouselContent.appendChild(testItem);
         firstItem = testItem;
     }
-    
+
     // Ensure first item is visible
     if (!firstItem) {
         firstItem = carouselContent.querySelector('.prompt-item.active');
@@ -4977,7 +5094,7 @@ function initPromptCarousel() {
         firstItem.style.transform = 'translateX(0)';
         firstItem.style.pointerEvents = 'auto';
     }
-    
+
     function showPrompt(index) {
         const items = carouselContent.querySelectorAll('.prompt-item');
         items.forEach((item, i) => {
@@ -4998,30 +5115,30 @@ function initPromptCarousel() {
         });
         currentPromptIndex = index;
     }
-    
+
     function nextPrompt() {
         const nextIndex = (currentPromptIndex + 1) % PROMPTS.length;
         showPrompt(nextIndex);
     }
-    
+
     function prevPrompt() {
         const prevIndex = (currentPromptIndex - 1 + PROMPTS.length) % PROMPTS.length;
         showPrompt(prevIndex);
     }
-    
+
     // Auto-rotate every 4 seconds
     function startAutoRotate() {
         if (promptCarouselInterval) clearInterval(promptCarouselInterval);
         promptCarouselInterval = setInterval(nextPrompt, 4000);
     }
-    
+
     function stopAutoRotate() {
         if (promptCarouselInterval) {
             clearInterval(promptCarouselInterval);
             promptCarouselInterval = null;
         }
     }
-    
+
     // Button handlers
     if (nextButton) {
         nextButton.addEventListener('click', () => {
@@ -5030,7 +5147,7 @@ function initPromptCarousel() {
             startAutoRotate();
         });
     }
-    
+
     if (prevButton) {
         prevButton.addEventListener('click', () => {
             prevPrompt();
@@ -5038,13 +5155,13 @@ function initPromptCarousel() {
             startAutoRotate();
         });
     }
-    
+
     // Pause on hover (carousel already defined at top of function)
     if (carousel) {
         carousel.addEventListener('mouseenter', stopAutoRotate);
         carousel.addEventListener('mouseleave', startAutoRotate);
     }
-    
+
     // Start auto-rotate
     startAutoRotate();
 }
@@ -5053,16 +5170,16 @@ function initPromptCarousel() {
 function initAutoRetractSidebar() {
     const sidebar = document.getElementById('sidebar');
     const mainWrapper = document.querySelector('.main-wrapper');
-    
+
     if (!sidebar || !mainWrapper) return;
-    
+
     let retractTimeout = null;
     const RETRACT_DELAY = 3000; // 3 seconds on mobile, 5 seconds on desktop
     const isMobile = window.innerWidth <= 768;
-    
+
     function scheduleRetract() {
         if (retractTimeout) clearTimeout(retractTimeout);
-        
+
         if (isMobile) {
             // Auto-retract on mobile after delay
             retractTimeout = setTimeout(() => {
@@ -5072,14 +5189,14 @@ function initAutoRetractSidebar() {
             }, RETRACT_DELAY);
         }
     }
-    
+
     function cancelRetract() {
         if (retractTimeout) {
             clearTimeout(retractTimeout);
             retractTimeout = null;
         }
     }
-    
+
     // Retract when clicking outside on mobile
     if (isMobile) {
         mainWrapper.addEventListener('click', (e) => {
@@ -5087,11 +5204,11 @@ function initAutoRetractSidebar() {
                 sidebar.classList.remove('open');
             }
         });
-        
+
         // Retract when interacting with main content
         const chatContainer = document.getElementById('chatContainer');
         const inputContainer = document.querySelector('.input-container');
-        
+
         [chatContainer, inputContainer].forEach(container => {
             if (container) {
                 container.addEventListener('click', () => {
@@ -5102,7 +5219,7 @@ function initAutoRetractSidebar() {
             }
         });
     }
-    
+
     // Schedule retract when sidebar opens
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -5115,9 +5232,9 @@ function initAutoRetractSidebar() {
             }
         });
     });
-    
+
     observer.observe(sidebar, { attributes: true });
-    
+
     // Cancel retract on sidebar interaction
     sidebar.addEventListener('mouseenter', cancelRetract);
     sidebar.addEventListener('mouseleave', scheduleRetract);
@@ -5133,15 +5250,15 @@ class NeuralNetworkBackground {
         this.connections = [];
         this.animationId = null;
         this.isActive = false;
-        
+
         this.setupCanvas();
         this.createNetwork();
         this.animate();
-        
+
         // Listen for ICEBURG activity
         this.setupActivityListeners();
     }
-    
+
     setupCanvas() {
         const resize = () => {
             this.canvas.width = window.innerWidth;
@@ -5150,24 +5267,24 @@ class NeuralNetworkBackground {
         resize();
         window.addEventListener('resize', resize);
     }
-    
+
     createNetwork() {
         const nodeCount = Math.floor((this.canvas.width * this.canvas.height) / 50000);
         const layers = 4;
         const nodesPerLayer = Math.ceil(nodeCount / layers);
-        
+
         this.nodes = [];
         this.connections = [];
-        
+
         // Create nodes in layers
         for (let layer = 0; layer < layers; layer++) {
             const layerNodes = [];
             const x = (this.canvas.width / (layers + 1)) * (layer + 1);
-            
+
             for (let i = 0; i < nodesPerLayer; i++) {
-                const y = (this.canvas.height / (nodesPerLayer + 1)) * (i + 1) + 
-                         (Math.random() - 0.5) * (this.canvas.height / nodesPerLayer);
-                
+                const y = (this.canvas.height / (nodesPerLayer + 1)) * (i + 1) +
+                    (Math.random() - 0.5) * (this.canvas.height / nodesPerLayer);
+
                 const node = {
                     x: x + (Math.random() - 0.5) * 50,
                     y: y,
@@ -5179,11 +5296,11 @@ class NeuralNetworkBackground {
                     targetIntensity: 0,
                     layer: layer
                 };
-                
+
                 layerNodes.push(node);
                 this.nodes.push(node);
             }
-            
+
             // Connect to previous layer
             if (layer > 0) {
                 const prevLayerNodes = this.nodes.filter(n => n.layer === layer - 1);
@@ -5209,7 +5326,7 @@ class NeuralNetworkBackground {
             }
         }
     }
-    
+
     setupActivityListeners() {
         // Monitor query input for activity
         const queryInput = document.getElementById('queryInput');
@@ -5218,7 +5335,7 @@ class NeuralNetworkBackground {
                 this.activate();
             });
         }
-        
+
         // Monitor send button
         const sendButton = document.getElementById('sendButton');
         if (sendButton) {
@@ -5226,16 +5343,16 @@ class NeuralNetworkBackground {
                 this.activate();
             });
         }
-        
+
         // Listen for WebSocket messages (will be set up after WebSocket is initialized)
         this.wsMessageHandler = (data) => {
-            if (data.type === 'chunk' || data.type === 'action' || data.type === 'thinking' || 
+            if (data.type === 'chunk' || data.type === 'action' || data.type === 'thinking' ||
                 data.type === 'word_breakdown' || data.type === 'algorithm_step') {
                 this.activate();
             }
         };
     }
-    
+
     // Method to be called when WebSocket is ready
     attachWebSocket(ws) {
         if (ws && this.wsMessageHandler) {
@@ -5251,24 +5368,24 @@ class NeuralNetworkBackground {
             };
         }
     }
-    
+
     activate() {
         this.isActive = true;
         this.canvas.classList.add('active');
-        
+
         // Activate random nodes and connections
         const activeNodes = Math.floor(this.nodes.length * 0.3);
         for (let i = 0; i < activeNodes; i++) {
             const node = this.nodes[Math.floor(Math.random() * this.nodes.length)];
             node.targetIntensity = 0.5 + Math.random() * 0.5;
         }
-        
+
         const activeConnections = Math.floor(this.connections.length * 0.2);
         for (let i = 0; i < activeConnections; i++) {
             const conn = this.connections[Math.floor(Math.random() * this.connections.length)];
             conn.targetIntensity = 0.3 + Math.random() * 0.4;
         }
-        
+
         // Gradually fade out
         setTimeout(() => {
             this.isActive = false;
@@ -5281,26 +5398,26 @@ class NeuralNetworkBackground {
             });
         }, 2000);
     }
-    
+
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
         // Update nodes
         this.nodes.forEach(node => {
             // Pulse animation
             node.pulse += node.pulseSpeed;
             node.radius = node.baseRadius + Math.sin(node.pulse) * 0.5;
-            
+
             // Intensity interpolation
             node.intensity += (node.targetIntensity - node.intensity) * 0.1;
         });
-        
+
         // Update connections
         this.connections.forEach(conn => {
             conn.pulse += conn.pulseSpeed;
             conn.intensity += (conn.targetIntensity - conn.intensity) * 0.1;
         });
-        
+
         // Draw connections
         this.connections.forEach(conn => {
             const alpha = conn.intensity * 0.3;
@@ -5308,13 +5425,13 @@ class NeuralNetworkBackground {
                 this.ctx.beginPath();
                 this.ctx.moveTo(conn.from.x, conn.from.y);
                 this.ctx.lineTo(conn.to.x, conn.to.y);
-                
+
                 // Glow effect for active connections
                 const glowIntensity = conn.intensity * (0.5 + Math.sin(conn.pulse) * 0.3);
                 this.ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * glowIntensity})`;
                 this.ctx.lineWidth = 0.5;
                 this.ctx.stroke();
-                
+
                 // Subtle glow
                 if (glowIntensity > 0.2) {
                     this.ctx.shadowBlur = 3;
@@ -5324,18 +5441,18 @@ class NeuralNetworkBackground {
                 }
             }
         });
-        
+
         // Draw nodes
         this.nodes.forEach(node => {
             const alpha = 0.2 + node.intensity * 0.8;
             if (alpha > 0.01) {
                 this.ctx.beginPath();
                 this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-                
+
                 // Fill
                 this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
                 this.ctx.fill();
-                
+
                 // Glow for active nodes
                 if (node.intensity > 0.3) {
                     this.ctx.shadowBlur = node.radius * 2;
@@ -5345,7 +5462,7 @@ class NeuralNetworkBackground {
                 }
             }
         });
-        
+
         // Subtle random activation
         if (!this.isActive && Math.random() < 0.01) {
             const randomNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
@@ -5354,10 +5471,10 @@ class NeuralNetworkBackground {
                 randomNode.targetIntensity = 0;
             }, 1000);
         }
-        
+
         this.animationId = requestAnimationFrame(() => this.animate());
     }
-    
+
     destroy() {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
@@ -5376,27 +5493,27 @@ class MeteorShowerBackground {
         this.meteors = [];
         this.stars = [];
         this.animationId = null;
-        
+
         this.setupCanvas();
         this.createStars();
         this.animate();
-        
+
         // Handle resize
         window.addEventListener('resize', () => this.setupCanvas());
     }
-    
+
     setupCanvas() {
         const container = this.canvas.parentElement;
         if (!container) return;
-        
+
         this.canvas.width = container.clientWidth;
         this.canvas.height = container.clientHeight;
     }
-    
+
     createStars() {
         const starCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
         this.stars = [];
-        
+
         for (let i = 0; i < starCount; i++) {
             this.stars.push({
                 x: Math.random() * this.canvas.width,
@@ -5408,12 +5525,12 @@ class MeteorShowerBackground {
             });
         }
     }
-    
+
     createMeteor() {
         const side = Math.floor(Math.random() * 4); // 0=top, 1=right, 2=bottom, 3=left
         let x, y, vx, vy;
-        
-        switch(side) {
+
+        switch (side) {
             case 0: // Top
                 x = Math.random() * this.canvas.width;
                 y = -10;
@@ -5439,7 +5556,7 @@ class MeteorShowerBackground {
                 vy = (Math.random() - 0.5) * 2;
                 break;
         }
-        
+
         return {
             x: x,
             y: y,
@@ -5452,48 +5569,48 @@ class MeteorShowerBackground {
             decay: 0.01 + Math.random() * 0.02
         };
     }
-    
+
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
         // Update and draw stars
         this.stars.forEach(star => {
             star.twinkle += star.twinkleSpeed;
             const twinkleOpacity = star.opacity + Math.sin(star.twinkle) * 0.2;
-            
+
             this.ctx.beginPath();
             this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, Math.min(1, twinkleOpacity))})`;
             this.ctx.fill();
         });
-        
+
         // Spawn new meteors occasionally
         if (Math.random() < 0.02) {
             this.meteors.push(this.createMeteor());
         }
-        
+
         // Update and draw meteors
         this.meteors = this.meteors.filter(meteor => {
             meteor.x += meteor.vx;
             meteor.y += meteor.vy;
             meteor.life -= meteor.decay;
-            
+
             // Draw meteor trail
-            if (meteor.life > 0 && 
+            if (meteor.life > 0 &&
                 meteor.x > -50 && meteor.x < this.canvas.width + 50 &&
                 meteor.y > -50 && meteor.y < this.canvas.height + 50) {
-                
+
                 const gradient = this.ctx.createLinearGradient(
                     meteor.x - meteor.vx * meteor.length / meteor.speed,
                     meteor.y - meteor.vy * meteor.length / meteor.speed,
                     meteor.x,
                     meteor.y
                 );
-                
+
                 gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
                 gradient.addColorStop(0.5, `rgba(255, 255, 255, ${meteor.opacity * meteor.life * 0.3})`);
                 gradient.addColorStop(1, `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`);
-                
+
                 this.ctx.beginPath();
                 this.ctx.moveTo(
                     meteor.x - meteor.vx * meteor.length / meteor.speed,
@@ -5503,21 +5620,21 @@ class MeteorShowerBackground {
                 this.ctx.strokeStyle = gradient;
                 this.ctx.lineWidth = 1.5;
                 this.ctx.stroke();
-                
+
                 // Draw meteor head
                 this.ctx.beginPath();
                 this.ctx.arc(meteor.x, meteor.y, 2, 0, Math.PI * 2);
                 this.ctx.fillStyle = `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`;
                 this.ctx.fill();
-                
+
                 return true;
             }
             return false;
         });
-        
+
         this.animationId = requestAnimationFrame(() => this.animate());
     }
-    
+
     destroy() {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
@@ -5525,11 +5642,11 @@ class MeteorShowerBackground {
     }
 }
 
-    // Initialize
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Load ICEBURG configuration first
     loadICEBURGConfig();
-    
+
     // Immediate debug check
     console.log('🚀 ICEBURG Frontend initializing...');
     console.log('🔍 DOM elements check:', {
@@ -5551,19 +5668,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
         console.warn('Failed to initialize client-side processor:', e);
     }
-    
+
     const sendButton = document.getElementById('sendButton');
     const queryInput = document.getElementById('queryInput');
     const sidebarToggle = document.getElementById('sidebarToggle');
     const newConversationBtn = document.getElementById('newConversationBtn');
     const sidebar = document.getElementById('sidebar');
-    
+
     // Initialize neural network background
     const canvas = document.getElementById('neuralNetworkCanvas');
     if (canvas) {
         neuralNetwork = new NeuralNetworkBackground(canvas);
     }
-    
+
     // Initialize mode UI if astro-physiology is already selected
     const initialModeSelect = document.getElementById('modeSelect');
     if (initialModeSelect) {
@@ -5574,7 +5691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 astro_updateModeUI('astrophysiology');
             }, 200);
         }
-        
+
         // Also trigger on any mode change to ensure it works
         initialModeSelect.addEventListener('change', () => {
             setTimeout(() => {
@@ -5585,7 +5702,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
         });
     }
-    
+
     // Initialize meteor shower background for chat container
     const meteorCanvas = document.getElementById('meteorShowerCanvas');
     const chatContainer = document.getElementById('chatContainer');
@@ -5593,7 +5710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Wait a bit for layout to settle
         setTimeout(() => {
             meteorShower = new MeteorShowerBackground(meteorCanvas);
-            
+
             // Update canvas size when container resizes
             const resizeObserver = new ResizeObserver(() => {
                 if (meteorShower) {
@@ -5622,19 +5739,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceButton = document.getElementById('voiceButton');
     const enableWebSearchCheckbox = document.getElementById('enableWebSearch');
     const enableImageGenerationCheckbox = document.getElementById('enableImageGeneration');
-    
+
     // Load settings
     loadSettings();
-    
+
     // Load saved birth data for astro-physiology mode (using new key)
     astro_loadSavedBirthData();
-    
+
     // Initialize voice recognition
     initVoiceRecognition();
-    
+
     // Setup keyboard shortcuts
     setupKeyboardShortcuts();
-    
+
     // Load conversations from localStorage
     const saved = localStorage.getItem('iceburg_conversations');
     if (saved) {
@@ -5645,18 +5762,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateConversationsList();
-    
+
     // Initialize prompt carousel immediately
     initPromptCarousel();
-    
+
     // Also try after a short delay to ensure DOM is ready
     setTimeout(() => {
         initPromptCarousel();
     }, 100);
-    
+
     // Initialize auto-retract sidebar
     initAutoRetractSidebar();
-    
+
     // Sidebar toggle
     if (sidebarToggle && sidebar) {
         console.log('🔧 Setting up sidebar toggle:', { sidebarToggle, sidebar });
@@ -5681,7 +5798,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('Sidebar toggle elements not found:', { sidebarToggle: !!sidebarToggle, sidebar: !!sidebar });
     }
-    
+
     // New conversation button
     if (newConversationBtn) {
         newConversationBtn.addEventListener('click', () => {
@@ -5689,7 +5806,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newConversation();
         });
     }
-    
+
     // File attachment
     if (attachButton && fileInput) {
         attachButton.addEventListener('click', () => {
@@ -5745,37 +5862,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (modeSelect && visualizationPanels) {
         console.log('📋 Setting up mode selection handler');
-        
-            // Initialize agent options on page load
-            if (modeSelect && typeof updateAgentOptionsForMode === 'function') {
-                const initialMode = modeSelect.value || 'chat';
-                updateAgentOptionsForMode(initialMode);
-                // Initialize agent display for chat mode
-                const agentSelect = document.getElementById('agentSelect');
-                const agentDisplay = document.getElementById('agentDisplay');
-                const agentDisplayValue = document.getElementById('agentDisplayValue');
-                
-                if (initialMode === 'chat') {
-                    if (agentSelect) agentSelect.style.display = 'none';
-                    if (agentDisplay) {
-                        agentDisplay.style.display = 'flex';
-                        if (agentDisplayValue) agentDisplayValue.textContent = 'Secretary';
-                    }
-                    console.log('👔 Initial chat mode: Showing agent display (Secretary)');
-                } else {
-                    if (agentSelect) agentSelect.style.display = 'block';
-                    if (agentDisplay) agentDisplay.style.display = 'none';
+
+        // Initialize agent options on page load
+        if (modeSelect && typeof updateAgentOptionsForMode === 'function') {
+            const initialMode = modeSelect.value || 'chat';
+            updateAgentOptionsForMode(initialMode);
+            // Initialize agent display for chat mode
+            const agentSelect = document.getElementById('agentSelect');
+            const agentDisplay = document.getElementById('agentDisplay');
+            const agentDisplayValue = document.getElementById('agentDisplayValue');
+
+            if (initialMode === 'chat') {
+                if (agentSelect) agentSelect.style.display = 'none';
+                if (agentDisplay) {
+                    agentDisplay.style.display = 'flex';
+                    if (agentDisplayValue) agentDisplayValue.textContent = 'Secretary';
                 }
+                console.log('👔 Initial chat mode: Showing agent display (Secretary)');
+            } else {
+                if (agentSelect) agentSelect.style.display = 'block';
+                if (agentDisplay) agentDisplay.style.display = 'none';
             }
+        }
 
         modeSelect.addEventListener('change', (e) => {
             const selectedMode = e.target.value;
             console.log('🔄 Mode changed to:', selectedMode);
-            
+
             const agentSelect = document.getElementById('agentSelect');
             const agentDisplay = document.getElementById('agentDisplay');
             const agentDisplayValue = document.getElementById('agentDisplayValue');
-            
+
             // In chat mode: Show agent display, hide dropdown
             if (selectedMode === 'chat') {
                 if (agentSelect) agentSelect.style.display = 'none';
@@ -5794,12 +5911,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 console.log('🔄 Other mode: Showing agent dropdown');
             }
-            
+
             // V2: Update agent options based on mode (before visibility check)
             if (typeof updateAgentOptionsForMode === 'function') {
                 updateAgentOptionsForMode(selectedMode);
             }
-            
+
             console.log('🎯 Agent dropdown should show for modes:', modesWithAgents);
 
             // Handle agent dropdown visibility
@@ -5851,7 +5968,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 visualizationPanels.style.display = 'none';
                 visualizationPanels.classList.remove('show');
             }
-            
+
             // Show mode-specific UI enhancements for astro-physiology
             astro_updateModeUI(selectedMode);
         });
@@ -5885,26 +6002,26 @@ document.addEventListener('DOMContentLoaded', () => {
             // Redirect to chat interface with astro-physiology mode
             const modeSelect = document.getElementById('modeSelect');
             const queryInput = document.getElementById('queryInput');
-            
+
             if (modeSelect && queryInput) {
                 // Set mode to astro-physiology
                 modeSelect.value = 'astrophysiology';
                 astro_updateModeUI('astrophysiology');
-                
+
                 // Create query with birth data
                 const birthTimeInput = document.getElementById('birthTimeInput');
                 const birthTime = birthTimeInput ? birthTimeInput.value : '12:00';
                 const query = `Calculate my molecular imprint. Birth date: ${birthDate} ${birthTime}, Location: ${location || 'unknown'}`;
-                
+
                 // Set query and send
                 queryInput.value = query;
-                
+
                 // Trigger send
                 const sendButton = document.getElementById('sendButton');
                 if (sendButton) {
                     sendButton.click();
                 }
-                
+
                 showToast('Sending query to calculate molecular imprint...', 'info');
             } else {
                 showToast('Please use the chat interface to calculate molecular imprint', 'info');
@@ -6004,7 +6121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (settingsOverlay) {
         settingsOverlay.addEventListener('click', closeSettings);
     }
-    
+
     // Settings controls
     if (primaryModel) {
         primaryModel.addEventListener('change', (e) => {
@@ -6026,7 +6143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveSettings();
         });
     }
-    
+
     // Export/Share/Clear
     if (exportBtn) {
         exportBtn.addEventListener('click', exportConversation);
@@ -6037,7 +6154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', clearAllConversations);
     }
-    
+
     // Search conversations
     if (sidebarSearchInput) {
         sidebarSearchInput.addEventListener('input', (e) => {
@@ -6057,12 +6174,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebarSearchClear.style.display = 'none';
         });
     }
-    
+
     // Voice input
     if (voiceButton) {
         voiceButton.addEventListener('click', startVoiceRecording);
     }
-    
+
     // Feature toggles
     if (enableWebSearchCheckbox) {
         enableWebSearchCheckbox.checked = enableWebSearch;
@@ -6080,19 +6197,19 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast(enableImageGeneration ? 'Image generation enabled' : 'Image generation disabled', 'info');
         });
     }
-    
+
     // Load feature toggles from localStorage
     const savedWebSearch = localStorage.getItem('iceburg_enableWebSearch');
     const savedImageGen = localStorage.getItem('iceburg_enableImageGeneration');
     if (savedWebSearch !== null) enableWebSearch = savedWebSearch === 'true';
     if (savedImageGen !== null) enableImageGeneration = savedImageGen === 'true';
-    
+
     // Event listeners
     sendButton.addEventListener('click', () => {
         sendQuery();
         saveConversation();
     });
-    
+
     queryInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -6100,13 +6217,13 @@ document.addEventListener('DOMContentLoaded', () => {
             saveConversation();
         }
     });
-    
+
     // Focus input on load
     queryInput.focus();
-    
+
     // Initialize WebSocket with retry on failure
     initWebSocket();
-    
+
     // Retry connection if it fails initially (after 3 seconds)
     // Only retry if not already connecting and not connected
     let retryTimeout = setTimeout(() => {
@@ -6115,7 +6232,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initWebSocket();
         }
     }, 3000);
-    
+
     // Handle visibility change (reconnect if tab becomes visible)
     // Only reconnect if not already connected and not already connecting
     // Add debounce to prevent multiple rapid reconnection attempts
@@ -6131,7 +6248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000); // Wait 1 second before reconnecting
     });
-    
+
     // Handle page focus (reconnect if page regains focus)
     // Only reconnect if not already connected and not already connecting
     // Add debounce to prevent multiple rapid reconnection attempts
@@ -6147,7 +6264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000); // Wait 1 second before reconnecting
     });
-    
+
     // Save conversation periodically
     setInterval(saveConversation, 30000); // Every 30 seconds
 
@@ -6238,7 +6355,7 @@ async function runMarketPrediction(query, physioState) {
     const breakthroughBonus = 0.1068 + (Math.random() - 0.5) * 0.03;
 
     const totalScore = fundamentals + physioInfluence + celestialInfluence +
-                      earthInfluence + tcmInfluence + breakthroughBonus;
+        earthInfluence + tcmInfluence + breakthroughBonus;
 
     const direction = totalScore > 0.65 ? 'BULLISH' : totalScore < 0.35 ? 'BEARISH' : 'NEUTRAL';
     const confidence = Math.min(0.95, Math.max(0.1, totalScore));
@@ -6291,8 +6408,8 @@ function formatPredictionResults(prediction) {
         <h5 style="color: #ccc; margin-bottom: 10px;">💡 Market Insight:</h5>
         <p style="color: #ccc; line-height: 1.6;">
             ${prediction.direction === 'BULLISH'
-                ? 'Unified consciousness fields suggest upward momentum. Your physiological state indicates strong market conviction.'
-                : prediction.direction === 'BEARISH'
+            ? 'Unified consciousness fields suggest upward momentum. Your physiological state indicates strong market conviction.'
+            : prediction.direction === 'BEARISH'
                 ? 'Caution advised. Celestial alignments suggest potential downward pressure.'
                 : 'Market appears balanced. Monitor physiological and celestial indicators for directional cues.'}
         </p>
@@ -6330,13 +6447,13 @@ async function testHypothesis(hypothesis) {
 
 function addTruthInsight(truthData, messageElement) {
     if (!messageElement || !truthData) return;
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) return;
-    
+
     const truthPanel = document.createElement('div');
     truthPanel.className = 'truth-insight-panel';
-    
+
     truthPanel.innerHTML = `
         <div class="truth-header">
             <span class="truth-icon">🔍</span>
@@ -6356,24 +6473,24 @@ function addTruthInsight(truthData, messageElement) {
             </div>` : ''}
         </div>
     `;
-    
+
     messageContent.appendChild(truthPanel);
 }
 
 function displayMolecularBlueprint(imprint, messageElement) {
     if (!messageElement || !imprint) return;
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) return;
-    
+
     const blueprintPanel = document.createElement('div');
     blueprintPanel.className = 'molecular-blueprint-panel';
-    
+
     const voltageGates = imprint.voltage_gates || {};
     const traits = imprint.trait_amplification_factors || {};
-    
+
     blueprintPanel.style.cssText = 'margin: 20px 0; padding: 0;';
-    
+
     blueprintPanel.innerHTML = `
         <h4 style="color: #fff; margin: 0 0 15px 0; padding: 0; display: flex; align-items: center; gap: 8px; font-size: 1.1em;">
             Your Molecular Blueprint
@@ -6391,9 +6508,9 @@ function displayMolecularBlueprint(imprint, messageElement) {
             <div class="blueprint-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; margin: 0;">
                 <strong style="color: #fff; display: block; margin: 0 0 10px 0; padding: 0; font-size: 0.95em;">Natural Traits:</strong>
                 <ul style="list-style: none; padding: 0; margin: 0; color: #ccc;">
-                    ${Object.entries(traits).slice(0, 4).map(([trait, value]) => 
-                        `<li style="margin: 6px 0; padding: 0;">${trait.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}: <span style="color: #10b981;">${(value * 100).toFixed(0)}%</span></li>`
-                    ).join('')}
+                    ${Object.entries(traits).slice(0, 4).map(([trait, value]) =>
+        `<li style="margin: 6px 0; padding: 0;">${trait.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}: <span style="color: #10b981;">${(value * 100).toFixed(0)}%</span></li>`
+    ).join('')}
                 </ul>
             </div>
         </div>
@@ -6401,26 +6518,26 @@ function displayMolecularBlueprint(imprint, messageElement) {
             This is your authentic blueprint - not personality, but molecular truth encoded at birth.
         </p>
     `;
-    
+
     messageContent.appendChild(blueprintPanel);
 }
 
 function displayPatternTruth(patternData, messageElement) {
     if (!messageElement || !patternData) return;
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) return;
-    
+
     const patternPanel = document.createElement('div');
     patternPanel.className = 'pattern-truth-panel';
-    
+
     const predictions = patternData.predictions || {};
     const sortedPredictions = Object.entries(predictions)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
-    
+
     patternPanel.style.cssText = 'margin: 20px 0; padding: 0;';
-    
+
     patternPanel.innerHTML = `
         <div class="pattern-header" style="display: flex; justify-content: space-between; align-items: center; margin: 0 0 15px 0; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
             <span style="color: #fff; font-weight: 600; font-size: 0.95em;">📊 Pattern Detected</span>
@@ -6435,18 +6552,18 @@ function displayPatternTruth(patternData, messageElement) {
                 <div style="margin-top: 15px; padding: 0;">
                     <strong style="color: #fff; display: block; margin: 0 0 10px 0; padding: 0;">Top Predictions:</strong>
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                        ${sortedPredictions.map(([trait, value]) => 
-                            `<li style="margin: 6px 0; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 4px;">
+                        ${sortedPredictions.map(([trait, value]) =>
+        `<li style="margin: 6px 0; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 4px;">
                                 ${trait.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}: 
                                 <span style="color: #10b981; font-weight: 600;">${(value * 100).toFixed(0)}%</span>
                             </li>`
-                        ).join('')}
+    ).join('')}
                     </ul>
                 </div>
             ` : ''}
         </div>
     `;
-    
+
     messageContent.appendChild(patternPanel);
 }
 
@@ -6463,14 +6580,14 @@ function displayPatternTruth(patternData, messageElement) {
  */
 function astro_parseBirthDataFromQuery(query) {
     if (!query || typeof query !== 'string') return null;
-    
+
     const result = {
         birth_date: null,
         birth_time: null,
         location: null,
         timezone: null
     };
-    
+
     // Month name mapping
     const months = {
         'january': 1, 'jan': 1,
@@ -6486,19 +6603,19 @@ function astro_parseBirthDataFromQuery(query) {
         'november': 11, 'nov': 11,
         'december': 12, 'dec': 12
     };
-    
+
     const queryLower = query.toLowerCase();
-    
+
     // Pattern 1: "December 26, 1991" or "Dec 26 1991"
     const datePattern1 = /(?:born|birth|on)?\s*(?:the\s+)?(\w+)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})/i;
     const dateMatch1 = query.match(datePattern1);
-    
+
     // Pattern 2: "12/26/1991" or "12-26-1991"
     const datePattern2 = /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/;
     const dateMatch2 = query.match(datePattern2);
-    
+
     let year, month, day;
-    
+
     if (dateMatch1) {
         const monthName = dateMatch1[1].toLowerCase();
         month = months[monthName];
@@ -6509,7 +6626,7 @@ function astro_parseBirthDataFromQuery(query) {
         day = parseInt(dateMatch2[2]);
         year = parseInt(dateMatch2[3]);
     }
-    
+
     if (year && month && day) {
         // Validate date
         const date = new Date(year, month - 1, day);
@@ -6517,36 +6634,36 @@ function astro_parseBirthDataFromQuery(query) {
             result.birth_date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         }
     }
-    
+
     // Time patterns: "7:20 AM", "07:20", "19:20"
     const timePatterns = [
         /(\d{1,2}):(\d{2})\s*(am|pm)/i,
         /(\d{1,2}):(\d{2})/,
         /at\s+(\d{1,2})\s*(am|pm)/i
     ];
-    
+
     for (const pattern of timePatterns) {
         const timeMatch = query.match(pattern);
         if (timeMatch) {
             let hours = parseInt(timeMatch[1]);
             const minutes = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
             const ampm = timeMatch[3] ? timeMatch[3].toLowerCase() : null;
-            
+
             if (ampm === 'pm' && hours < 12) hours += 12;
             if (ampm === 'am' && hours === 12) hours = 0;
-            
+
             result.birth_time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
             break;
         }
     }
-    
+
     // Location patterns: "in Dallas", "Dallas, TX", "at Parkland Hospital, Dallas"
     const locationPatterns = [
         /(?:in|at|location:)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)(?:,\s*([A-Z]{2}))?/i,
         /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2})/i,
         /coordinates?:\s*(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/i
     ];
-    
+
     for (const pattern of locationPatterns) {
         const locMatch = query.match(pattern);
         if (locMatch) {
@@ -6565,12 +6682,12 @@ function astro_parseBirthDataFromQuery(query) {
             break;
         }
     }
-    
+
     // Return null if no data extracted
     if (!result.birth_date && !result.birth_time && !result.location) {
         return null;
     }
-    
+
     return result;
 }
 
@@ -6579,13 +6696,13 @@ function astro_parseBirthDataFromQuery(query) {
  */
 function astro_showBirthDataForm(messageElement) {
     if (!messageElement) return;
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) return;
-    
+
     // Check if form already exists
     if (messageContent.querySelector('.astro-birth-form')) return;
-    
+
     const formCard = document.createElement('div');
     formCard.className = 'astro-birth-form';
     formCard.style.cssText = `
@@ -6595,7 +6712,7 @@ function astro_showBirthDataForm(messageElement) {
         padding: 20px;
         margin: 15px 0;
     `;
-    
+
     formCard.innerHTML = `
         <h4 style="color: #00D4FF; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">
             📅 Birth Information Required
@@ -6635,22 +6752,22 @@ function astro_showBirthDataForm(messageElement) {
             </p>
         </div>
     `;
-    
+
     messageContent.appendChild(formCard);
-    
+
     // Load saved data if available
     astro_loadSavedBirthData();
-    
+
     // Add event listeners
     const submitBtn = formCard.querySelector('#astro_submitBirthData');
     const saveBtn = formCard.querySelector('#astro_saveBirthData');
-    
+
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             astro_submitBirthDataFromForm();
         });
     }
-    
+
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
             astro_saveBirthDataToStorage();
@@ -6667,18 +6784,18 @@ function astro_loadSavedBirthData() {
         const saved = localStorage.getItem('iceburg_astro_birth_data');
         if (saved) {
             const birthData = JSON.parse(saved);
-            
+
             const dateInput = document.getElementById('astro_birthDateInput') || document.getElementById('birthDateInput');
             const timeInput = document.getElementById('astro_birthTimeInput') || document.getElementById('birthTimeInput');
             const locationInput = document.getElementById('astro_locationInput') || document.getElementById('locationInput');
-            
+
             if (birthData.birth_date && dateInput) {
                 const dt = new Date(birthData.birth_date);
                 if (!isNaN(dt.getTime())) {
                     dateInput.value = dt.toISOString().split('T')[0];
                 }
             }
-            
+
             if (birthData.birth_time && timeInput) {
                 timeInput.value = birthData.birth_time;
             } else if (birthData.birth_date && timeInput) {
@@ -6689,7 +6806,7 @@ function astro_loadSavedBirthData() {
                     timeInput.value = `${hours}:${minutes}`;
                 }
             }
-            
+
             if (birthData.location && locationInput) {
                 if (typeof birthData.location === 'object' && birthData.location.lat && birthData.location.lng) {
                     locationInput.value = `${birthData.location.lat},${birthData.location.lng}`;
@@ -6710,16 +6827,16 @@ function astro_saveBirthDataToStorage() {
     const dateInput = document.getElementById('astro_birthDateInput') || document.getElementById('birthDateInput');
     const timeInput = document.getElementById('astro_birthTimeInput') || document.getElementById('birthTimeInput');
     const locationInput = document.getElementById('astro_locationInput') || document.getElementById('locationInput');
-    
+
     if (!dateInput || !dateInput.value) return;
-    
+
     const birthDate = dateInput.value;
     const birthTime = timeInput ? (timeInput.value || '12:00') : '12:00';
     const locationStr = locationInput ? locationInput.value.trim() : '';
-    
+
     // Combine date and time
     const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-    
+
     // Parse location
     let location = null;
     if (locationStr) {
@@ -6733,13 +6850,13 @@ function astro_saveBirthDataToStorage() {
             location = locationStr;
         }
     }
-    
+
     const birthData = {
         birth_date: birthDateTime,
         birth_time: birthTime,
         location: location
     };
-    
+
     try {
         localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
         return true;
@@ -6757,31 +6874,31 @@ function astro_submitBirthDataFromForm() {
         showToast('Please enter a birth date', 'error');
         return;
     }
-    
+
     const dateInput = document.getElementById('astro_birthDateInput') || document.getElementById('birthDateInput');
     const timeInput = document.getElementById('astro_birthTimeInput') || document.getElementById('birthTimeInput');
     const locationInput = document.getElementById('astro_locationInput') || document.getElementById('locationInput');
-    
+
     if (!dateInput || !dateInput.value) {
         showToast('Please enter a birth date', 'error');
         return;
     }
-    
+
     const birthDate = dateInput.value;
     const birthTime = timeInput ? (timeInput.value || '12:00') : '12:00';
     const location = locationInput ? locationInput.value.trim() : 'unknown';
-    
+
     // Set mode to astro-physiology if not already
     const modeSelect = document.getElementById('modeSelect');
     if (modeSelect) {
         modeSelect.value = 'astrophysiology';
     }
-    
+
     // Create query
     const queryInput = document.getElementById('queryInput');
     if (queryInput) {
         queryInput.value = `Calculate my molecular imprint. Birth date: ${birthDate} ${birthTime}, Location: ${location}`;
-        
+
         // Trigger send
         const sendButton = document.getElementById('sendButton');
         if (sendButton) {
@@ -6795,24 +6912,24 @@ function astro_submitBirthDataFromForm() {
  */
 function astro_createAstroPhysiologyCard(resultData, messageElement) {
     if (!messageElement || !resultData) return;
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) return;
-    
+
     // Check if card already exists - prevent duplicates (more robust check)
     const existingCard = messageContent.querySelector('.astro-card');
     if (existingCard) {
         console.log('Astro card already exists, skipping duplicate creation');
         return;
     }
-    
+
     // Also check for existing expert consultations and interventions to prevent duplicates
-    if (messageContent.querySelector('.astro-expert-consultations') || 
+    if (messageContent.querySelector('.astro-expert-consultations') ||
         messageContent.querySelector('.astro-interventions')) {
         console.log('Expert consultations or interventions already exist, skipping duplicate creation');
         return;
     }
-    
+
     const card = document.createElement('div');
     card.className = 'astro-card';
     card.style.cssText = `
@@ -6822,18 +6939,18 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
         padding: 20px;
         margin: 15px 0;
     `;
-    
+
     const molecularImprint = resultData.molecular_imprint || {};
     const behavioralPredictions = resultData.behavioral_predictions || {};
     const tcmPredictions = resultData.tcm_predictions || {};
     const currentConditions = resultData.current_conditions || {};
-    
+
     // Get key insights
     const traits = molecularImprint.trait_amplification_factors || {};
     const topTraits = Object.entries(traits)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3);
-    
+
     card.innerHTML = `
         <div class="astro-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid rgba(0, 212, 255, 0.2);">
             <h3 style="color: #00D4FF; margin: 0; font-size: 0.9em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -6920,11 +7037,11 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
                             <strong style="color: #00D4FF; font-size: 0.85em;">Molecular Imprint:</strong>
                             <div style="margin-top: 4px; padding-left: 8px;">
                                 ${Object.entries(molecularImprint).slice(0, 10).map(([key, value]) => {
-                                    if (typeof value === 'object' && value !== null) {
-                                        return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${Object.keys(value).length} items</div>`;
-                                    }
-                                    return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${value}</div>`;
-                                }).join('')}
+        if (typeof value === 'object' && value !== null) {
+            return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${Object.keys(value).length} items</div>`;
+        }
+        return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${value}</div>`;
+    }).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -6932,9 +7049,9 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
                         <div style="margin-bottom: 8px;">
                             <strong style="color: #00D4FF; font-size: 0.85em;">Behavioral Predictions:</strong>
                             <div style="margin-top: 4px; padding-left: 8px;">
-                                ${Object.entries(behavioralPredictions).slice(0, 10).map(([key, value]) => 
-                                    `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${(value * 100).toFixed(1)}%</div>`
-                                ).join('')}
+                                ${Object.entries(behavioralPredictions).slice(0, 10).map(([key, value]) =>
+        `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${key.replace(/_/g, ' ')}:</strong> ${(value * 100).toFixed(1)}%</div>`
+    ).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -6943,10 +7060,10 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
                             <strong style="color: #00D4FF; font-size: 0.85em;">TCM Predictions:</strong>
                             <div style="margin-top: 4px; padding-left: 8px;">
                                 ${Object.entries(tcmPredictions).slice(0, 10).map(([key, value]) => {
-                                    const org = typeof value === 'object' ? (value.name || key) : key;
-                                    const strength = typeof value === 'object' ? (value.strength || 0) : value;
-                                    return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${org.replace(/_/g, ' ')}:</strong> ${(strength * 100).toFixed(1)}%</div>`;
-                                }).join('')}
+        const org = typeof value === 'object' ? (value.name || key) : key;
+        const strength = typeof value === 'object' ? (value.strength || 0) : value;
+        return `<div style="margin: 2px 0; font-size: 0.8em;"><strong>${org.replace(/_/g, ' ')}:</strong> ${(strength * 100).toFixed(1)}%</div>`;
+    }).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -6968,24 +7085,24 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
             </div>
         </div>
     `;
-    
+
     messageContent.appendChild(card);
-    
+
     // V2: Advanced visualizations removed - charts are now inline in main answer format
     // No need for separate dashboard visualizations
-    
+
     // V2: Display real-time adaptation status if available
     if (resultData.algorithmic_data && resultData.algorithmic_data.adaptation_status) {
         astro_displayAdaptationStatus(resultData.algorithmic_data.adaptation_status, messageContent);
     }
-    
+
     // Render charts immediately in inline view (main answer format)
     setTimeout(() => {
         const traitsChartInline = card.querySelector('#astro-traits-chart-inline');
         const organsChartInline = card.querySelector('#astro-organs-chart-inline');
         const traitsChart = card.querySelector('#astro-traits-chart');
         const organsChart = card.querySelector('#astro-organs-chart');
-        
+
         // Render inline charts (main view) - always visible
         if (traitsChartInline && behavioralPredictions && !Chart.getChart(traitsChartInline)) {
             astro_renderBehavioralTraitsChart(behavioralPredictions, traitsChartInline);
@@ -6993,7 +7110,7 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
         if (organsChartInline && tcmPredictions && !Chart.getChart(organsChartInline)) {
             astro_renderOrganSystemChart(tcmPredictions, organsChartInline);
         }
-        
+
         // Render level 2 charts if they exist (for expand view)
         if (traitsChart && behavioralPredictions && !Chart.getChart(traitsChart)) {
             astro_renderBehavioralTraitsChart(behavioralPredictions, traitsChart);
@@ -7002,40 +7119,40 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
             astro_renderOrganSystemChart(tcmPredictions, organsChart);
         }
     }, 100);
-    
+
     // Add event listeners
     const expandBtn = card.querySelector('.astro-expand-btn');
     const collapseBtn = card.querySelectorAll('.astro-collapse-btn');
     const expertBtn = card.querySelector('.astro-expert-btn');
     const exportBtn = card.querySelector('.astro-export-btn');
-    
+
     if (expandBtn) {
         expandBtn.addEventListener('click', () => {
             astro_expandAstroCard(card, 2);
         });
     }
-    
+
     collapseBtn.forEach(btn => {
         btn.addEventListener('click', () => {
             const level = parseInt(btn.dataset.level);
             astro_collapseAstroCard(card, level);
         });
     });
-    
+
     if (expertBtn) {
         expertBtn.addEventListener('click', () => {
             astro_expandAstroCard(card, 3);
         });
     }
-    
+
     // Dashboard button removed - charts are now inline in main answer
-    
+
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {
             astro_exportData(resultData);
         });
     }
-    
+
     // Add JSON export button handler
     const exportJsonBtn = card.querySelector('.astro-export-json-btn');
     if (exportJsonBtn) {
@@ -7061,13 +7178,13 @@ function astro_createAstroPhysiologyCard(resultData, messageElement) {
  */
 function astro_expandAstroCard(cardElement, level) {
     if (!cardElement) return;
-    
+
     // Hide all levels
     for (let i = 1; i <= 3; i++) {
         const levelEl = cardElement.querySelector(`#astro-level${i}`);
         if (levelEl) levelEl.style.display = 'none';
     }
-    
+
     // Show target level and all previous levels
     for (let i = 1; i <= level; i++) {
         const levelEl = cardElement.querySelector(`#astro-level${i}`);
@@ -7087,17 +7204,17 @@ function astro_collapseAstroCard(cardElement, level) {
  */
 function astro_renderBehavioralTraitsChart(data, canvasElement) {
     if (!canvasElement || !data || typeof Chart === 'undefined') return;
-    
+
     const traits = data || {};
     const labels = Object.keys(traits).map(k => k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
     const values = Object.values(traits).map(v => (v * 100));
-    
+
     // Destroy existing chart if it exists
     const existingChart = Chart.getChart(canvasElement);
     if (existingChart) {
         existingChart.destroy();
     }
-    
+
     new Chart(canvasElement, {
         type: 'radar',
         data: {
@@ -7147,7 +7264,7 @@ function astro_renderBehavioralTraitsChart(data, canvasElement) {
  */
 function astro_renderOrganSystemChart(data, canvasElement) {
     if (!canvasElement || !data || typeof Chart === 'undefined') return;
-    
+
     const organs = data || {};
     const labels = Object.keys(organs).map(k => {
         const org = organs[k];
@@ -7157,13 +7274,13 @@ function astro_renderOrganSystemChart(data, canvasElement) {
         const org = typeof v === 'object' ? (v.strength || 0) : (v || 0);
         return org * 100;
     });
-    
+
     // Destroy existing chart if it exists
     const existingChart = Chart.getChart(canvasElement);
     if (existingChart) {
         existingChart.destroy();
     }
-    
+
     new Chart(canvasElement, {
         type: 'bar',
         data: {
@@ -7213,31 +7330,31 @@ function astro_renderOrganSystemChart(data, canvasElement) {
  */
 function astro_renderCelestialMap(data, containerElement) {
     if (!containerElement || !data) return;
-    
+
     const positions = data.celestial_positions || {};
-    
+
     containerElement.innerHTML = `
         <div style="position: relative; width: 100%; height: 300px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
             <svg width="100%" height="100%" viewBox="0 0 400 300" style="position: absolute; top: 0; left: 0;">
                 ${Object.entries(positions).map(([body, pos]) => {
-                    const [ra, dec, dist] = Array.isArray(pos) ? pos : [0, 0, 0];
-                    const x = 200 + (ra * 100);
-                    const y = 150 - (dec * 100);
-                    const colors = {
-                        'sun': '#FFD700',
-                        'moon': '#C0C0C0',
-                        'mars': '#FF6B6B',
-                        'mercury': '#87CEEB',
-                        'jupiter': '#FFA500',
-                        'venus': '#FFB6C1',
-                        'saturn': '#F0E68C'
-                    };
-                    const color = colors[body.toLowerCase()] || '#00D4FF';
-                    return `<circle cx="${x}" cy="${y}" r="8" fill="${color}" stroke="#fff" stroke-width="1">
+        const [ra, dec, dist] = Array.isArray(pos) ? pos : [0, 0, 0];
+        const x = 200 + (ra * 100);
+        const y = 150 - (dec * 100);
+        const colors = {
+            'sun': '#FFD700',
+            'moon': '#C0C0C0',
+            'mars': '#FF6B6B',
+            'mercury': '#87CEEB',
+            'jupiter': '#FFA500',
+            'venus': '#FFB6C1',
+            'saturn': '#F0E68C'
+        };
+        const color = colors[body.toLowerCase()] || '#00D4FF';
+        return `<circle cx="${x}" cy="${y}" r="8" fill="${color}" stroke="#fff" stroke-width="1">
                         <title>${body}: RA=${ra.toFixed(2)}, Dec=${dec.toFixed(2)}</title>
                     </circle>
                     <text x="${x}" y="${y - 12}" fill="#fff" font-size="10" text-anchor="middle">${body.charAt(0).toUpperCase()}</text>`;
-                }).join('')}
+    }).join('')}
             </svg>
         </div>
     `;
@@ -7248,39 +7365,39 @@ function astro_renderCelestialMap(data, containerElement) {
  */
 function astro_syncChatToDashboard(chatData) {
     console.log('Syncing to dashboard with data:', Object.keys(chatData || {}));
-    
+
     const visualizationPanels = document.getElementById('visualizationPanels');
     const astroPanel = document.getElementById('astrophysiologyPanel');
-    
+
     if (!visualizationPanels) {
         console.error('visualizationPanels not found');
         showToast('Dashboard panels not found', 'error');
         return;
     }
-    
+
     if (!astroPanel) {
         console.error('astrophysiologyPanel not found');
         showToast('Astro-physiology panel not found', 'error');
         return;
     }
-    
+
     // Show panels
     visualizationPanels.style.display = 'block';
     visualizationPanels.classList.add('show');
     astroPanel.style.display = 'block';
-    
+
     // Wait a bit for DOM to update, then populate charts
     setTimeout(() => {
         const traitsChart = document.getElementById('voltageGatesChart');
         const organsChart = document.getElementById('tcmCyclesChart');
-        
+
         console.log('Chart elements:', {
             traitsChart: !!traitsChart,
             organsChart: !!organsChart,
             hasBehavioral: !!chatData?.behavioral_predictions,
             hasTcm: !!chatData?.tcm_predictions
         });
-        
+
         if (chatData?.behavioral_predictions && traitsChart) {
             try {
                 astro_renderBehavioralTraitsChart(chatData.behavioral_predictions, traitsChart);
@@ -7289,7 +7406,7 @@ function astro_syncChatToDashboard(chatData) {
                 console.error('Error rendering behavioral chart:', e);
             }
         }
-        
+
         if (chatData?.tcm_predictions && organsChart) {
             try {
                 astro_renderOrganSystemChart(chatData.tcm_predictions, organsChart);
@@ -7298,7 +7415,7 @@ function astro_syncChatToDashboard(chatData) {
                 console.error('Error rendering organ chart:', e);
             }
         }
-        
+
         showToast('Dashboard opened', 'success');
     }, 100);
 }
@@ -7307,30 +7424,41 @@ function astro_syncChatToDashboard(chatData) {
 function astro_displayExpertConsultations(expertConsultations, messageElement) {
     console.log('astro_displayExpertConsultations called with:', expertConsultations);
     if (!messageElement || !expertConsultations) {
-        console.warn('astro_displayExpertConsultations: Missing messageElement or expertConsultations', {messageElement: !!messageElement, expertConsultations: !!expertConsultations});
+        console.warn('astro_displayExpertConsultations: Missing messageElement or expertConsultations', { messageElement: !!messageElement, expertConsultations: !!expertConsultations });
         return;
     }
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) {
         console.error('astro_displayExpertConsultations: No .message-content found');
         return;
     }
-    
+
     const expertSection = document.createElement('div');
     expertSection.className = 'astro-expert-consultations';
-    
+
+    // Get expert registry from message element (for descriptions)
+    let expertRegistry = {};
+    try {
+        const expertRegistryStr = messageElement.closest('.message')?.dataset?.expertRegistry;
+        if (expertRegistryStr) {
+            expertRegistry = JSON.parse(expertRegistryStr);
+        }
+    } catch (e) {
+        console.debug('Could not parse expert registry:', e);
+    }
+
     const expertEntries = Object.entries(expertConsultations)
         .filter(([expert, data]) => {
             if (data.error) return false;
             if (!data.insights || data.insights.trim() === '' || data.insights === 'No insights available') return false;
             return true;
         });
-    
+
     if (expertEntries.length === 0) {
         return;
     }
-    
+
     expertSection.innerHTML = `
         <div class="astro-section-header-compact">
             <h3>Expert Consultations</h3>
@@ -7338,13 +7466,20 @@ function astro_displayExpertConsultations(expertConsultations, messageElement) {
         </div>
         <div class="astro-expert-grid-modern">
             ${expertEntries.map(([expert, data], idx) => {
-                const expertId = `expert-${expert}-${idx}`;
-                const insightsPreview = data.insights.substring(0, 120) + (data.insights.length > 120 ? '...' : '');
-                return `
-                    <div class="astro-expert-card-modern" data-expert="${expert}">
+        const expertId = `expert-${expert}-${idx}`;
+        const insightsPreview = data.insights.substring(0, 120) + (data.insights.length > 120 ? '...' : '');
+        const expertInfo = expertRegistry[expert] || {};
+        const expertName = expertInfo.name || expert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const expertDescription = expertInfo.description || '';
+        const expertFocus = expertInfo.focus || '';
+        return `
+                    <div class="astro-expert-card-modern" data-expert="${expert}" title="${expertDescription || expertFocus}">
                         <div class="expert-card-header-modern" data-toggle="${expertId}">
                             <div class="expert-title-row">
-                                <h4>${expert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                                <div style="flex: 1;">
+                                    <h4>${expertName}</h4>
+                                    ${expertDescription ? `<p style="color: rgba(255,255,255,0.5); font-size: 0.7em; margin: 2px 0 0 0;">${expertDescription}</p>` : ''}
+                                </div>
                                 <span class="expert-toggle-icon">▼</span>
                             </div>
                         </div>
@@ -7370,13 +7505,17 @@ function astro_displayExpertConsultations(expertConsultations, messageElement) {
                                     ${Object.keys(data.optimal_times).length > 4 ? `<span class="meta-tag-more">+${Object.keys(data.optimal_times).length - 4}</span>` : ''}
                                 </div>
                             ` : ''}
+                            <button class="astro-switch-to-expert-btn" data-expert="${expert}" 
+                                    style="margin-top: 8px; padding: 6px 12px; background: rgba(0, 212, 255, 0.2); color: #00D4FF; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; cursor: pointer; font-size: 0.8em; width: 100%;">
+                                Switch to ${expert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </button>
                         </div>
                     </div>
                 `;
-            }).join('')}
+    }).join('')}
         </div>
     `;
-    
+
     // Add toggle functionality
     expertSection.querySelectorAll('.expert-card-header-modern').forEach(header => {
         header.addEventListener('click', () => {
@@ -7390,7 +7529,16 @@ function astro_displayExpertConsultations(expertConsultations, messageElement) {
             }
         });
     });
-    
+
+    // Add expert switching functionality
+    expertSection.querySelectorAll('.astro-switch-to-expert-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const expert = btn.dataset.expert;
+            astro_handleExpertSwitch(expert, messageElement);
+        });
+    });
+
     // Only append if there are actual expert cards to show
     const expertCards = expertSection.querySelectorAll('.astro-expert-card-modern');
     if (expertCards.length > 0) {
@@ -7400,7 +7548,7 @@ function astro_displayExpertConsultations(expertConsultations, messageElement) {
         console.log('No expert consultations with insights to display');
         expertSection.remove(); // Clean up empty section
     }
-    
+
     // V2: Initialize expert consultation visualizations if available
     if (typeof renderExpertConsultationCharts !== 'undefined') {
         try {
@@ -7409,54 +7557,234 @@ function astro_displayExpertConsultations(expertConsultations, messageElement) {
             console.warn(' Error rendering expert consultation charts:', e);
         }
     }
-    
+
     // V2: Display real-time adaptation status if available
     if (expertConsultations.adaptation_status) {
         astro_displayAdaptationStatus(expertConsultations.adaptation_status, expertSection);
     }
 }
 
+/**
+ * Handle expert switching - send query to switch to specific expert
+ */
+function astro_handleExpertSwitch(expertName, messageElement) {
+    console.log('Switching to expert:', expertName);
+
+    // Get the current query input
+    const queryInput = document.getElementById('queryInput');
+    if (!queryInput) {
+        console.error('Query input not found');
+        return;
+    }
+
+    // Get current mode
+    const modeSelect = document.getElementById('modeSelect');
+    const currentMode = modeSelect ? modeSelect.value : 'astrophysiology';
+
+    if (currentMode !== 'astrophysiology') {
+        console.warn('Not in astrophysiology mode');
+        return;
+    }
+
+    // Get algorithmic data from localStorage
+    const algoDataStr = localStorage.getItem('iceburg_astro_algorithmic_data');
+    if (!algoDataStr) {
+        console.warn('No algorithmic data found, cannot switch to expert');
+        return;
+    }
+
+    // Set query to switch to expert
+    queryInput.value = `Switch to ${expertName.replace('_', ' ')}`;
+
+    // Create message with expert specified
+    const message = {
+        query: queryInput.value,
+        mode: 'astrophysiology',
+        agent: expertName,
+        data: {
+            agent: expertName,
+            expert: expertName,
+            algorithmic_data: JSON.parse(algoDataStr)
+        }
+    };
+
+    // Send message
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(message));
+        console.log('Sent expert switch message:', message);
+    } else {
+        console.error('WebSocket not connected');
+    }
+}
+
+/**
+ * Add switch back button when in expert mode
+ */
+function astro_addSwitchBackButton(messageElement, currentExpert) {
+    if (!messageElement) return;
+
+    const messageContent = messageElement.querySelector('.message-content');
+    if (!messageContent) return;
+
+    // Check if switch back button already exists
+    if (messageContent.querySelector('.astro-switch-back-btn')) {
+        return;
+    }
+
+    const switchBackSection = document.createElement('div');
+    switchBackSection.className = 'astro-switch-back-section';
+    switchBackSection.style.cssText = `
+        margin: 15px 0;
+        padding: 12px;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 8px;
+        text-align: center;
+    `;
+
+    switchBackSection.innerHTML = `
+        <div style="color: rgba(255,255,255,0.7); margin-bottom: 8px; font-size: 0.85em;">
+            Currently viewing: <strong style="color: #00D4FF;">${currentExpert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
+        </div>
+        <button class="astro-switch-back-btn" 
+                style="padding: 8px 16px; background: rgba(0, 212, 255, 0.2); color: #00D4FF; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+            Switch Back to Main Analysis
+        </button>
+    `;
+
+    messageContent.appendChild(switchBackSection);
+
+    // Add click handler
+    const switchBackBtn = switchBackSection.querySelector('.astro-switch-back-btn');
+    if (switchBackBtn) {
+        switchBackBtn.addEventListener('click', () => {
+            const queryInput = document.getElementById('queryInput');
+            if (queryInput) {
+                queryInput.value = 'switch back';
+
+                // Get algorithmic data
+                const algoDataStr = localStorage.getItem('iceburg_astro_algorithmic_data');
+                if (algoDataStr && ws && ws.readyState === WebSocket.OPEN) {
+                    const message = {
+                        query: 'switch back',
+                        mode: 'astrophysiology',
+                        data: {
+                            algorithmic_data: JSON.parse(algoDataStr)
+                        }
+                    };
+                    ws.send(JSON.stringify(message));
+                }
+            }
+        });
+    }
+}
+
+/**
+ * Display expert suggestions in result card
+ */
+function astro_showExpertSuggestions(suggestions, messageElement) {
+    if (!messageElement || !suggestions || suggestions.length === 0) return;
+
+    const messageContent = messageElement.querySelector('.message-content');
+    if (!messageContent) return;
+
+    // Check if suggestions already displayed
+    if (messageContent.querySelector('.astro-expert-suggestions')) {
+        return;
+    }
+
+    const suggestionsSection = document.createElement('div');
+    suggestionsSection.className = 'astro-expert-suggestions';
+    suggestionsSection.style.cssText = `
+        margin: 15px 0;
+        padding: 12px;
+        background: rgba(0, 212, 255, 0.05);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 8px;
+    `;
+
+    suggestionsSection.innerHTML = `
+        <div class="astro-section-header-compact" style="margin-bottom: 12px;">
+            <h3 style="color: #00D4FF; margin: 0; font-size: 0.9em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                Suggested Experts
+            </h3>
+        </div>
+        <div class="astro-suggestions-grid" style="display: grid; gap: 8px;">
+            ${suggestions.map(suggestion => `
+                <div class="astro-suggestion-card" style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px;">
+                        <h4 style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.85em; font-weight: 600;">
+                            ${suggestion.expert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </h4>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.6); margin: 0 0 6px 0; font-size: 0.75em; line-height: 1.4;">
+                        ${suggestion.reason}
+                    </p>
+                    <p style="color: rgba(255,255,255,0.5); margin: 0 0 8px 0; font-size: 0.7em; font-style: italic;">
+                        ${suggestion.description}
+                    </p>
+                    <button class="astro-switch-to-expert-btn" data-expert="${suggestion.expert}" 
+                            style="width: 100%; padding: 6px 10px; background: rgba(0, 212, 255, 0.2); color: #00D4FF; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; cursor: pointer; font-size: 0.8em;">
+                        Switch to ${suggestion.expert.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    messageContent.appendChild(suggestionsSection);
+
+    // Add click handlers for suggestion buttons
+    suggestionsSection.querySelectorAll('.astro-switch-to-expert-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const expert = btn.dataset.expert;
+            astro_handleExpertSwitch(expert, messageElement);
+        });
+    });
+}
+
 // Phase 7: Display Interventions
 function astro_displayInterventions(interventions, messageElement) {
     console.log(' astro_displayInterventions called with:', interventions);
     if (!messageElement || !interventions) {
-        console.warn(' astro_displayInterventions: Missing messageElement or interventions', {messageElement: !!messageElement, interventions: !!interventions});
+        console.warn(' astro_displayInterventions: Missing messageElement or interventions', { messageElement: !!messageElement, interventions: !!interventions });
         return;
     }
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) {
         console.error(' astro_displayInterventions: No .message-content found');
         return;
     }
-    
+
     const interventionSection = document.createElement('div');
     interventionSection.className = 'astro-interventions-modern';
-    
+
     // Parse text into sections
     const textContent = interventions.text || '';
     const sections = textContent.split(/\*\*([^*]+)\*\*/).filter(s => s.trim());
-    
+
     // Parse and format intervention text properly
     const formatInterventionText = (text) => {
         if (!text) return '';
-        
+
         // Remove "Algorithmic Data Summary" and everything after it
         const summaryIndex = text.indexOf('Algorithmic Data Summary');
         if (summaryIndex > -1) {
             text = text.substring(0, summaryIndex).trim();
         }
-        
+
         // Split by double newlines but keep structure
         let html = '';
         const lines = text.split('\n');
         let inList = false;
         let currentList = [];
-        
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
-            
+
             // Check for Roman numeral sections (I., II., III., etc.)
             if (line.match(/^[IVX]+\.\s+/)) {
                 if (currentList.length > 0) {
@@ -7494,15 +7822,15 @@ function astro_displayInterventions(interventions, messageElement) {
                 html += `<p class="intervention-para-compact">${line}</p>`;
             }
         }
-        
+
         // Close any remaining list
         if (currentList.length > 0) {
             html += `<ul class="intervention-list-compact">${currentList.map(item => `<li>${item}</li>`).join('')}</ul>`;
         }
-        
+
         return html;
     };
-    
+
     interventionSection.innerHTML = `
         <div class="astro-section-header-compact">
             <h3>Interventions</h3>
@@ -7515,11 +7843,11 @@ function astro_displayInterventions(interventions, messageElement) {
             ` : '<p class="intervention-empty">No interventions available</p>'}
         </div>
     `;
-    
+
     messageContent.appendChild(interventionSection);
-    
+
     console.log(' Interventions displayed');
-    
+
     // V2: Initialize intervention progress visualizations if available
     if (interventions.tracking_metadata && typeof renderInterventionProgressChart !== 'undefined') {
         try {
@@ -7535,7 +7863,7 @@ function astro_displayInterventions(interventions, messageElement) {
             console.warn(' Error rendering intervention progress chart:', e);
         }
     }
-    
+
     // V2: Feedback form removed per user request
 }
 
@@ -7545,30 +7873,30 @@ function astro_displayInterventions(interventions, messageElement) {
 function astro_displayHypotheses(hypotheses, messageElement) {
     console.log('Astro displayHypotheses called with:', hypotheses);
     if (!messageElement || !hypotheses || hypotheses.length === 0) {
-        console.warn('Astro displayHypotheses: Missing messageElement or hypotheses', {messageElement: !!messageElement, hypotheses: !!hypotheses});
+        console.warn('Astro displayHypotheses: Missing messageElement or hypotheses', { messageElement: !!messageElement, hypotheses: !!hypotheses });
         return;
     }
-    
+
     const messageContent = messageElement.querySelector('.message-content');
     if (!messageContent) {
         console.error('Astro displayHypotheses: No .message-content found');
         return;
     }
-    
+
     // Check if hypotheses section already exists
     if (messageContent.querySelector('.astro-hypotheses')) {
         console.log('Hypotheses section already exists, skipping duplicate');
         return;
     }
-    
+
     const hypothesesSection = document.createElement('div');
     hypothesesSection.className = 'astro-hypotheses-compact';
     hypothesesSection.style.cssText = 'margin: 2px 0; padding: 2px; background: transparent; border: none;';
-    
+
     // Collapsible header
     const headerId = `hypotheses-header-${Date.now()}`;
     const contentId = `hypotheses-content-${Date.now()}`;
-    
+
     hypothesesSection.innerHTML = `
         <div class="astro-hypotheses-header-compact" id="${headerId}" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 2px 0; border-bottom: 1px solid rgba(138, 43, 226, 0.2);">
             <div style="display: flex; align-items: center; gap: 4px;">
@@ -7601,14 +7929,14 @@ function astro_displayHypotheses(hypotheses, messageElement) {
             </div>
         </div>
     `;
-    
+
     messageContent.appendChild(hypothesesSection);
-    
+
     // Add toggle functionality
     const header = document.getElementById(headerId);
     const content = document.getElementById(contentId);
     const toggle = header.querySelector('.hypotheses-toggle');
-    
+
     if (header && content && toggle) {
         header.addEventListener('click', () => {
             const isHidden = content.style.display === 'none';
@@ -7624,10 +7952,10 @@ function astro_displayHypotheses(hypotheses, messageElement) {
 function updateAgentOptionsForMode(mode) {
     const agentSelect = document.getElementById('agentSelect');
     if (!agentSelect) return;
-    
+
     // Save current selection
     const currentValue = agentSelect.value;
-    
+
     if (mode === 'astrophysiology') {
         // Astro-Physiology mode: Show expert agents
         agentSelect.innerHTML = `
@@ -7657,7 +7985,6 @@ function updateAgentOptionsForMode(mode) {
         agentSelect.innerHTML = `
             <option value="auto">Auto (Full Protocol)</option>
             <option value="secretary">Secretary (Chat Assistant)</option>
-            <option value="surveyor">Surveyor</option>
             <option value="dissident">Dissident</option>
             <option value="synthesist">Synthesist</option>
             <option value="oracle">Oracle</option>
@@ -7673,7 +8000,7 @@ function updateAgentOptionsForMode(mode) {
         agentSelect.disabled = false;
         agentSelect.title = '';
     }
-    
+
     // Restore selection if still valid, otherwise default to auto
     if (agentSelect.querySelector(`option[value="${currentValue}"]`)) {
         agentSelect.value = currentValue;
@@ -7690,7 +8017,7 @@ function astro_addInterventionFeedbackForm(container, interventions) {
     // Feedback form removed - no longer displaying feedback/suggestions
     return;
     feedbackSection.style.cssText = 'margin: 20px 0; padding: 15px; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);';
-    
+
     feedbackSection.innerHTML = `
         <h4 style="color: #00D4FF; margin: 0 0 15px 0;">Share Your Progress</h4>
         <p style="color: #ccc; font-size: 0.9em; margin: 0 0 15px 0;">
@@ -7735,9 +8062,9 @@ function astro_addInterventionFeedbackForm(container, interventions) {
         </form>
         <div id="astro-feedback-status" style="margin-top: 10px; display: none;"></div>
     `;
-    
+
     container.appendChild(feedbackSection);
-    
+
     // Handle form submission
     const form = feedbackSection.querySelector('#astro-feedback-form');
     if (form) {
@@ -7751,12 +8078,12 @@ function astro_addInterventionFeedbackForm(container, interventions) {
                 timestamp: new Date().toISOString(),
                 intervention_id: interventions.id || `intervention_${Date.now()}`
             };
-            
+
             const statusDiv = feedbackSection.querySelector('#astro-feedback-status');
             statusDiv.style.display = 'block';
             statusDiv.style.color = '#00D4FF';
             statusDiv.textContent = 'Submitting feedback...';
-            
+
             try {
                 // Send feedback to backend
                 const response = await fetch('/api/astro-physiology/feedback', {
@@ -7764,12 +8091,12 @@ function astro_addInterventionFeedbackForm(container, interventions) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(feedback)
                 });
-                
+
                 if (response.ok) {
                     statusDiv.style.color = '#4CAF50';
                     statusDiv.textContent = '✓ Feedback submitted successfully! Thank you for helping us improve.';
                     form.reset();
-                    
+
                     // Store feedback locally for tracking
                     const storedFeedback = JSON.parse(localStorage.getItem('iceburg_astro_feedback') || '[]');
                     storedFeedback.push(feedback);
@@ -7791,15 +8118,15 @@ function astro_addInterventionFeedbackForm(container, interventions) {
  */
 function astro_displayAdaptationStatus(adaptationData, container) {
     if (!adaptationData || !container) return;
-    
+
     const adaptationSection = document.createElement('div');
     adaptationSection.className = 'astro-adaptation-status';
     adaptationSection.style.cssText = 'margin: 20px 0; padding: 15px; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);';
-    
+
     const status = adaptationData.status || 'monitoring';
     const lastUpdate = adaptationData.last_update ? new Date(adaptationData.last_update).toLocaleString() : 'Never';
     const changes = adaptationData.recent_changes || [];
-    
+
     adaptationSection.innerHTML = `
         <h4 style="color: #00D4FF; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">
             <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${status === 'active' ? '#4CAF50' : status === 'pending' ? '#FFA500' : '#999'};"></span>
@@ -7833,7 +8160,7 @@ function astro_displayAdaptationStatus(adaptationData, container) {
             </div>
         ` : ''}
     `;
-    
+
     container.appendChild(adaptationSection);
 }
 
@@ -7859,7 +8186,7 @@ function astro_updateModeUI(mode) {
     const queryInput = document.getElementById('queryInput');
     const modeDescription = document.getElementById('astro-mode-description');
     const quickActions = document.getElementById('astro-quick-actions');
-    
+
     if (mode === 'astrophysiology') {
         // Show mode description if it doesn't exist
         if (!modeDescription) {
@@ -7868,7 +8195,7 @@ function astro_updateModeUI(mode) {
                 controlsPanel: !!controlsPanel,
                 existingDesc: !!controlsPanel?.querySelector('#astro-mode-description')
             });
-            
+
             if (controlsPanel && !controlsPanel.querySelector('#astro-mode-description')) {
                 const desc = document.createElement('div');
                 desc.id = 'astro-mode-description';
@@ -7900,7 +8227,7 @@ function astro_updateModeUI(mode) {
                 controlsPanel.appendChild(desc);
                 console.log('✅ Description box created and appended to controlsPanel');
                 console.log('📍 ControlsPanel children:', controlsPanel.children.length);
-                
+
                 // Add learn more handler with enhanced popup
                 const learnMore = desc.querySelector('#astro-learn-more');
                 if (learnMore) {
@@ -7922,12 +8249,12 @@ function astro_updateModeUI(mode) {
             modeDescription.style.opacity = '1';
             console.log('✅ Existing description box shown');
         }
-        
+
         // Show quick actions above prompt area, outside suggestion border
         if (!quickActions) {
             const inputContainer = document.querySelector('.input-container');
             const promptCarousel = document.getElementById('promptCarousel');
-            
+
             if (inputContainer && promptCarousel && !inputContainer.querySelector('#astro-quick-actions')) {
                 const actions = document.createElement('div');
                 actions.id = 'astro-quick-actions';
@@ -7956,7 +8283,7 @@ function astro_updateModeUI(mode) {
                 `;
                 // Insert before prompt carousel
                 inputContainer.insertBefore(actions, promptCarousel);
-                
+
                 // Add event listeners
                 actions.querySelectorAll('.astro-quick-action').forEach(btn => {
                     btn.addEventListener('click', () => {
@@ -7968,7 +8295,7 @@ function astro_updateModeUI(mode) {
         } else if (quickActions) {
             quickActions.style.display = 'flex';
         }
-        
+
         // Update query input placeholder and show examples
         if (queryInput) {
             const saved = localStorage.getItem('iceburg_astro_birth_data');
@@ -7977,7 +8304,7 @@ function astro_updateModeUI(mode) {
             } else {
                 queryInput.placeholder = 'Enter birth info: "Dec 26 1991, 7:20 AM, Dallas" or use the form below...';
             }
-            
+
             // Show example queries on focus
             if (!queryInput.dataset.astroExamplesAdded) {
                 queryInput.addEventListener('focus', () => {
@@ -7993,12 +8320,12 @@ function astro_updateModeUI(mode) {
         if (modeDescription) {
             modeDescription.style.display = 'none';
         }
-        
+
         // Hide quick actions
         if (quickActions) {
             quickActions.style.display = 'none';
         }
-        
+
         // Reset query input placeholder
         if (queryInput) {
             queryInput.placeholder = 'Ask anything to begin...';
@@ -8015,10 +8342,10 @@ function astro_handleQuickAction(action) {
         modeSelect.value = 'astrophysiology';
         astro_updateModeUI('astrophysiology');
     }
-    
+
     const queryInput = document.getElementById('queryInput');
     if (!queryInput) return;
-    
+
     switch (action) {
         case 'today':
             queryInput.value = "What are today's celestial correlations for me?";
@@ -8042,7 +8369,7 @@ function astro_handleQuickAction(action) {
             }
             return;
     }
-    
+
     // Trigger send if query was set
     if (action !== 'export') {
         const sendButton = document.getElementById('sendButton');
@@ -8061,7 +8388,7 @@ function astro_showLearnMorePopup() {
     if (existingPopup) {
         existingPopup.remove();
     }
-    
+
     // Create popup overlay
     const overlay = document.createElement('div');
     overlay.id = 'astro-learn-more-popup';
@@ -8078,7 +8405,7 @@ function astro_showLearnMorePopup() {
         justify-content: center;
         padding: 20px;
     `;
-    
+
     // Create popup content
     const popup = document.createElement('div');
     popup.style.cssText = `
@@ -8093,7 +8420,7 @@ function astro_showLearnMorePopup() {
         box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
         position: relative;
     `;
-    
+
     popup.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 style="color: #00D4FF; margin: 0; font-size: 1.3em;">Astro-Physiology Mode</h3>
@@ -8140,23 +8467,23 @@ function astro_showLearnMorePopup() {
             </div>
         </div>
     `;
-    
+
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
-    
+
     // Close handlers
     const closeBtn = popup.querySelector('#astro-popup-close');
     const closePopup = () => {
         overlay.remove();
     };
-    
+
     closeBtn.addEventListener('click', closePopup);
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
             closePopup();
         }
     });
-    
+
     // ESC key to close
     const escHandler = (e) => {
         if (e.key === 'Escape') {
@@ -8172,7 +8499,7 @@ function astro_showLearnMorePopup() {
  */
 function astro_showLoadingState(messageContent) {
     if (!messageContent) return;
-    
+
     const loadingCard = document.createElement('div');
     loadingCard.className = 'astro-loading-state';
     loadingCard.style.cssText = `
@@ -8182,7 +8509,7 @@ function astro_showLoadingState(messageContent) {
         padding: 20px;
         margin: 15px 0;
     `;
-    
+
     loadingCard.innerHTML = `
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
             <div class="astro-loading-spinner" style="width: 24px; height: 24px; border: 3px solid rgba(0, 212, 255, 0.3); border-top-color: #00D4FF; border-radius: 50%; animation: spin 1s linear infinite;"></div>
@@ -8212,9 +8539,9 @@ function astro_showLoadingState(messageContent) {
             }
         </style>
     `;
-    
+
     messageContent.appendChild(loadingCard);
-    
+
     // Update steps as processing continues
     let currentStep = 0;
     const stepInterval = setInterval(() => {
@@ -8223,21 +8550,21 @@ function astro_showLoadingState(messageContent) {
             clearInterval(stepInterval);
             return;
         }
-        
+
         const stepEl = loadingCard.querySelector(`.astro-step[data-step="${currentStep}"]`);
         if (stepEl) {
             stepEl.style.color = '#00D4FF';
             const icon = stepEl.querySelector('.astro-step-icon');
             if (icon) icon.textContent = '✓';
         }
-        
+
         // Hide previous steps
         for (let i = 1; i < currentStep; i++) {
             const prevStep = loadingCard.querySelector(`.astro-step[data-step="${i}"]`);
             if (prevStep) prevStep.style.opacity = '0.5';
         }
     }, 2000);
-    
+
     // Store reference for cleanup
     loadingCard.dataset.astroLoadingId = Date.now();
 }
@@ -8249,7 +8576,7 @@ function astro_showExampleQueries(inputElement) {
     // Remove existing examples if any
     const existing = document.getElementById('astro-example-queries');
     if (existing) existing.remove();
-    
+
     const examples = document.createElement('div');
     examples.id = 'astro-example-queries';
     examples.style.cssText = `
@@ -8278,12 +8605,12 @@ function astro_showExampleQueries(inputElement) {
             "Show my organ system correlations"
         </button>
     `;
-    
+
     const inputContainer = inputElement.parentElement;
     if (inputContainer) {
         inputContainer.style.position = 'relative';
         inputContainer.appendChild(examples);
-        
+
         // Add click handlers
         examples.querySelectorAll('.astro-example-query').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -8292,7 +8619,7 @@ function astro_showExampleQueries(inputElement) {
                 inputElement.focus();
             });
         });
-        
+
         // Remove on blur
         inputElement.addEventListener('blur', () => {
             setTimeout(() => {
@@ -8352,5 +8679,234 @@ function formatHypothesisResults(results) {
         </ul>
     </div>
 </div>`;
+}
+
+// ================================================
+// PHASE 4: AGENT WORKFLOW PILL
+// Visual display of which agents are running
+// ================================================
+
+// Current workflow state
+let workflowState = {
+    agents: [],
+    currentIndex: 0,
+    total: 0,
+    visible: false
+};
+
+// Mode templates for different processing configurations
+const MODE_TEMPLATES = {
+    fast: { icon: '⚡', name: 'Fast', agents: ['secretary'] },
+    research: { icon: '🔬', name: 'Research', agents: ['surveyor', 'deliberation', 'synthesist'] },
+    deep_research: { icon: '🧬', name: 'Deep Research', agents: ['surveyor', 'dissident', 'deliberation', 'archaeologist', 'synthesist', 'oracle'] },
+    unbounded: { icon: '♾️', name: 'Unbounded', agents: ['surveyor', 'dissident', 'deliberation', 'archaeologist', 'synthesist', 'oracle', 'self_redesign'] }
+};
+
+// Current processing mode
+let currentMode = 'research';
+
+/**
+ * Initialize the workflow pill DOM elements
+ */
+function initWorkflowPill() {
+    // Create workflow pill container if it doesn't exist
+    if (!document.getElementById('agentWorkflowPill')) {
+        const pill = document.createElement('div');
+        pill.id = 'agentWorkflowPill';
+        pill.className = 'agent-workflow-pill hidden';
+        pill.innerHTML = '<span class="workflow-loading">Initializing...</span>';
+        document.body.appendChild(pill);
+    }
+
+    // Create metacog indicators container
+    if (!document.getElementById('metacogIndicators')) {
+        const indicators = document.createElement('div');
+        indicators.id = 'metacogIndicators';
+        indicators.className = 'metacog-indicators';
+        indicators.innerHTML = `
+            <div class="metacog-badge" id="alignmentBadge" style="display:none;">
+                <span class="metacog-badge-icon">🧠</span>
+                <span class="metacog-badge-label">Alignment:</span>
+                <span class="metacog-badge-value" id="alignmentValue">-</span>
+            </div>
+            <div class="metacog-badge warning" id="contradictionBadge" style="display:none;">
+                <span class="metacog-badge-icon">⚠️</span>
+                <span class="metacog-badge-label">Contradictions:</span>
+                <span class="metacog-badge-value" id="contradictionValue">0</span>
+            </div>
+        `;
+        document.body.appendChild(indicators);
+    }
+
+    console.log('🎨 Workflow pill initialized');
+}
+
+/**
+ * Show the workflow pill with animation
+ */
+function showWorkflowPill() {
+    const pill = document.getElementById('agentWorkflowPill');
+    if (pill) {
+        pill.classList.remove('hidden');
+        pill.classList.add('visible');
+        workflowState.visible = true;
+    }
+}
+
+/**
+ * Hide the workflow pill with animation
+ */
+function hideWorkflowPill() {
+    const pill = document.getElementById('agentWorkflowPill');
+    if (pill) {
+        pill.classList.remove('visible');
+        pill.classList.add('hidden');
+        workflowState.visible = false;
+    }
+
+    // Also hide metacog indicators
+    const indicators = document.getElementById('metacogIndicators');
+    if (indicators) {
+        indicators.classList.remove('visible');
+    }
+}
+
+/**
+ * Update the workflow pill to show current agent state
+ * @param {string} agentName - Name of the agent
+ * @param {string} status - 'pending' | 'active' | 'completed'
+ * @param {number} index - Current agent index
+ * @param {number} total - Total number of agents
+ */
+function updateWorkflowPill(agentName, status, index = null, total = null) {
+    const pill = document.getElementById('agentWorkflowPill');
+    if (!pill) {
+        initWorkflowPill();
+        return updateWorkflowPill(agentName, status, index, total);
+    }
+
+    // Update state
+    if (index !== null) workflowState.currentIndex = index;
+    if (total !== null) workflowState.total = total;
+
+    // Get agent display info
+    const agentDisplayNames = {
+        'secretary': 'Secretary',
+        'surveyor': 'Surveyor',
+        'dissident': 'Dissident',
+        'deliberation': 'Deliberation',
+        'synthesist': 'Synthesist',
+        'oracle': 'Oracle',
+        'archaeologist': 'Archaeologist',
+        'self_redesign': 'Self-Redesign',
+        'scrutineer': 'Scrutineer'
+    };
+
+    // Build the pill HTML
+    const template = MODE_TEMPLATES[currentMode] || MODE_TEMPLATES.research;
+    const agents = template.agents;
+
+    let pillHTML = '';
+    agents.forEach((agent, i) => {
+        const displayName = agentDisplayNames[agent] || agent;
+        const isActive = agent.toLowerCase() === agentName.toLowerCase() && status === 'active';
+        const isCompleted = i < workflowState.currentIndex ||
+            (agent.toLowerCase() === agentName.toLowerCase() && status === 'completed');
+
+        const stepClass = isActive ? 'active' : (isCompleted ? 'completed' : '');
+
+        pillHTML += `
+            <div class="agent-step ${stepClass}">
+                <span class="agent-step-icon"></span>
+                <span class="agent-step-name">${displayName}</span>
+            </div>
+        `;
+
+        if (i < agents.length - 1) {
+            pillHTML += '<span class="agent-step-arrow">→</span>';
+        }
+    });
+
+    pill.innerHTML = pillHTML;
+}
+
+/**
+ * Update metacognition indicators
+ * @param {Object} data - { alignment, contradictions, complexity, quarantined }
+ */
+function updateMetacogIndicators(data) {
+    const indicators = document.getElementById('metacogIndicators');
+    if (!indicators) {
+        initWorkflowPill();
+        return updateMetacogIndicators(data);
+    }
+
+    // Show indicators
+    indicators.classList.add('visible');
+
+    // Update alignment badge
+    const alignmentBadge = document.getElementById('alignmentBadge');
+    const alignmentValue = document.getElementById('alignmentValue');
+    if (alignmentBadge && alignmentValue && data.alignment !== undefined) {
+        alignmentBadge.style.display = 'flex';
+        alignmentValue.textContent = (data.alignment * 100).toFixed(0) + '%';
+
+        // Color based on alignment score
+        if (data.alignment < 0.3) {
+            alignmentBadge.classList.add('warning');
+        } else {
+            alignmentBadge.classList.remove('warning');
+        }
+    }
+
+    // Update contradiction badge
+    const contradictionBadge = document.getElementById('contradictionBadge');
+    const contradictionValue = document.getElementById('contradictionValue');
+    if (contradictionBadge && contradictionValue && data.contradictions !== undefined) {
+        if (data.contradictions > 0) {
+            contradictionBadge.style.display = 'flex';
+            contradictionValue.textContent = data.contradictions;
+        } else {
+            contradictionBadge.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Set the current processing mode
+ * @param {string} mode - 'fast' | 'research' | 'deep_research' | 'unbounded'
+ */
+function setProcessingMode(mode) {
+    if (MODE_TEMPLATES[mode]) {
+        currentMode = mode;
+        console.log(`📋 Processing mode set to: ${MODE_TEMPLATES[mode].name}`);
+
+        // Update any mode selector UI
+        const modeLabel = document.querySelector('.mode-selector-label');
+        if (modeLabel) {
+            modeLabel.textContent = MODE_TEMPLATES[mode].name;
+        }
+        const modeIcon = document.querySelector('.mode-selector-icon');
+        if (modeIcon) {
+            modeIcon.textContent = MODE_TEMPLATES[mode].icon;
+        }
+    }
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    initWorkflowPill();
+});
+
+// Export for testing
+if (typeof window !== 'undefined') {
+    window.ICEBURG_WORKFLOW = {
+        showWorkflowPill,
+        hideWorkflowPill,
+        updateWorkflowPill,
+        updateMetacogIndicators,
+        setProcessingMode,
+        MODE_TEMPLATES
+    };
 }
 

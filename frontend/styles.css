@@ -5472,3 +5472,269 @@ body {
         margin: 0.2rem 0;
     }
 }
+
+/* ================================================
+   AGENT WORKFLOW PILL - Phase 4 UX Enhancement
+   Shows which agents are running with pulse animation
+   ================================================ */
+
+.agent-workflow-pill {
+    position: fixed;
+    bottom: 100px; /* Above input area */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 500;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.agent-workflow-pill.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.agent-workflow-pill.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    pointer-events: none;
+}
+
+.agent-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.agent-step.active {
+    color: rgba(255, 255, 255, 1);
+}
+
+.agent-step.completed {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.agent-step-icon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.agent-step.active .agent-step-icon {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    animation: agent-pulse 1.5s ease-in-out infinite;
+}
+
+.agent-step.completed .agent-step-icon {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.agent-step.completed .agent-step-icon::after {
+    content: '✓';
+    position: absolute;
+    font-size: 6px;
+    color: var(--bg-primary);
+}
+
+.agent-step-arrow {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.625rem;
+}
+
+@keyframes agent-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* ================================================
+   METACOGNITION INDICATORS
+   Shows alignment score, contradiction count
+   ================================================ */
+
+.metacog-indicators {
+    position: fixed;
+    bottom: 140px; /* Above workflow pill */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 499;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.metacog-indicators.visible {
+    opacity: 1;
+}
+
+.metacog-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.metacog-badge.warning {
+    border-color: rgba(255, 200, 100, 0.3);
+    color: rgba(255, 200, 100, 0.9);
+}
+
+.metacog-badge-icon {
+    font-size: 0.75rem;
+}
+
+.metacog-badge-value {
+    font-weight: 500;
+}
+
+/* ================================================
+   MODE SELECTOR
+   Dropdown to choose processing mode
+   ================================================ */
+
+.mode-selector {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.mode-selector:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mode-selector-icon {
+    font-size: 0.875rem;
+}
+
+.mode-selector-label {
+    font-weight: 500;
+}
+
+.mode-selector-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background: rgba(26, 26, 26, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 180px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+}
+
+.mode-selector:hover .mode-selector-dropdown,
+.mode-selector:focus-within .mode-selector-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mode-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mode-option.selected {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.mode-option-icon {
+    font-size: 1rem;
+}
+
+.mode-option-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mode-option-name {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.mode-option-desc {
+    font-size: 0.6875rem;
+    color: var(--text-tertiary);
+}
+
+/* Mobile adjustments for workflow */
+@media (max-width: 768px) {
+    .agent-workflow-pill {
+        padding: 6px 12px;
+        gap: 6px;
+        max-width: 95%;
+    }
+    
+    .agent-step {
+        font-size: 0.6875rem;
+    }
+    
+    .agent-step-name {
+        display: none; /* Hide names on mobile, show only icons */
+    }
+    
+    .metacog-indicators {
+        bottom: 130px;
+        gap: 8px;
+    }
+    
+    .metacog-badge {
+        padding: 3px 8px;
+        font-size: 0.625rem;
+    }
+}
+
