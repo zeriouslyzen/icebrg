@@ -18,49 +18,48 @@ class TestTeacherStudentTuning:
     
     def test_prompt_evolution_trigger(self):
         """Test that prompt evolution is triggered based on performance"""
-        try:
-            from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning
-            
-            tuning = TeacherStudentTuning()
-            
-            # Simulate low performance
-            tuning.agent_performance["test_agent"] = [
-                {"success": False, "quality": 0.3},
-                {"success": False, "quality": 0.4},
-                {"success": True, "quality": 0.5},
-            ]
-            
-            # Should trigger evolution when success rate < threshold
-            should_evolve = tuning.should_evolve_prompt("test_agent")
-            
-            # With mixed performance, evolution may or may not trigger
-            assert isinstance(should_evolve, bool)
-        except ImportError:
-            pytest.skip("TeacherStudentTuning not available")
+        from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning, PerformanceFeedback
+        
+        tuning = TeacherStudentTuning()
+        
+        # Add performance feedback using the proper method
+        for i in range(5):
+            tuning.record_performance_feedback(
+                agent_id="test_agent",
+                task_type="research",
+                success=i % 2 == 0,  # 60% success rate (3/5)
+                execution_time=5.0,
+                result_quality=0.5 + (i * 0.05)
+            )
+        
+        # Should trigger evolution when success rate < threshold
+        should_evolve = tuning.should_evolve_prompt("test_agent")
+        
+        # With mixed performance, evolution may or may not trigger
+        assert isinstance(should_evolve, bool)
     
     def test_performance_analysis(self):
         """Test agent performance analysis"""
-        try:
-            from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning
-            
-            tuning = TeacherStudentTuning()
-            
-            # Add performance data
-            for i in range(10):
-                tuning.agent_performance["surveyor"] = tuning.agent_performance.get("surveyor", [])
-                tuning.agent_performance["surveyor"].append({
-                    "success": i % 2 == 0,  # 50% success rate
-                    "quality": 0.5 + (i * 0.05)
-                })
-            
-            # Analyze performance
-            analysis = tuning.analyze_agent_performance("surveyor")
-            
-            assert "success_rate" in analysis
-            assert "avg_quality" in analysis
-            assert "sample_size" in analysis
-        except ImportError:
-            pytest.skip("TeacherStudentTuning not available")
+        from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning
+        
+        tuning = TeacherStudentTuning()
+        
+        # Add performance data using proper method
+        for i in range(10):
+            tuning.record_performance_feedback(
+                agent_id="surveyor",
+                task_type="research",
+                success=i % 2 == 0,  # 50% success rate
+                execution_time=5.0,
+                result_quality=0.5 + (i * 0.05)
+            )
+        
+        # Analyze performance
+        analysis = tuning.analyze_agent_performance("surveyor")
+        
+        assert "success_rate" in analysis
+        assert "avg_quality" in analysis
+        assert "sample_size" in analysis
     
     def test_failure_pattern_analysis(self):
         """Test analysis of failure patterns"""
@@ -84,42 +83,32 @@ class TestTeacherStudentTuning:
     @pytest.mark.asyncio
     async def test_prompt_improvement_generation(self):
         """Test generation of improved prompts"""
-        try:
-            from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning
-            
-            tuning = TeacherStudentTuning()
-            
-            current_prompt = """
-            You are a research agent. Analyze the query and provide insights.
-            """
-            
-            performance_data = {
-                "success_rate": 0.4,
-                "avg_quality": 0.5,
-                "common_failures": ["timeout", "incomplete"]
-            }
-            
-            # Mock the LLM call
-            with patch('src.iceburg.agents.teacher_student_tuning.chat_complete', new_callable=AsyncMock) as mock_llm:
-                mock_llm.return_value = """
-                You are an expert research agent with enhanced capabilities.
-                When analyzing queries:
-                1. First identify the core question
-                2. Gather relevant context quickly
-                3. Provide concise, complete insights
-                Focus on efficiency to avoid timeouts.
-                """
-                
-                evolved = await tuning.evolve_agent_prompt(
-                    "test_agent",
-                    current_prompt,
-                    performance_data
-                )
-                
-                assert evolved is not None
-                assert len(evolved) > 0
-        except ImportError:
-            pytest.skip("TeacherStudentTuning not available")
+        from src.iceburg.agents.teacher_student_tuning import TeacherStudentTuning
+        
+        tuning = TeacherStudentTuning()
+        
+        current_prompt = """
+        You are a research agent. Analyze the query and provide insights.
+        """
+        
+        performance_data = {
+            "success_rate": 0.4,
+            "avg_quality": 0.5,
+            "avg_time": 5.0,
+            "sample_size": 10
+        }
+        
+        # evolve_agent_prompt is async
+        evolved = await tuning.evolve_agent_prompt(
+            "test_agent",
+            current_prompt,
+            performance_data
+        )
+        
+        assert evolved is not None
+        assert len(evolved) > 0
+        # Should contain performance optimizations
+        assert "Performance Optimizations" in evolved or evolved == current_prompt
     
     def test_improvement_expectation_calculation(self):
         """Test calculation of expected improvement from evolution"""

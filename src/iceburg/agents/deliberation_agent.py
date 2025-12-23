@@ -605,11 +605,218 @@ def apply_truth_seeking_analysis(cfg: IceburgConfig, outputs: Dict[str, Any], qu
 
 class DeliberationAgent:
     """
-    Handles deliberation and meta-analysis
+    Handles deliberation and meta-analysis.
+    
+    Provides methods for:
+    - Semantic alignment calculation
+    - Contradiction detection
+    - Reasoning complexity analysis
+    - Deliberation pauses with reflection
     """
 
     def __init__(self, cfg: IceburgConfig):
         self.cfg = cfg
+        self._embed_cache = {}
+    
+    def _calculate_semantic_alignment(self, query: str, output: str) -> float:
+        """
+        Calculate semantic alignment between query and agent output.
+        
+        Uses cosine similarity between embedding vectors.
+        Returns score from 0.0 (no alignment) to 1.0 (perfect alignment).
+        
+        NOTE: This method was restored based on evidence in COCONUT deliberation code.
+        """
+        import numpy as np
+        
+        try:
+            from ..llm import embed_texts
+            
+            # Get embeddings (use cache if available)
+            cache_key_q = hash(query[:200])
+            cache_key_o = hash(output[:200])
+            
+            if cache_key_q not in self._embed_cache:
+                self._embed_cache[cache_key_q] = np.array(embed_texts(self.cfg.embed_model, [query])[0])
+            if cache_key_o not in self._embed_cache:
+                self._embed_cache[cache_key_o] = np.array(embed_texts(self.cfg.embed_model, [output])[0])
+            
+            query_vector = self._embed_cache[cache_key_q]
+            output_vector = self._embed_cache[cache_key_o]
+            
+            # Cosine similarity
+            similarity = np.dot(query_vector, output_vector) / (
+                np.linalg.norm(query_vector) * np.linalg.norm(output_vector) + 1e-8
+            )
+            
+            return float(similarity)
+            
+        except Exception as e:
+            # Fallback: simple text overlap
+            query_words = set(query.lower().split())
+            output_words = set(output.lower().split())
+            if not query_words:
+                return 0.5
+            overlap = len(query_words & output_words) / len(query_words)
+            return overlap
+    
+    def _detect_contradictions(self, output: str) -> list:
+        """
+        Detect contradictions within a single output.
+        
+        Looks for conflicting statements, logical inconsistencies,
+        and contradictory claims.
+        
+        Returns list of detected contradiction dicts with type and confidence.
+        
+        NOTE: This method was restored based on evidence in hunt_contradictions().
+        """
+        contradictions = []
+        
+        # Split into sentences
+        sentences = [s.strip() for s in output.split('.') if s.strip()]
+        
+        # Contradiction indicator pairs
+        contradiction_pairs = [
+            ("always", "never"),
+            ("true", "false"),
+            ("can", "cannot"),
+            ("does", "does not"),
+            ("is", "is not"),
+            ("will", "will not"),
+            ("all", "none"),
+            ("every", "no"),
+            ("proven", "unproven"),
+            ("confirmed", "disproven"),
+        ]
+        
+        # Check for conflicting statements
+        for i, sent1 in enumerate(sentences):
+            sent1_lower = sent1.lower()
+            for sent2 in sentences[i+1:]:
+                sent2_lower = sent2.lower()
+                
+                for pos, neg in contradiction_pairs:
+                    # Check if one sentence has positive and another has negative
+                    if pos in sent1_lower and neg in sent2_lower:
+                        # Find common subject
+                        words1 = set(sent1_lower.split())
+                        words2 = set(sent2_lower.split())
+                        common = words1 & words2 - {"the", "a", "an", "is", "are", "was", "were"}
+                        
+                        if len(common) >= 2:  # Share meaningful words
+                            contradictions.append({
+                                "type": "logical_contradiction",
+                                "sentence1": sent1[:100],
+                                "sentence2": sent2[:100],
+                                "indicators": [pos, neg],
+                                "confidence": 0.7
+                            })
+        
+        # Check for hedging contradictions ("definitely... but maybe not")
+        hedging_indicators = ["but", "however", "although", "nevertheless", "yet"]
+        for sent in sentences:
+            sent_lower = sent.lower()
+            if any(h in sent_lower for h in hedging_indicators):
+                if "definitely" in sent_lower or "certainly" in sent_lower or "always" in sent_lower:
+                    contradictions.append({
+                        "type": "hedging_contradiction",
+                        "sentence": sent[:100],
+                        "confidence": 0.5
+                    })
+        
+        return contradictions
+    
+    def _analyze_reasoning_complexity(self, output: str) -> dict:
+        """
+        Analyze the complexity of reasoning in an output.
+        
+        Returns dict with:
+        - variance: semantic feature variance
+        - complexity: "low", "medium", or "high"
+        - depth_indicators: count of reasoning depth markers
+        
+        NOTE: This method was restored based on evidence in COCONUT vector analysis.
+        """
+        import numpy as np
+        
+        result = {
+            "variance": 0.0,
+            "complexity": "low",
+            "depth_indicators": 0,
+            "sentence_count": 0,
+            "avg_sentence_length": 0.0
+        }
+        
+        # Sentence analysis
+        sentences = [s.strip() for s in output.split('.') if s.strip()]
+        result["sentence_count"] = len(sentences)
+        
+        if sentences:
+            result["avg_sentence_length"] = sum(len(s) for s in sentences) / len(sentences)
+        
+        # Depth indicators (reasoning markers)
+        depth_markers = [
+            "therefore", "thus", "hence", "because", "since",
+            "implies", "suggests", "indicates", "demonstrates",
+            "first", "second", "third", "finally",
+            "furthermore", "moreover", "additionally",
+            "in contrast", "on the other hand", "alternatively",
+            "specifically", "particularly", "notably",
+            "if...then", "assuming", "given that",
+        ]
+        
+        output_lower = output.lower()
+        for marker in depth_markers:
+            if marker in output_lower:
+                result["depth_indicators"] += 1
+        
+        # Try vector-based complexity
+        try:
+            from ..llm import embed_texts
+            
+            if len(output) > 100:
+                embedding = np.array(embed_texts(self.cfg.embed_model, [output[:500]])[0])
+                result["variance"] = float(np.std(embedding))
+        except Exception:
+            # Fallback: word variety as proxy for complexity
+            words = output.lower().split()
+            if words:
+                result["variance"] = len(set(words)) / len(words)
+        
+        # Classify complexity
+        if result["variance"] > 0.1 or result["depth_indicators"] >= 5:
+            result["complexity"] = "high"
+        elif result["variance"] > 0.05 or result["depth_indicators"] >= 2:
+            result["complexity"] = "medium"
+        else:
+            result["complexity"] = "low"
+        
+        return result
+    
+    def add_pause(self, agent_name: str, agent_output: str, query: str, verbose: bool = False) -> str:
+        """
+        Add a deliberation pause with reflection.
+        
+        Wrapper around module-level add_deliberation_pause function.
+        """
+        return add_deliberation_pause(self.cfg, agent_name, agent_output, query, verbose)
+    
+    def detect_emergence(self, outputs: dict, query: str, verbose: bool = False) -> dict:
+        """
+        Detect emergent patterns in outputs.
+        
+        Wrapper around module-level detect_emergence function.
+        """
+        return detect_emergence(self.cfg, outputs, query, verbose)
+    
+    def hunt_contradictions(self, outputs: dict, query: str, verbose: bool = False) -> str:
+        """
+        Hunt for contradictions across multiple outputs.
+        
+        Wrapper around module-level hunt_contradictions function.
+        """
+        return hunt_contradictions(self.cfg, outputs, query, verbose)
 
 
 def run():
@@ -625,3 +832,4 @@ def create_emergent_agent():
 def emergent_field_creation():
     """Emergent field creation"""
     return {"status": "created", "field": "emergent"}
+

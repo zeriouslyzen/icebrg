@@ -30,15 +30,15 @@ class TestReflexAgent:
         # Compression should reduce length significantly
         from src.iceburg.agents.reflex_agent import ReflexAgent
         
-        with patch('src.iceburg.agents.reflex_agent.chat_complete') as mock_llm:
-            mock_llm.return_value = "Compressed: Bioelectric fields affect ion channels and cellular communication."
-            
-            agent = ReflexAgent(self.mock_cfg)
-            
-            # Test compression method exists and works
-            if hasattr(agent, '_compress_response'):
-                compressed = agent._compress_response(long_response)
-                assert len(compressed) < len(long_response)
+        # ReflexAgent takes no constructor arguments
+        agent = ReflexAgent()
+        
+        # Test compression method exists and works
+        result = agent.compress_response(long_response)
+        
+        # Compressed should be shorter than original
+        assert result.compression_ratio < 1.0
+        assert len(result.compressed) < len(result.full)
     
     def test_bullet_extraction(self):
         """Test extraction of key points as bullets"""
@@ -63,13 +63,15 @@ class TestReflexAgent:
         """Test that reflections are stored in knowledge tree"""
         from src.iceburg.agents.reflex_agent import ReflexAgent, ReflexResponse
         
-        agent = ReflexAgent(self.mock_cfg)
+        # ReflexAgent takes no constructor arguments
+        agent = ReflexAgent()
         
-        # Create a response with reflections
+        # Create a response with reflections using actual field names
         response = ReflexResponse(
-            preview_bullets=["Point 1", "Point 2"],
-            compressed_response="Compressed version",
-            full_response="Full long response",
+            preview={"core_insight": "Point 1", "actionable_guidance": "Point 2", "key_context": "Point 3"},
+            compressed="Compressed version",
+            full="Full long response",
+            compression_ratio=0.5,
             reflections=[
                 {"type": "breakthrough", "content": "Novel insight about fields"},
                 {"type": "synthesis", "content": "Cross-domain connection found"}
@@ -135,15 +137,17 @@ class TestReflexResponse:
         try:
             from src.iceburg.agents.reflex_agent import ReflexResponse
             
+            # Use actual field names: preview (Dict), full, compressed, compression_ratio, reflections
             response = ReflexResponse(
-                preview_bullets=["Point 1", "Point 2", "Point 3"],
-                compressed_response="Short version",
-                full_response="Full long version with all details",
+                preview={"core_insight": "Point 1", "actionable_guidance": "Point 2", "key_context": "Point 3"},
+                compressed="Short version",
+                full="Full long version with all details",
+                compression_ratio=0.5,
                 reflections=[{"type": "insight", "content": "Key insight"}]
             )
             
-            assert len(response.preview_bullets) == 3
-            assert len(response.compressed_response) < len(response.full_response)
+            assert len(response.preview) == 3
+            assert len(response.compressed) < len(response.full)
             assert len(response.reflections) == 1
         except ImportError:
             pytest.skip("ReflexResponse not available")
@@ -153,10 +157,12 @@ class TestReflexResponse:
         try:
             from src.iceburg.agents.reflex_agent import ReflexResponse
             
+            # Use actual field names
             response = ReflexResponse(
-                preview_bullets=[],
-                compressed_response="",
-                full_response="Some response",
+                preview={},
+                compressed="",
+                full="Some response",
+                compression_ratio=1.0,
                 reflections=[]
             )
             
