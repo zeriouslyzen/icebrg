@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "benchmark": "ARC-AGI",
+    "version": "1.0",
+    "timestamp": "2025-11-01T01:11:17.141294",
+    "total_tasks": 10,
+    "system": "ICEBURG"
+  },
+  "tasks": [
+    {
+      "task_id": "arc_001",
+      "type": "pattern_completion",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 0.8417720794677734,
+      "timestamp": "2025-11-01T01:11:17.983073"
+    },
+    {
+      "task_id": "arc_002",
+      "type": "abstract_transformation",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 3.504753112792969e-05,
+      "timestamp": "2025-11-01T01:11:18.484335"
+    },
+    {
+      "task_id": "arc_003",
+      "type": "spatial_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 6.914138793945312e-05,
+      "timestamp": "2025-11-01T01:11:18.986023"
+    },
+    {
+      "task_id": "arc_004",
+      "type": "novel_generalization",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 2.4080276489257812e-05,
+      "timestamp": "2025-11-01T01:11:19.487322"
+    },
+    {
+      "task_id": "arc_005",
+      "type": "multi_step_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 5.626678466796875e-05,
+      "timestamp": "2025-11-01T01:11:19.988730"
+    },
+    {
+      "task_id": "arc_006",
+      "type": "compositional_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 3.790855407714844e-05,
+      "timestamp": "2025-11-01T01:11:20.490028"
+    },
+    {
+      "task_id": "arc_007",
+      "type": "analogical_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 4.506111145019531e-05,
+      "timestamp": "2025-11-01T01:11:20.991364"
+    },
+    {
+      "task_id": "arc_008",
+      "type": "counterfactual_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 3.814697265625e-05,
+      "timestamp": "2025-11-01T01:11:21.492638"
+    },
+    {
+      "task_id": "arc_009",
+      "type": "hierarchical_reasoning",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 4.982948303222656e-05,
+      "timestamp": "2025-11-01T01:11:21.993921"
+    },
+    {
+      "task_id": "arc_010",
+      "type": "emergent_pattern",
+      "error": "iceberg_protocol() got an unexpected keyword argument 'force_agi'",
+      "duration": 0.00010800361633300781,
+      "timestamp": "2025-11-01T01:11:22.497178"
+    }
+  ],
+  "summary": {
+    "total_tasks": 10,
+    "completed_tasks": 0,
+    "successful_tasks": 0,
+    "average_score": 0.0,
+    "total_score": 0.0,
+    "max_score": 0.0,
+    "min_score": 0.0,
+    "average_duration": 0.08422355651855469,
+    "total_duration": 0.8422355651855469,
+    "success_rate": 0.0
+  }
+}

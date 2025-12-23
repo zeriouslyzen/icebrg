@@ -1,0 +1,201 @@
+{
+  "suite_name": "ICEBURG 2.0 Comprehensive Benchmarks",
+  "timestamp": 1762554844.5328069,
+  "summary": {
+    "total_tests": 15,
+    "successful": 15,
+    "failed": 0,
+    "success_rate": 1.0,
+    "average_accuracy": 0.9333333333333333,
+    "average_execution_time": 0.00011267662048339844
+  },
+  "results": [
+    {
+      "test_name": "MMLU-style: What is the capital of France?...",
+      "success": true,
+      "execution_time": 0.00023293495178222656,
+      "accuracy": 1.0,
+      "metrics": {
+        "question": "What is the capital of France?",
+        "expected": "Paris"
+      },
+      "error": null,
+      "timestamp": 1762554844.5330508
+    },
+    {
+      "test_name": "MMLU-style: What is 2+2?...",
+      "success": true,
+      "execution_time": 0.00011181831359863281,
+      "accuracy": 1.0,
+      "metrics": {
+        "question": "What is 2+2?",
+        "expected": "4"
+      },
+      "error": null,
+      "timestamp": 1762554844.533171
+    },
+    {
+      "test_name": "MMLU-style: What is the speed of light?...",
+      "success": true,
+      "execution_time": 9.584426879882812e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "question": "What is the speed of light?",
+        "expected": "299792458 meters per second"
+      },
+      "error": null,
+      "timestamp": 1762554844.5332701
+    },
+    {
+      "test_name": "Truth-Finding: What suppressed knowledge exists about q...",
+      "success": true,
+      "execution_time": 9.298324584960938e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "methodology_steps": 6,
+        "insights_count": 2
+      },
+      "error": null,
+      "timestamp": 1762554844.5333672
+    },
+    {
+      "test_name": "Truth-Finding: How can Enhanced Deliberation reveal hid...",
+      "success": true,
+      "execution_time": 9.179115295410156e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "methodology_steps": 6,
+        "insights_count": 2
+      },
+      "error": null,
+      "timestamp": 1762554844.533461
+    },
+    {
+      "test_name": "Truth-Finding: What contradictions exist in AI developm...",
+      "success": true,
+      "execution_time": 9.012222290039062e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "methodology_steps": 6,
+        "insights_count": 2
+      },
+      "error": null,
+      "timestamp": 1762554844.533553
+    },
+    {
+      "test_name": "Suppression Detection: doc1",
+      "success": true,
+      "execution_time": 3.1948089599609375e-05,
+      "accuracy": 0.0,
+      "metrics": {
+        "detected": false,
+        "expected": true,
+        "score": 0.04285714285714286
+      },
+      "error": null,
+      "timestamp": 1762554844.533589
+    },
+    {
+      "test_name": "Suppression Detection: doc2",
+      "success": true,
+      "execution_time": 7.867813110351562e-06,
+      "accuracy": 1.0,
+      "metrics": {
+        "detected": false,
+        "expected": false,
+        "score": 0.04285714285714286
+      },
+      "error": null,
+      "timestamp": 1762554844.533599
+    },
+    {
+      "test_name": "Swarming: How does swarming create better answers?...",
+      "success": true,
+      "execution_time": 5.888938903808594e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "agent_count": 3,
+        "result_count": 3,
+        "synthesized": true
+      },
+      "error": null,
+      "timestamp": 1762554844.533663
+    },
+    {
+      "test_name": "Swarming: What are the benefits of multi-agent col...",
+      "success": true,
+      "execution_time": 5.698204040527344e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "agent_count": 3,
+        "result_count": 3,
+        "synthesized": true
+      },
+      "error": null,
+      "timestamp": 1762554844.5337222
+    },
+    {
+      "test_name": "Device Generation: quantum_computer",
+      "success": true,
+      "execution_time": 0.0003108978271484375,
+      "accuracy": 1.0,
+      "metrics": {
+        "has_specifications": true,
+        "has_schematics": true,
+        "has_code": true
+      },
+      "error": null,
+      "timestamp": 1762554844.5340369
+    },
+    {
+      "test_name": "Device Generation: energy_device",
+      "success": true,
+      "execution_time": 1.3113021850585938e-05,
+      "accuracy": 1.0,
+      "metrics": {
+        "has_specifications": true,
+        "has_schematics": true,
+        "has_code": true
+      },
+      "error": null,
+      "timestamp": 1762554844.5340521
+    },
+    {
+      "test_name": "System Integration: Full Query Processing",
+      "success": true,
+      "execution_time": 0.00012111663818359375,
+      "accuracy": 1.0,
+      "metrics": {
+        "integrated": false,
+        "has_methodology": true,
+        "has_swarm": true,
+        "has_insights": true
+      },
+      "error": null,
+      "timestamp": 1762554844.534176
+    },
+    {
+      "test_name": "Performance: Latency",
+      "success": true,
+      "execution_time": 0.00010085105895996094,
+      "accuracy": 1.0,
+      "metrics": {
+        "latency_seconds": 0.00010085105895996094
+      },
+      "error": null,
+      "timestamp": 1762554844.5342798
+    },
+    {
+      "test_name": "Performance: Throughput",
+      "success": true,
+      "execution_time": 0.00027298927307128906,
+      "accuracy": 1.0,
+      "metrics": {
+        "throughput_qps": 10989.442794759825,
+        "queries_processed": 3
+      },
+      "error": null,
+      "timestamp": 1762554844.534555
+    }
+  ]
+}
