@@ -409,146 +409,147 @@
               style="margin-left: auto; font-size: 0.6rem; background: var(--accent-primary); color: var(--bg-primary); padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">NEW</span>
           </a>
         </div>
+      </aside>
 
-        <!-- Main Content -->
-        <div class="main-wrapper">
-          <header class="app-header">
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-              <div class="pulsing-ball-icon"></div>
-            </button>
-            <div class="header-content">
-              <h1 class="app-title">ICEBERG</h1>
-              <p class="app-subtitle">Deep Knowledge Decoding</p>
+      <!-- Main Content -->
+      <div class="main-wrapper">
+        <header class="app-header">
+          <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+          <div class="header-content">
+            <h1 class="app-title">ICEBERG</h1>
+            <p class="app-subtitle">Deep Knowledge Decoding</p>
+          </div>
+          <a href="/encyclopedia.html" class="encyclopedia-link" aria-label="Celestial Encyclopedia"
+            title="Celestial Encyclopedia"
+            style="margin-right: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.9rem;">Encyclopedia</span>
+          </a>
+          <a href="/wiki.html" class="wiki-link" aria-label="Intelligence Wiki" title="Intelligence Wiki"
+            style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.9rem;">Intelligence Wiki</span>
+          </a>
+
+          <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+        </header>
+
+        <main class="app-main">
+          <div class="controls-panel" id="controlsPanel">
+            <div class="control-group">
+              <label class="control-label">Mode</label>
+              <select class="control-select" id="modeSelect"
+                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
+                <option value="fast">Fast (Chat)</option>
+                <option value="research" selected>Research</option>
+                <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep
+                  Research
+                  (Coming Soon)</option>
+                <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded
+                  (Coming
+                  Soon)</option>
+                <option value="chat">Chat (Legacy)</option>
+                <option value="web_research">Research (Web)</option>
+                <option value="local_rag">Local (Code/Docs)</option>
+                <option value="hybrid">Hybrid (Web + Local)</option>
+                <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
+                  (Coming Soon)</option>
+                <option value="truth">Truth Finding</option>
+                <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
+                </option>
+                <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge
+                  (Coming Soon)</option>
+                <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
+                  Astro-Physiology (Coming Soon)</option>
+                <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction
+                  Lab (Coming Soon)</option>
+              </select>
             </div>
-            <a href="/encyclopedia.html" class="encyclopedia-link" aria-label="Celestial Encyclopedia"
-              title="Celestial Encyclopedia"
-              style="margin-right: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 0.9rem;">Encyclopedia</span>
-            </a>
-            <a href="/wiki.html" class="wiki-link" aria-label="Intelligence Wiki" title="Intelligence Wiki"
-              style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 0.9rem;">Intelligence Wiki</span>
-            </a>
-
-            <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
-              <div class="pulsing-ball-icon"></div>
-            </button>
-          </header>
-
-          <main class="app-main">
-            <div class="controls-panel" id="controlsPanel">
-              <div class="control-group">
-                <label class="control-label">Mode</label>
-                <select class="control-select" id="modeSelect"
-                  onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
-                  <option value="fast">Fast (Chat)</option>
-                  <option value="research" selected>Research</option>
-                  <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep
-                    Research
-                    (Coming Soon)</option>
-                  <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded
-                    (Coming
-                    Soon)</option>
-                  <option value="chat">Chat (Legacy)</option>
-                  <option value="web_research">Research (Web)</option>
-                  <option value="local_rag">Local (Code/Docs)</option>
-                  <option value="hybrid">Hybrid (Web + Local)</option>
-                  <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
-                    (Coming Soon)</option>
-                  <option value="truth">Truth Finding</option>
-                  <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
-                  </option>
-                  <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge
-                    (Coming Soon)</option>
-                  <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
-                    Astro-Physiology (Coming Soon)</option>
-                  <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction
-                    Lab (Coming Soon)</option>
-                </select>
-              </div>
-              <div class="control-group" id="agentGroup">
-                <label class="control-label">Agent</label>
-                <select class="control-select" id="agentSelect">
-                  <option value="auto">Auto (Full Protocol)</option>
-                  <option value="secretary" selected>Secretary (Chat Assistant)</option>
-                  <option value="dissident">Dissident</option>
-                  <option value="synthesist">Synthesist</option>
-                  <option value="oracle">Oracle</option>
-                  <option value="archaeologist">Archaeologist</option>
-                  <option value="supervisor">Supervisor</option>
-                  <option value="scribe">Scribe</option>
-                  <option value="weaver">Weaver</option>
-                  <option value="scrutineer">Scrutineer</option>
-                  <option value="swarm">Swarm</option>
-                  <option value="ide">IDE Agent</option>
-                </select>
-                <div class="agent-display" id="agentDisplay" style="display: none;">
-                  <span class="agent-display-label">Active Agent:</span>
-                  <span class="agent-display-value" id="agentDisplayValue">Secretary</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="chat-container" id="chatContainer">
-              <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
-              <div class="welcome-message">
-                <p>Iceberg Research Interface</p>
-                <p class="welcome-subtitle">Multi-agent truth-finding system in active development. Available modes:
-                  Fast
-                  Chat, Web Research, Local RAG, Hybrid Search, and Truth Finding. Type a question to begin.</p>
+            <div class="control-group" id="agentGroup">
+              <label class="control-label">Agent</label>
+              <select class="control-select" id="agentSelect">
+                <option value="auto">Auto (Full Protocol)</option>
+                <option value="secretary" selected>Secretary (Chat Assistant)</option>
+                <option value="dissident">Dissident</option>
+                <option value="synthesist">Synthesist</option>
+                <option value="oracle">Oracle</option>
+                <option value="archaeologist">Archaeologist</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="scribe">Scribe</option>
+                <option value="weaver">Weaver</option>
+                <option value="scrutineer">Scrutineer</option>
+                <option value="swarm">Swarm</option>
+                <option value="ide">IDE Agent</option>
+              </select>
+              <div class="agent-display" id="agentDisplay" style="display: none;">
+                <span class="agent-display-label">Active Agent:</span>
+                <span class="agent-display-value" id="agentDisplayValue">Secretary</span>
               </div>
             </div>
+          </div>
 
-            <!-- Advanced Visualization Panels - REMOVED to reduce complexity -->
-            <!-- Charts are now included in main answer format -->
-
-            <div class="input-container">
-              <div class="prompt-carousel" id="promptCarousel">
-                <div class="prompt-carousel-content" id="promptCarouselContent">
-                  <!-- Prompts will be dynamically inserted here -->
-                </div>
-                <button class="prompt-carousel-prev" id="promptCarouselPrev" aria-label="Previous prompt">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                  </svg>
-                </button>
-                <button class="prompt-carousel-next" id="promptCarouselNext" aria-label="Next prompt">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                  </svg>
-                </button>
-              </div>
-              <div class="input-wrapper">
-                <button class="attach-button" id="attachButton" aria-label="Attach file" title="Attach file">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M13.5 5.5L6.5 12.5C5.67157 12.5 5 11.8284 5 11C5 10.1716 5.67157 9.5 6.5 9.5L12.5 3.5"
-                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-                <button class="voice-button" id="voiceButton" aria-label="Voice input" title="Voice input">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path
-                      d="M9 2L11 2M9 18L11 18M2 9L6 9M14 9L18 9M6 6L4 4M16 4L14 6M14 14L16 16M4 16L6 14M10 5C7.79086 5 6 6.79086 6 9V11C6 13.2091 7.79086 15 10 15C12.2091 15 14 13.2091 14 11V9C14 6.79086 12.2091 5 10 5Z"
-                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-                <input type="text" class="input-field" id="queryInput" placeholder="Ask Iceberg anything..."
-                  autocomplete="off" spellcheck="false">
-                <input type="file" id="fileInput" multiple
-                  accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" style="display: none;">
-                <button class="send-button" id="sendButton" aria-label="Send message">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-              </div>
-              <div class="attached-files" id="attachedFiles"></div>
+          <div class="chat-container" id="chatContainer">
+            <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
+            <div class="welcome-message">
+              <p>Iceberg Research Interface</p>
+              <p class="welcome-subtitle">Multi-agent truth-finding system in active development. Available modes:
+                Fast
+                Chat, Web Research, Local RAG, Hybrid Search, and Truth Finding. Type a question to begin.</p>
             </div>
-          </main>
-        </div>
+          </div>
+
+          <!-- Advanced Visualization Panels - REMOVED to reduce complexity -->
+          <!-- Charts are now included in main answer format -->
+
+          <div class="input-container">
+            <div class="prompt-carousel" id="promptCarousel">
+              <div class="prompt-carousel-content" id="promptCarouselContent">
+                <!-- Prompts will be dynamically inserted here -->
+              </div>
+              <button class="prompt-carousel-prev" id="promptCarouselPrev" aria-label="Previous prompt">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="prompt-carousel-next" id="promptCarouselNext" aria-label="Next prompt">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="input-wrapper">
+              <button class="attach-button" id="attachButton" aria-label="Attach file" title="Attach file">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M13.5 5.5L6.5 12.5C5.67157 12.5 5 11.8284 5 11C5 10.1716 5.67157 9.5 6.5 9.5L12.5 3.5"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="voice-button" id="voiceButton" aria-label="Voice input" title="Voice input">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M9 2L11 2M9 18L11 18M2 9L6 9M14 9L18 9M6 6L4 4M16 4L14 6M14 14L16 16M4 16L6 14M10 5C7.79086 5 6 6.79086 6 9V11C6 13.2091 7.79086 15 10 15C12.2091 15 14 13.2091 14 11V9C14 6.79086 12.2091 5 10 5Z"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <input type="text" class="input-field" id="queryInput" placeholder="Ask Iceberg anything..."
+                autocomplete="off" spellcheck="false">
+              <input type="file" id="fileInput" multiple
+                accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" style="display: none;">
+              <button class="send-button" id="sendButton" aria-label="Send message">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="attached-files" id="attachedFiles"></div>
+          </div>
+        </main>
+      </div>
     </div>
 
     <!-- Settings Panel -->
