@@ -203,4 +203,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Built with ❤️ for truth-seekers and practitioners of The Nine Arts.**
+**Built with ❤️ for truth-seekers and practitioners of The Nine Arts.**# Study page rendering fixes deployed
