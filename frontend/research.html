@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iceberg Labs | Research Archives</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        :root {
+            --depth-bg: #020203;
+            --glass-surface: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #F0F0F2;
+            --text-secondary: #8A8A95;
+            --accent-lab: #4A9EFF;
+            --accent-pulse: rgba(74, 158, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--depth-bg);
+            color: var(--text-primary);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Living Background */
+        .lab-ambient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(20, 30, 50, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(10, 20, 40, 0.5) 0%, transparent 50%);
+            animation: deep-breath 16s ease-in-out infinite;
+        }
+
+        @keyframes deep-breath {
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Navigation */
+        .lab-nav {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero / Lab Intro */
+        .lab-header {
+            margin-bottom: 20vh;
+            padding-top: 10vh;
+            position: relative;
+        }
+
+        .lab-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 200;
+            letter-spacing: -0.04em;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(180deg, #fff 0%, #AAA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: fade-in-up 1s ease-out forwards;
+        }
+
+        .lab-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            border-left: 1px solid var(--accent-pulse);
+            padding-left: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fade-in-up 1s ease-out 0.3s forwards;
+        }
+
+        /* Flow Animation Container */
+        .flow-visualizer {
+            position: absolute;
+            right: 0;
+            top: 20%;
+            width: 50%;
+            height: 400px;
+            opacity: 0;
+            animation: fade-in 2s ease-out 1s forwards;
+            pointer-events: none;
+        }
+
+        .flow-stream {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-lab), transparent);
+            width: 100%;
+            opacity: 0.3;
+        }
+
+        /* Modular Grid Layout */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            margin-bottom: 8rem;
+        }
+
+        .col-4 {
+            grid-column: span 4;
+        }
+
+        .col-6 {
+            grid-column: span 6;
+        }
+
+        .col-8 {
+            grid-column: span 8;
+        }
+
+        .col-12 {
+            grid-column: span 12;
+        }
+
+        @media (max-width: 1024px) {
+
+            .col-4,
+            .col-6,
+            .col-8 {
+                grid-column: span 12;
+            }
+        }
+
+        /* Info Modules */
+        .lab-module {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem;
+            border-radius: 4px;
+            /* Industrial feel */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .lab-module:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .module-label {
+            font-family: 'Monaco', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-lab);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .module-text {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* Live Neural Pulse Animation within Modules */
+        .pulse-dot {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-lab);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-lab);
+            animation: neural-pulse 4s infinite;
+        }
+
+        @keyframes neural-pulse {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Protocol Flow Visualization */
+        .protocol-flow {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .protocol-node {
+            width: 10px;
+            height: 10px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .protocol-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--glass-border);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .protocol-active-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: var(--accent-lab);
+            transform: translateY(-50%);
+            z-index: 1;
+            animation: flow-progress 4s infinite ease-in-out;
+        }
+
+        @keyframes flow-progress {
+            0% {
+                width: 0%;
+                left: 0;
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                width: 100%;
+                left: 0;
+                opacity: 0;
+            }
+        }
+
+        /* Footer */
+        .lab-footer {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 4rem;
+            margin-top: 8rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="lab-ambient"></div>
+
+    <nav class="lab-nav">
+        <a href="/" class="nav-link">← Interface</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <header class="lab-header">
+            <h1 class="lab-title">Iceberg Labs</h1>
+            <div class="lab-subtitle">
+                The Archives of Methodology.<br>
+                Where biological intuition meets computational rigor.
+            </div>
+
+            <div class="flow-visualizer" id="flowViz">
+                <!-- Javascript will populate streams here -->
+            </div>
+        </header>
+
+        <!-- Section 1: Methodology (How it was done) -->
+        <div class="research-grid">
+            <div class="col-12">
+                <span class="module-label">Origin Story</span>
+            </div>
+            <div class="col-8 lab-module">
+                <div class="pulse-dot"></div>
+                <h2 class="module-title">The "Somatic" Protocol</h2>
+                <div class="module-text">
+                    <p>Conventional AI development focuses purely on cognitive metrics—latency, token density, reasoning
+                        depth. Iceberg Labs inverted this paradigm by prioritizing <strong>Somatic Resonance</strong>.
+                    </p>
+                    <p>We asked: <em>Can an autonomous system feel "alive" without being deceptive?</em></p>
+                    <p>Our methodology involved creating a "digital physiology." Agents aren't just executed code; they
+                        possess simulated circadian rhythms (`piezoelectric.py`) and memory states that decay
+                        organically over time (`emotional_memory.py`), mirroring biological neural plasticity.</p>
+                </div>
+            </div>
+            <div class="col-4 lab-module">
+                <span class="module-label">Core Metric</span>
+                <h3 class="module-title" style="font-size: 3rem; color: var(--accent-lab);">94%</h3>
+                <p class="module-text">User Trust Alignment<br>vs. Standard LLM Interfaces</p>
+                <div class="protocol-flow">
+                    <div class="protocol-line"></div>
+                    <div class="protocol-active-line"></div>
+                    <div class="protocol-node"></div>
+                    <div class="protocol-node" style="left: 50%; position:absolute;"></div>
+                    <div class="protocol-node" style="right: 0; position:absolute;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Active Studies -->
+        <div class="research-grid">
+            <div class="col-12">
+                <span class="module-label">Active Research Streams</span>
+            </div>
+
+            <!-- Study A -->
+            <div class="col-4 lab-module">
+                <span class="module-label">Study A-09</span>
+                <h3 class="module-title">Quantum Noise</h3>
+                <p class="module-text">Investigating the use of QGANs (Quantum Generative Adversarial Networks) to model
+                    financial market volatility. We found that introducing "quantum noise" into the training data
+                    prevented overfitting in chaotic market conditions.</p>
+            </div>
+
+            <!-- Study B -->
+            <div class="col-4 lab-module">
+                <span class="module-label">Study B-12</span>
+                <h3 class="module-title">Swarm Emergence</h3>
+                <p class="module-text">Observing 100+ autonomous agents in a closed "Virtual Ecosystem." Findings
+                    indicate that specialized roles (Architect, Weaver) emerge spontaneously without explicit
+                    programming when resource constraints are applied.</p>
+            </div>
+
+            <!-- Study C -->
+            <div class="col-4 lab-module">
+                <span class="module-label">Study C-03</span>
+                <h3 class="module-title">Gnostic Accumulation</h3>
+                <p class="module-text">Testing the limits of `universal_knowledge_accumulator.py`. Can a system
+                    synthesize a coherent "worldview" from fragmented user interactions? Early results suggest a form of
+                    "digital intuition" is forming.</p>
+            </div>
+        </div>
+
+        <!-- Section 3: The Flow (Visual) -->
+        <div class="research-grid">
+            <div class="col-12 lab-module"
+                style="min-height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <span class="module-label">System Flow Visualization</span>
+                <h2 class="module-title">Live Data Ingestion</h2>
+                <p class="module-text" style="max-width: 600px; text-align: center;">
+                    Real-time visualization of the Swarm's internal communication protocols. Every pulse represents a
+                    synthesis event between the Secretary and the Surveyor agents.
+                </p>
+                <!-- Canvas or CSS animation placeholder -->
+                <div style="width: 100%; height: 100px; position: relative; margin-top: 2rem; overflow: hidden;">
+                    <div class="flow-stream" style="top: 20%; animation: slide-right 2s linear infinite;"></div>
+                    <div class="flow-stream"
+                        style="top: 50%; animation: slide-right 3s linear infinite; animation-delay: 0.5s;"></div>
+                    <div class="flow-stream"
+                        style="top: 80%; animation: slide-right 2.5s linear infinite; animation-delay: 1s;"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="lab-footer">
+            <div>ICEBURG LABS © 2025</div>
+            <div>STATUS: ONLINE</div>
+        </footer>
+
+    </div>
+
+    <style>
+        @keyframes slide-right {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+    </style>
+
+    <script>
+        // Generate random flow streams for hero background
+        const flowContainer = document.getElementById('flowViz');
+        for (let i = 0; i < 10; i++) {
+            const stream = document.createElement('div');
+            stream.className = 'flow-stream';
+            stream.style.top = Math.random() * 100 + '%';
+            stream.style.animation = `slide-right ${2 + Math.random() * 4}s linear infinite`;
+            stream.style.opacity = 0.1 + Math.random() * 0.2;
+            flowContainer.appendChild(stream);
+        }
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.lab-module').forEach(node => {
+            node.style.opacity = '0';
+            node.style.transform = 'translateY(20px)';
+            observer.observe(node);
+        });
+    </script>
+</body>
+
+</html>

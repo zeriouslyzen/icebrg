@@ -25,7 +25,8 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         encyclopedia: resolve(__dirname, 'encyclopedia.html'),
         wiki: resolve(__dirname, 'wiki.html'),
-        features: resolve(__dirname, 'features.html')
+        features: resolve(__dirname, 'features.html'),
+        research: resolve(__dirname, 'research.html')
       }
     }
   },
