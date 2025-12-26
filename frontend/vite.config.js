@@ -9,9 +9,10 @@ export default defineConfig({
     strictPort: false,
     open: false, // Don't auto-open browser
     cors: true, // Enable CORS
-    // HMR will automatically use the request origin, so it works for both localhost and network access
-    hmr: {
-      clientPort: 3000 // Use the same port for HMR
+    // HMR disabled to prevent constant refreshing during development
+    hmr: false,
+    watch: {
+      ignored: ['**/*.md', '**/node_modules/**'] // Ignore markdown files too
     }
   },
   build: {
@@ -22,7 +23,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        encyclopedia: resolve(__dirname, 'encyclopedia.html')
+        encyclopedia: resolve(__dirname, 'encyclopedia.html'),
+        wiki: resolve(__dirname, 'wiki.html'),
+        features: resolve(__dirname, 'features.html')
       }
     }
   },
