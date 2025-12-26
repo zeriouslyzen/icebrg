@@ -34,6 +34,22 @@
       "destination": "/encyclopedia.html"
     },
     {
+      "source": "/study.html",
+      "destination": "/study.html"
+    },
+    {
+      "source": "/research.html",
+      "destination": "/research.html"
+    },
+    {
+      "source": "/features.html",
+      "destination": "/features.html"
+    },
+    {
+      "source": "/wiki.html",
+      "destination": "/wiki.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
