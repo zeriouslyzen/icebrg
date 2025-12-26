@@ -44,6 +44,31 @@
   </script>
 
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Mobile-specific styling for header buttons */
+    @media (max-width: 600px) {
+
+      .encyclopedia-link,
+      .wiki-link {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.7rem !important;
+        margin-right: 0.3rem !important;
+      }
+
+      .encyclopedia-link span,
+      .wiki-link span {
+        font-size: 0.7rem !important;
+      }
+
+      .app-header {
+        gap: 0.25rem;
+      }
+
+      .header-content {
+        margin-right: auto;
+      }
+    }
+  </style>
   <!-- Syntax highlighting and math rendering -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
