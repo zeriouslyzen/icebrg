@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications | ICEBURG Intelligence</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        :root {
+            --depth-bg: #030304;
+            --glass-surface: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text-primary: #EEEEEF;
+            --text-secondary: #888890;
+            --accent-subtle: rgba(255, 255, 255, 0.1);
+            --glow-pulse: 0 0 40px rgba(64, 128, 255, 0.03);
+        }
+
+        body {
+            background-color: var(--depth-bg);
+            color: var(--text-primary);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        .ambient-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(40, 40, 50, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(20, 20, 30, 0.4) 0%, transparent 40%);
+            animation: breathe 12s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header / Somatic Intro */
+        .resonance-header {
+            margin-bottom: 25vh;
+            padding-top: 10vh;
+            position: relative;
+        }
+
+        .resonance-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            margin: 0 0 1.5rem 0;
+            background: linear-gradient(180deg, #fff 0%, #AAA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: fade-in-up 1s ease-out forwards;
+        }
+
+        .resonance-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            border-left: 1px solid var(--accent-subtle);
+            padding-left: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fade-in-up 1s ease-out 0.3s forwards;
+            line-height: 1.6;
+        }
+
+        /* Nav */
+        .interface-nav {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* The Scales (Tiers) */
+        .scale-section {
+            margin-bottom: 20vh;
+            position: relative;
+        }
+
+        .scale-marker {
+            font-family: 'Cinzel', serif;
+            /* Use serif for gravitas if available, fallbacks handled */
+            font-size: 0.8rem;
+            letter-spacing: 0.3em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.6;
+        }
+
+        .scale-title {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1px;
+            /* Gap for border effect */
+            background: var(--glass-border);
+            /* Grid lines color */
+            border: 1px solid var(--glass-border);
+        }
+
+        .capability-node {
+            background: #050505;
+            padding: 3rem 2rem;
+            transition: background 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-node:hover {
+            background: #080808;
+        }
+
+        .node-icon-area {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            height: 24px;
+            width: 24px;
+            color: var(--text-primary);
+        }
+
+        .node-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .node-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .node-meta {
+            font-family: 'Monaco', monospace;
+            font-size: 0.7rem;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .resonance-header {
+                margin-bottom: 15vh;
+            }
+
+            .resonance-title {
+                font-size: 2.5rem;
+            }
+
+            .grid-layout {
+                grid-template-columns: 1fr;
+                border: none;
+                background: transparent;
+                gap: 1rem;
+            }
+
+            .capability-node {
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                background: rgba(5, 5, 5, 0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-field"></div>
+
+    <nav class="interface-nav">
+        <a href="/" class="nav-link">← Interface</a>
+    </nav>
+
+    <div class="container">
+
+        <header class="resonance-header">
+            <h1 class="resonance-title">Applied Intelligence</h1>
+            <div class="resonance-subtitle">
+                A convergence of biological intent and computational synthesis.<br>
+                Deploying autonomous systems across Personal, Global, and Community scales.
+            </div>
+        </header>
+
+        <!-- Scale I: Personal -->
+        <section class="scale-section">
+            <span class="scale-marker">SCALE I</span>
+            <h2 class="scale-title">
+                <span>Personal Augmentation</span>
+                <span style="font-size: 0.8rem; opacity: 0.5; font-family: monospace;">N=1</span>
+            </h2>
+
+            <div class="grid-layout">
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="22"></line>
+                            <line x1="8" y1="22" x2="16" y2="22"></line>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Secretary Interface</h3>
+                    <p class="node-desc">Professional-grade voice synthesis operating at near-zero latency. Manages
+                        scheduling, synthesis, and executive function with high-trust VAD protocols.</p>
+                    <div class="node-meta"><span>secretary.py</span> <span>Voice V2</span></div>
+                </article>
+
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Emotional Persistence</h3>
+                    <p class="node-desc">Context retention engine that tags memories with emotional weight. Understands
+                        shifts in user sentiment across extended temporal scales.</p>
+                    <div class="node-meta"><span>emotional_memory.py</span> <span>RAG</span></div>
+                </article>
+
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Bio-Digital Sync</h3>
+                    <p class="node-desc">Direct physiological feedback loop via piezoelectric sensors. Harmonizes
+                        computational output with biological rhythms to reduce cognitive load.</p>
+                    <div class="node-meta"><span>piezoelectric.py</span> <span>Somatic</span></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Scale II: Global -->
+        <section class="scale-section">
+            <span class="scale-marker">SCALE II</span>
+            <h2 class="scale-title">
+                <span>Global Synchronization</span>
+                <span style="font-size: 0.8rem; opacity: 0.5; font-family: monospace;">N=EARTH</span>
+            </h2>
+
+            <div class="grid-layout">
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Truth Finding</h3>
+                    <p class="node-desc">Autonomous suppression detection algorithms. Scans global data streams to
+                        identify buried truths and uncorrelated anomalies in the information landscape.</p>
+                    <div class="node-meta"><span>suppression.py</span> <span>Analysis</span></div>
+                </article>
+
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Quantum Modeling</h3>
+                    <p class="node-desc">Generative Adversarial Networks (QGANs) synthesizing financial market data for
+                        high-fidelity portfolio optimization and predictive modeling.</p>
+                    <div class="node-meta"><span>qgan.py</span> <span>Finance</span></div>
+                </article>
+
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Pattern Synthesis</h3>
+                    <p class="node-desc">Recursive celestial analysis identifying emerging technological trends before
+                        they saturate mainstream discourse.</p>
+                    <div class="node-meta"><span>synthesis.py</span> <span>Trend</span></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Scale III: Comminity -->
+        <section class="scale-section">
+            <span class="scale-marker">SCALE III</span>
+            <h2 class="scale-title">
+                <span>Community Evolution</span>
+                <span style="font-size: 0.8rem; opacity: 0.5; font-family: monospace;">N=ALL</span>
+            </h2>
+
+            <div class="grid-layout">
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Swarm Architecture</h3>
+                    <p class="node-desc">Self-organizing agent clusters (Architect, Weaver, Scrutineer) that evolve to
+                        solve complex engineering challenges requested by the community.</p>
+                    <div class="node-meta"><span>swarm.py</span> <span>Orchestration</span></div>
+                </article>
+
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Universal Gnosis</h3>
+                    <p class="node-desc">A shared knowledge accumulation layer. Automatically highlights novel discovery
+                        breakthroughs and synthesizes insights from every interaction.</p>
+                    <div class="node-meta"><span>gnosis.py</span> <span>Knowledge</span></div>
+                </article>
+                <article class="capability-node">
+                    <div class="node-icon-area">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="node-title">Virtual Ecosystems</h3>
+                    <p class="node-desc">Simulated populations of 100+ agents evolving cultural and scientific knowledge
+                        autonomously in accelerated time environments.</p>
+                    <div class="node-meta"><span>society.py</span> <span>Simulation</span></div>
+                </article>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Subtle Reveal on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.capability-node').forEach(node => {
+            node.style.opacity = '0';
+            node.style.transform = 'translateY(20px)';
+            node.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(node);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,75 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ICEBURG">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
-    <title>ICEBURG - Truth-Finding Civilization</title>
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/icon-192.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
-    <link rel="stylesheet" href="/styles.css">
-    <!-- Syntax highlighting and math rendering -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Three.js ES Module (replaces deprecated build/three.min.js) -->
-    <script type="importmap">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Iceberg">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>Iceberg - Truth-Finding Civilization</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+
+  <!-- Theme toggle script - must be in head before body loads -->
+  <script>
+    // Light mode toggle - defined early so it's available for onchange handlers
+    function toggleLightMode(isLight) {
+      if (isLight) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('iceburg-theme', 'light');
+        console.log('Theme: Light mode enabled');
+      } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('iceburg-theme', 'dark');
+        console.log('Theme: Dark mode enabled');
+      }
+    }
+
+    // Load saved theme on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      var savedTheme = localStorage.getItem('iceburg-theme');
+      var themeToggle = document.getElementById('themeToggle');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.checked = true;
+      }
+    });
+  </script>
+
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Syntax highlighting and math rendering -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Three.js ES Module (replaces deprecated build/three.min.js) -->
+  <script type="importmap">
     {
         "imports": {
             "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/+esm"
         }
     }
     </script>
-    <script type="module">
-        import * as THREE from 'three';
-        window.THREE = THREE;
-    </script>
-    <!-- Immediately unregister service workers in development -->
-    <script>
-        // Run immediately, before any other scripts
-        (function() {
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for (let registration of registrations) {
-                            registration.unregister().then(function(success) {
-                                if (success) {
-                                    console.log('✅ Service Worker unregistered (development mode)');
-                                }
-                            });
-                        }
-                    });
-                    // Also try to unregister by scope
-                    navigator.serviceWorker.getRegistration().then(function(registration) {
-                        if (registration) {
-                            registration.unregister().then(function(success) {
-                                if (success) {
-                                    console.log('✅ Service Worker unregistered by scope');
-                                }
-                            });
-                        }
-                    });
+  <script type="module">
+    import * as THREE from 'three';
+    window.THREE = THREE;
+  </script>
+  <!-- Immediately unregister service workers in development -->
+  <script>
+    // Run immediately, before any other scripts
+    (function () {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister().then(function (success) {
+                if (success) {
+                  console.log('✅ Service Worker unregistered (development mode)');
                 }
+              });
             }
-        })();
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.27.0/dist/plotly.min.js"></script>
-    <!-- Core dependencies - browser-compatible versions -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-    <!-- ICEBURG Server Configuration -->
-    <script type="application/json" id="iceburg-server-config">{
+          });
+          // Also try to unregister by scope
+          navigator.serviceWorker.getRegistration().then(function (registration) {
+            if (registration) {
+              registration.unregister().then(function (success) {
+                if (success) {
+                  console.log('✅ Service Worker unregistered by scope');
+                }
+              });
+            }
+          });
+        }
+      }
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.27.0/dist/plotly.min.js"></script>
+  <!-- Core dependencies - browser-compatible versions -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <!-- ICEBURG Server Configuration -->
+  <script type="application/json" id="iceburg-server-config">{
   "status": "ready",
   "serverConfig": {
     "iceburg_version": "2.0",
-    "iceburg_branding": "ICEBURG",
+    "iceburg_branding": "Iceberg",
     "iceburg_description": "Truth-Finding AI Civilization",
     "models": [
       {
@@ -332,274 +361,302 @@
     }
   }
 }</script>
-    <div id="app">
-        <!-- Neural Network Background -->
-        <canvas id="neuralNetworkCanvas" class="neural-network-canvas"></canvas>
-        <div class="app-container">
-            <!-- Sidebar -->
-            <aside class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <button class="new-conversation-btn" id="newConversationBtn" aria-label="New conversation">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        New Chat
-                    </button>
-                </div>
-                <div class="sidebar-search">
-                    <input 
-                        type="text" 
-                        class="sidebar-search-input" 
-                        id="sidebarSearchInput" 
-                        placeholder="Search conversations..."
-                        autocomplete="off"
-                        spellcheck="false"
-                    >
-                    <button class="sidebar-search-clear" id="sidebarSearchClear" aria-label="Clear search" style="display: none;">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="conversations-list" id="conversationsList">
-                    <div class="conversation-item active" data-id="current">
-                        <span class="conversation-title">Current Conversation</span>
-                        <button class="conversation-delete" aria-label="Delete conversation">×</button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Main Content -->
-            <div class="main-wrapper">
-                <header class="app-header">
-                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                        <div class="pulsing-ball-icon"></div>
-                    </button>
-                    <div class="header-content">
-                        <h1 class="app-title">ICEBERG</h1>
-                        <p class="app-subtitle">Deep Knowledge Decoding</p>
-                    </div>
-                    <a href="/encyclopedia.html" class="encyclopedia-link" aria-label="Celestial Encyclopedia" title="Celestial Encyclopedia" style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
-                        <span style="font-size: 0.9rem;">Encyclopedia</span>
-                    </a>
-                    <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
-                        <div class="pulsing-ball-icon"></div>
-                    </button>
-                </header>
-
-                <main class="app-main">
-                <div class="controls-panel" id="controlsPanel">
-                    <div class="control-group">
-                        <label class="control-label">Mode</label>
-                        <select class="control-select" id="modeSelect" onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
-                            <option value="fast">⚡ Fast (Chat)</option>
-                            <option value="research" selected>🔬 Research</option>
-                            <option value="deep_research">🧬 Deep Research</option>
-                            <option value="unbounded">♾️ Unbounded (AGI)</option>
-                            <option value="chat">Chat (Legacy)</option>
-                            <option value="web_research">Research (Web) 🔍</option>
-                            <option value="local_rag">Local (Code/Docs) 📁</option>
-                            <option value="hybrid">Hybrid (Web + Local) 🌐</option>
-                            <option value="device">Device Generation</option>
-                            <option value="truth">Truth Finding</option>
-                            <option value="swarm">Swarm</option>
-                            <option value="gnosis">Deep Knowledge Decoding</option>
-                        <option value="astrophysiology">Astro-Physiology</option>
-                        <option value="prediction_lab">Prediction Lab</option>
-                        </select>
-                    </div>
-                    <div class="control-group" id="agentGroup">
-                        <label class="control-label">Agent</label>
-                        <select class="control-select" id="agentSelect">
-                            <option value="auto">Auto (Full Protocol)</option>
-                            <option value="secretary" selected>Secretary (Chat Assistant)</option>
-                            <option value="dissident">Dissident</option>
-                            <option value="synthesist">Synthesist</option>
-                            <option value="oracle">Oracle</option>
-                            <option value="archaeologist">Archaeologist</option>
-                            <option value="supervisor">Supervisor</option>
-                            <option value="scribe">Scribe</option>
-                            <option value="weaver">Weaver</option>
-                            <option value="scrutineer">Scrutineer</option>
-                            <option value="swarm">Swarm</option>
-                            <option value="ide">IDE Agent</option>
-                        </select>
-                        <div class="agent-display" id="agentDisplay" style="display: none;">
-                            <span class="agent-display-label">Active Agent:</span>
-                            <span class="agent-display-value" id="agentDisplayValue">Secretary</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-container" id="chatContainer">
-                    <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
-                    <div class="welcome-message">
-                        <p>Welcome to ICEBURG 2.0</p>
-                        <p class="welcome-subtitle">Ask anything to begin</p>
-                    </div>
-                </div>
-
-                <!-- Advanced Visualization Panels - REMOVED to reduce complexity -->
-                <!-- Charts are now included in main answer format -->
-
-                <div class="input-container">
-                    <div class="prompt-carousel" id="promptCarousel">
-                        <div class="prompt-carousel-content" id="promptCarouselContent">
-                            <!-- Prompts will be dynamically inserted here -->
-                        </div>
-                        <button class="prompt-carousel-prev" id="promptCarouselPrev" aria-label="Previous prompt">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <button class="prompt-carousel-next" id="promptCarouselNext" aria-label="Next prompt">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="input-wrapper">
-                        <button class="attach-button" id="attachButton" aria-label="Attach file" title="Attach file">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M13.5 5.5L6.5 12.5C5.67157 12.5 5 11.8284 5 11C5 10.1716 5.67157 9.5 6.5 9.5L12.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <button class="voice-button" id="voiceButton" aria-label="Voice input" title="Voice input">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M9 2L11 2M9 18L11 18M2 9L6 9M14 9L18 9M6 6L4 4M16 4L14 6M14 14L16 16M4 16L6 14M10 5C7.79086 5 6 6.79086 6 9V11C6 13.2091 7.79086 15 10 15C12.2091 15 14 13.2091 14 11V9C14 6.79086 12.2091 5 10 5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <input 
-                            type="text" 
-                            class="input-field" 
-                            id="queryInput" 
-                            placeholder="Ask ICEBURG anything..."
-                            autocomplete="off"
-                            spellcheck="false"
-                        >
-                        <input type="file" id="fileInput" multiple accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" style="display: none;">
-                        <button class="send-button" id="sendButton" aria-label="Send message">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="attached-files" id="attachedFiles"></div>
-                </div>
-            </main>
-            </div>
+  <div id="app">
+    <!-- Neural Network Background -->
+    <canvas id="neuralNetworkCanvas" class="neural-network-canvas"></canvas>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <button class="new-conversation-btn" id="newConversationBtn" aria-label="New conversation">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            New Chat
+          </button>
         </div>
-        
-        <!-- Settings Panel -->
-        <div class="settings-panel" id="settingsPanel">
-            <div class="settings-header">
-                <h2>Settings</h2>
-                <button class="settings-close" id="settingsClose" aria-label="Close settings">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="settings-content">
-                <div class="settings-section">
-                    <h3>Model Configuration</h3>
-                    <div class="settings-group">
-                        <label class="settings-label">Primary Model (Locked)</label>
-                        <select class="settings-select" id="primaryModel" disabled title="Model selection disabled until Secretary browser integration is complete">
-                            <optgroup label="Fast Mode (1B-3B)">
-                                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
-                                <option value="phi3.5">phi3.5 (Fast)</option>
-                                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
-                                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
-                                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
-                            </optgroup>
-                            <optgroup label="Gemini API (Cloud) - Default">
-                                <option value="gemini-2.0-flash-exp" selected>Gemini 2.0 Flash (Fast, Cheap) ⭐</option>
-                                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Balanced)</option>
-                                <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Quality)</option>
-                            </optgroup>
-                            <optgroup label="Fast Mode (1B-3B)">
-                                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
-                                <option value="phi3.5">phi3.5 (Fast)</option>
-                                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
-                                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
-                                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
-                            </optgroup>
-                            <optgroup label="Standard (8B)">
-                                <option value="llama3.1:8b">llama3.1:8b (Balanced)</option>
-                                <option value="llama3:8b">llama3:8b (Balanced)</option>
-                                <option value="mistral:7b">mistral:7b (Balanced)</option>
-                                <option value="qwen2.5:7b">qwen2.5:7b (Balanced)</option>
-                            </optgroup>
-                            <optgroup label="Deep Research (70B+)">
-                                <option value="llama3:70b">llama3:70b (Deep)</option>
-                                <option value="qwen2.5:32b">qwen2.5:32b (Deep)</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="settings-group">
-                        <label class="settings-label">Temperature</label>
-                        <input type="range" class="settings-range" id="temperature" min="0" max="2" step="0.1" value="0.7">
-                        <span class="settings-value" id="temperatureValue">0.7</span>
-                    </div>
-                    <div class="settings-group">
-                        <label class="settings-label">Max Tokens</label>
-                        <input type="range" class="settings-range" id="maxTokens" min="100" max="8000" step="100" value="2000">
-                        <span class="settings-value" id="maxTokensValue">2000</span>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>Features</h3>
-                    <div class="settings-group">
-                        <label class="settings-label">
-                            <input type="checkbox" id="enableWebSearch" class="settings-checkbox">
-                            <span>Enable Web Search</span>
-                        </label>
-                        <label class="settings-label">
-                            <input type="checkbox" id="enableImageGeneration" class="settings-checkbox">
-                            <span>Enable Image Generation</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>Conversation</h3>
-                    <div class="settings-group">
-                        <button class="settings-button" id="exportConversation">Export Conversation</button>
-                        <button class="settings-button" id="shareConversation">Share Conversation</button>
-                        <button class="settings-button danger" id="clearConversations">Clear All Conversations</button>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>Keyboard Shortcuts</h3>
-                    <div class="settings-group">
-                        <div class="shortcut-item">
-                            <span class="shortcut-key">Ctrl/Cmd + K</span>
-                            <span class="shortcut-desc">Focus search</span>
-                        </div>
-                        <div class="shortcut-item">
-                            <span class="shortcut-key">Ctrl/Cmd + /</span>
-                            <span class="shortcut-desc">Toggle settings</span>
-                        </div>
-                        <div class="shortcut-item">
-                            <span class="shortcut-key">Ctrl/Cmd + N</span>
-                            <span class="shortcut-desc">New conversation</span>
-                        </div>
-                        <div class="shortcut-item">
-                            <span class="shortcut-key">Esc</span>
-                            <span class="shortcut-desc">Close panels</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="sidebar-search">
+          <input type="text" class="sidebar-search-input" id="sidebarSearchInput" placeholder="Search conversations..."
+            autocomplete="off" spellcheck="false">
+          <button class="sidebar-search-clear" id="sidebarSearchClear" aria-label="Clear search" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
         </div>
-        <div class="settings-overlay" id="settingsOverlay"></div>
-        
-        <!-- Toast Notifications -->
-        <div class="toast-container" id="toastContainer"></div>
+        <div class="conversations-list" id="conversationsList">
+          <div class="conversation-item active" data-id="current">
+            <span class="conversation-title">Current Conversation</span>
+            <button class="conversation-delete" aria-label="Delete conversation">×</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-wrapper">
+        <header class="app-header">
+          <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+          <div class="header-content">
+            <h1 class="app-title">ICEBERG</h1>
+            <p class="app-subtitle">Deep Knowledge Decoding</p>
+          </div>
+          <a href="/encyclopedia.html" class="encyclopedia-link" aria-label="Celestial Encyclopedia"
+            title="Celestial Encyclopedia"
+            style="margin-right: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.9rem;">Encyclopedia</span>
+          </a>
+          <a href="/wiki.html" class="wiki-link" aria-label="Intelligence Wiki" title="Intelligence Wiki"
+            style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.9rem;">Intelligence Wiki</span>
+          </a>
+          <a href="/features.html" class="features-link" aria-label="Applications" title="Applications"
+            style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.9rem;">Applications</span>
+            <span
+              style="font-size: 0.7rem; background: var(--accent-primary); color: var(--bg-primary); padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">NEW</span>
+          </a>
+          <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+        </header>
+
+        <main class="app-main">
+          <div class="controls-panel" id="controlsPanel">
+            <div class="control-group">
+              <label class="control-label">Mode</label>
+              <select class="control-select" id="modeSelect"
+                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
+                <option value="fast">Fast (Chat)</option>
+                <option value="research" selected>Research</option>
+                <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep Research
+                  (Coming Soon)</option>
+                <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded (Coming
+                  Soon)</option>
+                <option value="chat">Chat (Legacy)</option>
+                <option value="web_research">Research (Web)</option>
+                <option value="local_rag">Local (Code/Docs)</option>
+                <option value="hybrid">Hybrid (Web + Local)</option>
+                <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
+                  (Coming Soon)</option>
+                <option value="truth">Truth Finding</option>
+                <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
+                </option>
+                <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge
+                  (Coming Soon)</option>
+                <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
+                  Astro-Physiology (Coming Soon)</option>
+                <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction
+                  Lab (Coming Soon)</option>
+              </select>
+            </div>
+            <div class="control-group" id="agentGroup">
+              <label class="control-label">Agent</label>
+              <select class="control-select" id="agentSelect">
+                <option value="auto">Auto (Full Protocol)</option>
+                <option value="secretary" selected>Secretary (Chat Assistant)</option>
+                <option value="dissident">Dissident</option>
+                <option value="synthesist">Synthesist</option>
+                <option value="oracle">Oracle</option>
+                <option value="archaeologist">Archaeologist</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="scribe">Scribe</option>
+                <option value="weaver">Weaver</option>
+                <option value="scrutineer">Scrutineer</option>
+                <option value="swarm">Swarm</option>
+                <option value="ide">IDE Agent</option>
+              </select>
+              <div class="agent-display" id="agentDisplay" style="display: none;">
+                <span class="agent-display-label">Active Agent:</span>
+                <span class="agent-display-value" id="agentDisplayValue">Secretary</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-container" id="chatContainer">
+            <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
+            <div class="welcome-message">
+              <p>Iceberg Research Interface</p>
+              <p class="welcome-subtitle">Multi-agent truth-finding system in active development. Available modes: Fast
+                Chat, Web Research, Local RAG, Hybrid Search, and Truth Finding. Type a question to begin.</p>
+            </div>
+          </div>
+
+          <!-- Advanced Visualization Panels - REMOVED to reduce complexity -->
+          <!-- Charts are now included in main answer format -->
+
+          <div class="input-container">
+            <div class="prompt-carousel" id="promptCarousel">
+              <div class="prompt-carousel-content" id="promptCarouselContent">
+                <!-- Prompts will be dynamically inserted here -->
+              </div>
+              <button class="prompt-carousel-prev" id="promptCarouselPrev" aria-label="Previous prompt">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="prompt-carousel-next" id="promptCarouselNext" aria-label="Next prompt">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="input-wrapper">
+              <button class="attach-button" id="attachButton" aria-label="Attach file" title="Attach file">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M13.5 5.5L6.5 12.5C5.67157 12.5 5 11.8284 5 11C5 10.1716 5.67157 9.5 6.5 9.5L12.5 3.5"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="voice-button" id="voiceButton" aria-label="Voice input" title="Voice input">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M9 2L11 2M9 18L11 18M2 9L6 9M14 9L18 9M6 6L4 4M16 4L14 6M14 14L16 16M4 16L6 14M10 5C7.79086 5 6 6.79086 6 9V11C6 13.2091 7.79086 15 10 15C12.2091 15 14 13.2091 14 11V9C14 6.79086 12.2091 5 10 5Z"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <input type="text" class="input-field" id="queryInput" placeholder="Ask Iceberg anything..."
+                autocomplete="off" spellcheck="false">
+              <input type="file" id="fileInput" multiple
+                accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" style="display: none;">
+              <button class="send-button" id="sendButton" aria-label="Send message">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="attached-files" id="attachedFiles"></div>
+          </div>
+        </main>
+      </div>
     </div>
-    <!-- astro_physiology_viz.js removed - visualizations now inline in main answer -->
-    <!-- astro_animated_streaming.js removed - not needed -->
-    <script type="module" src="/main.js?v=2"></script>
-</body>
-</html>
 
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button class="settings-close" id="settingsClose" aria-label="Close settings">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="settings-content">
+        <div class="settings-section">
+          <h3>Appearance</h3>
+          <div class="settings-group">
+            <label class="settings-label" for="themeToggle">Light Mode</label>
+            <div class="theme-toggle-wrapper">
+              <input type="checkbox" id="themeToggle" class="theme-toggle-input"
+                onchange="toggleLightMode(this.checked)">
+              <label for="themeToggle" class="theme-toggle-slider"></label>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Model Configuration</h3>
+          <div class="settings-group">
+            <label class="settings-label">Primary Model (Locked)</label>
+            <select class="settings-select" id="primaryModel" disabled
+              title="Model selection disabled until Secretary browser integration is complete">
+              <optgroup label="Fast Mode (1B-3B)">
+                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
+                <option value="phi3.5">phi3.5 (Fast)</option>
+                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
+                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
+                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
+              </optgroup>
+              <optgroup label="Gemini API (Cloud) - Default">
+                <option value="gemini-2.0-flash-exp" selected>Gemini 2.0 Flash (Fast, Cheap) ⭐</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Balanced)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Quality)</option>
+              </optgroup>
+              <optgroup label="Fast Mode (1B-3B)">
+                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
+                <option value="phi3.5">phi3.5 (Fast)</option>
+                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
+                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
+                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
+              </optgroup>
+              <optgroup label="Standard (8B)">
+                <option value="llama3.1:8b">llama3.1:8b (Balanced)</option>
+                <option value="llama3:8b">llama3:8b (Balanced)</option>
+                <option value="mistral:7b">mistral:7b (Balanced)</option>
+                <option value="qwen2.5:7b">qwen2.5:7b (Balanced)</option>
+              </optgroup>
+              <optgroup label="Deep Research (70B+)">
+                <option value="llama3:70b">llama3:70b (Deep)</option>
+                <option value="qwen2.5:32b">qwen2.5:32b (Deep)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="settings-group">
+            <label class="settings-label">Temperature</label>
+            <input type="range" class="settings-range" id="temperature" min="0" max="2" step="0.1" value="0.7">
+            <span class="settings-value" id="temperatureValue">0.7</span>
+          </div>
+          <div class="settings-group">
+            <label class="settings-label">Max Tokens</label>
+            <input type="range" class="settings-range" id="maxTokens" min="100" max="8000" step="100" value="2000">
+            <span class="settings-value" id="maxTokensValue">2000</span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Features</h3>
+          <div class="settings-group">
+            <label class="settings-label">
+              <input type="checkbox" id="enableWebSearch" class="settings-checkbox">
+              <span>Enable Web Search</span>
+            </label>
+            <label class="settings-label">
+              <input type="checkbox" id="enableImageGeneration" class="settings-checkbox">
+              <span>Enable Image Generation</span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Conversation</h3>
+          <div class="settings-group">
+            <button class="settings-button" id="exportConversation">Export Conversation</button>
+            <button class="settings-button" id="shareConversation">Share Conversation</button>
+            <button class="settings-button danger" id="clearConversations">Clear All Conversations</button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Keyboard Shortcuts</h3>
+          <div class="settings-group">
+            <div class="shortcut-item">
+              <span class="shortcut-key">Ctrl/Cmd + K</span>
+              <span class="shortcut-desc">Focus search</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-key">Ctrl/Cmd + /</span>
+              <span class="shortcut-desc">Toggle settings</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-key">Ctrl/Cmd + N</span>
+              <span class="shortcut-desc">New conversation</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-key">Esc</span>
+              <span class="shortcut-desc">Close panels</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-overlay" id="settingsOverlay"></div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+  <!-- astro_physiology_viz.js removed - visualizations now inline in main answer -->
+  <!-- astro_animated_streaming.js removed - not needed -->
+  <script type="module" src="/main.js?v=2"></script>
+  </body>
+
+</html>

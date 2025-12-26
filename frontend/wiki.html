@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence Wiki - ICEBURG</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .wiki-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .celestial-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        #starfieldCanvas {
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .celestial-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-glow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        .wiki-hero {
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .wiki-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .wiki-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .wiki-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .wiki-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .wiki-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .wiki-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+        }
+
+        .wiki-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+        }
+
+        .wiki-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            padding-right: 1rem;
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .wiki-nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .wiki-nav-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .wiki-nav-item {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .wiki-nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .wiki-nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-left: 2px solid var(--accent-primary);
+        }
+
+        .wiki-content {
+            min-width: 0;
+        }
+
+        .domain-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .domain-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .domain-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .domain-count {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .domain-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .module-list {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .module-item {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-secondary);
+            border-radius: 6px;
+            transition: border-color 0.2s;
+        }
+
+        .module-item:hover {
+            border-color: var(--border-primary);
+        }
+
+        .module-name {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .module-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .back-nav {
+            margin-bottom: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 1024px) {
+            .wiki-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .wiki-sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                border-right: none;
+                border-bottom: 1px solid var(--border-primary);
+                padding-bottom: 1rem;
+                margin-bottom: 2rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .wiki-nav-section {
+                margin-bottom: 0;
+            }
+
+            .module-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="celestial-background"><canvas id="starfieldCanvas"></canvas>
+        <div class="celestial-glow"></div>
+    </div>
+    <div class="wiki-container">
+        <div class="back-nav"><a href="/" class="back-link">Return to Interface</a></div>
+        <header class="wiki-hero">
+            <h1 class="wiki-title">ICEBURG Intelligence Wiki</h1>
+            <p class="wiki-subtitle">Complete technical index of the ICEBURG autonomous architecture. Documenting 230+
+                modules across 21 domains: agents, optimization, quantum finance, truth-finding, self-healing
+                monitoring, and more.</p>
+            <div class="wiki-stats">
+                <div class="wiki-stat">
+                    <div class="wiki-stat-number">230</div>
+                    <div class="wiki-stat-label">Modules</div>
+                </div>
+                <div class="wiki-stat">
+                    <div class="wiki-stat-number">21</div>
+                    <div class="wiki-stat-label">Domains</div>
+                </div>
+                <div class="wiki-stat">
+                    <div class="wiki-stat-number">61</div>
+                    <div class="wiki-stat-label">Agents</div>
+                </div>
+            </div>
+        </header>
+        <div class="wiki-layout">
+            <aside class="wiki-sidebar">
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Agent Systems</div><a href="#agents" class="wiki-nav-item">Agents
+                        (61)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Intelligence</div><a href="#optimization"
+                        class="wiki-nav-item">Optimization (19)</a><a href="#learning" class="wiki-nav-item">Learning/RL
+                        (23)</a><a href="#gnosis" class="wiki-nav-item">Gnosis (6)</a><a href="#truth"
+                        class="wiki-nav-item">Truth Finding (7)</a><a href="#emergence" class="wiki-nav-item">Emergence
+                        (6)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Infrastructure</div><a href="#monitoring"
+                        class="wiki-nav-item">Monitoring (21)</a><a href="#security" class="wiki-nav-item">Security
+                        (12)</a><a href="#core" class="wiki-nav-item">Core (10)</a><a href="#memory"
+                        class="wiki-nav-item">Memory (6)</a><a href="#protocol" class="wiki-nav-item">Protocol (38+)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Multimodal</div><a href="#voice" class="wiki-nav-item">Voice (13)</a><a
+                        href="#vision" class="wiki-nav-item">Vision (6)</a><a href="#physiological"
+                        class="wiki-nav-item">Physiological (11)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Finance</div><a href="#quantum" class="wiki-nav-item">Quantum (10)</a><a
+                        href="#trading" class="wiki-nav-item">Trading (21)</a><a href="#business"
+                        class="wiki-nav-item">Business (7)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Compiler</div><a href="#iir" class="wiki-nav-item">IIR Compiler (15)</a>
+                </div>
+                <div class="wiki-nav-section">
+                    <div class="wiki-nav-title">Governance</div><a href="#governance" class="wiki-nav-item">Governance
+                        (7)</a><a href="#civilization" class="wiki-nav-item">Civilization (5)</a><a href="#blockchain"
+                        class="wiki-nav-item">Blockchain (6)</a>
+                </div>
+            </aside>
+            <main class="wiki-content">
+
+                <section id="agents" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Agent Systems</h2><span class="domain-count">61 modules</span>
+                    </div>
+                    <p class="domain-desc">The complete roster of autonomous agents. Each specializes in different
+                        cognitive tasks, ranging from research synthesis and code generation to system architecture and
+                        self-healing.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">secretary.py</span><span
+                                class="module-desc">Primary conversational agent responsible for context management,
+                                tool orchestration, and user interaction logic. (101 KB)</span></div>
+                        <div class="module-item"><span class="module-name">surveyor.py</span><span
+                                class="module-desc">Deep research specialist. Executes complex information retrieval
+                                tasks, citation tracking, and truth verification. (55 KB)</span></div>
+                        <div class="module-item"><span class="module-name">weaver.py</span><span
+                                class="module-desc">Code generation engine. Transforms high-level architectural
+                                principles into executable, optimized code. (66 KB)</span></div>
+                        <div class="module-item"><span class="module-name">architect.py</span><span
+                                class="module-desc">System design specialist. Generates comprehensive software
+                                architectures from requirements. (42 KB)</span></div>
+                        <div class="module-item"><span class="module-name">capability_registry.py</span><span
+                                class="module-desc">Dynamic index of all agent capabilities, enabling runtime discovery
+                                and orchestration. (52 KB)</span></div>
+                        <div class="module-item"><span class="module-name">celestial_biological_framework.py</span><span
+                                class="module-desc">Astro-physiological correlation engine. (43 KB)</span></div>
+                        <div class="module-item"><span class="module-name">elite_agent_factory.py</span><span
+                                class="module-desc">Runtime agent spawner. Creates specialized agents on demand.
+                                37KB.</span></div>
+                        <div class="module-item"><span class="module-name">deliberation_agent.py</span><span
+                                class="module-desc">Multi-turn reasoning. Chain-of-thought decomposition. 36KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">enhanced_astrophysiology_agent.py</span><span
+                                class="module-desc">Advanced physiological analysis with planetary correlations.
+                                29KB.</span></div>
+                        <div class="module-item"><span class="module-name">quantum_molecular_framework.py</span><span
+                                class="module-desc">Molecular simulation integration. Quantum chemistry reasoning.
+                                27KB.</span></div>
+                        <div class="module-item"><span class="module-name">synthesist.py</span><span
+                                class="module-desc">Cross-domain synthesis. Merges evidence from multiple research
+                                streams. 23KB.</span></div>
+                        <div class="module-item"><span class="module-name">linguistic_intelligence.py</span><span
+                                class="module-desc">NLP meta-analysis. Semantic structure extraction. 23KB.</span></div>
+                        <div class="module-item"><span class="module-name">astro_physiology_experts.py</span><span
+                                class="module-desc">Expert system for astro-biological correlations. 22KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_red_team.py</span><span
+                                class="module-desc">Visual adversarial testing. UI/UX vulnerability analysis.
+                                19KB.</span></div>
+                        <div class="module-item"><span class="module-name">reflex_agent.py</span><span
+                                class="module-desc">Fast reactive agent. Low-latency responses. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">interaction_protocol.py</span><span
+                                class="module-desc">Multi-agent communication protocol. Message passing. 19KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">virtual_scientific_ecosystem.py</span><span
+                                class="module-desc">Simulated research environment. Hypothesis testing sandbox.
+                                18KB.</span></div>
+                        <div class="module-item"><span class="module-name">scrutineer.py</span><span
+                                class="module-desc">Forensic evidence validator. Suppression detection. 18KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">recursive_celestial_analyzer.py</span><span
+                                class="module-desc">Recursive pattern detection in celestial data. 18KB.</span></div>
+                        <div class="module-item"><span class="module-name">dynamic_agent_factory.py</span><span
+                                class="module-desc">Runtime agent instantiation with capability matching. 17KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">visual_architect.py</span><span
+                                class="module-desc">UI/UX design generation. Visual layout synthesis. 17KB.</span></div>
+                        <div class="module-item"><span class="module-name">prompt_interpreter.py</span><span
+                                class="module-desc">Natural language to structured query translation. 17KB.</span></div>
+                        <div class="module-item"><span class="module-name">pyramid_dag_architect.py</span><span
+                                class="module-desc">Hierarchical task decomposition. DAG-based planning. 16KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">digital_twins_simulation.py</span><span
+                                class="module-desc">Digital twin modeling for predictive analysis. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">scribe.py</span><span
+                                class="module-desc">Knowledge documentation agent. Structured output generation.
+                                15KB.</span></div>
+                        <div class="module-item"><span class="module-name">secretary_pilot.py</span><span
+                                class="module-desc">Experimental secretary with advanced planning. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">teacher_student_tuning.py</span><span
+                                class="module-desc">Distillation-based agent improvement. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">tcm_planetary_integration.py</span><span
+                                class="module-desc">Traditional medicine + planetary correlation engine. 14KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">secretary_planner.py</span><span
+                                class="module-desc">Multi-step task planning for Secretary. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">enhanced_swarm_architect.py</span><span
+                                class="module-desc">Swarm intelligence coordinator. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">swarm_architect.py</span><span
+                                class="module-desc">Multi-agent swarm orchestration. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">runtime_agent_modifier.py</span><span
+                                class="module-desc">Hot-patching agents at runtime. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">prompt_interpreter_engine.py</span><span
+                                class="module-desc">Core NL interpretation logic. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">word_breakdown.py</span><span
+                                class="module-desc">Morphological analysis. Etymology extraction. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_scientific_research.py</span><span
+                                class="module-desc">ArXiv/PubMed integration. Academic search. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">dataset_synthesizer.py</span><span
+                                class="module-desc">Synthetic training data generation. 11KB.</span></div>
+                        <div class="module-item"><span
+                                class="module-name">geospatial_financial_anthropological.py</span><span
+                                class="module-desc">Cross-domain geospatial analysis. 11KB.</span></div>
+                        <div class="module-item"><span class="module-name">rag_memory_integration.py</span><span
+                                class="module-desc">RAG system connection for agents. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">oracle.py</span><span
+                                class="module-desc">Principle synthesis. Evidence-weighted truth extraction.
+                                10KB.</span></div>
+                        <div class="module-item"><span class="module-name">capability_gap_detector.py</span><span
+                                class="module-desc">Identifies missing agent capabilities. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">swarm_integrated_architect.py</span><span
+                                class="module-desc">Unified swarm control. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">search_planner_agent.py</span><span
+                                class="module-desc">Multi-source search strategy. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">ide_agent.py</span><span
+                                class="module-desc">Safe command execution. Code editing. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">error_handler_wrapper.py</span><span
+                                class="module-desc">Agent error recovery. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">evolutionary_factory.py</span><span
+                                class="module-desc">Genetic algorithm agent optimization. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">code_validator.py</span><span
+                                class="module-desc">Static analysis for generated code. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">working_swarm_architect.py</span><span
+                                class="module-desc">Production swarm controller. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">archaeologist.py</span><span
+                                class="module-desc">Historical evidence excavation. 3KB.</span></div>
+                        <div class="module-item"><span class="module-name">supervisor.py</span><span
+                                class="module-desc">Quality control agent. 3KB.</span></div>
+                        <div class="module-item"><span class="module-name">emergent_architect.py</span><span
+                                class="module-desc">Emergent behavior design. 2KB.</span></div>
+                        <div class="module-item"><span class="module-name">dissident.py</span><span
+                                class="module-desc">Paradigm challenger. Alternative hypotheses. 2KB.</span></div>
+                        <div class="module-item"><span class="module-name">molecular_synthesis.py</span><span
+                                class="module-desc">Molecular structure generation. 2KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="optimization" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Optimization</h2><span class="domain-count">19 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span
+                                class="module-name">blockchain_performance_optimizer.py</span><span
+                                class="module-desc">Gas optimization and transaction throughput tuning. (35 KB)</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">next_model_predictor.py</span><span
+                                class="module-desc">Predictive model selection based on query complexity. (34 KB)</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">model_performance_registry.py</span><span
+                                class="module-desc">Registry of model benchmarks and capabilities. (32 KB)</span></div>
+                        <!-- Remaining optimization modules -->
+                    </div>
+                </section>
+
+                <section id="quantum" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Quantum Computing</h2><span class="domain-count">10 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">qgan.py</span><span
+                                class="module-desc">Quantum Generative Adversarial Networks for financial data
+                                synthesis. (21 KB)</span></div>
+                        <div class="module-item"><span class="module-name">circuits.py</span><span
+                                class="module-desc">Variational quantum circuit definitions for QML. (19 KB)</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">sampling.py</span><span
+                                class="module-desc">Quantum state sampling algorithms. (21 KB)</span></div>
+                    </div>
+                </section>
+
+                <!-- Additional sections for Trading, Security, Learning, etc. -->
+
+                <section id="trading" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Trading Systems</h2><span class="domain-count">21 modules</span>
+                    </div>
+                    <p class="domain-desc">Algorithmic trading with military-grade security. Real broker integration,
+                        risk management, and secure wallet handling.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">secure_wallet_manager.py</span><span
+                                class="module-desc">Encrypted wallet storage. Multi-sig support. 20KB.</span></div>
+                        <div class="module-item"><span class="module-name">web.py</span><span
+                                class="module-desc">Trading web API. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_money_trading.py</span><span
+                                class="module-desc">Live trading execution system. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_broker_integration.py</span><span
+                                class="module-desc">Binance/Alpaca integration. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_money_launcher.py</span><span
+                                class="module-desc">Safe deployment of live trading. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">market_data.py</span><span
+                                class="module-desc">Real-time market data feeds. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">military_security.py</span><span
+                                class="module-desc">PBKDF2 encryption, IP whitelisting, kill switches. 12KB.</span>
+                        </div>
+                        <div class="module-item"><span class="module-name">cli.py</span><span
+                                class="module-desc">Trading command-line interface. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">orchestrator.py</span><span
+                                class="module-desc">Trading strategy orchestration. 5KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="security" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Security</h2><span class="domain-count">12 modules</span>
+                    </div>
+                    <p class="domain-desc">Autonomous red teaming, penetration testing, and runtime governance. Security
+                        hardening and exploit generation.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">runtime_governance.py</span><span
+                                class="module-desc">Real-time policy enforcement. 33KB.</span></div>
+                        <div class="module-item"><span class="module-name">security_hardening.py</span><span
+                                class="module-desc">Automated security configuration. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">penetration_tester.py</span><span
+                                class="module-desc">Automated penetration testing agent. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">tool_inventory.py</span><span
+                                class="module-desc">Security tool registry. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">vulnerability_scanner.py</span><span
+                                class="module-desc">CVE-based vulnerability detection. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">exploit_generator.py</span><span
+                                class="module-desc">Proof-of-concept exploit generation. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">autonomous_red_team.py</span><span
+                                class="module-desc">Self-directed adversarial testing. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">tool_generator.py</span><span
+                                class="module-desc">Dynamic security tool creation. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">ethical_hacking.py</span><span
+                                class="module-desc">Ethical constraints for security testing. 5KB.</span></div>
+                        <div class="module-item"><span class="module-name">redteam.py</span><span
+                                class="module-desc">Red team coordination. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">review_gate.py</span><span
+                                class="module-desc">Human review checkpoints. 4KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="learning" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Learning and Reinforcement Learning</h2><span class="domain-count">23
+                            modules</span>
+                    </div>
+                    <p class="domain-desc">Self-improvement systems. Autonomous learning, experience replay, and
+                        emergent behavior detection.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">autonomous_improvement.py</span><span
+                                class="module-desc">Self-directed capability enhancement. 38KB.</span></div>
+                        <div class="module-item"><span class="module-name">emergence_detector.py</span><span
+                                class="module-desc">Detects emergent behaviors in RL agents. 28KB.</span></div>
+                        <div class="module-item"><span class="module-name">optimized_training.py</span><span
+                                class="module-desc">Efficient RL training loops. 23KB.</span></div>
+                        <div class="module-item"><span class="module-name">tesla_end_to_end.py</span><span
+                                class="module-desc">End-to-end neural network training (inspired by Tesla FSD).
+                                19KB.</span></div>
+                        <div class="module-item"><span class="module-name">config.py</span><span class="module-desc">RL
+                                hyperparameter configuration. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">self_improvement_orchestrator.py</span><span
+                                class="module-desc">Coordinates self-improvement cycles. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">utils.py</span><span class="module-desc">RL
+                                utility functions. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">quality_scorer.py</span><span
+                                class="module-desc">Output quality assessment. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">analysis.py</span><span
+                                class="module-desc">RL training analysis. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">nested_learner.py</span><span
+                                class="module-desc">Hierarchical learning. 5KB.</span></div>
+                        <div class="module-item"><span class="module-name">experience_learner.py</span><span
+                                class="module-desc">Experience replay systems. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">rewards.py</span><span
+                                class="module-desc">Reward function definitions. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">reasoning_bank.py</span><span
+                                class="module-desc">Stores successful reasoning patterns. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">kv_compression.py</span><span
+                                class="module-desc">KV-cache compression for long contexts. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">continuum_memory.py</span><span
+                                class="module-desc">Continuous memory across sessions. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">memory_based_adaptation.py</span><span
+                                class="module-desc">Memory-augmented learning. 3KB.</span></div>
+                    </div>
+                </section>
+
+                <!-- Additional sections for Monitoring, Truth finding, etc. -->
+
+                <section id="monitoring" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Monitoring and Self-Healing</h2><span class="domain-count">21
+                            modules</span>
+                    </div>
+                    <p class="domain-desc">Observability, alerting, and autonomous error recovery. Deep reinforcement
+                        learning for self-healing operations.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">bottleneck_detector.py</span><span
+                                class="module-desc">Identifies performance bottlenecks. 34KB.</span></div>
+                        <div class="module-item"><span class="module-name">unified_performance_tracker.py</span><span
+                                class="module-desc">Central metrics aggregation. 33KB.</span></div>
+                        <div class="module-item"><span class="module-name">prometheus_integration.py</span><span
+                                class="module-desc">Full Prometheus metrics export. 29KB.</span></div>
+                        <div class="module-item"><span class="module-name">system_health_monitor.py</span><span
+                                class="module-desc">Real-time health scoring. 17KB.</span></div>
+                        <div class="module-item"><span class="module-name">neural_engine_tracker.py</span><span
+                                class="module-desc">Apple Neural Engine utilization monitoring. 16KB.</span></div>
+                        <div class="module-item"><span class="module-name">observability_dashboard.py</span><span
+                                class="module-desc">Dashboard data generation. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">operation_monitor.py</span><span
+                                class="module-desc">Individual operation tracking. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">token_usage_tracker.py</span><span
+                                class="module-desc">LLM token cost monitoring. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">error_handler.py</span><span
+                                class="module-desc">Centralized error management. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">alerting_system.py</span><span
+                                class="module-desc">Multi-channel alerting. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">drl_healing_agent.py</span><span
+                                class="module-desc">Deep RL agent for autonomous error recovery. 11KB.</span></div>
+                        <div class="module-item"><span class="module-name">healing_env.py</span><span
+                                class="module-desc">RL environment for self-healing training. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">healing_rewards.py</span><span
+                                class="module-desc">Reward shaping for healing agent. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">parallel_healing.py</span><span
+                                class="module-desc">Concurrent error recovery. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">llm_enhanced_detector.py</span><span
+                                class="module-desc">LLM-powered anomaly detection. 7KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="truth" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Truth Finding</h2><span class="domain-count">7 modules</span>
+                    </div>
+                    <p class="domain-desc">Epistemic algorithms for truth verification. Suppression detection, certainty
+                        calculation, and information archaeology.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">suppression_detector.py</span><span
+                                class="module-desc">Identifies systematically suppressed information. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">pattern_correlation_engine.py</span><span
+                                class="module-desc">Cross-source pattern matching. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">information_archaeology.py</span><span
+                                class="module-desc">Historical evidence excavation. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">certainty_calculation.py</span><span
+                                class="module-desc">Bayesian certainty estimation. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">timeline_correlator.py</span><span
+                                class="module-desc">Temporal event correlation. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">metadata_analyzer.py</span><span
+                                class="module-desc">Source metadata analysis. 6KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="gnosis" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Gnosis</h2><span class="domain-count">6 modules</span>
+                    </div>
+                    <p class="domain-desc">Deep knowledge synthesis. Universal knowledge accumulation and insight
+                        extraction from conversations.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span
+                                class="module-name">universal_knowledge_accumulator.py</span><span
+                                class="module-desc">Persistent cross-session knowledge growth. 18KB.</span></div>
+                        <div class="module-item"><span class="module-name">conversation_insight_extractor.py</span><span
+                                class="module-desc">Extracts reusable insights from dialogues. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">gnosis_query.py</span><span
+                                class="module-desc">Queries accumulated gnosis. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">gnosis_evolution_orchestrator.py</span><span
+                                class="module-desc">Coordinates gnosis growth. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">unified_gnosis_interface.py</span><span
+                                class="module-desc">Single API for all gnosis operations. 7KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="emergence" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Emergence Detection</h2><span class="domain-count">6 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">breakthrough_storage.py</span><span
+                                class="module-desc">Persists detected breakthroughs. 20KB.</span></div>
+                        <div class="module-item"><span class="module-name">temporal_emergence_detector.py</span><span
+                                class="module-desc">Time-series emergence detection. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">quantum_emergence_detector.py</span><span
+                                class="module-desc">Quantum correlation emergence. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_emergence_detector.py</span><span
+                                class="module-desc">Visual pattern emergence. 11KB.</span></div>
+                        <div class="module-item"><span class="module-name">detectors.py</span><span
+                                class="module-desc">Base detector interfaces. 4KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="voice" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Voice</h2><span class="domain-count">13 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">enhanced_voice_input.py</span><span
+                                class="module-desc">Advanced speech recognition. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">enhanced_voice_output.py</span><span
+                                class="module-desc">Advanced speech synthesis. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">enhanced_voice_conversation.py</span><span
+                                class="module-desc">Full duplex voice conversation. 18KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_voice_input.py</span><span
+                                class="module-desc">Real-time voice capture. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">natural_conversation.py</span><span
+                                class="module-desc">Turn-taking and interruption handling. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_voice_conversation.py</span><span
+                                class="module-desc">Production voice conversation. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">professional_tts_engine.py</span><span
+                                class="module-desc">High-quality TTS. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">advanced_tts_engine.py</span><span
+                                class="module-desc">Neural TTS. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">advanced_vad.py</span><span
+                                class="module-desc">Voice Activity Detection. 11KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="vision" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Vision</h2><span class="domain-count">6 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">computer_vision_engine.py</span><span
+                                class="module-desc">Core CV pipeline. Object detection, OCR. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">macos_accessibility.py</span><span
+                                class="module-desc">macOS accessibility API integration. 18KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_reasoning.py</span><span
+                                class="module-desc">Reasoning over visual inputs. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">image_analyzer.py</span><span
+                                class="module-desc">Image content analysis. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">multimodal_processor.py</span><span
+                                class="module-desc">Multimodal input fusion. 4KB.</span></div>
+                    </div>
+                </section>
+
+                <!-- Additional sections for Physiological, IIR, Memory, Core, etc -->
+
+                <section id="physiological" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Physiological Interface</h2><span class="domain-count">11
+                            modules</span>
+                    </div>
+                    <p class="domain-desc">Sensor integration for physiological data. Piezoelectric detection, frequency
+                        synthesis, and earth connection protocols.</p>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">physiological_amplifier.py</span><span
+                                class="module-desc">Signal amplification for weak biosignals. 25KB.</span></div>
+                        <div class="module-item"><span class="module-name">piezoelectric_detector.py</span><span
+                                class="module-desc">Piezoelectric sensor processing. 21KB.</span></div>
+                        <div class="module-item"><span class="module-name">real_sensor_interface.py</span><span
+                                class="module-desc">Hardware sensor abstraction. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">icberg_integration.py</span><span
+                                class="module-desc">Integrates physiological data with ICEBURG core. 17KB.</span></div>
+                        <div class="module-item"><span class="module-name">sensor_interface.py</span><span
+                                class="module-desc">Sensor API. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">physiological_detector.py</span><span
+                                class="module-desc">Biosignal detection. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">earth_connection.py</span><span
+                                class="module-desc">Grounding and earth frequency correlation. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">frequency_synthesizer.py</span><span
+                                class="module-desc">Generates therapeutic frequencies. 13KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="iir" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">IIR Compiler</h2><span class="domain-count">15 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">visual_contracts.py</span><span
+                                class="module-desc">Visual contract language. 22KB.</span></div>
+                        <div class="module-item"><span class="module-name">multi_backend.py</span><span
+                                class="module-desc">Multi-target compilation. 20KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_tsl.py</span><span
+                                class="module-desc">Visual Truth Specification Language. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">optimizer.py</span><span
+                                class="module-desc">IR optimization passes. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">property_testing.py</span><span
+                                class="module-desc">Property-based testing for contracts. 14KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_optimizer.py</span><span
+                                class="module-desc">Visual IR optimization. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">contract_language.py</span><span
+                                class="module-desc">Contract DSL. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">interpreter.py</span><span
+                                class="module-desc">IR interpreter. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">visual_ir.py</span><span
+                                class="module-desc">Visual intermediate representation. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">wasm_compiler.py</span><span
+                                class="module-desc">WASM code generation. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">scrutineer_hooks.py</span><span
+                                class="module-desc">Scrutineer integration. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">wasm_backend.py</span><span
+                                class="module-desc">WASM backend. 4KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="memory" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Memory</h2><span class="domain-count">6 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">emotional_memory.py</span><span
+                                class="module-desc">Stores emotionally-tagged memories for context. 21KB.</span></div>
+                        <div class="module-item"><span class="module-name">persistent_memory_api.py</span><span
+                                class="module-desc">Cross-session memory persistence. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">advanced_memory_manager.py</span><span
+                                class="module-desc">Tiered memory management. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">unified_memory.py</span><span
+                                class="module-desc">Single memory interface. 7KB.</span></div>
+                        <div class="module-item"><span class="module-name">rag_gateway.py</span><span
+                                class="module-desc">RAG system connection. 5KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="core" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Core Systems</h2><span class="domain-count">10 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">system_integrator.py</span><span
+                                class="module-desc">Integrates all subsystems. 44KB.</span></div>
+                        <div class="module-item"><span class="module-name">local_persona_instance.py</span><span
+                                class="module-desc">Per-user persona management. 13KB.</span></div>
+                        <div class="module-item"><span class="module-name">iceburg_portal.py</span><span
+                                class="module-desc">Main entry point. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">always_on_executor.py</span><span
+                                class="module-desc">Background task execution. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">pre_warmed_agent_pool.py</span><span
+                                class="module-desc">Pre-initialized agent pool. 11KB.</span></div>
+                        <div class="module-item"><span class="module-name">graph_processor.py</span><span
+                                class="module-desc">Knowledge graph operations. 9KB.</span></div>
+                        <div class="module-item"><span class="module-name">mixture_of_experts.py</span><span
+                                class="module-desc">MoE routing. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">multi_token_predictor.py</span><span
+                                class="module-desc">Multi-token prediction. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">quarantine_manager.py</span><span
+                                class="module-desc">Isolates problematic components. 4KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="governance" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Governance</h2><span class="domain-count">7 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">visual_governance.py</span><span
+                                class="module-desc">Visual content governance. 15KB.</span></div>
+                        <div class="module-item"><span class="module-name">constitution.py</span><span
+                                class="module-desc">Constitutional AI rules. 6KB.</span></div>
+                        <div class="module-item"><span class="module-name">autonomy_manager.py</span><span
+                                class="module-desc">Autonomy level control. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">data_policy.py</span><span
+                                class="module-desc">Data handling policies. 4KB.</span></div>
+                        <div class="module-item"><span class="module-name">human_oversight.py</span><span
+                                class="module-desc">Human-in-the-loop controls. 3KB.</span></div>
+                        <div class="module-item"><span class="module-name">rule_enforcer.py</span><span
+                                class="module-desc">Rule enforcement engine. 2KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="civilization" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Agent Civilization</h2><span class="domain-count">5 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">persistent_agents.py</span><span
+                                class="module-desc">Agents with persistent state. 28KB.</span></div>
+                        <div class="module-item"><span class="module-name">world_model.py</span><span
+                                class="module-desc">Simulated world state. 26KB.</span></div>
+                        <div class="module-item"><span class="module-name">agent_society.py</span><span
+                                class="module-desc">Multi-agent society dynamics. 24KB.</span></div>
+                        <div class="module-item"><span class="module-name">iceburg_agent.py</span><span
+                                class="module-desc">Base civilization agent. 7KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="business" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Business Mode</h2><span class="domain-count">7 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">revenue_tracker.py</span><span
+                                class="module-desc">Transaction and revenue analytics. 12KB.</span></div>
+                        <div class="module-item"><span class="module-name">business_mode.py</span><span
+                                class="module-desc">Business/research mode switching. 10KB.</span></div>
+                        <div class="module-item"><span class="module-name">payment_processor.py</span><span
+                                class="module-desc">Payment handling with fee structures. 8KB.</span></div>
+                        <div class="module-item"><span class="module-name">agent_wallet.py</span><span
+                                class="module-desc">Dual-currency agent wallets. 6KB.</span></div>
+                    </div>
+                </section>
+
+                <section id="blockchain" class="domain-section">
+                    <div class="domain-header">
+                        <h2 class="domain-title">Blockchain</h2><span class="domain-count">6 modules</span>
+                    </div>
+                    <div class="module-list">
+                        <div class="module-item"><span class="module-name">smart_contracts.py</span><span
+                                class="module-desc">Solidity contract generation. 19KB.</span></div>
+                        <div class="module-item"><span class="module-name">cross_chain.py</span><span
+                                class="module-desc">Cross-chain bridge operations. (Stub)</span></div>
+                        <div class="module-item"><span class="module-name">defi_integration.py</span><span
+                                class="module-desc">DeFi protocol integration. (Stub)</span></div>
+                        <div class="module-item"><span class="module-name">governance.py</span><span
+                                class="module-desc">On-chain governance. (Stub)</span></div>
+                        <div class="module-item"><span class="module-name">nft_system.py</span><span
+                                class="module-desc">NFT minting and management. (Stub)</span></div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('starfieldCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        function initStars() {
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width; canvas.height = height;
+            stars = [];
+            const numStars = Math.floor((width * height) / 12000);
+            for (let i = 0; i < numStars; i++) {
+                stars.push({ x: Math.random() * width, y: Math.random() * height, size: Math.random() * 1.5, opacity: Math.random(), speed: Math.random() * 0.15 + 0.05 });
+            }
+        }
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                ctx.globalAlpha = star.opacity;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                star.y -= star.speed;
+                if (star.y < 0) { star.y = height; star.x = Math.random() * width; }
+            });
+            requestAnimationFrame(animateStars);
+        }
+        window.addEventListener('resize', initStars);
+        initStars();
+        animateStars();
+
+        const sections = document.querySelectorAll('.domain-section');
+        const navItems = document.querySelectorAll('.wiki-nav-item');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { const sectionTop = section.offsetTop; if (scrollY >= sectionTop - 200) { current = section.getAttribute('id'); } });
+            navItems.forEach(item => { item.classList.remove('active'); if (item.getAttribute('href').includes(current)) { item.classList.add('active'); } });
+        });
+    </script>
+</body>
+
+</html>
