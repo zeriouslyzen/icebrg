@@ -676,19 +676,19 @@
                     htmlContent = `<pre><code>${content}</code></pre>`;
                 }
             } else {
-                // Configure marked.js renderer
+                // Configure marked.js renderer for v17 API (uses object parameters)
                 const renderer = new marked.Renderer();
 
-                // Override link renderer to open external links in new tab
-                renderer.link = function (href, title, text) {
+                // Override link renderer - v17 uses object destructuring
+                renderer.link = ({ href, title, text }) => {
                     const isExternal = href.startsWith('http://') || href.startsWith('https://');
                     const target = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
                     const titleAttr = title ? ` title="${title}"` : '';
                     return `<a href="${href}"${titleAttr}${target}>${text}</a>`;
                 };
 
-                // Override image renderer to handle paths
-                renderer.image = function (href, title, text) {
+                // Override image renderer - v17 uses object destructuring
+                renderer.image = ({ href, title, text }) => {
                     const titleAttr = title ? ` title="${title}"` : '';
                     const alt = text || '';
                     return `<img src="${href}" alt="${alt}"${titleAttr} loading="lazy">`;
