@@ -3,7 +3,7 @@ ICEBURG API Server
 FastAPI server with WebSocket support
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
 from starlette.websockets import WebSocketState
 from fastapi.middleware.cors import CORSMiddleware
@@ -112,15 +112,16 @@ else:
         pass
     
     allowed_origins = [
-        "http://localhost:3000", "http://localhost:3001", "http://localhost:5173",
-        "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:5173"
+        "http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:5173",
+        "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002", "http://127.0.0.1:5173"
     ]
     
     # Add network IP origins for mobile access
     if local_ip:
         allowed_origins.extend([
             f"http://{local_ip}:3000",
-            f"http://{local_ip}:3001", 
+            f"http://{local_ip}:3001",
+            f"http://{local_ip}:3002",
             f"http://{local_ip}:5173"
         ])
     
@@ -203,6 +204,42 @@ if ENABLE_MONITORING:
     except Exception as e:
         logger.warning(f"Failed to initialize bottleneck monitoring: {e}")
         bottleneck_monitor = None
+
+# Initialize system health monitor
+system_health_monitor = None
+if os.getenv("ICEBURG_ENABLE_HEALTH_MONITORING", "1") == "1":
+    try:
+        from ..monitoring.system_health_monitor import get_system_health_monitor
+        from ..config import load_config
+        
+        health_config = {
+            "check_interval": 5,
+            "health_score_threshold": 70,
+            "alert_on_critical": True
+        }
+        system_health_monitor = get_system_health_monitor(health_config)
+        
+        # Start monitoring in background
+        async def start_health_monitoring():
+            try:
+                await system_health_monitor.start_monitoring()
+                logger.info("System health monitoring started")
+            except Exception as e:
+                logger.error(f"Failed to start health monitoring: {e}")
+        
+        # Start monitoring asynchronously
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                asyncio.create_task(start_health_monitoring())
+            else:
+                loop.run_until_complete(start_health_monitoring())
+        except Exception as e:
+            logger.warning(f"Could not start health monitoring: {e}")
+            system_health_monitor = None
+    except Exception as e:
+        logger.warning(f"Failed to initialize system health monitoring: {e}")
+        system_health_monitor = None
 
 # Initialize always-on AI components (disabled by default for performance - only enable if needed)
 # Set ICEBURG_ENABLE_ALWAYS_ON=1 to enable (adds startup delay, uses more memory)
@@ -351,11 +388,102 @@ async def test_thinking_stream():
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {
+    health_data = {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "system_status": system_integrator.get_system_status()
     }
+    
+    # Add system health monitor data if available
+    if system_health_monitor:
+        try:
+            current_health = system_health_monitor.get_current_health()
+            if current_health:
+                health_data["health_score"] = current_health.health_score
+                health_data["health_status"] = current_health.status
+                health_data["cpu_usage"] = current_health.cpu_usage
+                health_data["memory_usage"] = current_health.memory_usage
+                health_data["thermal_state"] = current_health.thermal_state
+        except Exception as e:
+            logger.debug(f"Could not get health monitor data: {e}")
+    
+    return health_data
+
+
+@app.get("/api/health")
+async def api_health_check():
+    """Detailed API health check endpoint with full health metrics"""
+    if system_health_monitor:
+        try:
+            # Get current health snapshot
+            current_health = system_health_monitor.get_current_health()
+            
+            # Run all health checks
+            health_checks = await system_health_monitor.run_health_checks()
+            
+            return {
+                "status": "operational",
+                "timestamp": datetime.now().isoformat(),
+                "health_score": current_health.health_score if current_health else 0.0,
+                "health_status": current_health.status if current_health else "unknown",
+                "metrics": {
+                    "cpu_usage": current_health.cpu_usage if current_health else 0.0,
+                    "memory_usage": current_health.memory_usage if current_health else 0.0,
+                    "disk_usage": current_health.disk_usage if current_health else 0.0,
+                    "thermal_state": current_health.thermal_state if current_health else "unknown",
+                    "thermal_temperature": current_health.thermal_temperature if current_health else 0.0,
+                    "network_active": current_health.network_active if current_health else False,
+                    "error_rate": current_health.error_rate if current_health else 0.0,
+                    "latency_p95": current_health.latency_p95 if current_health else 0.0,
+                    "cache_hit_rate": current_health.cache_hit_rate if current_health else 0.0
+                },
+                "health_checks": health_checks,
+                "system_status": system_integrator.get_system_status()
+            }
+        except Exception as e:
+            logger.error(f"Error getting health data: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
+    else:
+        return {
+            "status": "operational",
+            "timestamp": datetime.now().isoformat(),
+            "health_monitoring": "disabled",
+            "system_status": system_integrator.get_system_status()
+        }
+
+
+@app.get("/api/cache/stats")
+async def cache_stats():
+    """Get cache statistics endpoint"""
+    try:
+        from ..llm import get_llm_cache_stats
+        from ..caching.model_cache import get_model_cache
+        
+        llm_stats = get_llm_cache_stats()
+        model_cache = get_model_cache()
+        model_stats = model_cache.get_stats()
+        
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "llm_cache": llm_stats,
+            "model_cache": model_stats,
+            "summary": {
+                "total_hit_rate": llm_stats.get("hit_rate", 0.0),
+                "model_cache_hit_rate": model_stats.get("model_stats", {}).get("hit_rate", 0.0),
+                "cache_sizes": model_stats.get("cache_sizes", {})
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting cache stats: {e}")
+        return {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+
 
 
 @app.get("/api/encyclopedia")
@@ -376,36 +504,11 @@ async def get_encyclopedia():
             encyclopedia_data = json.load(f)
         
         return JSONResponse(content=encyclopedia_data)
-    except Exception as e:
-        logger.error(f"Error loading encyclopedia: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Error loading encyclopedia: {str(e)}")
-
-
-@app.get("/api/encyclopedia/{category}")
-async def get_encyclopedia_category(category: str):
-    """Get specific category from Celestial Encyclopedia"""
-    try:
-        from pathlib import Path
-        import json
-        
-        data_dir = Path(__file__).parent.parent.parent.parent / "data"
-        encyclopedia_path = data_dir / "celestial_encyclopedia.json"
-        
-        if not encyclopedia_path.exists():
-            raise HTTPException(status_code=404, detail="Encyclopedia data not found")
-        
-        with open(encyclopedia_path, 'r', encoding='utf-8') as f:
-            encyclopedia_data = json.load(f)
-        
-        if category in encyclopedia_data:
-            return JSONResponse(content=encyclopedia_data[category])
-        else:
-            raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error loading encyclopedia category: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Error loading category: {str(e)}")
+        logger.error(f"Error loading encyclopedia: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error loading encyclopedia: {str(e)}")
 
 
 @app.get("/api/middleware/stats")
@@ -432,6 +535,172 @@ async def get_middleware_stats():
         return JSONResponse({"error": str(e)}, status_code=500)
 
 
+# ===== LOST KNOWLEDGE API ENDPOINTS =====
+@app.post("/api/knowledge/submit")
+async def submit_knowledge(submission: dict):
+    """
+    Submit historical/suppressed knowledge to the Lost Knowledge database.
+    
+    Request body:
+    {
+        "type": "patent" | "document" | "video",
+        "title": str,
+        "content": str,
+        "year": int (optional),
+        "tags": list[str] (optional),
+        "patent_number": str (required if type=="patent"),
+        "suppression_evidence": str (optional),
+        "source_url": str (optional)
+    }
+    """
+    try:
+        from ..ingestion import HumanCuratedSubmission
+        
+        submitter = HumanCuratedSubmission()
+        entry_id = None
+        
+        submission_type = submission.get('type', 'document')
+        
+        if submission_type == 'patent':
+            entry_id = submitter.submit_patent(
+                patent_number=submission['patent_number'],
+                year=submission.get('year'),
+                title=submission['title'],
+                description=submission.get('content', submission.get('description', '')),
+                tags=submission.get('tags', []),
+                suppression_evidence=submission.get('suppression_evidence')
+            )
+        elif submission_type == 'document':
+            entry_id = submitter.submit_document(
+                title=submission['title'],
+                content=submission.get('content', ''),
+                year=submission.get('year'),
+                tags=submission.get('tags', []),
+                suppression_evidence=submission.get('suppression_evidence'),
+                source_url=submission.get('source_url')
+            )
+        elif submission_type == 'video':
+            entry_id = submitter.submit_video(
+                url=submission.get('source_url', ''),
+                title=submission['title'],
+                description=submission.get('content', ''),
+                year=submission.get('year'),
+                tags=submission.get('tags', [])
+            )
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid submission type: {submission_type}")
+        
+        return {
+            "status": "success",
+            "entry_id": entry_id,
+            "message": "Knowledge submitted successfully",
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    except KeyError as e:
+        raise HTTPException(status_code=400, detail=f"Missing required field: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error submitting knowledge: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/knowledge/search")
+async def search_knowledge(
+    query: str = None,
+    topic: str = None,
+    year: int = None,
+    source_type: str = None,
+    min_suppression_score: float = None
+):
+    """Search the Lost Knowledge database"""
+    try:
+        from ..ingestion import HumanCuratedSubmission
+        
+        submitter = HumanCuratedSubmission()
+        filters = {}
+        
+        if topic:
+            filters['topic'] = topic
+        if year:
+            filters['year'] = year
+        if source_type:
+            filters['source_type'] = source_type
+        
+        results = submitter.search(query=query, **filters)
+        
+        # Filter by suppression score if requested
+        if min_suppression_score is not None:
+            results = [
+                r for r in results
+                if r.get('suppression_score', 0.0) >= min_suppression_score
+            ]
+        
+        return {
+            "status": "success",
+            "query": query,
+            "filters": filters,
+            "count": len(results),
+            "results": results,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    except Exception as e:
+        logger.error(f"Error searching knowledge: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/knowledge/stats")
+async def knowledge_stats():
+    """Get Lost Knowledge database statistics"""
+    try:
+        from ..ingestion import HumanCuratedSubmission
+        from pathlib import Path
+        import json
+        
+        submitter = HumanCuratedSubmission()
+        index = submitter.index
+        
+        # Calculate statistics
+        total_entries = len(index.get('entries', []))
+        
+        # Group by type
+        by_type = {}
+        by_topic = {}
+        high_suppression = []
+        
+        for entry in index.get('entries', []):
+            # Count by type
+            source_type = entry.get('source_type', 'unknown')
+            by_type[source_type] = by_type.get(source_type, 0) + 1
+            
+            # Count by topic
+            topic = entry.get('topic', 'unknown')
+            by_topic[topic] = by_topic.get(topic, 0) + 1
+            
+            # High suppression entries
+            if entry.get('suppression_score', 0.0) > 0.7:
+                high_suppression.append({
+                    'id': entry['id'],
+                    'title': entry.get('title'),
+                    'suppression_score': entry.get('suppression_score')
+                })
+        
+        return {
+            "status": "success",
+            "total_entries": total_entries,
+            "by_type": by_type,
+            "by_topic": by_topic,
+            "high_suppression_count": len(high_suppression),
+            "high_suppression_entries": high_suppression,
+            "last_updated": index.get('last_updated'),
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    except Exception as e:
+        logger.error(f"Error getting knowledge stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/api/middleware/agent/{agent_name}")
 async def get_agent_middleware_stats(agent_name: str):
     """Get middleware statistics for a specific agent."""
@@ -454,6 +723,99 @@ async def get_agent_middleware_stats(agent_name: str):
     except Exception as e:
         logger.error(f"Error getting agent stats: {e}", exc_info=True)
         return JSONResponse({"error": str(e)}, status_code=500)
+
+
+@app.post("/api/upload")
+async def upload_file(file: UploadFile = File(...)):
+    """
+    Phase 2: File upload endpoint using multipart/form-data.
+    
+    Accepts file uploads and returns a file_id for later reference.
+    Files are stored temporarily and automatically cleaned up after 1 hour.
+    
+    Returns:
+        {
+            "file_id": "uuid",
+            "filename": "original_filename.ext",
+            "content_type": "image/png",
+            "size": 12345
+        }
+    """
+    try:
+        from ..storage.file_storage import get_file_storage
+        
+        # Read file content
+        file_content = await file.read()
+        file_size = len(file_content)
+        
+        # Validate file
+        is_valid, error_msg = validate_file_upload(
+            file.filename or "unknown",
+            file.content_type or "application/octet-stream",
+            file_size
+        )
+        
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=error_msg or "Invalid file")
+        
+        # Store file
+        file_storage = get_file_storage()
+        file_id = file_storage.store_file(
+            file_content=file_content,
+            filename=file.filename or "unknown",
+            content_type=file.content_type or "application/octet-stream",
+            file_size=file_size
+        )
+        
+        # Return file_id
+        return JSONResponse(content={
+            "file_id": file_id,
+            "filename": file.filename,
+            "content_type": file.content_type,
+            "size": file_size
+        })
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error uploading file: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error uploading file: {str(e)}")
+
+
+@app.get("/api/file/{file_id}")
+async def get_file(file_id: str):
+    """
+    Retrieve a file by file_id.
+    
+    Returns the file content with appropriate Content-Type header.
+    """
+    try:
+        from ..storage.file_storage import get_file_storage
+        
+        file_storage = get_file_storage()
+        metadata = file_storage.get_file(file_id)
+        
+        if not metadata:
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        file_content = file_storage.read_file(file_id)
+        if not file_content:
+            raise HTTPException(status_code=404, detail="File content not found")
+        
+        from fastapi.responses import Response
+        return Response(
+            content=file_content,
+            media_type=metadata["content_type"],
+            headers={
+                "Content-Disposition": f'inline; filename="{metadata["filename"]}"'
+            }
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving file {file_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error retrieving file: {str(e)}")
 
 
 @app.get("/api/encyclopedia/search/{query}")
@@ -516,6 +878,12 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
         degradation_mode = request.get("degradation_mode", False)
         settings = request.get("settings", {})
         
+        # v5: Route query to appropriate handler
+        from ..router.request_router import get_request_router
+        router = get_request_router()
+        routing_decision = router.route(query, context={"mode": mode})
+        logger.info(f"🔍 v5 Routing: query='{query[:50]}' -> mode={routing_decision.mode} (confidence={routing_decision.confidence:.2f})")
+        
         logger.info(f"🔍🔍🔍 REQUEST PARAMS: query='{query[:50]}', mode='{mode}', agent='{agent}'")
         
         # Validate query (skip for now to debug hanging issue)
@@ -571,8 +939,8 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                     logger.info(f"🔍🔍🔍 SSE generate_stream: agent from request = '{stream_agent}' (type: {type(stream_agent)})")
                     
                     # FAST PATH: Check for simple queries FIRST (before any processing)
-                    # CHAT MODE: Secretary ONLY - completely isolated from Surveyor and all other agents
-                    if mode == "chat":
+                    # CHAT MODE & FAST MODE: Secretary ONLY - completely isolated from Surveyor and all other agents
+                    if mode == "chat" or mode == "fast":
                         from ..config import load_config_with_model
                         from ..providers.factory import provider_factory
                         
@@ -595,7 +963,37 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                         
                         # Secretary agent - fast, friendly, knows ICEBURG, no VectorStore needed
                         if agent_normalized == "secretary":
-                            logger.info(f"👔 Secretary agent selected - fast chat mode, no VectorStore needed")
+                            logger.info(f"👔 Secretary agent selected - fast chat mode")
+                            
+                            # SEARCH-FIRST: Get real web evidence before responding
+                            web_evidence_context = ""
+                            search_sources = []
+                            try:
+                                from ..search.web_search_orchestrator import get_web_search_orchestrator
+                                
+                                # Quick search (5 second timeout for reliable results)
+                                search_orchestrator = get_web_search_orchestrator(timeout=5.0)
+                                search_response = await search_orchestrator.search(query, num_results=5)
+                                
+                                if search_response.results:
+                                    logger.info(f"🔍 Fast mode search: {len(search_response.results)} results in {search_response.search_time_ms:.0f}ms")
+                                    
+                                    # Format evidence for Secretary
+                                    evidence_parts = ["WEB SEARCH RESULTS (use these as sources):"]
+                                    for i, result in enumerate(search_response.results, 1):
+                                        evidence_parts.append(f"[Source {i}] {result.title}")
+                                        evidence_parts.append(f"  URL: {result.url}")
+                                        evidence_parts.append(f"  {result.snippet[:200]}...")
+                                        search_sources.append({"title": result.title, "url": result.url})
+                                    
+                                    web_evidence_context = "\n".join(evidence_parts)
+                                    yield f"data: {json.dumps({'type': 'thinking_stream', 'content': f'Found {len(search_response.results)} sources...', 'timestamp': time.time()})}\n\n"
+                                else:
+                                    logger.info("🔍 Fast mode search: No results found")
+                                    
+                            except Exception as e:
+                                logger.warning(f"🔍 Fast mode search failed (continuing without): {e}")
+                            
                             try:
                                 from ..config import load_config_with_model
                                 from ..agents.secretary import run as secretary_run
@@ -642,7 +1040,16 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 user_id = request.get("user_id")
                                 
                                 # Call Secretary agent (no VectorStore needed!)
-                                logger.info(f"🔍🔍🔍 SSE: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
+                                # Enhance query with web evidence if available
+                                enhanced_query = query
+                                if web_evidence_context:
+                                    enhanced_query = f"{query}\n\n{web_evidence_context}"
+                                    logger.info(f"🔍 Enhanced query with {len(search_sources)} web sources")
+                                
+                                logger.info(f"🔍🔍🔍 SSE: Calling secretary_run with query='{query[:100]}' (length={len(enhanced_query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
+                                
+                                # Pass routing_mode to agent (fixes double routing)
+                                routing_mode_sse = routing_decision.mode if routing_decision else None
                                 
                                 # Wrap with global middleware if available
                                 if global_middleware:
@@ -650,23 +1057,47 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                         agent_name="secretary",
                                         agent_func=secretary_run,
                                         cfg=secretary_cfg,
-                                        query=query,
+                                        query=enhanced_query,
                                         verbose=False,
                                         thinking_callback=lambda msg: None,
                                         conversation_id=conversation_id,
-                                        user_id=user_id
+                                        user_id=user_id,
+                                        routing_mode=routing_mode_sse,
+                                        mode=mode  # Pass original mode for chat detection
                                     )
                                 else:
-                                    secretary_response = await asyncio.to_thread(
-                                        secretary_run,
+                                    # Directly await since run() is now async
+                                    secretary_response = await secretary_run(
                                         secretary_cfg,
-                                        query,
+                                        enhanced_query,
                                         verbose=False,
                                         thinking_callback=lambda msg: None,
                                         conversation_id=conversation_id,
-                                        user_id=user_id
+                                        user_id=user_id,
+                                        routing_mode=routing_mode_sse,
+                                        mode=mode  # Pass original mode for chat detection
                                     )
                                 logger.info(f"🔍🔍🔍 SSE: Secretary returned response length={len(secretary_response) if secretary_response else 0}, preview='{secretary_response[:100] if secretary_response else None}...'")
+                                
+                                # SANITIZATION: Remove hallucinated "Goal-driven task" reports BEFORE streaming
+                                # This prevents verbose planning logs from reaching the browser
+                                if secretary_response:
+                                    import re
+                                    # Remove "I've executed your goal-driven task..." text
+                                    secretary_response = re.sub(r"I've executed your goal-driven task.*?(?=\n\n|\Z)", "", secretary_response, flags=re.DOTALL)
+                                    # Remove "Goal: X - Planned Y step(s)" lines
+                                    secretary_response = re.sub(r"Goal:.*?Planned \d+ step\(s\).*?(?=\n)", "", secretary_response)
+                                    # Remove "Task Execution Report" lines
+                                    secretary_response = re.sub(r"\*\*Task Execution Report\*\*.*?(?=\n)", "", secretary_response)
+                                    # Remove "✓ Task:" lines
+                                    secretary_response = re.sub(r"✓.*?Task:.*?(?=\n)", "", secretary_response)
+                                    # Remove "Planned X step(s) - Completed: Y, Failed: Z" lines
+                                    secretary_response = re.sub(r"- Planned \d+ step\(s\) - Completed: \d+, Failed: \d+", "", secretary_response)
+                                    # Remove "All tasks have been executed" lines
+                                    secretary_response = re.sub(r"All tasks have been executed.*?(?=\n|\Z)", "", secretary_response)
+                                    # Clean up multiple newlines
+                                    secretary_response = re.sub(r"\n{3,}", "\n\n", secretary_response).strip()
+                                    logger.info(f"✅ Sanitized response length={len(secretary_response)}, preview='{secretary_response[:100]}...'")
                                 
                                 # Stream the response
                                 if secretary_response:
@@ -951,10 +1382,88 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                             yield f"data: {json.dumps({'type': 'done', 'mode': 'astrophysiology', 'error': 'no_results', 'results': error_result.get('results', {})})}\n\n"
                     else:
                         # Use full protocol for other non-chat modes
-                        result = await system_integrator.process_query_with_full_integration(
-                            query=query,
-                            domain=request.get("domain")
+                        # Use asyncio.Queue for message streaming (same pattern as astro-physiology)
+                        research_queue = asyncio.Queue()
+                        
+                        async def research_callback(msg: Dict[str, Any]):
+                            """Put messages into queue for SSE generator"""
+                            # Transform system_integrator events to thinking_stream for UI
+                            msg_type = msg.get("type", "action")
+                            transformed_msg = msg
+                            if msg_type == "action":
+                                thinking_content = msg.get("description", "Processing...")
+                                transformed_msg = {
+                                    "type": "thinking_stream",
+                                    "content": thinking_content,
+                                    "timestamp": time.time()
+                                }
+                            elif msg_type == "agent_thinking":
+                                agent = msg.get("agent", "system")
+                                content = msg.get("content", "Processing...")
+                                transformed_msg = {
+                                    "type": "thinking_stream",
+                                    "content": f"{agent.capitalize()}: {content}",
+                                    "timestamp": time.time()
+                                }
+                            
+                            await research_queue.put(transformed_msg)
+
+                        # Emit initial progress event
+                        await research_queue.put({
+                            'type': 'thinking_stream', 
+                            'content': 'Starting full research protocol...', 
+                            'timestamp': time.time()
+                        })
+                        
+                        # Run research in background task
+                        research_task = asyncio.create_task(
+                            system_integrator.process_query_with_full_integration(
+                                query=query,
+                                domain=request.get("domain"),
+                                progress_callback=research_callback
+                            )
                         )
+                        
+                        # Monitor queue and task
+                        try:
+                            # 2-minute total timeout tracked from start
+                            while True:
+                                # Check how much time remains for the global 2-minute timeout
+                                elapsed = time.time() - prompt_start_time
+                                remaining = 120 - elapsed
+                                
+                                if remaining <= 0:
+                                    logger.error(f"Global research timeout reached (120s)")
+                                    research_task.cancel()
+                                    raise asyncio.TimeoutError()
+
+                                try:
+                                    # Wait for a message with short timeout to toggle
+                                    msg = await asyncio.wait_for(research_queue.get(), timeout=0.1)
+                                    yield f"data: {json.dumps(msg)}\n\n"
+                                except asyncio.TimeoutError:
+                                    if research_task.done():
+                                        # Task is done, drain any remaining messages in queue
+                                        while not research_queue.empty():
+                                            m = research_queue.get_nowait()
+                                            yield f"data: {json.dumps(m)}\n\n"
+                                        break
+                                    continue
+                            
+                            # Final result
+                            result = await research_task
+                            yield f"data: {json.dumps({'type': 'thinking_stream', 'content': 'Research complete, generating response...', 'timestamp': time.time()})}\n\n"
+                            
+                        except asyncio.TimeoutError:
+                            logger.error(f"Query processing timed out after 120 seconds")
+                            yield f"data: {json.dumps({'type': 'thinking_stream', 'content': 'Research timed out. Generating partial response...', 'timestamp': time.time()})}\n\n"
+                            result = {
+                                "query": query,
+                                "results": {
+                                    "content": "The research process timed out. Please try using **Fast** or **Chat** mode for quicker responses, or simplify your query.",
+                                    "error": "timeout"
+                                }
+                            }
                         
                         # Stream content
                         content = result.get("results", {}).get("content", "")
@@ -1015,6 +1524,65 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
             )
             
             try:
+                # ALWAYS use Secretary agent for chat mode (with executor capabilities)
+                # This ensures date injection and all enhanced features work
+                agent_normalized = str(agent).lower().strip() if agent else "auto"
+                # Force Secretary for chat mode regardless of agent selection
+                agent_normalized = "secretary"
+                logger.info(f"📞 HTTP Chat Mode: Using Secretary agent with executor (forced for chat mode)")
+                
+                from ..agents.secretary import run as secretary_run
+                from ..config import IceburgConfig
+                
+                # Create config for Secretary
+                secretary_cfg = IceburgConfig(
+                    data_dir=custom_cfg.data_dir,
+                    surveyor_model=custom_cfg.surveyor_model,
+                    dissident_model=custom_cfg.dissident_model,
+                    synthesist_model=custom_cfg.synthesist_model,
+                    oracle_model=custom_cfg.oracle_model,
+                    embed_model=custom_cfg.embed_model,
+                    llm_provider=custom_cfg.llm_provider,
+                    provider_url=custom_cfg.provider_url,
+                    timeout_s=custom_cfg.timeout_s,
+                    enable_code_generation=custom_cfg.enable_code_generation,
+                    disable_memory=custom_cfg.disable_memory,
+                    enable_software_lab=custom_cfg.enable_software_lab,
+                    max_context_length=custom_cfg.max_context_length,
+                    fast=custom_cfg.fast
+                )
+                
+                user_id = request.get("user_id")
+                
+                # Get routing decision for this query
+                routing_decision_http = router.route(query, context={"mode": mode})
+                
+                # Call Secretary agent (with executor and date injection)
+                # Now async - directly await
+                secretary_response = await secretary_run(
+                    cfg=secretary_cfg,
+                    query=query,
+                    verbose=False,
+                    thinking_callback=None,
+                    conversation_id=conversation_id,
+                    user_id=user_id,
+                    routing_mode=routing_decision_http.mode,
+                    mode=mode  # Pass original mode for chat detection
+                )
+                
+                return JSONResponse(content={
+                    "content": secretary_response,
+                    "thinking": [],
+                    "informatics": {
+                        "sources": [],
+                        "confidence": 0.0,
+                        "processing_time": 0.0
+                    },
+                    "conclusions": []
+                })
+                
+                # OLD CODE PATH BELOW - Only used for non-chat modes
+                # (This code should never execute for chat mode, but kept for other modes)
                 provider = provider_factory(custom_cfg)
                 # Build system prompt based on agent selection (same logic as WebSocket)
                 if agent and agent != "auto":
@@ -1929,9 +2497,20 @@ async def websocket_endpoint(websocket: WebSocket):
             try:
                 query_timeout = 120.0  # 2 minutes max for query processing
                 
+                # v5: Route query to appropriate handler
+                from ..router.request_router import get_request_router
+                router = get_request_router()
+                routing_decision = router.route(query, context={"mode": mode})
+                logger.info(f"🔍 v5 Routing (WS): query='{query[:50]}' -> mode={routing_decision.mode} (confidence={routing_decision.confidence:.2f})")
+                
+                # Override mode with routing decision if it's a v5 mode
+                if routing_decision.mode in ["web_research", "local_rag", "hybrid"]:
+                    mode = routing_decision.mode
+                    logger.info(f"🔍 v5 Mode override: using {mode} for query")
+                
                 # PRIORITY: Chat mode should be checked FIRST (before other modes)
                 # This ensures single-agent mode is used for chat, regardless of agent setting
-                if mode == "chat":  # Single agent mode for ALL agents in chat mode
+                if mode == "chat" or mode == "web_research" or mode == "local_rag" or mode == "hybrid":  # Single agent mode for chat and v5 search modes
                     # SINGLE AGENT CHAT MODE - Optimized for speed
                     # Flow: Immediate thinking → LLM call (parallel with optional etymology)
                     logger.info(f"🎯 SINGLE AGENT CHAT MODE (PRIORITY): agent={agent} (type: {type(agent).__name__}), mode={mode}, query={query[:50]}")
@@ -2148,6 +2727,9 @@ async def websocket_endpoint(websocket: WebSocket):
                                 # Call Secretary agent (no VectorStore needed!)
                                 logger.info(f"🔍🔍🔍 WS: Calling secretary_run with query='{query[:100]}' (length={len(query)}), conversation_id={conversation_id[:20] if conversation_id else None}")
                                 
+                                # Pass routing_mode to agent (fixes double routing)
+                                routing_mode_to_pass = routing_decision.mode if routing_decision else None
+                                
                                 # Wrap with global middleware if available
                                 if global_middleware:
                                     secretary_response = await global_middleware.execute_agent(
@@ -2158,17 +2740,21 @@ async def websocket_endpoint(websocket: WebSocket):
                                         verbose=False,
                                         thinking_callback=thinking_callback,
                                         conversation_id=conversation_id,
-                                        user_id=user_id
+                                        user_id=user_id,
+                                        routing_mode=routing_mode_to_pass,
+                                        mode=mode  # Pass original mode for chat detection
                                     )
                                 else:
-                                    secretary_response = await asyncio.to_thread(
-                                        secretary_run,
+                                    # Directly await since run() is now async
+                                    secretary_response = await secretary_run(
                                         secretary_cfg,
                                         query,
                                         verbose=False,
                                         thinking_callback=thinking_callback,
                                         conversation_id=conversation_id,
-                                        user_id=user_id
+                                        user_id=user_id,
+                                        routing_mode=routing_mode_to_pass,
+                                        mode=mode  # Pass original mode for chat detection
                                     )
                                 
                                 # Cancel thinking task
@@ -3662,6 +4248,21 @@ def create_app() -> FastAPI:
     
     return app
 
+
+# Mount static files for frontend (must be after all routes)
+# IMPORTANT: This must be the LAST thing before app is used
+try:
+    from pathlib import Path
+    frontend_dir = Path(__file__).parent.parent.parent.parent / "frontend"
+    if frontend_dir.exists() and (frontend_dir / "index.html").exists():
+        # Mount static files - this will serve index.html for / and other static files
+        # API routes take precedence because they're defined first
+        app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="static")
+        logger.info(f"✅ Mounted static files from {frontend_dir}")
+    else:
+        logger.warning(f"⚠️ Frontend directory not found or index.html missing: {frontend_dir}")
+except Exception as e:
+    logger.error(f"❌ Could not mount static files: {e}", exc_info=True)
 
 if __name__ == "__main__":
     import uvicorn

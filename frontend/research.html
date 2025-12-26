@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iceberg Labs | Research Archives</title>
+    <title>Research Archives | ICEBURG Intelligence</title>
+    <meta name="description"
+        content="ICEBURG Research Archives: Exploring methodologies, labs, and studies in autonomous intelligence systems.">
     <link rel="stylesheet" href="/styles.css">
     <style>
         :root {
-            --depth-bg: #020203;
-            --glass-surface: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #F0F0F2;
-            --text-secondary: #8A8A95;
-            --accent-lab: #4A9EFF;
-            --accent-pulse: rgba(74, 158, 255, 0.1);
+            --depth-bg: #030304;
+            --glass-surface: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text-primary: #EEEEEF;
+            --text-secondary: #888890;
+            --text-tertiary: #555558;
+            --accent-blue: rgba(80, 140, 255, 0.15);
+            --accent-glow: rgba(80, 140, 255, 0.08);
         }
 
         body {
@@ -27,7 +30,7 @@
         }
 
         /* Ambient Living Background */
-        .lab-ambient {
+        .ambient-field {
             position: fixed;
             top: 0;
             left: 0;
@@ -35,33 +38,44 @@
             height: 100%;
             z-index: -1;
             background:
-                radial-gradient(circle at 20% 30%, rgba(20, 30, 50, 0.5) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(10, 20, 40, 0.5) 0%, transparent 50%);
-            animation: deep-breath 16s ease-in-out infinite;
+                radial-gradient(ellipse at 20% 20%, rgba(40, 60, 80, 0.25) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(30, 40, 60, 0.2) 0%, transparent 50%);
+            animation: breathe 15s ease-in-out infinite;
         }
 
-        @keyframes deep-breath {
+        @keyframes breathe {
 
             0%,
             100% {
-                opacity: 0.6;
+                opacity: 0.7;
                 transform: scale(1);
             }
 
             50% {
-                opacity: 0.9;
-                transform: scale(1.05);
+                opacity: 1;
+                transform: scale(1.03);
             }
         }
 
+        /* Neural Network Animation */
+        .neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 4rem 2rem;
         }
 
         /* Navigation */
-        .lab-nav {
+        .interface-nav {
             position: absolute;
             top: 2rem;
             left: 2rem;
@@ -75,245 +89,438 @@
             letter-spacing: 0.05em;
             text-transform: uppercase;
             transition: color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .nav-link:hover {
             color: var(--text-primary);
         }
 
-        /* Hero / Lab Intro */
-        .lab-header {
-            margin-bottom: 20vh;
-            padding-top: 10vh;
-            position: relative;
+        /* Hero Section */
+        .research-hero {
+            margin-bottom: 12vh;
+            padding-top: 12vh;
+            text-align: center;
         }
 
-        .lab-title {
-            font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 200;
-            letter-spacing: -0.04em;
-            margin: 0 0 1rem 0;
-            background: linear-gradient(180deg, #fff 0%, #AAA 100%);
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fade-in-up 0.8s ease-out 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            margin: 0 0 1.5rem 0;
+            background: linear-gradient(180deg, #fff 0%, #999 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             opacity: 0;
-            animation: fade-in-up 1s ease-out forwards;
+            animation: fade-in-up 0.8s ease-out 0.4s forwards;
         }
 
-        .lab-subtitle {
-            font-size: clamp(1rem, 2vw, 1.2rem);
+        .hero-subtitle {
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            font-weight: 300;
-            max-width: 600px;
-            border-left: 1px solid var(--accent-pulse);
-            padding-left: 1.5rem;
-            margin-top: 2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
             opacity: 0;
-            animation: fade-in-up 1s ease-out 0.3s forwards;
+            animation: fade-in-up 0.8s ease-out 0.6s forwards;
         }
 
-        /* Flow Animation Container */
-        .flow-visualizer {
-            position: absolute;
-            right: 0;
-            top: 20%;
-            width: 50%;
-            height: 400px;
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
             opacity: 0;
-            animation: fade-in 2s ease-out 1s forwards;
-            pointer-events: none;
+            animation: fade-in-up 0.8s ease-out 0.8s forwards;
         }
 
-        .flow-stream {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-lab), transparent);
-            width: 100%;
-            opacity: 0.3;
+        .stat-item {
+            text-align: center;
         }
 
-        /* Modular Grid Layout */
-        .research-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 2rem;
-            margin-bottom: 8rem;
-        }
-
-        .col-4 {
-            grid-column: span 4;
-        }
-
-        .col-6 {
-            grid-column: span 6;
-        }
-
-        .col-8 {
-            grid-column: span 8;
-        }
-
-        .col-12 {
-            grid-column: span 12;
-        }
-
-        @media (max-width: 1024px) {
-
-            .col-4,
-            .col-6,
-            .col-8 {
-                grid-column: span 12;
-            }
-        }
-
-        /* Info Modules */
-        .lab-module {
-            background: var(--glass-surface);
-            border: 1px solid var(--glass-border);
-            padding: 2.5rem;
-            border-radius: 4px;
-            /* Industrial feel */
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .lab-module:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .module-label {
-            font-family: 'Monaco', monospace;
-            font-size: 0.7rem;
-            color: var(--accent-lab);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .module-title {
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin: 0 0 1rem 0;
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 200;
             color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
 
-        .module-text {
-            color: var(--text-secondary);
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-top: 0.25rem;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 15vh;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
             font-weight: 300;
-            font-size: 0.95rem;
-            line-height: 1.8;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.02em;
         }
 
-        /* Live Neural Pulse Animation within Modules */
-        .pulse-dot {
+        /* Methodology Flow */
+        .methodology-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--glass-border);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 3rem;
+        }
+
+        .flow-step {
+            background: #050506;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            transition: background 0.5s;
+        }
+
+        .flow-step:hover {
+            background: #080809;
+        }
+
+        .flow-step::after {
+            content: '→';
             position: absolute;
-            top: 2rem;
-            right: 2rem;
-            width: 6px;
-            height: 6px;
-            background: var(--accent-lab);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-lab);
-            animation: neural-pulse 4s infinite;
+            right: -0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
+            opacity: 0.4;
         }
 
-        @keyframes neural-pulse {
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .flow-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            animation: pulse-ring 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
 
             0%,
             100% {
-                opacity: 0.2;
                 transform: scale(1);
+                opacity: 0.5;
             }
 
             50% {
-                opacity: 1;
-                transform: scale(1.5);
-            }
-        }
-
-        /* Protocol Flow Visualization */
-        .protocol-flow {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            position: relative;
-        }
-
-        .protocol-node {
-            width: 10px;
-            height: 10px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            position: relative;
-            z-index: 2;
-        }
-
-        .protocol-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--glass-border);
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-
-        .protocol-active-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 0%;
-            height: 1px;
-            background: var(--accent-lab);
-            transform: translateY(-50%);
-            z-index: 1;
-            animation: flow-progress 4s infinite ease-in-out;
-        }
-
-        @keyframes flow-progress {
-            0% {
-                width: 0%;
-                left: 0;
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 1;
-            }
-
-            80% {
-                opacity: 1;
-            }
-
-            100% {
-                width: 100%;
-                left: 0;
+                transform: scale(1.15);
                 opacity: 0;
             }
         }
 
-        /* Footer */
-        .lab-footer {
-            border-top: 1px solid var(--glass-border);
-            padding-top: 4rem;
-            margin-top: 8rem;
+        .flow-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-desc {
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
+            line-height: 1.5;
         }
 
+        /* Labs Grid */
+        .labs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lab-card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lab-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .lab-card:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .lab-card:hover::before {
+            opacity: 1;
+        }
+
+        .lab-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .lab-name {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .lab-focus {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        .lab-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .lab-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .module-tag {
+            font-family: 'Monaco', monospace;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-tertiary);
+        }
+
+        /* Studies Section */
+        .studies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: var(--glass-border);
+            border: 1px solid var(--glass-border);
+        }
+
+        .study-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 2rem;
+            padding: 2rem;
+            background: #050506;
+            align-items: start;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .study-item:hover {
+            background: #0a0a0c;
+            transform: translateX(4px);
+        }
+
+        a.study-item {
+            display: grid;
+        }
+
+        .study-year {
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            padding-top: 0.25rem;
+        }
+
+        .study-content {
+            min-width: 0;
+        }
+
+        .study-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .study-abstract {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .study-status {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            padding: 0.35rem 0.75rem;
+            border: 1px solid var(--glass-border);
+            white-space: nowrap;
+        }
+
+        .study-status.active {
+            color: rgba(100, 200, 150, 0.8);
+            border-color: rgba(100, 200, 150, 0.2);
+        }
+
+        .study-status.hypothesis {
+            color: rgba(255, 180, 100, 0.8);
+            border-color: rgba(255, 180, 100, 0.2);
+        }
+
+        .study-status.research {
+            color: rgba(180, 150, 255, 0.8);
+            border-color: rgba(180, 150, 255, 0.2);
+        }
+
+        /* Data Flow Animation */
+        .data-flow-container {
+            margin-top: 6rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .data-flow-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .data-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .data-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            animation: data-pulse 2s ease-in-out infinite;
+        }
+
+        .data-node:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .data-node:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .data-node:nth-child(4) {
+            animation-delay: 0.45s;
+        }
+
+        .data-node:nth-child(5) {
+            animation-delay: 0.6s;
+        }
+
+        .data-node:nth-child(6) {
+            animation-delay: 0.75s;
+        }
+
+        .data-node:nth-child(7) {
+            animation-delay: 0.9s;
+        }
+
+        .data-node:nth-child(8) {
+            animation-delay: 1.05s;
+        }
+
+        @keyframes data-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.8);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
         @keyframes fade-in-up {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
 
             to {
@@ -322,173 +529,483 @@
             }
         }
 
-        @keyframes fade-in {
-            from {
-                opacity: 0;
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .methodology-flow {
+                grid-template-columns: 1fr 1fr;
             }
 
-            to {
-                opacity: 1;
+            .flow-step:nth-child(2)::after,
+            .flow-step:nth-child(4)::after {
+                display: none;
+            }
+
+            .study-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .study-year {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            html,
+            body {
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            body {
+                position: relative;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .interface-nav {
+                left: 1rem;
+                top: 1.5rem;
+            }
+
+            .research-hero {
+                padding-top: 8vh;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+
+            .methodology-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-step {
+                padding: 2rem 1.5rem;
+            }
+
+            .flow-step::after {
+                display: none;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .labs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lab-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .study-item {
+                padding: 1.5rem 1rem;
+                gap: 1rem;
+            }
+
+            .data-flow-container {
+                padding: 1rem 0;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="lab-ambient"></div>
+    <div class="ambient-field"></div>
+    <canvas class="neural-canvas" id="neuralCanvas"></canvas>
 
-    <nav class="lab-nav">
+    <nav class="interface-nav">
         <a href="/" class="nav-link">← Interface</a>
     </nav>
 
     <div class="container">
 
         <!-- Hero Section -->
-        <header class="lab-header">
-            <h1 class="lab-title">Iceberg Labs</h1>
-            <div class="lab-subtitle">
-                The Archives of Methodology.<br>
-                Where biological intuition meets computational rigor.
-            </div>
-
-            <div class="flow-visualizer" id="flowViz">
-                <!-- Javascript will populate streams here -->
+        <header class="research-hero">
+            <div class="hero-eyebrow">Autonomous Research Division</div>
+            <h1 class="hero-title">Research Archives</h1>
+            <p class="hero-subtitle">
+                Documenting the methodologies, experimental frameworks, and breakthrough studies
+                that power ICEBURG's autonomous intelligence infrastructure.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Research Labs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Publications</div>
+                </div>
             </div>
         </header>
 
-        <!-- Section 1: Methodology (How it was done) -->
-        <div class="research-grid">
-            <div class="col-12">
-                <span class="module-label">Origin Story</span>
+        <!-- Methodology Section -->
+        <section class="section reveal">
+            <div class="section-header">
+                <div class="section-eyebrow">Process</div>
+                <h2 class="section-title">Research Methodology</h2>
             </div>
-            <div class="col-8 lab-module">
-                <div class="pulse-dot"></div>
-                <h2 class="module-title">The "Somatic" Protocol</h2>
-                <div class="module-text">
-                    <p>Conventional AI development focuses purely on cognitive metrics—latency, token density, reasoning
-                        depth. Iceberg Labs inverted this paradigm by prioritizing <strong>Somatic Resonance</strong>.
+
+            <div class="methodology-flow">
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 16v-4M12 8h.01"></path>
+                        </svg>
+                    </div>
+                    <div class="flow-title">Hypothesis</div>
+                    <div class="flow-desc">Pattern recognition across domains identifies research opportunities</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="flow-title">Analysis</div>
+                    <div class="flow-desc">Multi-agent swarms decompose complex problems into tractable components</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="flow-title">Synthesis</div>
+                    <div class="flow-desc">Cross-domain knowledge fusion generates novel insights and solutions</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="flow-title">Verification</div>
+                    <div class="flow-desc">Autonomous validation through simulation and real-world testing</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Labs Section -->
+        <section class="section reveal">
+            <div class="section-header">
+                <div class="section-eyebrow">Infrastructure</div>
+                <h2 class="section-title">Research Labs</h2>
+            </div>
+
+            <div class="labs-grid">
+                <article class="lab-card">
+                    <svg class="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                        </path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                    <div class="lab-name">Quantum Computing Lab</div>
+                    <div class="lab-focus">Quantum Finance • QML</div>
+                    <p class="lab-desc">
+                        Researching quantum advantage in financial modeling through QGANs,
+                        variational circuits, and hybrid classical-quantum optimization strategies.
                     </p>
-                    <p>We asked: <em>Can an autonomous system feel "alive" without being deceptive?</em></p>
-                    <p>Our methodology involved creating a "digital physiology." Agents aren't just executed code; they
-                        possess simulated circadian rhythms (`piezoelectric.py`) and memory states that decay
-                        organically over time (`emotional_memory.py`), mirroring biological neural plasticity.</p>
+                    <div class="lab-modules">
+                        <span class="module-tag">qgan.py</span>
+                        <span class="module-tag">circuits.py</span>
+                        <span class="module-tag">sampling.py</span>
+                    </div>
+                </article>
+
+                <article class="lab-card">
+                    <svg class="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <div class="lab-name">Neural Architecture Lab</div>
+                    <div class="lab-focus">Self-Improvement • RL</div>
+                    <p class="lab-desc">
+                        Investigating autonomous improvement cycles, experience replay mechanisms,
+                        and emergent behavior detection in reinforcement learning systems.
+                    </p>
+                    <div class="lab-modules">
+                        <span class="module-tag">autonomous_improvement.py</span>
+                        <span class="module-tag">emergence_detector.py</span>
+                    </div>
+                </article>
+
+                <article class="lab-card">
+                    <svg class="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                    <div class="lab-name">Truth Finding Lab</div>
+                    <div class="lab-focus">Epistemics • Detection</div>
+                    <p class="lab-desc">
+                        Developing algorithms for suppression detection, certainty calculation,
+                        and information archaeology across global data streams.
+                    </p>
+                    <div class="lab-modules">
+                        <span class="module-tag">suppression_detector.py</span>
+                        <span class="module-tag">certainty_calculation.py</span>
+                    </div>
+                </article>
+
+                <article class="lab-card">
+                    <svg class="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <div class="lab-name">Swarm Intelligence Lab</div>
+                    <div class="lab-focus">Multi-Agent • Orchestration</div>
+                    <p class="lab-desc">
+                        Exploring self-organizing agent clusters, capability matching algorithms,
+                        and emergent coordination patterns in distributed systems.
+                    </p>
+                    <div class="lab-modules">
+                        <span class="module-tag">swarm_architect.py</span>
+                        <span class="module-tag">capability_registry.py</span>
+                    </div>
+                </article>
+
+                <article class="lab-card">
+                    <svg class="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="22"></line>
+                    </svg>
+                    <div class="lab-name">Physiological Interface Lab</div>
+                    <div class="lab-focus">Bio-Digital • Sensors</div>
+                    <p class="lab-desc">
+                        Pioneering piezoelectric detection, frequency synthesis, and
+                        earth-connection protocols for bio-digital synchronization.
+                    </p>
+                    <div class="lab-modules">
+                        <span class="module-tag">piezoelectric_detector.py</span>
+                        <span class="module-tag">frequency_synthesizer.py</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Studies Section -->
+        <section class="section reveal">
+            <div class="section-header">
+                <div class="section-eyebrow">Publications</div>
+                <h2 class="section-title">Featured Studies</h2>
+            </div>
+
+
+            <div class="studies-list" id="studiesList">
+                <!-- Studies will be dynamically generated from JavaScript -->
+            </div>
+
+            <script>
+                // ALL 47 ICEBURG-generated studies from research_outputs
+                const allStudies = [
+                    // November 2025 Studies (6)
+                    { id: 'quantum-consciousness-1', title: 'Quantum Consciousness & Bioelectricity & Free Energy (v1)', date: '2025.11.05', status: 'active' },
+                    { id: 'quantum-consciousness-2', title: 'Quantum Consciousness & Bioelectricity & Free Energy (v2)', date: '2025.11.05', status: 'active' },
+                    { id: 'quantum-entanglement-1', title: 'Quantum Entanglement in Biological Systems (v1)', date: '2025.11.05', status: 'active' },
+                    { id: 'quantum-entanglement-2', title: 'Quantum Entanglement in Biological Systems (v2)', date: '2025.11.05', status: 'active' },
+                    { id: 'pancreatic-bioelectric-1', title: 'Pancreatic Function & Bioelectricity (v1)', date: '2025.11.05', status: 'active' },
+                    { id: 'pancreatic-bioelectric-2', title: 'Pancreatic Function & Bioelectricity (v2)', date: '2025.11.05', status: 'active' },
+
+                    // September 2025 Studies (41)
+                    { id: 'unified-theory', title: 'Unified Theory Principle', date: '2025.09.25', status: 'published' },
+                    { id: 'enhanced-fulfillment', title: 'Enhanced Fulfillment Protocols via ML Integration', date: '2025.09.25', status: 'published' },
+                    { id: 'semantic-similarity-nlp', title: 'Optimization of Semantic Similarity Detection in NLP', date: '2025.09.24', status: 'published' },
+                    { id: 'systemic-suppression', title: 'Systemic Suppression of Alternative Energy Research', date: '2025.09.12', status: 'published' },
+                    { id: 'holistic-bioelectric-4', title: 'Holistic Bioelectric Energy Principle (v4)', date: '2025.09.12', status: 'published' },
+                    { id: 'hypothesis-2', title: 'Hypothesis - Insufficient Evidence (2)', date: '2025.09.12', status: 'hypothesis' },
+                    { id: 'hypothesis-3', title: 'Hypothesis - Insufficient Evidence (3)', date: '2025.09.12', status: 'hypothesis' },
+                    { id: 'field-propulsion', title: 'Field-Driven Propulsion Coherence', date: '2025.09.11', status: 'hypothesis' },
+                    { id: 'holistic-bioelectric-1', title: 'Holistic Bioelectric Energy Principle (v1)', date: '2025.09.11', status: 'published' },
+                    { id: 'holistic-bioelectric-2', title: 'Holistic Bioelectric Energy Principle (v2)', date: '2025.09.11', status: 'published' },
+                    { id: 'holistic-bioelectric-3', title: 'Holistic Bioelectric Energy Principle (v3)', date: '2025.09.11', status: 'published' },
+                    { id: 'holistic-bioelectric-5', title: 'Holistic Bioelectric Principle', date: '2025.09.11', status: 'published' },
+                    { id: 'hypothesis-1', title: 'Hypothesis - Insufficient Evidence (1)', date: '2025.09.11', status: 'hypothesis' },
+                    { id: 'unknown-8', title: 'Unknown Principle (Discovery 8)', date: '2025.09.11', status: 'research' },
+                    { id: 'unknown-9', title: 'Unknown Principle (Discovery 9)', date: '2025.09.11', status: 'research' },
+                    { id: 'unknown-10', title: 'Unknown Principle (Discovery 10)', date: '2025.09.11', status: 'research' },
+                    { id: 'unknown-4', title: 'Unknown Principle (Discovery 4)', date: '2025.09.10', status: 'research' },
+                    { id: 'unknown-5', title: 'Unknown Principle (Discovery 5)', date: '2025.09.10', status: 'research' },
+                    { id: 'unknown-6', title: 'Unknown Principle (Discovery 6)', date: '2025.09.10', status: 'research' },
+                    { id: 'unknown-7', title: 'Unknown Principle (Discovery 7)', date: '2025.09.10', status: 'research' },
+                    { id: 'emergence-language-1', title: 'Emergence in Language Model Development (v1)', date: '2025.09.05', status: 'published' },
+                    { id: 'emergence-language-2', title: 'Emergence in Language Models (v2)', date: '2025.09.05', status: 'published' },
+                    { id: 'emergence-language-3', title: 'Emergence in Language Models (v3)', date: '2025.09.05', status: 'published' },
+                    { id: 'emergence-language-4', title: 'Emergence in Language Models (v4)', date: '2025.09.05', status: 'published' },
+                    { id: 'emergent-intelligence-1', title: 'Emergent Intelligence in Complex Systems', date: '2025.09.05', status: 'published' },
+                    { id: 'emergent-intelligence-2', title: 'Emergent Intelligence through Interdisciplinary Integration', date: '2025.09.05', status: 'published' },
+                    { id: 'cross-disciplinary-consent', title: 'Cross-disciplinary Exploration with Informed Consent', date: '2025.09.05', status: 'published' },
+                    { id: 'cross-disciplinary-importance', title: 'Importance of Cross-Disciplinary Research in LM Development', date: '2025.09.05', status: 'published' },
+                    { id: 'emergent-behavior-lm', title: 'Incorporation of Emergent Behavior in Language Models', date: '2025.09.05', status: 'published' },
+                    { id: 'informed-consent-1', title: 'Informed Consent in Cross-Disciplinary Research', date: '2025.09.05', status: 'published' },
+                    { id: 'informed-consent-2', title: 'Informed Consent in Data Practices', date: '2025.09.05', status: 'published' },
+                    { id: 'quantum-insight', title: 'Interdisciplinary Quantum Insight Principle', date: '2025.09.05', status: 'published' },
+                    { id: 'quantum-integration', title: 'Quantum Integration Principle', date: '2025.09.05', status: 'published' },
+                    { id: 'rapid-brain-mindfulness', title: 'Rapid Brain Processing & Mindfulness', date: '2025.09.05', status: 'published' },
+                    { id: 'unknown-1', title: 'Unknown Principle (Discovery 1)', date: '2025.09.05', status: 'research' },
+                    { id: 'unknown-2', title: 'Unknown Principle (Discovery 2)', date: '2025.09.05', status: 'research' },
+                    { id: 'unknown-3', title: 'Unknown Principle (Discovery 3)', date: '2025.09.05', status: 'research' },
+                    { id: 'advanced-ancient-security', title: 'Advanced Technologies in Ancient Document Security', date: '2025.09.04', status: 'published' },
+                    { id: 'architectural-precision', title: 'Innovative Architectural Precision', date: '2025.09.04', status: 'published' },
+                    { id: 'interdisciplinary-synergy', title: 'Interdisciplinary Synergy in Problem-Solving', date: '2025.09.04', status: 'published' },
+                    { id: 'interdisciplinary-synthesis', title: 'Interdisciplinary Synthesis Principle', date: '2025.09.04', status: 'published' }
+                ];
+
+                // Render all studies
+                const container = document.getElementById('studiesList');
+                allStudies.forEach(study => {
+                    const statusClass = study.status === 'active' ? 'active' :
+                        study.status === 'hypothesis' ? 'hypothesis' :
+                            study.status === 'research' ? 'research' : '';
+                    container.innerHTML += `
+                        <a href="/study.html?id=${study.id}" class="study-item">
+                            <div class="study-year">${study.date}</div>
+                            <div class="study-content">
+                                <div class="study-title">${study.title}</div>
+                                <div class="study-abstract">ICEBURG Multi-Agent generated research output.</div>
+                            </div>
+                            <div class="study-status ${statusClass}">${study.status.charAt(0).toUpperCase() + study.status.slice(1)}</div>
+                        </a>
+                    `;
+                });
+            </script>
+
+            <div class="data-flow-container">
+                <div class="data-flow-label">47 Research Studies Generated</div>
+                <div class="data-flow">
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
+                    <div class="data-node"></div>
                 </div>
             </div>
-            <div class="col-4 lab-module">
-                <span class="module-label">Core Metric</span>
-                <h3 class="module-title" style="font-size: 3rem; color: var(--accent-lab);">94%</h3>
-                <p class="module-text">User Trust Alignment<br>vs. Standard LLM Interfaces</p>
-                <div class="protocol-flow">
-                    <div class="protocol-line"></div>
-                    <div class="protocol-active-line"></div>
-                    <div class="protocol-node"></div>
-                    <div class="protocol-node" style="left: 50%; position:absolute;"></div>
-                    <div class="protocol-node" style="right: 0; position:absolute;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Active Studies -->
-        <div class="research-grid">
-            <div class="col-12">
-                <span class="module-label">Active Research Streams</span>
-            </div>
-
-            <!-- Study A -->
-            <div class="col-4 lab-module">
-                <span class="module-label">Study A-09</span>
-                <h3 class="module-title">Quantum Noise</h3>
-                <p class="module-text">Investigating the use of QGANs (Quantum Generative Adversarial Networks) to model
-                    financial market volatility. We found that introducing "quantum noise" into the training data
-                    prevented overfitting in chaotic market conditions.</p>
-            </div>
-
-            <!-- Study B -->
-            <div class="col-4 lab-module">
-                <span class="module-label">Study B-12</span>
-                <h3 class="module-title">Swarm Emergence</h3>
-                <p class="module-text">Observing 100+ autonomous agents in a closed "Virtual Ecosystem." Findings
-                    indicate that specialized roles (Architect, Weaver) emerge spontaneously without explicit
-                    programming when resource constraints are applied.</p>
-            </div>
-
-            <!-- Study C -->
-            <div class="col-4 lab-module">
-                <span class="module-label">Study C-03</span>
-                <h3 class="module-title">Gnostic Accumulation</h3>
-                <p class="module-text">Testing the limits of `universal_knowledge_accumulator.py`. Can a system
-                    synthesize a coherent "worldview" from fragmented user interactions? Early results suggest a form of
-                    "digital intuition" is forming.</p>
-            </div>
-        </div>
-
-        <!-- Section 3: The Flow (Visual) -->
-        <div class="research-grid">
-            <div class="col-12 lab-module"
-                style="min-height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                <span class="module-label">System Flow Visualization</span>
-                <h2 class="module-title">Live Data Ingestion</h2>
-                <p class="module-text" style="max-width: 600px; text-align: center;">
-                    Real-time visualization of the Swarm's internal communication protocols. Every pulse represents a
-                    synthesis event between the Secretary and the Surveyor agents.
-                </p>
-                <!-- Canvas or CSS animation placeholder -->
-                <div style="width: 100%; height: 100px; position: relative; margin-top: 2rem; overflow: hidden;">
-                    <div class="flow-stream" style="top: 20%; animation: slide-right 2s linear infinite;"></div>
-                    <div class="flow-stream"
-                        style="top: 50%; animation: slide-right 3s linear infinite; animation-delay: 0.5s;"></div>
-                    <div class="flow-stream"
-                        style="top: 80%; animation: slide-right 2.5s linear infinite; animation-delay: 1s;"></div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="lab-footer">
-            <div>ICEBURG LABS © 2025</div>
-            <div>STATUS: ONLINE</div>
-        </footer>
+        </section>
 
     </div>
 
-    <style>
-        @keyframes slide-right {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-    </style>
-
     <script>
-        // Generate random flow streams for hero background
-        const flowContainer = document.getElementById('flowViz');
-        for (let i = 0; i < 10; i++) {
-            const stream = document.createElement('div');
-            stream.className = 'flow-stream';
-            stream.style.top = Math.random() * 100 + '%';
-            stream.style.animation = `slide-right ${2 + Math.random() * 4}s linear infinite`;
-            stream.style.opacity = 0.1 + Math.random() * 0.2;
-            flowContainer.appendChild(stream);
-        }
-
-        // Scroll reveal
-        const observer = new IntersectionObserver((entries) => {
+        // Scroll Reveal Animation
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('visible');
                 }
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.lab-module').forEach(node => {
-            node.style.opacity = '0';
-            node.style.transform = 'translateY(20px)';
-            observer.observe(node);
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Neural Network Canvas Animation
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.floor((canvas.width * canvas.height) / 25000);
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    radius: Math.random() * 1.5 + 0.5
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(100, 140, 200, 0.4)';
+                ctx.fill();
+            });
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(100, 140, 200, ${0.15 * (1 - dist / 120)})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
         });
+
+        resizeCanvas();
+        initParticles();
+        drawParticles();
     </script>
 </body>
 
