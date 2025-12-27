@@ -478,8 +478,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
     <script>
         // Study data mapping - ALL 47 ICEBURG-generated research studies
-        // Using Vite's /@fs/ prefix to serve files from outside the project root during development
-        const DATA_PATH = '/@fs/Users/jackdanger/Desktop/Projects/iceburg/data/research_outputs/';
+        // Production path to research files deployed in public/data
+        const DATA_PATH = '/data/research_outputs/';
         const studyFiles = {
             // November 2025 standalone MD files (6 files)
             'quantum-consciousness-1': DATA_PATH + 'Quantum_Consciousness_Bioelectricity_FreeEnergy_20251105_225459.md',

@@ -16,7 +16,7 @@ export default defineConfig({
       allow: ['..']
     }
   },
-  publicDir: false,
+  publicDir: 'public', // Include public directory with research data
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
