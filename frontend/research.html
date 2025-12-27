@@ -625,10 +625,56 @@
             .study-item {
                 padding: 1.5rem 1rem;
                 gap: 1rem;
+                grid-template-columns: 1fr;
+            }
+
+            .study-year {
+                font-size: 0.75rem;
+                order: -1;
+            }
+
+            .study-title {
+                font-size: 0.95rem;
+            }
+
+            .study-abstract {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+
+            .study-status {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.5rem;
             }
 
             .data-flow-container {
                 padding: 1rem 0;
+            }
+        }
+
+        /* Tablet/Medium screens - prevent study item overflow */
+        @media (max-width: 900px) and (min-width: 601px) {
+            .study-item {
+                grid-template-columns: 100px 1fr auto;
+                gap: 1.5rem;
+                padding: 1.75rem 1.5rem;
+            }
+
+            .study-year {
+                font-size: 0.8rem;
+            }
+
+            .study-title {
+                font-size: 1rem;
+            }
+
+            .study-abstract {
+                font-size: 0.85rem;
+            }
+
+            .study-status {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
             }
         }
     </style>
