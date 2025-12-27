@@ -1,29 +1,21 @@
 import { defineConfig } from 'vite';
-import { copyFileSync } from 'fs';
-import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export default defineConfig({
   server: {
     port: 3000,
-    host: '0.0.0.0', // Explicitly bind to all interfaces for network access
+    host: '0.0.0.0',
     strictPort: false,
-    open: false, // Don't auto-open browser
-    cors: true, // Enable CORS
-    // HMR disabled to prevent constant refreshing during development
+    open: false,
+    cors: true,
     hmr: false,
     watch: {
-      ignored: ['**/*.md', '**/node_modules/**'] // Ignore markdown files too
+      ignored: ['**/*.md', '**/node_modules/**']
     },
-    // Allow serving files from the parent data directory
     fs: {
       allow: ['..']
     }
   },
-  // Proxy /data requests to serve actual research files
   publicDir: false,
   build: {
     outDir: 'dist',
@@ -32,14 +24,13 @@ export default defineConfig({
     minify: 'terser',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        encyclopedia: resolve(__dirname, 'encyclopedia.html'),
-        wiki: resolve(__dirname, 'wiki.html'),
-        features: resolve(__dirname, 'features.html'),
-        research: resolve(__dirname, 'research.html'),
-        study: resolve(__dirname, 'study.html')
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        encyclopedia: fileURLToPath(new URL('./encyclopedia.html', import.meta.url)),
+        wiki: fileURLToPath(new URL('./wiki.html', import.meta.url)),
+        features: fileURLToPath(new URL('./features.html', import.meta.url)),
+        research: fileURLToPath(new URL('./research.html', import.meta.url)),
+        study: fileURLToPath(new URL('./study.html', import.meta.url))
       }
     }
   },
 });
-
