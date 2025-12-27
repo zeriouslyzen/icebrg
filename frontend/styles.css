@@ -603,6 +603,8 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1.25rem 1rem;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    /* Room for fixed input */
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -1192,14 +1194,16 @@ body {
 
 /* Input Container */
 .input-container {
-    position: sticky;
+    position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     background-color: var(--bg-primary);
     border-top: 1px solid var(--border-primary);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
     padding: 1rem 1.25rem;
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
     padding-left: calc(1.25rem + env(safe-area-inset-left));
@@ -1207,9 +1211,6 @@ body {
     width: 100%;
     box-sizing: border-box;
     margin: 0;
-    /* Safari fix - ensure no gaps */
-    left: 0;
-    right: 0;
 }
 
 .input-wrapper {
