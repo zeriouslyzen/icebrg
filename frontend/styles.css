@@ -419,14 +419,16 @@ body {
 
 /* Header */
 .app-header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     background-color: var(--bg-primary);
     border-bottom: 1px solid var(--border-primary);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
     padding: 1rem 1.25rem;
     padding-top: calc(1rem + env(safe-area-inset-top));
     /* Safari notch support */
@@ -594,6 +596,8 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0;
+    padding-top: calc(60px + env(safe-area-inset-top, 0px));
+    /* Account for fixed header */
     overflow: hidden;
 }
 
