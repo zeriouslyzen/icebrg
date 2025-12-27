@@ -2422,7 +2422,8 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 0.5rem;
-    padding-bottom: 1rem; /* Ensure bottom content isn't cut off on mobile */
+    padding-bottom: 1rem;
+    /* Ensure bottom content isn't cut off on mobile */
 }
 
 .conversation-item {
@@ -3160,7 +3161,8 @@ body {
     }
 
     .sidebar {
-        width: 100%;
+        width: 85%;
+        max-width: 320px;
     }
 
     .sidebar.open~.main-wrapper {
