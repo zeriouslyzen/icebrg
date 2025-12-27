@@ -1367,9 +1367,50 @@
       // === Cinematic Welcome Experience ===
       initWelcomeExperience();
 
+      // === Hide Welcome When Typing ===
+      initHideWelcomeOnTyping();
+
       // === Glitch Transition for Sidebar Links ===
       initGlitchTransition();
     });
+
+    // Hide Welcome Experience when user starts typing
+    function initHideWelcomeOnTyping() {
+      const queryInput = document.getElementById('queryInput');
+      const welcomeExperience = document.getElementById('welcomeExperience');
+
+      if (!queryInput || !welcomeExperience) return;
+
+      let hasHidden = false;
+
+      queryInput.addEventListener('input', () => {
+        if (!hasHidden && queryInput.value.length > 0) {
+          hasHidden = true;
+          welcomeExperience.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+          welcomeExperience.style.opacity = '0';
+          welcomeExperience.style.transform = 'translateY(-20px)';
+
+          setTimeout(() => {
+            welcomeExperience.style.display = 'none';
+          }, 500);
+        }
+      });
+
+      // Also hide when form is submitted (send button clicked)
+      const sendButton = document.getElementById('sendButton');
+      if (sendButton) {
+        sendButton.addEventListener('click', () => {
+          if (!hasHidden) {
+            hasHidden = true;
+            welcomeExperience.style.transition = 'opacity 0.3s ease-out';
+            welcomeExperience.style.opacity = '0';
+            setTimeout(() => {
+              welcomeExperience.style.display = 'none';
+            }, 300);
+          }
+        });
+      }
+    }
 
     // Glitch Transition for Page Navigation
     function initGlitchTransition() {
