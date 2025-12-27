@@ -68,6 +68,613 @@
         margin-right: auto;
       }
     }
+
+    /* Cinematic Welcome Experience */
+    .welcome-experience {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      animation: welcomeFadeIn 1.2s ease-out 0.3s forwards;
+    }
+
+    @keyframes welcomeFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome-fade-in {
+      margin-bottom: 3rem;
+    }
+
+    .welcome-greeting {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #8BBFFF;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .welcome-dynamic {
+      font-size: 2.2rem;
+      font-weight: 300;
+      background: linear-gradient(135deg, #FFFFFF 0%, #E6F0FF 50%, #B8D4FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      min-height: 3rem;
+      letter-spacing: -0.02em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .welcome-dynamic .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 2rem;
+      background: #B8D4FF;
+      margin-left: 4px;
+      animation: cursorBlink 1s ease-in-out infinite;
+      vertical-align: middle;
+      box-shadow: 0 0 8px rgba(184, 212, 255, 0.6);
+    }
+
+    @keyframes cursorBlink {
+
+      0%,
+      50% {
+        opacity: 1;
+      }
+
+      51%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Deep Thinking Prompts - Premium Creative Style */
+    .thinking-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      max-width: 800px;
+      opacity: 0;
+      animation: promptsSlideIn 0.8s ease-out 2s forwards;
+      perspective: 1000px;
+    }
+
+    @keyframes promptsSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .thinking-prompts.fade-out {
+      animation: promptsFadeOut 0.6s ease-out forwards;
+    }
+
+    @keyframes promptsFadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+        pointer-events: none;
+      }
+    }
+
+    /* Individual chip - Glassmorphism with animated border */
+    .prompt-chip {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1.1rem;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.01em;
+      font-weight: 400;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        color 0.25s ease;
+      transform-style: preserve-3d;
+      animation: chipEntrance 0.6s ease-out backwards;
+    }
+
+    /* Staggered entrance for each chip */
+    .prompt-chip:nth-child(1) {
+      animation-delay: 2.1s;
+    }
+
+    .prompt-chip:nth-child(2) {
+      animation-delay: 2.2s;
+    }
+
+    .prompt-chip:nth-child(3) {
+      animation-delay: 2.3s;
+    }
+
+    .prompt-chip:nth-child(4) {
+      animation-delay: 2.4s;
+    }
+
+    .prompt-chip:nth-child(5) {
+      animation-delay: 2.5s;
+    }
+
+    @keyframes chipEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Animated gradient border */
+    .prompt-chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      padding: 1px;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(184, 212, 255, 0.1) 50%,
+          rgba(255, 255, 255, 0.05) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      transition: all 0.35s ease;
+    }
+
+    /* Subtle inner glow */
+    .prompt-chip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(184, 212, 255, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .prompt-chip:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(184, 212, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+    }
+
+    .prompt-chip:hover::before {
+      background: linear-gradient(135deg,
+          rgba(184, 212, 255, 0.5) 0%,
+          rgba(120, 180, 255, 0.3) 50%,
+          rgba(184, 212, 255, 0.2) 100%);
+    }
+
+    .prompt-chip:hover::after {
+      opacity: 1;
+    }
+
+    .prompt-chip:active {
+      transform: translateY(-2px) scale(1);
+      transition: transform 0.1s ease;
+    }
+
+    /* Icon styling with rotation on hover */
+    .prompt-icon {
+      width: 16px;
+      height: 16px;
+      stroke: rgba(184, 212, 255, 0.9);
+      filter: drop-shadow(0 0 4px rgba(184, 212, 255, 0.3));
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        stroke 0.25s ease,
+        filter 0.25s ease;
+    }
+
+    .prompt-chip:hover .prompt-icon {
+      transform: rotate(15deg) scale(1.1);
+      stroke: #FFFFFF;
+      filter: drop-shadow(0 0 8px rgba(184, 212, 255, 0.6));
+    }
+
+    /* Broken Ice Cracks Overlay */
+    .ice-cracks-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.3;
+    }
+
+    .ice-cracks-overlay svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 2px rgba(200, 220, 255, 0.4));
+    }
+
+    /* Base group - no animation, individual paths animate */
+    .ice-crack-group {
+      opacity: 1;
+    }
+
+    /* Independent glimmer animations for each crack path */
+    .ice-crack-group path:nth-child(1) {
+      animation: glimmer1 6s ease-in-out infinite, crackForm 12s ease-out infinite;
+    }
+
+    .ice-crack-group path:nth-child(2) {
+      animation: glimmer2 8s ease-in-out infinite 0.5s;
+    }
+
+    .ice-crack-group path:nth-child(3) {
+      animation: glimmer3 7s ease-in-out infinite 1s;
+    }
+
+    .ice-crack-group path:nth-child(4) {
+      animation: glimmer1 9s ease-in-out infinite 1.5s;
+    }
+
+    .ice-crack-group path:nth-child(5) {
+      animation: glimmer2 5s ease-in-out infinite 2s, crackForm 15s ease-out infinite 3s;
+    }
+
+    .ice-crack-group path:nth-child(6) {
+      animation: glimmer3 10s ease-in-out infinite 2.5s;
+    }
+
+    .ice-crack-group path:nth-child(7) {
+      animation: glimmer1 7s ease-in-out infinite 3s;
+    }
+
+    .ice-crack-group path:nth-child(8) {
+      animation: glimmer2 6s ease-in-out infinite 3.5s;
+    }
+
+    .ice-crack-group path:nth-child(9) {
+      animation: glimmer3 8s ease-in-out infinite 4s, crackForm 18s ease-out infinite 6s;
+    }
+
+    .ice-crack-group path:nth-child(10) {
+      animation: glimmer1 11s ease-in-out infinite 0.8s;
+    }
+
+    .ice-crack-group path:nth-child(11) {
+      animation: glimmer2 9s ease-in-out infinite 1.2s;
+    }
+
+    .ice-crack-group path:nth-child(12) {
+      animation: glimmer3 6s ease-in-out infinite 1.8s;
+    }
+
+    .ice-crack-group path:nth-child(13) {
+      animation: glimmer1 8s ease-in-out infinite 2.2s;
+    }
+
+    .ice-crack-group path:nth-child(14) {
+      animation: glimmer2 7s ease-in-out infinite 2.8s, crackForm 20s ease-out infinite 8s;
+    }
+
+    .ice-crack-group path:nth-child(15) {
+      animation: glimmer3 10s ease-in-out infinite 3.2s;
+    }
+
+    .ice-crack-group path:nth-child(16) {
+      animation: glimmer1 5s ease-in-out infinite 3.8s;
+    }
+
+    .ice-crack-group path:nth-child(17) {
+      animation: glimmer2 9s ease-in-out infinite 4.2s;
+    }
+
+    .ice-crack-group path:nth-child(18) {
+      animation: glimmer3 7s ease-in-out infinite 4.8s;
+    }
+
+    /* Glimmer keyframes - different patterns */
+    @keyframes glimmer1 {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px transparent);
+      }
+
+      40% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 3px rgba(200, 220, 255, 0.6));
+      }
+
+      60% {
+        opacity: 0.5;
+        filter: drop-shadow(0 0 1px rgba(200, 220, 255, 0.3));
+      }
+    }
+
+    @keyframes glimmer2 {
+
+      0%,
+      100% {
+        opacity: 0.25;
+        filter: drop-shadow(0 0 0px transparent);
+      }
+
+      30% {
+        opacity: 0.6;
+        filter: drop-shadow(0 0 2px rgba(180, 200, 255, 0.5));
+      }
+
+      70% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.7));
+      }
+    }
+
+    @keyframes glimmer3 {
+
+      0%,
+      100% {
+        opacity: 0.35;
+        filter: drop-shadow(0 0 1px rgba(200, 220, 255, 0.2));
+      }
+
+      50% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 3px rgba(220, 240, 255, 0.6));
+      }
+    }
+
+    /* Slow crack forming animation - simulates ice fracturing */
+    @keyframes crackForm {
+      0% {
+        stroke-dasharray: 0 1000;
+        opacity: 0;
+      }
+
+      10% {
+        stroke-dasharray: 50 1000;
+        opacity: 0.4;
+      }
+
+      30% {
+        stroke-dasharray: 200 1000;
+        opacity: 0.6;
+      }
+
+      50% {
+        stroke-dasharray: 500 1000;
+        opacity: 0.5;
+      }
+
+      70% {
+        stroke-dasharray: 800 1000;
+        opacity: 0.4;
+      }
+
+      100% {
+        stroke-dasharray: 1000 1000;
+        opacity: 0.3;
+      }
+    }
+
+    /* Subtle parallax on scroll for depth feel */
+    @media (prefers-reduced-motion: no-preference) {
+      .ice-cracks-overlay svg {
+        transform: scale(1.05);
+        transition: transform 0.5s ease-out;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .welcome-dynamic {
+        font-size: 1.8rem;
+      }
+
+      .welcome-experience {
+        min-height: 50vh;
+        padding: 1.5rem;
+      }
+
+      .prompt-chip {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+
+      .thinking-prompts {
+        gap: 0.75rem;
+      }
+    }
+
+    /* Glitch Loading Overlay */
+    .glitch-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .glitch-loader.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .glitch-text {
+      font-size: 3rem;
+      font-weight: 300;
+      color: #fff;
+      position: relative;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.1em;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: 'Iceberg';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-loader.active .glitch-text::before {
+      left: 2px;
+      text-shadow: -2px 0 #ff0040;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+    }
+
+    .glitch-loader.active .glitch-text::after {
+      left: -2px;
+      text-shadow: 2px 0 #00ffff;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim-1 {
+      0% {
+        clip-path: inset(40% 0 20% 0);
+        transform: translate(-2px, 2px);
+      }
+
+      20% {
+        clip-path: inset(10% 0 60% 0);
+        transform: translate(2px, -1px);
+      }
+
+      40% {
+        clip-path: inset(70% 0 5% 0);
+        transform: translate(-1px, 1px);
+      }
+
+      60% {
+        clip-path: inset(25% 0 45% 0);
+        transform: translate(1px, -2px);
+      }
+
+      80% {
+        clip-path: inset(55% 0 15% 0);
+        transform: translate(-2px, 0);
+      }
+
+      100% {
+        clip-path: inset(5% 0 80% 0);
+        transform: translate(0, 1px);
+      }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% {
+        clip-path: inset(85% 0 5% 0);
+        transform: translate(2px, -1px);
+      }
+
+      25% {
+        clip-path: inset(15% 0 65% 0);
+        transform: translate(-1px, 2px);
+      }
+
+      50% {
+        clip-path: inset(45% 0 35% 0);
+        transform: translate(1px, 0);
+      }
+
+      75% {
+        clip-path: inset(5% 0 75% 0);
+        transform: translate(-2px, -1px);
+      }
+
+      100% {
+        clip-path: inset(60% 0 20% 0);
+        transform: translate(0, 2px);
+      }
+    }
+
+    /* VHS tape lines effect */
+    .glitch-loader::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.03) 2px,
+          rgba(255, 255, 255, 0.03) 4px);
+      pointer-events: none;
+    }
+
+    .glitch-loader.active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 0%,
+          rgba(255, 255, 255, 0.05) 50%,
+          transparent 100%);
+      animation: vhs-scan 0.8s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes vhs-scan {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
   </style>
   <!-- Syntax highlighting and math rendering -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
@@ -389,6 +996,58 @@
   <div id="app">
     <!-- Neural Network Background -->
     <canvas id="neuralNetworkCanvas" class="neural-network-canvas"></canvas>
+
+    <!-- Broken Ice Effect Overlay -->
+    <div class="ice-cracks-overlay" aria-hidden="true">
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="iceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(200,220,255,0.5);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0.25);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <!-- Main crack lines - visible but not distracting -->
+        <g class="ice-crack-group" stroke="url(#iceGradient)" stroke-width="0.8" fill="none">
+          <!-- Central crack system -->
+          <path d="M600,0 L580,120 L620,180 L590,280 L640,350 L610,450 L650,520 L600,600 L640,700 L610,800"
+            opacity="0.6" />
+          <path d="M590,280 L520,320 L480,380 L420,400" opacity="0.5" />
+          <path d="M590,280 L660,300 L720,340 L780,360" opacity="0.5" />
+          <path d="M610,450 L540,480 L490,530 L420,560" opacity="0.4" />
+          <path d="M610,450 L680,470 L740,510 L820,540" opacity="0.4" />
+
+          <!-- Left fracture system -->
+          <path d="M200,100 L220,200 L180,280 L240,360 L200,450 L250,540 L210,620 L260,720" opacity="0.5" />
+          <path d="M180,280 L100,320 L60,400" opacity="0.4" />
+          <path d="M240,360 L310,400 L380,420" opacity="0.4" />
+          <path d="M200,450 L130,500 L80,580" opacity="0.3" />
+
+          <!-- Right fracture system -->
+          <path d="M1000,50 L980,150 L1020,230 L970,320 L1010,410 L960,500 L1000,590 L950,700" opacity="0.5" />
+          <path d="M1020,230 L1080,280 L1140,300" opacity="0.4" />
+          <path d="M970,320 L900,370 L840,400" opacity="0.4" />
+          <path d="M960,500 L1040,550 L1120,580" opacity="0.3" />
+
+          <!-- Connecting hairline fractures -->
+          <path d="M380,420 L500,460 L540,480" opacity="0.3" stroke-width="1" />
+          <path d="M780,360 L740,510" opacity="0.25" stroke-width="1" />
+          <path d="M420,560 L490,530" opacity="0.25" stroke-width="1" />
+          <path d="M820,540 L740,510" opacity="0.25" stroke-width="1" />
+
+          <!-- Micro fractures for texture -->
+          <path d="M300,200 L340,240 L320,290" opacity="0.2" stroke-width="0.75" />
+          <path d="M850,180 L880,230 L860,280" opacity="0.2" stroke-width="0.75" />
+          <path d="M150,500 L190,540 L170,600" opacity="0.2" stroke-width="0.75" />
+          <path d="M1050,450 L1080,490 L1060,550" opacity="0.2" stroke-width="0.75" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Glitch Loading Overlay -->
+    <div class="glitch-loader" id="glitchLoader">
+      <div class="glitch-text">Iceberg</div>
+    </div>
+
     <div class="app-container">
       <!-- Sidebar -->
       <aside class="sidebar" id="sidebar">
@@ -442,7 +1101,30 @@
             </svg>
             <span>Research Archives</span>
           </a>
+
+          <a href="/encyclopedia.html" class="encyclopedia-link sidebar-link"
+            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="margin-right: 0.75rem; color: var(--accent-primary);">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Encyclopedia</span>
+          </a>
+
+          <a href="/wiki.html" class="wiki-link sidebar-link"
+            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="margin-right: 0.75rem; color: var(--accent-primary);">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+              </path>
+            </svg>
+            <span>Wiki</span>
+          </a>
         </div>
+        <div style="height: 2rem;"></div> <!-- Extra space at bottom for scrolling -->
       </aside>
 
       <!-- Main Content -->
@@ -452,18 +1134,8 @@
             <div class="pulsing-ball-icon"></div>
           </button>
           <div class="header-content">
-            <h1 class="app-title">ICEBERG</h1>
-            <p class="app-subtitle">Deep Knowledge Decoding</p>
+            <h1 class="app-title">Iceberg</h1>
           </div>
-          <a href="/encyclopedia.html" class="encyclopedia-link" aria-label="Celestial Encyclopedia"
-            title="Celestial Encyclopedia"
-            style="margin-right: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
-            <span style="font-size: 0.9rem;">Encyclopedia</span>
-          </a>
-          <a href="/wiki.html" class="wiki-link" aria-label="Intelligence Wiki" title="Intelligence Wiki"
-            style="margin-right: 1rem; padding: 0.5rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
-            <span style="font-size: 0.9rem;">Intelligence Wiki</span>
-          </a>
 
           <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
             <div class="pulsing-ball-icon"></div>
@@ -471,38 +1143,21 @@
         </header>
 
         <main class="app-main">
-          <div class="controls-panel" id="controlsPanel">
+          <!-- Hidden controls for JS sync - actual UI moved to settings panel -->
+          <div class="controls-panel" id="controlsPanel" style="display: none;">
             <div class="control-group">
-              <label class="control-label">Mode</label>
               <select class="control-select" id="modeSelect"
                 onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
                 <option value="fast">Fast (Chat)</option>
                 <option value="research" selected>Research</option>
-                <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep
-                  Research
-                  (Coming Soon)</option>
-                <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded
-                  (Coming
-                  Soon)</option>
                 <option value="chat">Chat (Legacy)</option>
                 <option value="web_research">Research (Web)</option>
                 <option value="local_rag">Local (Code/Docs)</option>
                 <option value="hybrid">Hybrid (Web + Local)</option>
-                <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
-                  (Coming Soon)</option>
                 <option value="truth">Truth Finding</option>
-                <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
-                </option>
-                <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge
-                  (Coming Soon)</option>
-                <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
-                  Astro-Physiology (Coming Soon)</option>
-                <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction
-                  Lab (Coming Soon)</option>
               </select>
             </div>
             <div class="control-group" id="agentGroup">
-              <label class="control-label">Agent</label>
               <select class="control-select" id="agentSelect">
                 <option value="auto">Auto (Full Protocol)</option>
                 <option value="secretary" selected>Secretary (Chat Assistant)</option>
@@ -517,20 +1172,70 @@
                 <option value="swarm">Swarm</option>
                 <option value="ide">IDE Agent</option>
               </select>
-              <div class="agent-display" id="agentDisplay" style="display: none;">
-                <span class="agent-display-label">Active Agent:</span>
-                <span class="agent-display-value" id="agentDisplayValue">Secretary</span>
-              </div>
             </div>
           </div>
 
           <div class="chat-container" id="chatContainer">
             <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
-            <div class="welcome-message">
-              <p>Iceberg Research Interface</p>
-              <p class="welcome-subtitle">Multi-agent truth-finding system in active development. Available modes:
-                Fast
-                Chat, Web Research, Local RAG, Hybrid Search, and Truth Finding. Type a question to begin.</p>
+
+            <!-- Cinematic Welcome Experience -->
+            <div class="welcome-experience" id="welcomeExperience">
+              <div class="welcome-fade-in" id="welcomeFadeIn">
+                <p class="welcome-greeting">Welcome back</p>
+                <p class="welcome-dynamic" id="welcomeDynamic"></p>
+              </div>
+
+              <!-- Deep Thinking Prompts -->
+              <div class="thinking-prompts" id="thinkingPrompts">
+                <div class="prompt-chip" data-prompt="What does it mean to truly understand something?">
+                  <svg class="prompt-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
+                  </svg>
+                  <span>What does it mean to truly understand?</span>
+                </div>
+                <div class="prompt-chip" data-prompt="Explore the connection between consciousness and reality">
+                  <svg class="prompt-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5" />
+                    <line x1="12" y1="22" x2="12" y2="15.5" />
+                    <polyline points="22 8.5 12 15.5 2 8.5" />
+                  </svg>
+                  <span>Consciousness & Reality</span>
+                </div>
+                <div class="prompt-chip" data-prompt="How do patterns emerge from chaos?">
+                  <svg class="prompt-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                  </svg>
+                  <span>Patterns from Chaos</span>
+                </div>
+                <div class="prompt-chip" data-prompt="What lies at the boundary of knowledge?">
+                  <svg class="prompt-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="7.5 4.21 12 6.81 16.5 4.21" />
+                    <polyline points="7.5 19.79 7.5 14.6 3 12" />
+                    <polyline points="21 12 16.5 14.6 16.5 19.79" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                  </svg>
+                  <span>The Boundary of Knowledge</span>
+                </div>
+                <div class="prompt-chip" data-prompt="Examine the nature of truth itself">
+                  <svg class="prompt-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
+                  </svg>
+                  <span>The Nature of Truth</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -598,6 +1303,55 @@
       </div>
       <div class="settings-content">
         <div class="settings-section">
+          <h3>Mode</h3>
+          <div class="settings-group">
+            <select class="settings-select" id="modeSelectSettings"
+              onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
+              <option value="fast">Fast (Chat)</option>
+              <option value="research" selected>Research</option>
+              <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep Research
+                (Coming Soon)</option>
+              <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded (Coming
+                Soon)</option>
+              <option value="chat">Chat (Legacy)</option>
+              <option value="web_research">Research (Web)</option>
+              <option value="local_rag">Local (Code/Docs)</option>
+              <option value="hybrid">Hybrid (Web + Local)</option>
+              <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
+                (Coming Soon)</option>
+              <option value="truth">Truth Finding</option>
+              <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
+              </option>
+              <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge (Coming
+                Soon)</option>
+              <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
+                Astro-Physiology (Coming Soon)</option>
+              <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction Lab
+                (Coming Soon)</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Agent</h3>
+          <div class="settings-group">
+            <select class="settings-select" id="agentSelectSettings"
+              onchange="document.getElementById('agentSelect') && (document.getElementById('agentSelect').value = this.value)">
+              <option value="auto">Auto (Full Protocol)</option>
+              <option value="secretary" selected>Secretary (Chat Assistant)</option>
+              <option value="dissident">Dissident</option>
+              <option value="synthesist">Synthesist</option>
+              <option value="oracle">Oracle</option>
+              <option value="archaeologist">Archaeologist</option>
+              <option value="supervisor">Supervisor</option>
+              <option value="scribe">Scribe</option>
+              <option value="weaver">Weaver</option>
+              <option value="scrutineer">Scrutineer</option>
+              <option value="swarm">Swarm</option>
+              <option value="ide">IDE Agent</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-section">
           <h3>Appearance</h3>
           <div class="settings-group">
             <label class="settings-label" for="themeToggle">Light Mode</label>
@@ -605,96 +1359,6 @@
               <input type="checkbox" id="themeToggle" class="theme-toggle-input"
                 onchange="toggleLightMode(this.checked)">
               <label for="themeToggle" class="theme-toggle-slider"></label>
-            </div>
-          </div>
-        </div>
-        <div class="settings-section">
-          <h3>Model Configuration</h3>
-          <div class="settings-group">
-            <label class="settings-label">Primary Model (Locked)</label>
-            <select class="settings-select" id="primaryModel" disabled
-              title="Model selection disabled until Secretary browser integration is complete">
-              <optgroup label="Fast Mode (1B-3B)">
-                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
-                <option value="phi3.5">phi3.5 (Fast)</option>
-                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
-                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
-                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
-              </optgroup>
-              <optgroup label="Gemini API (Cloud) - Default">
-                <option value="gemini-2.0-flash-exp" selected>Gemini 2.0 Flash (Fast, Cheap) ⭐</option>
-                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Balanced)</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Quality)</option>
-              </optgroup>
-              <optgroup label="Fast Mode (1B-3B)">
-                <option value="llama3.2:1b">llama3.2:1b (Ultra-fast)</option>
-                <option value="phi3.5">phi3.5 (Fast)</option>
-                <option value="gemma2:2b">gemma2:2b (Very fast)</option>
-                <option value="qwen2.5:1.5b">qwen2.5:1.5b (Very fast)</option>
-                <option value="llama3.1:3b">llama3.1:3b (Fast)</option>
-              </optgroup>
-              <optgroup label="Standard (8B)">
-                <option value="llama3.1:8b">llama3.1:8b (Balanced)</option>
-                <option value="llama3:8b">llama3:8b (Balanced)</option>
-                <option value="mistral:7b">mistral:7b (Balanced)</option>
-                <option value="qwen2.5:7b">qwen2.5:7b (Balanced)</option>
-              </optgroup>
-              <optgroup label="Deep Research (70B+)">
-                <option value="llama3:70b">llama3:70b (Deep)</option>
-                <option value="qwen2.5:32b">qwen2.5:32b (Deep)</option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="settings-group">
-            <label class="settings-label">Temperature</label>
-            <input type="range" class="settings-range" id="temperature" min="0" max="2" step="0.1" value="0.7">
-            <span class="settings-value" id="temperatureValue">0.7</span>
-          </div>
-          <div class="settings-group">
-            <label class="settings-label">Max Tokens</label>
-            <input type="range" class="settings-range" id="maxTokens" min="100" max="8000" step="100" value="2000">
-            <span class="settings-value" id="maxTokensValue">2000</span>
-          </div>
-        </div>
-        <div class="settings-section">
-          <h3>Features</h3>
-          <div class="settings-group">
-            <label class="settings-label">
-              <input type="checkbox" id="enableWebSearch" class="settings-checkbox">
-              <span>Enable Web Search</span>
-            </label>
-            <label class="settings-label">
-              <input type="checkbox" id="enableImageGeneration" class="settings-checkbox">
-              <span>Enable Image Generation</span>
-            </label>
-          </div>
-        </div>
-        <div class="settings-section">
-          <h3>Conversation</h3>
-          <div class="settings-group">
-            <button class="settings-button" id="exportConversation">Export Conversation</button>
-            <button class="settings-button" id="shareConversation">Share Conversation</button>
-            <button class="settings-button danger" id="clearConversations">Clear All Conversations</button>
-          </div>
-        </div>
-        <div class="settings-section">
-          <h3>Keyboard Shortcuts</h3>
-          <div class="settings-group">
-            <div class="shortcut-item">
-              <span class="shortcut-key">Ctrl/Cmd + K</span>
-              <span class="shortcut-desc">Focus search</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-key">Ctrl/Cmd + /</span>
-              <span class="shortcut-desc">Toggle settings</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-key">Ctrl/Cmd + N</span>
-              <span class="shortcut-desc">New conversation</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-key">Esc</span>
-              <span class="shortcut-desc">Close panels</span>
             </div>
           </div>
         </div>
@@ -739,7 +1403,133 @@
           });
         });
       }, 1000); // Delayed check for dynamically created mobile menus
+
+      // === Cinematic Welcome Experience ===
+      initWelcomeExperience();
+
+      // === Glitch Transition for Sidebar Links ===
+      initGlitchTransition();
     });
+
+    // Glitch Transition for Page Navigation
+    function initGlitchTransition() {
+      const glitchLoader = document.getElementById('glitchLoader');
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('/') && !href.startsWith('//')) {
+            e.preventDefault();
+
+            // Show glitch loader
+            glitchLoader.classList.add('active');
+
+            // Navigate after animation
+            setTimeout(() => {
+              window.location.href = href;
+            }, 800);
+          }
+        });
+      });
+    }
+
+    // Welcome Experience - Typing Effect & Prompts
+    function initWelcomeExperience() {
+      const dynamicText = document.getElementById('welcomeDynamic');
+      const thinkingPrompts = document.getElementById('thinkingPrompts');
+      const promptChips = document.querySelectorAll('.prompt-chip');
+      const userInput = document.getElementById('userInput');
+
+      if (!dynamicText) return;
+
+      // Time-dynamic messages
+      const hour = new Date().getHours();
+      let messages;
+
+      if (hour < 12) {
+        messages = [
+          "What shall we explore this morning?",
+          "A new day of discovery awaits"
+        ];
+      } else if (hour < 18) {
+        messages = [
+          "What questions are calling you?",
+          "Ready to dive deeper?"
+        ];
+      } else {
+        messages = [
+          "What's on your mind tonight?",
+          "The quiet hours of insight"
+        ];
+      }
+
+      // Pick a random message
+      const message = messages[Math.floor(Math.random() * messages.length)];
+
+      // Typing effect
+      let charIndex = 0;
+      const cursor = document.createElement('span');
+      cursor.className = 'typing-cursor';
+      dynamicText.appendChild(cursor);
+
+      function typeChar() {
+        if (charIndex < message.length) {
+          dynamicText.insertBefore(
+            document.createTextNode(message[charIndex]),
+            cursor
+          );
+          charIndex++;
+          setTimeout(typeChar, 50 + Math.random() * 40);
+        } else {
+          // Remove cursor after typing complete
+          setTimeout(() => {
+            cursor.style.animation = 'none';
+            cursor.style.opacity = '0';
+          }, 2000);
+        }
+      }
+
+      // Start typing after fade-in completes
+      setTimeout(typeChar, 1200);
+
+      // Prompt chip click handlers
+      promptChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const promptText = chip.getAttribute('data-prompt');
+
+          // Populate the input field
+          if (userInput) {
+            userInput.value = promptText;
+            userInput.focus();
+
+            // Trigger input event for any listeners
+            userInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+
+          // Fade out all prompts
+          if (thinkingPrompts) {
+            thinkingPrompts.classList.add('fade-out');
+          }
+
+          // Scroll to input
+          userInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      });
+    }
+
+    // Hide welcome when chat starts
+    function hideWelcomeExperience() {
+      const welcomeExp = document.getElementById('welcomeExperience');
+      if (welcomeExp) {
+        welcomeExp.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        welcomeExp.style.opacity = '0';
+        welcomeExp.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          welcomeExp.style.display = 'none';
+        }, 500);
+      }
+    }
   </script>
   </body>
 

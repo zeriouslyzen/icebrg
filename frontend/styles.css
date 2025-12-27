@@ -2277,7 +2277,10 @@ body {
     top: 0;
     width: 280px;
     height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height for mobile Safari */
     max-height: 100vh;
+    max-height: 100dvh;
     background-color: var(--bg-secondary);
     border-right: 1px solid var(--border-primary);
     transform: translateX(-100%);
@@ -2288,6 +2291,9 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
 }
 
 .sidebar.open {
