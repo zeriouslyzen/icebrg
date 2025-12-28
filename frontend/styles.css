@@ -24,32 +24,26 @@
 
 /* Light Mode - TRUE INVERSION: white->black, black->white */
 body.light-mode {
-    /* Warm cream palette - easier on eyes */
-    --bg-primary: #faf8f5;
-    /* Warm cream instead of pure white */
-    --bg-secondary: #f5f3f0;
-    /* Soft ivory */
-    --bg-tertiary: #efece8;
-    /* Warm sand */
-    --bg-elevated: #e8e5e0;
-    /* Soft beige */
-    --text-primary: #1a1a1a;
-    /* Soft black (not pure) */
-    --text-secondary: #2d2d2d;
-    /* Dark gray */
-    --text-tertiary: #4a4a4a;
-    /* Medium gray */
-    --border-primary: #d0ccc5;
-    /* Warm border */
-    --border-secondary: #b8b3aa;
-    /* Darker warm border */
-    --accent-primary: #6d5d4d;
-    /* Warm brown accent */
-    --accent-secondary: #8b7355;
-    /* Lighter brown */
-    --shadow-sm: 0 2px 4px rgba(60, 50, 40, 0.12);
-    --shadow-md: 0 4px 8px rgba(60, 50, 40, 0.16);
-    --shadow-lg: 0 8px 16px rgba(60, 50, 40, 0.20);
+    /* Soft off-white backgrounds - easier on eyes */
+    --bg-primary: #f8f8f6;
+    /* Soft off-white (not pure white) */
+    --bg-secondary: #f3f3f1;
+    /* Slightly dimmer */
+    --bg-tertiary: #eeeeec;
+    /* Even softer */
+    --bg-elevated: #e9e9e7;
+    /* Elevated surfaces */
+    /* Keep original text/borders/accents */
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --text-tertiary: #333333;
+    --border-primary: #000000;
+    --border-secondary: #333333;
+    --accent-primary: #000000;
+    --accent-secondary: #000000;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Light mode: Invert neural network/stars to black */
