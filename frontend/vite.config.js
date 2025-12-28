@@ -29,7 +29,8 @@ export default defineConfig({
         wiki: fileURLToPath(new URL('./wiki.html', import.meta.url)),
         features: fileURLToPath(new URL('./features.html', import.meta.url)),
         research: fileURLToPath(new URL('./research.html', import.meta.url)),
-        study: fileURLToPath(new URL('./study.html', import.meta.url))
+        study: fileURLToPath(new URL('./study.html', import.meta.url)),
+        protocols: fileURLToPath(new URL('./protocols.html', import.meta.url))
       }
     }
   },
