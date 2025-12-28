@@ -3415,6 +3415,72 @@ body {
     text-align: right;
 }
 
+/* API Key Input Styles */
+.settings-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.settings-input {
+    flex: 1;
+    padding: 0.625rem 0.875rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: 0.02em;
+    transition: all var(--transition-fast);
+}
+
+.settings-input::placeholder {
+    color: var(--text-tertiary);
+    font-family: inherit;
+}
+
+.settings-input:hover {
+    border-color: var(--border-secondary);
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.settings-input-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.settings-input-toggle:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-secondary);
+    color: var(--text-primary);
+}
+
+.settings-input-toggle:active {
+    transform: scale(0.95);
+}
+
+.settings-input-toggle svg {
+    width: 16px;
+    height: 16px;
+}
+
 .settings-button {
     width: 100%;
     padding: 0.875rem 1rem;
@@ -6631,6 +6697,7 @@ body {
 .theme-toggle-input:checked+.theme-toggle-slider::before {
     transform: translateX(24px);
 }
+
 /* FINAL OVERRIDE for Sidebar Link Balance */
 /* Ensures no media query can shrink these specific links */
 .sidebar-link,
