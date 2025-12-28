@@ -1373,37 +1373,8 @@
   <!-- astro_animated_streaming.js removed - not needed -->
   <script type="module" src="/main.js?v=2"></script>
   <script>
-    // Force standard navigation for external pages (bypassing any SPA routing)
-    // Updated to target both specific classes and general sidebar links
-    const targetSelectors = ['.features-link', '.wiki-link', '.encyclopedia-link', '.sidebar-link'];
-
-    targetSelectors.forEach(selector => {
-      document.querySelectorAll(selector).forEach(link => {
-        link.addEventListener('click', (e) => {
-          // Verify it's an internal link but meant for full reload
-          if (link.getAttribute('href').startsWith('/')) {
-            e.stopPropagation(); // Stop persistent SPAs from intercepting
-            window.location.href = link.href;
-          }
-        }, true); // Capture phase to run before other listeners
-      });
-    });
-
-    // Also handle mobile menu items / dynamic elements
+    // === Cinimatic Welcome Experience ===
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        targetSelectors.forEach(selector => {
-          document.querySelectorAll(selector).forEach(link => {
-            link.addEventListener('click', (e) => {
-              if (link.getAttribute('href').startsWith('/')) {
-                e.stopPropagation();
-                window.location.href = link.href;
-              }
-            }, true);
-          });
-        });
-      }, 1000); // Delayed check for dynamically created mobile menus
-
       // === Cinematic Welcome Experience ===
       initWelcomeExperience();
 
