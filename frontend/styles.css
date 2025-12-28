@@ -1453,6 +1453,28 @@ body {
     margin: 0;
 }
 
+/* Sidebar Link Unification */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+    border-radius: 6px;
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-elevated);
+}
+
+.sidebar-link svg {
+    margin-right: 0.75rem;
+    min-width: 16px;
+}
+
 /* Prompt Bar Decorative Orbs */
 .prompt-orb-left,
 .prompt-orb-right {
@@ -1460,8 +1482,16 @@ body {
     top: -35px;
     /* Floats higher above the border */
     z-index: 10001;
-    pointer-events: none;
+    pointer-events: auto;
+    /* Enable clicking */
+    cursor: pointer;
     animation: neutralPulse 4s ease-in-out infinite;
+    transition: transform 0.2s;
+}
+
+.prompt-orb-left:hover,
+.prompt-orb-right:hover {
+    transform: scale(1.2);
 }
 
 .prompt-orb-left {

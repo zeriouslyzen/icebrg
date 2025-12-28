@@ -1094,10 +1094,9 @@
             style="padding: 0 1rem; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; letter-spacing: 0.05em;">
             System Modules</h3>
 
-          <a href="/features.html" class="features-link sidebar-link"
-            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+          <a href="/features.html" class="features-link sidebar-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              style="margin-right: 0.75rem; color: var(--accent-primary);">
+              style="color: var(--accent-primary);">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
             <span>Applications</span>
@@ -1105,29 +1104,26 @@
               style="margin-left: auto; font-size: 0.6rem; background: var(--accent-primary); color: var(--bg-primary); padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">NEW</span>
           </a>
 
-          <a href="/research.html" class="research-link sidebar-link"
-            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+          <a href="/research.html" class="research-link sidebar-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              style="margin-right: 0.75rem; color: #4A9EFF;">
+              style="color: #4A9EFF;">
               <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
             </svg>
             <span>Research Archives</span>
           </a>
 
-          <a href="/encyclopedia.html" class="encyclopedia-link sidebar-link"
-            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+          <a href="/encyclopedia.html" class="encyclopedia-link sidebar-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              style="margin-right: 0.75rem; color: var(--accent-primary);">
+              style="color: var(--accent-primary);">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
             <span>Encyclopedia</span>
           </a>
 
-          <a href="/wiki.html" class="wiki-link sidebar-link"
-            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+          <a href="/wiki.html" class="wiki-link sidebar-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              style="margin-right: 0.75rem; color: var(--accent-primary);">
+              style="color: var(--accent-primary);">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="2" y1="12" x2="22" y2="12"></line>
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
@@ -1137,10 +1133,9 @@
           </a>
 
           <a href="/protocols.html" class="protocols-link sidebar-link"
-            onclick="window.location.href='/protocols.html'; return false;"
-            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+            onclick="window.location.href='/protocols.html'; return false;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              style="margin-right: 0.75rem; color: #8B5CF6;">
+              style="color: #8B5CF6;">
               <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
               <path d="M2 17l10 5 10-5"></path>
               <path d="M2 12l10 5 10-5"></path>
@@ -1199,6 +1194,15 @@
                 <option value="ide">IDE Agent</option>
               </select>
             </div>
+            <div class="control-group" id="modelGroup">
+              <select class="control-select" id="modelSelect">
+                <option value="gemini-2.0-flash-exp" selected>Gemini 2.0 Flash</option>
+                <option value="gemini-exp-1206">Gemini Exp 1206</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                <option value="gemini-1.5-flash-8b">Gemini 1.5 Flash 8B</option>
+              </select>
+            </div>
           </div>
 
           <div class="chat-container" id="chatContainer">
@@ -1220,7 +1224,8 @@
       <div class="input-container">
         <!-- Decorative Orbs -->
         <div class="pulsing-ball-icon prompt-orb-left"></div>
-        <div class="pulsing-ball-icon prompt-orb-right"></div>
+        <div class="pulsing-ball-icon prompt-orb-right" onclick="document.getElementById('sidebarToggle').click()">
+        </div>
 
         <div class="prompt-carousel" id="promptCarousel">
           <div class="prompt-carousel-content" id="promptCarouselContent">
