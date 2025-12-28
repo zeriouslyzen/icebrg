@@ -27,7 +27,7 @@ from ..model_select import _available_model_names
 # =============================================================================
 
 API_KEY = os.getenv("ICEBURG_API_KEY", "w91EEfKN3_x5_rEbdcEV_m5kipSrS4fqS_tP9-DgCTo")
-CORS_ORIGINS = os.getenv("ICEBURG_CORS_ORIGINS", "http://os.getenv("HOST", "localhost"):8081,http://os.getenv("HOST", "localhost"):3000").split(",")
+CORS_ORIGINS = os.getenv("ICEBURG_CORS_ORIGINS", f"http://localhost:8081,http://localhost:3000").split(",")
 
 security = HTTPBearer()
 
@@ -410,6 +410,181 @@ async def preview_visual(
 
 
 # =============================================================================
+# Multi-Provider Chat Endpoints (User API Keys)
+# =============================================================================
+
+class MultiProviderChatRequest(BaseModel):
+    """Request for multi-provider chat with user-provided API key"""
+    message: str
+    provider: str  # openai, anthropic, google, xai, deepseek, hybrid
+    api_key: str  # User's API key for the provider
+    model: Optional[str] = None  # Optional model override
+    system: Optional[str] = None  # Optional system prompt
+    temperature: float = 0.2
+    max_tokens: int = 4096
+
+
+class MultiProviderChatResponse(BaseModel):
+    """Response from multi-provider chat"""
+    content: str
+    provider: str
+    model: str
+    success: bool
+    error: Optional[str] = None
+    latency_ms: Optional[float] = None
+
+
+@app.post("/api/v1/chat/multi", response_model=MultiProviderChatResponse)
+async def multi_provider_chat(request: MultiProviderChatRequest):
+    """
+    Chat with any AI provider using user-provided API key.
+    
+    Supports: openai (GPT), anthropic (Claude), google (Gemini), xai (Grok), deepseek
+    
+    Note: No auth required - user provides their own API key.
+    """
+    try:
+        from ..providers.multi_provider_router import (
+            get_router, Provider, ProviderConfig, ChatRequest
+        )
+        
+        router = get_router()
+        
+        # Map provider string to enum
+        provider_map = {
+            "openai": Provider.OPENAI,
+            "gpt": Provider.OPENAI,
+            "anthropic": Provider.ANTHROPIC,
+            "claude": Provider.ANTHROPIC,
+            "google": Provider.GOOGLE,
+            "gemini": Provider.GOOGLE,
+            "xai": Provider.XAI,
+            "grok": Provider.XAI,
+            "deepseek": Provider.DEEPSEEK,
+        }
+        
+        provider_name = request.provider.lower()
+        if provider_name not in provider_map:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown provider: {request.provider}. Supported: openai, anthropic, google, xai, deepseek"
+            )
+        
+        provider_enum = provider_map[provider_name]
+        config = ProviderConfig(
+            api_key=request.api_key,
+            model=request.model,
+        )
+        chat_request = ChatRequest(
+            message=request.message,
+            system=request.system,
+            temperature=request.temperature,
+            max_tokens=request.max_tokens,
+        )
+        
+        # Run chat in thread pool to avoid blocking
+        response = await asyncio.to_thread(
+            router.chat,
+            provider_enum,
+            config,
+            chat_request,
+        )
+        
+        return MultiProviderChatResponse(
+            content=response.content,
+            provider=response.provider,
+            model=response.model,
+            success=response.success,
+            error=response.error,
+            latency_ms=response.latency_ms,
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        return MultiProviderChatResponse(
+            content="",
+            provider=request.provider,
+            model=request.model or "",
+            success=False,
+            error=str(e),
+        )
+
+
+@app.post("/api/v1/chat/hybrid")
+async def hybrid_provider_chat(
+    message: str,
+    providers: List[Dict[str, str]],  # [{"provider": "claude", "api_key": "sk-..."}]
+    system: Optional[str] = None,
+):
+    """
+    Query multiple providers in parallel (hybrid mode).
+    
+    Returns responses from all providers for comparison/synthesis.
+    """
+    try:
+        from ..providers.multi_provider_router import (
+            get_router, Provider, ProviderConfig, ChatRequest
+        )
+        
+        router = get_router()
+        
+        provider_map = {
+            "openai": Provider.OPENAI,
+            "gpt": Provider.OPENAI,
+            "anthropic": Provider.ANTHROPIC,
+            "claude": Provider.ANTHROPIC,
+            "google": Provider.GOOGLE,
+            "gemini": Provider.GOOGLE,
+            "xai": Provider.XAI,
+            "grok": Provider.XAI,
+            "deepseek": Provider.DEEPSEEK,
+        }
+        
+        # Build provider configs
+        provider_configs = []
+        for p in providers:
+            provider_name = p.get("provider", "").lower()
+            api_key = p.get("api_key", "")
+            model = p.get("model")
+            
+            if provider_name not in provider_map:
+                continue
+            
+            provider_configs.append((
+                provider_map[provider_name],
+                ProviderConfig(api_key=api_key, model=model)
+            ))
+        
+        if not provider_configs:
+            raise HTTPException(status_code=400, detail="No valid providers specified")
+        
+        chat_request = ChatRequest(message=message, system=system)
+        
+        # Run hybrid chat
+        responses = await router.chat_hybrid(provider_configs, chat_request)
+        
+        return {
+            "responses": [
+                {
+                    "content": r.content,
+                    "provider": r.provider,
+                    "model": r.model,
+                    "success": r.success,
+                    "error": r.error,
+                    "latency_ms": r.latency_ms,
+                }
+                for r in responses
+            ]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
 # Main (for direct execution)
 # =============================================================================
 
@@ -430,7 +605,7 @@ if __name__ == "__main__":
     print("  POST /api/v1/query")
     print("  GET  /api/v1/query/stream")
     print("=" * 60)
-    print("\nUI: http://os.getenv("HOST", "localhost"):8081/iceburg-live-interface.html")
+    print("\nUI: http://localhost:8081/iceburg-live-interface.html")
     print("    (Start UI: cd web && python -m http.server 8081)")
     print("=" * 60)
     

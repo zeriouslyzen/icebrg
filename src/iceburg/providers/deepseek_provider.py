@@ -1,0 +1,89 @@
+"""
+DeepSeek Provider
+DeepSeek API integration (OpenAI-compatible)
+
+DeepSeek uses OpenAI-compatible API format at https://api.deepseek.com/v1
+"""
+
+from typing import Any, Optional, List
+import os
+
+
+class DeepSeekProvider:
+    """DeepSeek API provider (OpenAI-compatible)"""
+    
+    def __init__(self, api_key: Optional[str] = None, timeout_s: int = 60):
+        self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
+        self.timeout_s = timeout_s
+        self.client = None
+        self.base_url = "https://api.deepseek.com/v1"
+        
+        if self.api_key:
+            try:
+                from openai import OpenAI
+                self.client = OpenAI(
+                    api_key=self.api_key,
+                    base_url=self.base_url,
+                    timeout=self.timeout_s
+                )
+            except ImportError:
+                raise ImportError(
+                    "openai package not installed. Install with: pip install openai>=1.12.0"
+                )
+        else:
+            raise ValueError("DEEPSEEK_API_KEY not set")
+    
+    def chat_complete(
+        self,
+        model: str,
+        prompt: str,
+        system: Optional[str] = None,
+        temperature: float = 0.2,
+        options: Optional[dict[str, Any]] = None,
+        images: Optional[List[str]] = None,
+    ) -> str:
+        """Complete chat with DeepSeek"""
+        if not self.client:
+            raise RuntimeError("DeepSeek client not initialized")
+        
+        try:
+            messages = []
+            
+            if system:
+                messages.append({"role": "system", "content": system})
+            
+            # DeepSeek-VL supports vision
+            if images and "vl" in (model or "").lower():
+                import base64
+                content = [{"type": "text", "text": prompt}]
+                for img_path in images:
+                    with open(img_path, "rb") as f:
+                        img_data = base64.b64encode(f.read()).decode("utf-8")
+                    content.append({
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{img_data}"
+                        }
+                    })
+                messages.append({"role": "user", "content": content})
+            else:
+                messages.append({"role": "user", "content": prompt})
+            
+            response = self.client.chat.completions.create(
+                model=model or "deepseek-chat",
+                messages=messages,
+                temperature=temperature,
+                max_tokens=options.get("max_tokens", 4096) if options else 4096
+            )
+            
+            if response.choices:
+                return response.choices[0].message.content or ""
+            return ""
+            
+        except Exception as e:
+            raise RuntimeError(f"DeepSeek API error: {e}")
+    
+    def embed_texts(self, model: str, texts: List[str]) -> List[List[float]]:
+        """Embed texts using DeepSeek (if supported)"""
+        # DeepSeek may not have embedding API, return empty
+        return [[] for _ in texts]
