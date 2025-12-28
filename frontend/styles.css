@@ -1476,16 +1476,6 @@ body {
     animation-delay: 2s;
 }
 
-@media (max-width: 600px) {
-    .prompt-orb-left {
-        left: 4px;
-    }
-
-    .prompt-orb-right {
-        right: 4px;
-    }
-}
-
 .input-wrapper {
     display: flex;
     gap: 0.75rem;
