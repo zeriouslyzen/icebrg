@@ -547,12 +547,14 @@
       align-items: center;
       justify-content: center;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.15s ease;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
     }
 
     .glitch-loader.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: all;
     }
 
