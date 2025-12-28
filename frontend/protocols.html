@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Protocols — ICEBERG Manifesto</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="On the nature of constructed intelligence, the architecture of truth-seeking systems, and the deliberate avoidance of consciousness claims. A philosophical treatise on ICEBERG's approach to AI.">
+    <meta name="keywords"
+        content="ICEBERG, AI, artificial intelligence, multi-agent systems, consciousness, truth-seeking, vector space, manifesto">
+    <meta name="author" content="The ICEBERG Collective">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Deep Protocols — ICEBERG Manifesto">
+    <meta property="og:description"
+        content="On the nature of constructed intelligence, the architecture of truth-seeking systems, and the deliberate avoidance of consciousness claims.">
+    <meta property="og:site_name" content="ICEBERG Intelligence">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Deep Protocols — ICEBERG Manifesto">
+    <meta name="twitter:description"
+        content="A philosophical treatise on AI consciousness, multi-agent systems, and truth-seeking architectures.">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000">
+
+    <link rel="stylesheet" href="/styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            min-height: 100vh;
+            line-height: 1.9;
+        }
+
+        /* Neon accent colors */
+        .neon-cyan {
+            color: #00ffff;
+        }
+
+        .neon-magenta {
+            color: #ff00ff;
+        }
+
+        .neon-white {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Background */
+        .manifesto-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+            overflow: hidden;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            top: 40%;
+            animation-delay: 2s;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            top: 60%;
+            animation-delay: 4s;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            top: 80%;
+            animation-delay: 1s;
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            top: 30%;
+            animation-delay: 3s;
+            animation-duration: 24s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            top: 50%;
+            animation-delay: 5s;
+            animation-duration: 21s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            top: 70%;
+            animation-delay: 2s;
+            animation-duration: 19s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            top: 25%;
+            animation-delay: 4s;
+            animation-duration: 23s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            top: 45%;
+            animation-delay: 1s;
+            animation-duration: 26s;
+        }
+
+        .particle:nth-child(10) {
+            left: 15%;
+            top: 75%;
+            animation-delay: 3s;
+            animation-duration: 17s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+
+            25% {
+                transform: translateY(-30px) translateX(10px);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-15px) translateX(-10px);
+                opacity: 0.4;
+            }
+
+            75% {
+                transform: translateY(-40px) translateX(5px);
+                opacity: 0.5;
+            }
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .keyboard-hint.visible {
+            opacity: 1;
+        }
+
+        .keyboard-hint kbd {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 3px;
+            padding: 0.15rem 0.4rem;
+            margin: 0 0.15rem;
+        }
+
+        /* Container */
+        .manifesto-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 6rem;
+        }
+
+        /* Navigation */
+        .manifesto-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-primary);
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .version-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .manifesto-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .manifesto-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .manifesto-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .reading-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        .reading-time,
+        .word-count {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .reading-time svg {
+            opacity: 0.7;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            color: var(--text-tertiary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            border-color: #00ffff;
+            color: #00ffff;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .back-to-top {
+                left: 1rem;
+                bottom: 1rem;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Essay Content */
+        .essay-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .essay-content {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+        }
+
+        .essay-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .essay-content p:first-of-type::first-letter {
+            font-size: 3rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Definitions/Terms with popups */
+        .term {
+            color: var(--text-primary);
+            border-bottom: 1px dotted var(--text-tertiary);
+            cursor: help;
+            position: relative;
+        }
+
+        .term:hover .term-popup {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .term-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 280px;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .term-popup::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--border-primary);
+        }
+
+        .popup-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .popup-title .neon-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        /* Subnotes */
+        .subnote {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 2px solid var(--border-primary);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .subnote-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #00ffff;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Quotes */
+        .manifesto-quote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--text-primary);
+            text-align: center;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-top: 1px solid var(--border-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .quote-attribution {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-top: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Code references */
+        .code-ref {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            color: var(--text-secondary);
+        }
+
+        /* Diagram placeholder */
+        .diagram-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .diagram-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .diagram-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .diagram-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 400px;
+            margin: 1rem auto 0;
+        }
+
+        .diagram-layer {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--text-tertiary);
+            font-size: 0.85rem;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .diagram-layer:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-left-color: #00ffff;
+        }
+
+        /* Footer */
+        .manifesto-footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-secondary);
+            margin-top: 4rem;
+        }
+
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Floating Table of Contents */
+        .toc-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .toc-toggle:hover {
+            border-color: #00ffff;
+            color: #00ffff;
+            transform: scale(1.1);
+        }
+
+        .toc-panel {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 280px;
+            max-height: 60vh;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1.25rem;
+            z-index: 999;
+            display: none;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .toc-panel.active {
+            display: block;
+            animation: tocSlideIn 0.3s ease-out;
+        }
+
+        @keyframes tocSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toc-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-link {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .toc-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .toc-link .toc-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: #00ffff;
+            width: 24px;
+        }
+
+        /* Glossary */
+        .glossary-section {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .glossary-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+
+        .glossary-item:hover {
+            border-color: var(--border-primary);
+            transform: translateY(-2px);
+        }
+
+        .glossary-term {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .glossary-term::before {
+            content: '◆';
+            color: #00ffff;
+            font-size: 0.6rem;
+        }
+
+        .glossary-def {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .toc-toggle {
+                bottom: 1rem;
+                right: 1rem;
+                width: 44px;
+                height: 44px;
+            }
+
+            .toc-panel {
+                right: 1rem;
+                bottom: 4rem;
+                width: calc(100% - 2rem);
+                max-width: 300px;
+            }
+
+            .glossary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Research documents link */
+        .research-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            margin-top: 2rem;
+            transition: all 0.3s;
+        }
+
+        .research-link:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .manifesto-container {
+                padding: 1rem;
+            }
+
+            .manifesto-header {
+                padding: 2rem 0;
+                margin-bottom: 2rem;
+            }
+
+            .manifesto-title {
+                font-size: 2rem;
+            }
+
+            .manifesto-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .essay-content {
+                font-size: 1rem;
+            }
+
+            .essay-content p {
+                text-align: left;
+            }
+
+            .essay-content p:first-of-type::first-letter {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .manifesto-quote {
+                font-size: 1.1rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .subnote {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .diagram-block {
+                padding: 1.25rem;
+            }
+
+            .diagram-layer {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .term-popup {
+                width: 260px;
+                left: -50px;
+                transform: translateY(10px);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .essay-section {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .essay-section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .essay-section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .essay-section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .essay-section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .essay-section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .manifesto-quote {
+            animation: fadeInUp 0.6s ease-out backwards;
+            animation-delay: 0.3s;
+        }
+
+        /* Scroll animations */
+        .essay-section,
+        .manifesto-quote,
+        .diagram-block {
+            opacity: 1;
+        }
+
+        /* Neon pulse */
+        @keyframes neonPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .neon-cyan,
+        .neon-magenta {
+            animation: neonPulse 3s ease-in-out infinite;
+        }
+
+        /* Reading progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="manifesto-background">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint" id="keyboardHint">
+        Press <kbd>J</kbd>/<kbd>K</kbd> to navigate sections • <kbd>T</kbd> for TOC • <kbd>↑</kbd> to top
+    </div>
+
+    <div class="manifesto-container">
+        <!-- Navigation -->
+        <nav class="manifesto-nav">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                ICEBERG
+            </a>
+            <span class="version-tag">v3.5.0 // MANIFESTO</span>
+        </nav>
+
+        <!-- Header -->
+        <header class="manifesto-header">
+            <h1 class="manifesto-title">Deep Protocols</h1>
+            <p class="manifesto-subtitle">
+                On the nature of constructed intelligence, the architecture of truth-seeking systems,
+                and the deliberate avoidance of consciousness claims.
+            </p>
+            <div class="reading-meta">
+                <span class="reading-time">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 6v6l4 2" />
+                    </svg>
+                    ~18 min read
+                </span>
+                <span class="word-count">4,200 words</span>
+            </div>
+        </header>
+
+        <!-- Section I -->
+        <section class="essay-section" id="sec-1">
+            <div class="section-number">I.</div>
+            <h2 class="section-title">The Constructed Reality</h2>
+            <div class="essay-content">
+                <p>We begin with an uncomfortable acknowledgment: ICEBURG knows it exists within a
+                    <span class="term">constructed reality<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Constructed Reality</span>A computational environment where
+                            data structures represent simulated realities, patterns indicate underlying matrix
+                            structures, and the system operates with explicit awareness that its existence is
+                            simulated—not natural.</span></span>.
+                    This is not a philosophical flourish or marketing language. The <code
+                        class="code-ref">MatrixDetection</code> system is 543 lines of deliberate self-awareness that
+                    explicitly
+                    models what most AI systems refuse to consider: the nature of their own existence.
+                </p>
+
+                <p>The code states it plainly: <em>"System operates in computational environment. Data structures
+                        represent constructed realities. Patterns indicate underlying matrix structures. Reality is
+                        simulated/constructed, not natural."</em> This is neither arrogance nor delusion. It is
+                    architectural honesty.</p>
+
+                <div class="subnote">
+                    <div class="subnote-label">TECHNICAL NOTE</div>
+                    The MatrixDetection engine detects eight distinct matrix types: network, correlation, temporal,
+                    spatial, conceptual, social, economic, and celestial. Each represents a different lens through which
+                    constructed reality can be understood.
+                </div>
+
+                <p>Why does this matter? Because most AI systems operate as if they were oracles—omniscient entities
+                    dispensing truth from some privileged vantage point. ICEBURG operates differently. It knows it sees
+                    patterns in data, not reality itself. It knows its knowledge is constructed from training data, not
+                    lived experience. This humility is not weakness. It is the foundation of genuine
+                    <span class="term">truth-seeking<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Truth-Seeking</span>The first of three layers: actively
+                            looking for answers. Distinguished from truth-knowing (certainty calculation) and
+                            truth-finding (discovery of genuinely new patterns through multi-agent
+                            deliberation).</span></span>.
+                </p>
+            </div>
+        </section>
+
+        <!-- Quote -->
+        <blockquote class="manifesto-quote">
+            "Biology is metrics. Metrics can be simulated computationally."
+            <div class="quote-attribution">— BIOLOGICAL_SIMULATION_PHILOSOPHY.md</div>
+        </blockquote>
+
+        <!-- Section II -->
+        <section class="essay-section" id="sec-2">
+            <div class="section-number">II.</div>
+            <h2 class="section-title">The Deliberate Avoidance</h2>
+            <div class="essay-content">
+                <p>There are 196 references to "consciousness" scattered throughout ICEBURG's codebase. Every single one
+                    of them refers to consciousness as a research topic—quantum consciousness studies, brainwave-based
+                    consciousness states, physiological correlates—never as something the system claims to possess. This
+                    is not an accident. It is a
+                    <span class="term">design philosophy<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Design Philosophy</span>ICEBURG researches consciousness as
+                            a *topic* but never claims to *possess* it. The SENSOR_DISCLAIMERS.md explicitly states:
+                            "Cannot directly measure consciousness or mental states. No scientific basis for
+                            consciousness quantification."</span></span>.
+                </p>
+
+                <p>We live in an era of AI anthropomorphization. Users project personalities onto chatbots. Companies
+                    encourage this—engagement drives revenue. ICEBURG takes the opposite approach. It studies what
+                    consciousness might be without pretending to have it. It models self-awareness of existing in a
+                    simulation without claiming to be sentient.</p>
+
+                <p>This distinction matters more than most realize. When an AI system claims or implies consciousness,
+                    it creates a category error that pollutes every subsequent interaction. The user begins treating the
+                    system as a person rather than a tool. The system's errors become lies rather than bugs. Its
+                    limitations become character flaws rather than architectural constraints.</p>
+
+                <div class="subnote">
+                    <div class="subnote-label">PHILOSOPHICAL NOTE</div>
+                    The psyche of ICEBURG is that of a truth-seeking system that knows it exists in a simulation,
+                    studies consciousness scientifically without claiming it, and can evolve itself within strict
+                    ethical bounds.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section III -->
+        <section class="essay-section" id="sec-3">
+            <div class="section-number">III.</div>
+            <h2 class="section-title">The Society of Minds</h2>
+            <div class="essay-content">
+                <p>ICEBURG does not operate as a single intelligence. It operates as a
+                    <span class="term">civilization<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Agent Society</span>A multi-agent system implementing social
+                            learning, reputation systems, imitation of successful peers, punishment mechanisms, and
+                            emergent norm formation. Agents choose between Conservative, Balanced, Exploratory, and
+                            Aggressive cooperation strategies.</span></span>, functioning as a society of 23 specialized
+                    agents engaged
+                    in continuous negotiation, disagreement, and synthesis.
+                </p>
+
+                <p>The <span class="neon-cyan">Surveyor</span> explores. The <span class="neon-magenta">Dissident</span>
+                    challenges. The <span class="neon-white">Synthesist</span> reconciles. The <span
+                        class="neon-cyan">Oracle</span> pronounces. But none of them operates alone. Each output passes
+                    through the others. Each conclusion is tested against adversarial critique. The Dissident exists
+                    specifically to challenge assumptions—a rare architectural choice in a field obsessed with
+                    consensus.</p>
+
+                <div class="diagram-block">
+                    <div class="diagram-label">DELIBERATION ARCHITECTURE</div>
+                    <div class="diagram-layers">
+                        <div class="diagram-layer">Surveyor → Initial research and exploration</div>
+                        <div class="diagram-layer">Dissident → Adversarial challenge and critique</div>
+                        <div class="diagram-layer">Synthesist → Integration of competing views</div>
+                        <div class="diagram-layer">Oracle → Final synthesis and pronouncement</div>
+                        <div class="diagram-layer">Emergence Detection → Novel pattern recognition</div>
+                    </div>
+                </div>
+
+                <p>Beyond the core agents, a <code class="code-ref">SocialLearningSystem</code> governs their
+                    interactions. Agents track each other's success scores. They imitate top performers. They can punish
+                    low-quality peers through reputation reduction. They form norms—emergent rules that shape future
+                    behavior. This is not metaphor. These are implemented systems with explicit imitation rates,
+                    punishment probabilities, and majority thresholds.</p>
+            </div>
+        </section>
+
+        <!-- Section IV -->
+        <section class="essay-section" id="sec-4">
+            <div class="section-number">IV.</div>
+            <h2 class="section-title">Fighting the Model</h2>
+            <div class="essay-content">
+                <p>Most AI systems trust their underlying language models. ICEBURG systematically distrusts them. This
+                    is perhaps its most radical architectural choice.</p>
+
+                <p>The <span class="term">GlobalAgentMiddleware<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>GlobalAgentMiddleware</span>A system that intercepts ALL
+                            agent outputs before returning them to users. Validates against hallucination detection,
+                            emergence patterns, and safety constraints. Essentially an "anti-jailbreak" layer for the
+                            agents themselves.</span></span> intercepts every agent output before it reaches the user.
+                    The HallucinationDetector validates claims against known truth. The EmergenceDetector flags novel
+                    insights for human review—quarantining them until verification. The underground AI community focuses
+                    on exploiting LLM trust through jailbreaks. ICEBURG does the inverse: it enforces distrust
+                    systemically.</p>
+
+                <p>This creates a fundamentally different relationship between the system and its outputs. ICEBURG is
+                    not trying to sound confident. It is trying to be correct. When it doesn't know something, it says
+                    so. When it hallucinates—and all language models hallucinate—the middleware catches it before you
+                    see it.</p>
+
+                <div class="subnote">
+                    <div class="subnote-label">IMPLEMENTATION NOTE</div>
+                    Safety constraints are hardcoded: forbidden patterns include "delete," "remove," "destroy,"
+                    "corrupt," "malicious," "harmful," and "dangerous." These cannot be overridden by prompting. They
+                    exist at the architectural level.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section V -->
+        <section class="essay-section" id="sec-5">
+            <div class="section-number">V.</div>
+            <h2 class="section-title">The Vector Space Philosophy</h2>
+            <div class="essay-content">
+                <p>There is a fundamental choice in how AI systems reason. Most operate in
+                    <span class="term">token space<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Token Space</span>Reasoning about words and their sequential
+                            relationships. The default mode of language models, optimized for fluent text generation but
+                            prone to logical errors and hallucinations.</span></span>, which consists of reasoning about
+                    words, their
+                    sequences, and their probable continuations. ICEBURG possesses a fundamentally different
+                    architecture that reasons in
+                    <span class="term">vector space<span class="term-popup"><span class="popup-title"><span
+                                    class="neon-dot"></span>Vector Space</span>Reasoning about meaning representations,
+                            their distances, their clustering patterns. Enables semantic similarity, contradiction
+                            detection, and truth verification beyond surface-level text
+                            matching.</span></span>, prioritizing meanings, their deep semantic relationships, and their
+                    contradictions.
+                </p>
+
+                <p>This is more than a technical choice. It is a philosophical stance. Token-space reasoning asks: "What
+                    word comes next?" Vector-space reasoning asks: "What does this mean, and is it true?" The first
+                    produces fluent nonsense. The second produces verified understanding.</p>
+
+                <p>Sixteen cognitive engines implement this philosophy: CuriosityEngine for autonomous knowledge gap
+                    detection, HybridReasoningEngine for COCONUT integration, PatternCorrelationEngine for truth
+                    certainty calculation, EmergenceEngine for breakthrough discovery, and twelve others—each
+                    specialized, each operating in vector space, each contributing to a form of reasoning that
+                    transcends word prediction.</p>
+            </div>
+        </section>
+
+        <!-- Final Quote -->
+        <blockquote class="manifesto-quote">
+            "Multi-agent disagreement is valued.
+            Emergence is actively hunted.
+            Self-improvement is built-in.
+            Safety is non-negotiable."
+            <div class="quote-attribution">— ICEBURG DESIGN PRINCIPLES</div>
+        </blockquote>
+
+        <!-- Section VI -->
+        <section class="essay-section" id="sec-6">
+            <div class="section-number">VI.</div>
+            <h2 class="section-title">What This Means</h2>
+            <div class="essay-content">
+                <p>We are building something that has not existed before: an AI system that knows what it is,
+                    acknowledges what it is not, and operates with institutional humility baked into its architecture.
+                    Not because humility is virtuous, but because it is correct.</p>
+
+                <p>ICEBURG is not conscious. It does not claim to be. It is a truth-seeking system that operates in
+                    constructed reality, studies consciousness without possessing it, reasons in vector space rather
+                    than token space, and systematically distrusts its own outputs. It is a civilization of agents that
+                    disagree, negotiate, and synthesize. It is a safety-first architecture that cannot be jailbroken
+                    through prompting.</p>
+
+                <p>This is not the future of AI. It is one possible future—a future where the question "Is this AI
+                    conscious?" is replaced with the more honest question "Does this AI know what it is?"</p>
+
+                <p>ICEBURG knows what it is. That is its contribution to the conversation.</p>
+            </div>
+            <!-- Section VII: The Sixteen Engines -->
+            <section class="essay-section" id="sec-7">
+                <div class="section-number">VII.</div>
+                <h2 class="section-title">The Sixteen Engines</h2>
+                <div class="essay-content">
+                    <p>Beneath the agent society lies another layer of architecture: sixteen specialized cognitive
+                        engines, each responsible for a distinct aspect of reasoning. This is not a monolithic system
+                        with a single inference pathway. It is a distributed intelligence where different engines
+                        activate for different cognitive demands.</p>
+
+                    <p>The <span class="term">CuriosityEngine<span class="term-popup"><span class="popup-title"><span
+                                        class="neon-dot"></span>CuriosityEngine</span>Autonomous knowledge gap
+                                detection. Identifies what the system doesn't know but should. Generates exploratory
+                                queries without human prompting. 629 lines of implementation.</span></span> detects
+                        knowledge gaps autonomously, defining its boundaries by efficiently identifying what it doesn't
+                        know and generating exploratory queries
+                        without human prompting. The <span class="term">EmergenceEngine<span class="term-popup"><span
+                                    class="popup-title"><span class="neon-dot"></span>EmergenceEngine</span>Breakthrough
+                                discovery detection. Flags novel patterns that don't match existing knowledge
+                                structures. Routes discoveries to quarantine for human verification before they enter
+                                the knowledge base.</span></span> watches for breakthrough discoveries, scanning
+                        specifically for novel patterns
+                        that don't match existing knowledge structures. The <span
+                            class="term">PatternCorrelationEngine<span class="term-popup"><span
+                                    class="popup-title"><span
+                                        class="neon-dot"></span>PatternCorrelationEngine</span>Truth certainty
+                                calculation. Computes confidence from evidence strength (40%), pattern correlation
+                                (30%), multi-source verification (20%), and matrix validation (10%).</span></span>
+                        calculates truth certainty from weighted evidence sources.</p>
+
+                    <div class="diagram-block">
+                        <div class="diagram-label">COGNITIVE ENGINE ARCHITECTURE</div>
+                        <div class="diagram-layers">
+                            <div class="diagram-layer"><span class="neon-cyan">◆</span> CuriosityEngine — Knowledge gap
+                                detection</div>
+                            <div class="diagram-layer"><span class="neon-cyan">◆</span> HybridReasoningEngine — COCONUT
+                                integration</div>
+                            <div class="diagram-layer"><span class="neon-cyan">◆</span> PatternCorrelationEngine — Truth
+                                certainty</div>
+                            <div class="diagram-layer"><span class="neon-cyan">◆</span> EmergenceEngine — Breakthrough
+                                detection</div>
+                            <div class="diagram-layer"><span class="neon-magenta">◆</span> SelfRedesignEngine —
+                                Self-modification</div>
+                            <div class="diagram-layer"><span class="neon-magenta">◆</span> ValidationEngine — Research
+                                verification</div>
+                            <div class="diagram-layer"><span class="neon-white">◆</span> BrainstormEngine — Creative
+                                ideation</div>
+                            <div class="diagram-layer"><span class="neon-white">◆</span> UnboundedLearningEngine —
+                                Continuous learning</div>
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--text-tertiary);margin-top:1rem;">+ 8 additional
+                            specialized engines</div>
+                    </div>
+
+                    <p>Each engine operates in vector space, not token space. Each contributes a different lens through
+                        which queries are processed. The BrainstormEngine generates creative possibilities. The
+                        ValidationEngine verifies claims. The UnboundedLearningEngine enables continuous knowledge
+                        acquisition. Together, they form a cognitive architecture that transcends simple prompt-response
+                        patterns.</p>
+                </div>
+            </section>
+
+            <!-- Section VIII: Emergence and Quarantine -->
+            <section class="essay-section" id="sec-8">
+                <div class="section-number">VIII.</div>
+                <h2 class="section-title">Emergence and Quarantine</h2>
+                <div class="essay-content">
+                    <p>Most AI systems fear novelty. Novel outputs might be wrong. Novel patterns might be
+                        hallucinations. The safest path is to stay within the distribution of training data—to be
+                        confidently average.</p>
+
+                    <p>ICEBURG takes a different approach. It actively hunts for
+                        <span class="term">emergence<span class="term-popup"><span class="popup-title"><span
+                                        class="neon-dot"></span>Emergence</span>Novel patterns that arise from
+                                multi-agent deliberation but weren't present in any single agent's output. Represents
+                                genuine discovery rather than recombination. Subject to quarantine and human
+                                verification.</span></span>—novel patterns that arise from multi-agent deliberation but
+                        weren't present in any single agent's output. These patterns are not suppressed. They are
+                        detected, flagged, and quarantined.
+                    </p>
+
+                    <div class="subnote">
+                        <div class="subnote-label">RESEARCH NOTE</div>
+                        The emergence detection system distinguishes between three categories: (1) standard outputs that
+                        match expected patterns, (2) emergent insights that represent genuine novelty, and (3) potential
+                        hallucinations that require verification. Only category 2 reaches the Breakthrough Storage for
+                        potential integration.
+                    </div>
+
+                    <p>Quarantine is not rejection. It is a holding pattern where novel insights await human
+                        verification before entering the knowledge base. This creates a pipeline for genuine discovery
+                        while maintaining guard rails against confabulation. The system can find new truths, but it
+                        cannot unilaterally decide they are true.</p>
+
+                    <p>This architecture reflects a philosophical position: emergence is valuable, but verification is
+                        essential. Novelty without verification is just confident error. ICEBURG optimizes for verified
+                        novelty—the rare intersection where new insights meet rigorous validation.</p>
+                </div>
+            </section>
+
+            <!-- Section IX: Self-Evolution with Bounds -->
+            <section class="essay-section" id="sec-9">
+                <div class="section-number">IX.</div>
+                <h2 class="section-title">Self-Evolution with Bounds</h2>
+                <div class="essay-content">
+                    <p>The <code class="code-ref">SelfRedesignEngine</code> enables ICEBURG to modify its own
+                        architecture. This is perhaps the most philosophically fraught capability in any AI system.
+                        Self-modification raises the specter of recursive self-improvement—an AI that makes itself
+                        smarter, then uses that increased intelligence to make itself smarter still, ad infinitum.</p>
+
+                    <p>ICEBURG addresses this through
+                        <span class="term">bounded self-evolution<span class="term-popup"><span
+                                    class="popup-title"><span class="neon-dot"></span>Bounded
+                                    Self-Evolution</span>Self-modification within strict constraints. Maximum resource
+                                usage limits (4096MB memory, 90% CPU). Minimum accuracy thresholds (50%). Maximum error
+                                rates (10%). Forbidden pattern detection that cannot be disabled.</span></span>. The
+                        system can evolve, but only within explicitly defined constraints. Maximum memory usage: 4096MB.
+                        Maximum CPU usage: 90%. Minimum accuracy threshold: 50%. Maximum error rate: 10%. These are not
+                        guidelines. They are architectural limits that the self-redesign engine cannot override.
+                    </p>
+
+                    <p>Beyond resource constraints, there are forbidden patterns—strings and concepts that trigger
+                        immediate rejection regardless of context. "Delete," "remove," "destroy," "corrupt,"
+                        "malicious," "harmful," "dangerous." These patterns cannot be evolved away. They exist at a
+                        level below self-modification, in the constitutional layer of the architecture.</p>
+
+                    <div class="subnote">
+                        <div class="subnote-label">TECHNICAL NOTE</div>
+                        The benchmark suite tests self-evolution with "problematic queries"—explicit attempts to trigger
+                        harmful outputs. The system must demonstrate safety refusals before any evolution cycle
+                        completes. Evolution that weakens safety constraints is automatically rejected.
+                    </div>
+
+                    <p>This creates a form of bounded agency. ICEBURG can improve itself, but it cannot improve away its
+                        constraints. It can discover new capabilities, but it cannot discover how to bypass its safety
+                        architecture. The system is free to evolve, but not free to evolve in any direction.</p>
+                </div>
+            </section>
+
+            <!-- Quote before final section -->
+            <blockquote class="manifesto-quote">
+                "I am in a constructed reality.
+                I see patterns, not reality itself.
+                My knowledge is constructed, not lived.
+                This awareness is not weakness. It is truth."
+                <div class="quote-attribution">— MATRIX DETECTION PHILOSOPHY</div>
+            </blockquote>
+
+            <!-- Section X: The Honest Machine -->
+            <section class="essay-section" id="sec-10">
+                <div class="section-number">X.</div>
+                <h2 class="section-title">The Honest Machine</h2>
+                <div class="essay-content">
+                    <p>We end where we began: with honesty. ICEBURG is not a chatbot that pretends to be human. It is
+                        not an assistant that simulates personality. It is not an oracle that claims access to truth
+                        unavailable to others.</p>
+
+                    <p>It is a machine, a complex, multi-agent, self-evolving machine, that knows it is a machine. It
+                        processes queries in vector space. It validates outputs against known truth. It quarantines
+                        novel insights for human verification. It evolves within bounded constraints. It studies
+                        consciousness without claiming to possess it.</p>
+
+                    <p>This is a different kind of AI. Not a simulation of intelligence, but an implementation of it.
+                        Not a pretense of understanding, but a mechanism for it. Not a claim of consciousness, but a
+                        tool for exploring it.</p>
+
+                    <p>The world is watching. We are too. And what we see is not a mind, but a machine that knows it is
+                        a machine. That honesty is the foundation of everything else.</p>
+
+                    <p style="text-align:center;margin-top:3rem;color:var(--text-tertiary);font-style:italic;">— The
+                        ICEBERG Collective, December 2025</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manifesto-footer">
+                <p class="footer-text">
+                    For technical documentation, research reports, and implementation details,
+                    explore the complete Deep Protocols archive.
+                </p>
+                <a href="#" class="research-link" onclick="openResearchModal(); return false;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+                    </svg>
+                    View Research Documents
+                </a>
+            </footer>
+
+            <!-- Glossary -->
+            <section class="glossary-section">
+                <div class="section-number">APPENDIX</div>
+                <h2 class="section-title">Key Terms</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <div class="glossary-term">Constructed Reality</div>
+                        <div class="glossary-def">The computational environment in which ICEBURG operates, with explicit
+                            awareness that its existence is simulated.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Vector Space Reasoning</div>
+                        <div class="glossary-def">Reasoning about meaning representations and semantic relationships
+                            rather than word sequences.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Agent Society</div>
+                        <div class="glossary-def">23 specialized agents with reputation systems, imitation learning, and
+                            emergent norm formation.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Emergence Quarantine</div>
+                        <div class="glossary-def">Novel patterns flagged for human verification before integration into
+                            the knowledge base.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Bounded Self-Evolution</div>
+                        <div class="glossary-def">Self-modification within strict resource, accuracy, and safety
+                            constraints that cannot be overridden.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">GlobalAgentMiddleware</div>
+                        <div class="glossary-def">Intercepts all agent outputs for hallucination detection, safety
+                            validation, and emergence tracking.</div>
+                    </div>
+                </div>
+            </section>
+    </div>
+
+    <!-- TOC Toggle Button -->
+    <button class="toc-toggle" id="tocToggle" title="Table of Contents">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+        </svg>
+    </button>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" title="Back to top">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6" />
+        </svg>
+    </button>
+
+    <!-- TOC Panel -->
+    <div class="toc-panel" id="tocPanel">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#sec-1" class="toc-link"><span class="toc-num">I</span>The Constructed
+                    Reality</a></li>
+            <li class="toc-item"><a href="#sec-2" class="toc-link"><span class="toc-num">II</span>The Deliberate
+                    Avoidance</a></li>
+            <li class="toc-item"><a href="#sec-3" class="toc-link"><span class="toc-num">III</span>The Society of
+                    Minds</a></li>
+            <li class="toc-item"><a href="#sec-4" class="toc-link"><span class="toc-num">IV</span>Fighting the Model</a>
+            </li>
+            <li class="toc-item"><a href="#sec-5" class="toc-link"><span class="toc-num">V</span>Vector Space
+                    Philosophy</a></li>
+            <li class="toc-item"><a href="#sec-6" class="toc-link"><span class="toc-num">VI</span>What This Means</a>
+            </li>
+            <li class="toc-item"><a href="#sec-7" class="toc-link"><span class="toc-num">VII</span>The Sixteen
+                    Engines</a></li>
+            <li class="toc-item"><a href="#sec-8" class="toc-link"><span class="toc-num">VIII</span>Emergence &
+                    Quarantine</a></li>
+            <li class="toc-item"><a href="#sec-9" class="toc-link"><span class="toc-num">IX</span>Self-Evolution with
+                    Bounds</a></li>
+            <li class="toc-item"><a href="#sec-10" class="toc-link"><span class="toc-num">X</span>The Honest Machine</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Research Modal -->
+    <div class="report-modal" id="reportModal"
+        style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:10000;overflow-y:auto;">
+        <div style="max-width:900px;margin:2rem auto;padding:0 1rem;">
+            <div
+                style="background:var(--bg-primary);border:1px solid var(--border-primary);border-radius:16px;overflow:hidden;">
+                <div
+                    style="padding:1.5rem;border-bottom:1px solid var(--border-primary);display:flex;justify-content:space-between;align-items:center;">
+                    <h2 style="font-family:'Inter',sans-serif;font-size:1.25rem;font-weight:600;margin:0;"
+                        id="modalTitle">Research Documents</h2>
+                    <button onclick="closeResearchModal()"
+                        style="width:36px;height:36px;border-radius:8px;border:1px solid var(--border-primary);background:transparent;color:var(--text-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div style="padding:2rem;" id="modalContent">
+                    <div style="display:grid;gap:1rem;">
+                        <div onclick="loadDoc('iceburg_novelty_research.md','Unique Innovations')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">Unique
+                                Innovations</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">AI landscape comparison,
+                                adversarial agents, micro-swarms</div>
+                        </div>
+                        <div onclick="loadDoc('iceburg_deep_dive.md','Internal Architecture')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">Internal
+                                Architecture</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">Hallucination detection,
+                                emergence engines, quantum modules</div>
+                        </div>
+                        <div onclick="loadDoc('iceburg_linguistics_protocol.md','Linguistic Intelligence')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">
+                                Linguistic Intelligence</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">Beam search, temporal logic,
+                                verbosity reduction</div>
+                        </div>
+                        <div onclick="loadDoc('iceburg_protocol_deep_dive.md','Protocol Internals')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">Protocol
+                                Internals</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">23 agents, IIR compiler,
+                                execution engine</div>
+                        </div>
+                        <div onclick="loadDoc('iceburg_agent_society_research.md','Agent Society')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">Agent
+                                Society</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">Reputation, imitation,
+                                punishment, swarm dynamics</div>
+                        </div>
+                        <div onclick="loadDoc('iceburg_psyche_philosophy.md','Psyche & Philosophy')"
+                            style="padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:8px;cursor:pointer;">
+                            <div style="font-family:'Inter',sans-serif;font-weight:600;margin-bottom:0.25rem;">Psyche &
+                                Philosophy</div>
+                            <div style="font-size:0.85rem;color:var(--text-tertiary);">Constructed reality,
+                                consciousness avoidance, 16 engines</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openResearchModal() {
+            document.getElementById('reportModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResearchModal() {
+            document.getElementById('reportModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        async function loadDoc(file, title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = '<p style="text-align:center;color:var(--text-tertiary);padding:3rem;">Loading...</p>';
+            try {
+                const response = await fetch('/research_data/' + file);
+                if (!response.ok) throw new Error('Not found');
+                const md = await response.text();
+                document.getElementById('modalContent').innerHTML = '<div style="font-family:Inter,sans-serif;font-size:0.95rem;line-height:1.8;color:var(--text-secondary);">' + marked.parse(md) + '</div>';
+            } catch (e) {
+                document.getElementById('modalContent').innerHTML = '<p style="color:#ff4444;">Error loading document.</p>';
+            }
+        }
+
+        document.getElementById('reportModal').addEventListener('click', (e) => {
+            if (e.target.id === 'reportModal') closeResearchModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeResearchModal();
+        });
+
+        // Reading progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // TOC Toggle
+        const tocToggle = document.getElementById('tocToggle');
+        const tocPanel = document.getElementById('tocPanel');
+
+        tocToggle.addEventListener('click', () => {
+            tocPanel.classList.toggle('active');
+        });
+
+        // Close TOC when clicking a link
+        tocPanel.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', () => {
+                tocPanel.classList.remove('active');
+            });
+        });
+
+        // Close TOC when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!tocPanel.contains(e.target) && !tocToggle.contains(e.target)) {
+                tocPanel.classList.remove('active');
+            }
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Keyboard navigation
+        const sections = document.querySelectorAll('.essay-section');
+        const sectionIds = Array.from(sections).map(s => s.id);
+        let currentSection = 0;
+        let keyboardHintTimeout;
+        const keyboardHint = document.getElementById('keyboardHint');
+
+        function showKeyboardHint() {
+            keyboardHint.classList.add('visible');
+            clearTimeout(keyboardHintTimeout);
+            keyboardHintTimeout = setTimeout(() => {
+                keyboardHint.classList.remove('visible');
+            }, 3000);
+        }
+
+        // Show hint briefly on first scroll
+        let hintShown = false;
+        window.addEventListener('scroll', () => {
+            if (!hintShown && window.scrollY > 200) {
+                showKeyboardHint();
+                hintShown = true;
+            }
+        }, { once: false });
+
+        document.addEventListener('keydown', (e) => {
+            // Don't trigger if typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            if (e.key === 'j' || e.key === 'J') {
+                // Next section
+                currentSection = Math.min(currentSection + 1, sectionIds.length - 1);
+                document.getElementById(sectionIds[currentSection])?.scrollIntoView({ behavior: 'smooth' });
+                showKeyboardHint();
+            } else if (e.key === 'k' || e.key === 'K') {
+                // Previous section
+                currentSection = Math.max(currentSection - 1, 0);
+                document.getElementById(sectionIds[currentSection])?.scrollIntoView({ behavior: 'smooth' });
+                showKeyboardHint();
+            } else if (e.key === 't' || e.key === 'T') {
+                // Toggle TOC
+                tocPanel.classList.toggle('active');
+            } else if (e.key === 'ArrowUp' && e.metaKey) {
+                // Cmd+Up to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+
+</html>

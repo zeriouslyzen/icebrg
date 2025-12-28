@@ -469,7 +469,7 @@ body {
     color: var(--text-primary);
 }
 
-/* Pulsing Ball Icon */
+/* Pulsing Ball Icon - Brainwave Inspired */
 .pulsing-ball-icon {
     width: 12px;
     height: 12px;
@@ -478,7 +478,6 @@ body {
     box-shadow:
         0 0 8px rgba(255, 255, 255, 0.6),
         0 0 16px rgba(255, 255, 255, 0.4);
-    animation: ball-pulse 2s ease-in-out infinite;
     transition: all var(--transition-fast);
 }
 
@@ -487,65 +486,302 @@ body {
     box-shadow:
         0 0 12px rgba(255, 255, 255, 0.8),
         0 0 24px rgba(255, 255, 255, 0.6);
+    transform: scale(1.2);
 }
 
-@keyframes ball-pulse {
+/* Left Orb (Sidebar) - Neutral Pulse */
+.sidebar-toggle .pulsing-ball-icon {
+    animation: neutralPulse 3s ease-in-out infinite;
+}
+
+/* Right Orb (Settings) - Neutral Pulse */
+.settings-toggle .pulsing-ball-icon {
+    animation: neutralPulse 3s ease-in-out infinite;
+}
+
+@keyframes neutralPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.4);
+    }
+
+    50% {
+        transform: scale(1.1);
+        background-color: rgba(255, 255, 255, 1);
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 24px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/* Alpha Wave - Relaxed Focus (8-12 Hz) - Yellow/Green */
+@keyframes alphaWave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+
+    25% {
+        transform: scale(1.08);
+        opacity: 0.95;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+
+    75% {
+        transform: scale(1.08);
+        opacity: 0.95;
+    }
+}
+
+@keyframes alphaColor {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg, #98FB98 0%, #90EE90 100%);
+        box-shadow: 0 0 8px rgba(152, 251, 152, 0.6), 0 0 16px rgba(152, 251, 152, 0.3);
+    }
+
+    16% {
+        background: linear-gradient(135deg, #F0E68C 0%, #FAFAD2 100%);
+        box-shadow: 0 0 10px rgba(240, 230, 140, 0.7), 0 0 20px rgba(240, 230, 140, 0.4);
+    }
+
+    33% {
+        background: linear-gradient(135deg, #E0FFE0 0%, #FFFFFF 100%);
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 24px rgba(224, 255, 224, 0.5);
+    }
+
+    50% {
+        background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+        box-shadow: 0 0 10px rgba(144, 238, 144, 0.7), 0 0 20px rgba(144, 238, 144, 0.4);
+    }
+
+    66% {
+        background: linear-gradient(135deg, #FAFAD2 0%, #FFFACD 100%);
+        box-shadow: 0 0 8px rgba(250, 250, 210, 0.6), 0 0 16px rgba(250, 250, 210, 0.3);
+    }
+
+    83% {
+        background: linear-gradient(135deg, #B8FFC8 0%, #98FB98 100%);
+        box-shadow: 0 0 10px rgba(184, 255, 200, 0.7), 0 0 20px rgba(184, 255, 200, 0.4);
+    }
+}
+
+/* Theta Wave - Deep Relaxation/Creativity (4-8 Hz) - Purple/Violet/Green */
+@keyframes thetaWave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    33% {
+        transform: scale(1.12);
+        opacity: 0.95;
+    }
+
+    66% {
+        transform: scale(1.18);
+        opacity: 1;
+    }
+}
+
+@keyframes thetaColor {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg, #DDA0DD 0%, #BA55D3 100%);
+        box-shadow: 0 0 8px rgba(221, 160, 221, 0.6), 0 0 16px rgba(186, 85, 211, 0.3);
+    }
+
+    20% {
+        background: linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%);
+        box-shadow: 0 0 10px rgba(147, 112, 219, 0.7), 0 0 20px rgba(138, 43, 226, 0.4);
+    }
+
+    40% {
+        background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+        box-shadow: 0 0 12px rgba(144, 238, 144, 0.8), 0 0 24px rgba(152, 251, 152, 0.5);
+    }
+
+    60% {
+        background: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%);
+        box-shadow: 0 0 10px rgba(230, 230, 250, 0.7), 0 0 20px rgba(216, 191, 216, 0.4);
+    }
+
+    80% {
+        background: linear-gradient(135deg, #BA55D3 0%, #9932CC 100%);
+        box-shadow: 0 0 8px rgba(186, 85, 211, 0.6), 0 0 16px rgba(153, 50, 204, 0.3);
+    }
+}
+
+/* Beta Wave - Alert Focus (12-30 Hz) - Orange/Red (for active states) */
+@keyframes betaWave {
 
     0%,
     100% {
         transform: scale(1);
         opacity: 0.9;
-        box-shadow:
-            0 0 8px rgba(255, 255, 255, 0.6),
-            0 0 16px rgba(255, 255, 255, 0.4);
+    }
+
+    12.5% {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+
+    25% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    37.5% {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+
+    50% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+
+    62.5% {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+
+    75% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    87.5% {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+}
+
+@keyframes betaColor {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+        box-shadow: 0 0 10px rgba(255, 165, 0, 0.7), 0 0 20px rgba(255, 140, 0, 0.4);
+    }
+
+    50% {
+        background: linear-gradient(135deg, #FF6347 0%, #FF4500 100%);
+        box-shadow: 0 0 12px rgba(255, 99, 71, 0.8), 0 0 24px rgba(255, 69, 0, 0.5);
+    }
+}
+
+/* Delta Wave - Deep Sleep/Rest (0.1-4 Hz) - Deep Violet/Indigo */
+@keyframes deltaWave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.95;
+    }
+}
+
+@keyframes deltaColor {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg, #4B0082 0%, #6A5ACD 100%);
+        box-shadow: 0 0 8px rgba(75, 0, 130, 0.5), 0 0 16px rgba(106, 90, 205, 0.3);
+    }
+
+    50% {
+        background: linear-gradient(135deg, #483D8B 0%, #7B68EE 100%);
+        box-shadow: 0 0 12px rgba(72, 61, 139, 0.7), 0 0 24px rgba(123, 104, 238, 0.4);
+    }
+}
+
+/* Gamma Wave - Peak Performance (30+ Hz) - Bright White/Gold */
+@keyframes gammaWave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.95;
+    }
+
+    10% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+    20% {
+        transform: scale(1);
+        opacity: 0.95;
+    }
+
+    30% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 0.95;
     }
 
     50% {
         transform: scale(1.1);
         opacity: 1;
-        box-shadow:
-            0 0 12px rgba(255, 255, 255, 0.8),
-            0 0 24px rgba(255, 255, 255, 0.6),
-            0 0 32px rgba(255, 255, 255, 0.3);
+    }
+
+    60% {
+        transform: scale(1);
+        opacity: 0.95;
+    }
+
+    70% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+    80% {
+        transform: scale(1);
+        opacity: 0.95;
+    }
+
+    90% {
+        transform: scale(1.08);
+        opacity: 1;
     }
 }
 
-/* Color shift animation for ball */
-@keyframes ball-color-shift {
+@keyframes gammaColor {
 
     0%,
     100% {
-        background-color: rgba(255, 255, 255, 0.9);
-        box-shadow:
-            0 0 8px rgba(255, 255, 255, 0.6),
-            0 0 16px rgba(255, 255, 255, 0.4);
-    }
-
-    25% {
-        background-color: rgba(240, 248, 255, 0.95);
-        box-shadow:
-            0 0 8px rgba(240, 248, 255, 0.7),
-            0 0 16px rgba(240, 248, 255, 0.5);
+        background: linear-gradient(135deg, #FFFFFF 0%, #FFD700 100%);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 215, 0, 0.6);
     }
 
     50% {
-        background-color: rgba(230, 240, 255, 0.95);
-        box-shadow:
-            0 0 8px rgba(230, 240, 255, 0.7),
-            0 0 16px rgba(230, 240, 255, 0.5);
-    }
-
-    75% {
-        background-color: rgba(240, 248, 255, 0.95);
-        box-shadow:
-            0 0 8px rgba(240, 248, 255, 0.7),
-            0 0 16px rgba(240, 248, 255, 0.5);
+        background: linear-gradient(135deg, #FFFACD 0%, #FFFFFF 100%);
+        box-shadow: 0 0 20px rgba(255, 250, 205, 1), 0 0 40px rgba(255, 255, 255, 0.8);
     }
 }
 
-.pulsing-ball-icon {
-    animation: ball-pulse 2s ease-in-out infinite, ball-color-shift 4s ease-in-out infinite;
-}
+/* Brainwave Mode Data Attributes - Disabled */
+/* [data-brainwave="delta"] ... etc */
 
 .app-title {
     font-size: 1.5rem;
@@ -1215,6 +1451,39 @@ body {
     width: 100%;
     box-sizing: border-box;
     margin: 0;
+}
+
+/* Prompt Bar Decorative Orbs */
+.prompt-orb-left,
+.prompt-orb-right {
+    position: absolute;
+    top: -35px;
+    /* Floats higher above the border */
+    z-index: 10001;
+    pointer-events: none;
+    animation: neutralPulse 4s ease-in-out infinite;
+}
+
+.prompt-orb-left {
+    left: 33px;
+    /* Aligned with carousel arrow center */
+    animation-delay: 0s;
+}
+
+.prompt-orb-right {
+    right: 33px;
+    /* Aligned with carousel arrow center */
+    animation-delay: 2s;
+}
+
+@media (max-width: 600px) {
+    .prompt-orb-left {
+        left: 4px;
+    }
+
+    .prompt-orb-right {
+        right: 4px;
+    }
 }
 
 .input-wrapper {

@@ -1135,6 +1135,19 @@
             </svg>
             <span>Wiki</span>
           </a>
+
+          <a href="/protocols.html" class="protocols-link sidebar-link"
+            style="display: flex; align-items: center; padding: 0.5rem 1rem; color: var(--text-primary); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="margin-right: 0.75rem; color: #8B5CF6;">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <span>Deep Protocols</span>
+            <span
+              style="margin-left: auto; font-size: 0.6rem; background: #8B5CF6; color: #fff; padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">CORE</span>
+          </a>
         </div>
         <div style="height: 2rem;"></div> <!-- Extra space at bottom for scrolling -->
       </aside>
@@ -1204,6 +1217,10 @@
       <!-- Charts are now included in main answer format -->
 
       <div class="input-container">
+        <!-- Decorative Orbs -->
+        <div class="pulsing-ball-icon prompt-orb-left"></div>
+        <div class="pulsing-ball-icon prompt-orb-right"></div>
+
         <div class="prompt-carousel" id="promptCarousel">
           <div class="prompt-carousel-content" id="promptCarouselContent">
             <!-- Prompts will be dynamically inserted here -->
@@ -1313,6 +1330,23 @@
         </div>
       </div>
       <div class="settings-section">
+        <h3>Brainwave State</h3>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Orb light patterns inspired by mental states
+        </p>
+        <div class="settings-group">
+          <select class="settings-select" id="brainwaveSelect"
+            onchange="document.body.setAttribute('data-brainwave', this.value); localStorage.setItem('brainwaveMode', this.value)">
+            <option value="auto">Auto (Adaptive)</option>
+            <option value="alpha" selected>Alpha - Relaxed Focus (Green/Yellow)</option>
+            <option value="theta">Theta - Creative Flow (Purple/Violet)</option>
+            <option value="delta">Delta - Deep Rest (Indigo)</option>
+            <option value="beta">Beta - Alert Focus (Orange)</option>
+            <option value="gamma">Gamma - Peak Performance (Gold/White)</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings-section">
         <h3>Appearance</h3>
         <div class="settings-group">
           <label class="settings-label" for="themeToggle">Light Mode</label>
@@ -1372,7 +1406,26 @@
 
       // === Glitch Transition for Sidebar Links ===
       initGlitchTransition();
+
+      // === Brainwave Mode ===
+      initBrainwaveMode();
     });
+
+    // Initialize Brainwave Mode from localStorage
+    function initBrainwaveMode() {
+      const savedMode = localStorage.getItem('brainwaveMode') || 'alpha';
+      const select = document.getElementById('brainwaveSelect');
+
+      // Set the body attribute
+      if (savedMode !== 'auto') {
+        document.body.setAttribute('data-brainwave', savedMode);
+      }
+
+      // Update select to match
+      if (select) {
+        select.value = savedMode;
+      }
+    }
 
     // Hide Welcome Experience when user starts typing
     function initHideWelcomeOnTyping() {
