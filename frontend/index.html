@@ -1224,7 +1224,8 @@
       <div class="input-container">
         <!-- Decorative Orbs -->
         <div class="pulsing-ball-icon prompt-orb-left"></div>
-        <div class="pulsing-ball-icon prompt-orb-right" onclick="document.getElementById('sidebarToggle').click()">
+        <div class="pulsing-ball-icon prompt-orb-right"
+          onclick="event.stopPropagation(); document.getElementById('sidebarToggle').click()">
         </div>
 
         <div class="prompt-carousel" id="promptCarousel">
