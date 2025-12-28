@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ICEBURG WebSocket Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+        .log { margin: 5px 0; padding: 5px; background: #111; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+        button { padding: 10px; margin: 5px; background: #333; color: #0f0; border: 1px solid #0f0; cursor: pointer; }
+        button:hover { background: #444; }
+    </style>
+</head>
+<body>
+    <h1>ICEBURG WebSocket Connection Test</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testPredictionLab()">Test Prediction Lab</button>
+    <button onclick="clearLog()">Clear Log</button>
+    <div id="log"></div>
+
+    <script>
+        let ws = null;
+        const log = document.getElementById('log');
+
+        function addLog(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function clearLog() {
+            log.innerHTML = '';
+        }
+
+        function testConnection() {
+            addLog('🔍 Testing WebSocket connection to ws://localhost:8000/ws', 'info');
+            
+            try {
+                ws = new WebSocket('ws://localhost:8000/ws');
+                
+                ws.onopen = () => {
+                    addLog('✅ WebSocket opened successfully', 'success');
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addLog(`📥 Received: type=${data.type}, content=${(data.content || data.message || '').substring(0, 50)}`, 'info');
+                        
+                        if (data.type === 'connected') {
+                            addLog('✅ Connection confirmed by server!', 'success');
+                        }
+                    } catch (e) {
+                        addLog(`📥 Raw message: ${event.data}`, 'info');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    addLog(`❌ WebSocket error: ${error}`, 'error');
+                    addLog(`❌ ReadyState: ${ws.readyState}`, 'error');
+                };
+                
+                ws.onclose = (event) => {
+                    addLog(`⚠️ WebSocket closed: code=${event.code}, reason=${event.reason || 'none'}, wasClean=${event.wasClean}`, 'error');
+                };
+                
+            } catch (error) {
+                addLog(`❌ Failed to create WebSocket: ${error}`, 'error');
+            }
+        }
+
+        function testPredictionLab() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                addLog('❌ WebSocket not connected. Click "Test Connection" first.', 'error');
+                return;
+            }
+            
+            addLog('📤 Sending prediction_lab query...', 'info');
+            ws.send(JSON.stringify({
+                query: 'what is the weather next week',
+                mode: 'prediction_lab'
+            }));
+        }
+    </script>
+</body>
+</html>
+

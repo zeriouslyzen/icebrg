@@ -1826,9 +1826,13 @@
             { id: 'vedic_knowledge', name: 'Vedic Knowledge', description: 'Ayurveda, Jyotish, Nakshatras, Doshas' },
             { id: 'schumann_resonance', name: 'Schumann Resonance', description: 'Earth frequency and biological correlations' },
             { id: 'government_research', name: 'Government Research', description: 'Declassified government programs and consciousness research' },
-        { id: 'patents', name: 'Patents', description: 'Patents related to EM fields, consciousness technologies, and biological effects' },
-        { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' }
-      ];
+            { id: 'field_topologies', name: 'Field Topologies', description: 'Cardiac torus fields, cortical standing waves, and other biofield geometries' },
+            { id: 'collective_states', name: 'Collective States', description: 'Group coherence, mass attention events, and planetary-scale human states' },
+            { id: 'information_dynamics', name: 'Information Dynamics', description: 'HRV coherence, EEG global coherence, and information-theoretic descriptors' },
+            { id: 'anomalous_phenomena', name: 'Anomalous Phenomena', description: 'High-strangeness reports and multi-domain anomalies with explicit evidence grading' },
+            { id: 'patents', name: 'Patents', description: 'Patents related to EM fields, consciousness technologies, and biological effects' },
+            { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' }
+        ];
 
         async function loadEncyclopedia() {
             const loadingEl = document.getElementById('loadingIndicator');
@@ -1896,6 +1900,10 @@
                 'vedic_knowledge': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/></svg>',
                 'schumann_resonance': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
                 'government_research': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>',
+                'field_topologies': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12C6 9 9 9 12 12C15 15 18 15 21 12"/><path d="M12 3C9 6 9 9 12 12C15 15 15 18 12 21"/></svg>',
+                'collective_states': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="12" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><path d="M10.5 10.5L13.5 9.5M10.5 13.5L13.5 14.5"/></svg>',
+                'information_dynamics': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15C9 13 11 13 13 15C15 17 17 17 19 15"/><path d="M7 9H9M11 9H17"/></svg>',
+                'anomalous_phenomena': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6V12L16 14"/><circle cx="12" cy="18" r="1"/></svg>',
                 'patents': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8C21 7.46957 20.7893 6.96086 20.4142 6.58579C20.0391 6.21071 19.5304 6 19 6H5C4.46957 6 3.96086 6.21071 3.58579 6.58579C3.21071 6.96086 3 7.46957 3 8V16C3 16.5304 3.21071 17.0391 3.58579 17.4142C3.96086 17.7893 4.46957 18 5 18H19C19.5304 18 20.0391 17.7893 20.4142 17.4142C20.7893 17.0391 21 16.5304 21 16Z"/></svg>',
                 'cern_research': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z"/><circle cx="12" cy="12" r="2"/></svg>'
             };
@@ -1906,9 +1914,10 @@
         const categoryGroups = {
             'Biological Systems': ['voltage_gates', 'neurotransmitters', 'hormones', 'biophysical_parameters', 'organ_systems', 'cellular_processes'],
             'Celestial & EM': ['celestial_bodies', 'electromagnetic_environment', 'schumann_resonance'],
+            'Field & Information Geometry': ['field_topologies', 'information_dynamics', 'coherence_systems'],
+            'Collective & Anomalous States': ['collective_states', 'anomalous_phenomena', 'morphic_fields'],
             'Research & Methods': ['research_methodologies', 'quantum_biology', 'circadian_biology', 'molecular_chemistry'],
             'Traditional Knowledge': ['tcm_correlations', 'vedic_knowledge'],
-            'Advanced Concepts': ['coherence_systems', 'morphic_fields'],
             'Institutional Research': ['government_research', 'patents', 'cern_research']
         };
 

@@ -875,6 +875,9 @@ function handleStreamingMessage(data) {
                 }
             }
 
+            // Hide the mode loading state when response is complete
+            hideModeLoadingState(lastMessage);
+
             const statusCarousel = lastMessage.querySelector('.status-carousel');
             if (statusCarousel) {
                 const thinkingItems = statusCarousel.querySelectorAll('.status-item.thinking');
@@ -3487,6 +3490,9 @@ async function sendQuery() {
         // Add mode-specific loading for astro-physiology
         if (mode === 'astrophysiology') {
             astro_showLoadingState(messageContent);
+        } else {
+            // Show rich loading state for all other modes (research, fast, truth, hybrid, etc.)
+            showModeLoadingState(messageContent, mode);
         }
     }
 
@@ -4448,7 +4454,7 @@ function handleThinkingStream(data, messageElement) {
 
     // Update current line (single line display) with glitch effect
     if (currentDisplay) {
-        const text = data.content + ' >';
+        const text = data.content + ' ○';
         currentDisplay.textContent = text;
         currentDisplay.dataset.text = text; // For glitch animation
 
@@ -4462,7 +4468,7 @@ function handleThinkingStream(data, messageElement) {
     // Add to dropdown list (no glitchy switching - just append)
     const thoughtItem = document.createElement('div');
     thoughtItem.className = 'thoughts-stream-item';
-    thoughtItem.textContent = data.content + ' >';
+    thoughtItem.textContent = data.content + ' ○';
     itemsContainer.appendChild(thoughtItem);
 
     // Mark previous items as complete (but don't remove them - prevents glitchy switching)
@@ -8570,6 +8576,186 @@ function astro_showLoadingState(messageContent) {
 }
 
 /**
+ * Show rich loading state for any mode (Research, Fast, Truth, Hybrid, etc.)
+ * Similar to astrophysiology but with mode-specific processing steps
+ */
+function showModeLoadingState(messageContent, mode = 'research') {
+    if (!messageContent) return null;
+
+    // Mode-specific steps configuration
+    const modeSteps = {
+        fast: [
+            { icon: '1', text: 'Routing to Secretary...' },
+            { icon: '2', text: 'Generating response...' }
+        ],
+        chat: [
+            { icon: '1', text: 'Processing query...' },
+            { icon: '2', text: 'Generating response...' }
+        ],
+        research: [
+            { icon: '1', text: 'Routing query...' },
+            { icon: '2', text: 'Surveyor: Web research...' },
+            { icon: '3', text: 'Deliberation: Analyzing sources...' },
+            { icon: '4', text: 'Synthesist: Compiling answer...' }
+        ],
+        deep_research: [
+            { icon: '1', text: 'Query interpretation...' },
+            { icon: '2', text: 'Surveyor: Deep web research...' },
+            { icon: '3', text: 'Dissident: Alternative perspectives...' },
+            { icon: '4', text: 'Deliberation: Cross-referencing...' },
+            { icon: '5', text: 'Synthesist: Final synthesis...' }
+        ],
+        truth: [
+            { icon: '1', text: 'Query analysis...' },
+            { icon: '2', text: 'Suppression detection...' },
+            { icon: '3', text: 'Source verification...' },
+            { icon: '4', text: 'Truth synthesis...' }
+        ],
+        hybrid: [
+            { icon: '1', text: 'Routing decision...' },
+            { icon: '2', text: 'Web search...' },
+            { icon: '3', text: 'Local RAG search...' },
+            { icon: '4', text: 'Merging results...' }
+        ],
+        web_research: [
+            { icon: '1', text: 'Query parsing...' },
+            { icon: '2', text: 'Web search...' },
+            { icon: '3', text: 'Result synthesis...' }
+        ],
+        local_rag: [
+            { icon: '1', text: 'Query embedding...' },
+            { icon: '2', text: 'Vector search...' },
+            { icon: '3', text: 'Context compilation...' }
+        ]
+    };
+
+    const steps = modeSteps[mode] || modeSteps.research;
+    const modeLabel = mode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    const loadingCard = document.createElement('div');
+    loadingCard.className = 'mode-loading-state';
+    loadingCard.dataset.mode = mode;
+    loadingCard.style.cssText = `
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 12px 0;
+    `;
+
+    const stepsHTML = steps.map((step, i) => `
+        <div class="mode-step" data-step="${i + 1}" style="display: flex; align-items: center; gap: 10px; color: ${i === 0 ? 'var(--text-primary)' : 'var(--text-tertiary)'}; font-size: 0.875rem; padding: 4px 0; transition: all 0.3s ease;">
+            <span class="mode-step-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: ${i === 0 ? 'var(--text-primary)' : 'var(--bg-tertiary)'}; color: ${i === 0 ? 'var(--bg-primary)' : 'var(--text-tertiary)'}; font-size: 0.7rem; font-weight: 600;">${step.icon}</span>
+            <span class="mode-step-text">${step.text}</span>
+        </div>
+    `).join('');
+
+    loadingCard.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div class="mode-loading-spinner" style="width: 18px; height: 18px; border: 2px solid var(--border-primary); border-top-color: var(--text-primary); border-radius: 50%; animation: mode-spin 1s linear infinite;"></div>
+            <span class="mode-loading-title" style="color: var(--text-primary); font-size: 0.9rem; font-weight: 500;">${modeLabel} Mode Processing</span>
+        </div>
+        <div class="mode-loading-steps" style="display: grid; gap: 4px; padding-left: 4px;">
+            ${stepsHTML}
+        </div>
+        <style>
+            @keyframes mode-spin {
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    `;
+
+    messageContent.appendChild(loadingCard);
+
+    // Auto-advance through steps (simulated progress)
+    let currentStep = 0;
+    const stepInterval = setInterval(() => {
+        currentStep++;
+        if (currentStep >= steps.length) {
+            clearInterval(stepInterval);
+            return;
+        }
+
+        // Update current step to active
+        const currentStepEl = loadingCard.querySelector(`.mode-step[data-step="${currentStep + 1}"]`);
+        if (currentStepEl) {
+            currentStepEl.style.color = 'var(--text-primary)';
+            const icon = currentStepEl.querySelector('.mode-step-icon');
+            if (icon) {
+                icon.style.background = 'var(--text-primary)';
+                icon.style.color = 'var(--bg-primary)';
+            }
+        }
+
+        // Fade previous step
+        const prevStepEl = loadingCard.querySelector(`.mode-step[data-step="${currentStep}"]`);
+        if (prevStepEl) {
+            prevStepEl.style.opacity = '0.5';
+            const prevIcon = prevStepEl.querySelector('.mode-step-icon');
+            if (prevIcon) {
+                prevIcon.textContent = '✓';
+            }
+        }
+    }, 2500);
+
+    // Store reference for cleanup
+    loadingCard.dataset.loadingId = Date.now();
+    loadingCard.dataset.intervalId = stepInterval;
+
+    return loadingCard;
+}
+
+/**
+ * Update the loading state with a specific step from backend events
+ */
+function updateModeLoadingState(messageElement, stepText) {
+    const loadingCard = messageElement.querySelector('.mode-loading-state');
+    if (!loadingCard) return;
+
+    const steps = loadingCard.querySelectorAll('.mode-step');
+    steps.forEach(step => {
+        const text = step.querySelector('.mode-step-text')?.textContent || '';
+        if (stepText.toLowerCase().includes(text.split('...')[0].toLowerCase().trim()) ||
+            text.toLowerCase().includes(stepText.split('...')[0].toLowerCase().trim())) {
+            step.style.color = 'var(--text-primary)';
+            step.style.opacity = '1';
+            const icon = step.querySelector('.mode-step-icon');
+            if (icon) {
+                icon.style.background = 'var(--text-primary)';
+                icon.style.color = 'var(--bg-primary)';
+            }
+        }
+    });
+
+    // Update title with current step
+    const title = loadingCard.querySelector('.mode-loading-title');
+    if (title && stepText) {
+        title.textContent = stepText;
+    }
+}
+
+/**
+ * Hide the loading state when processing is complete
+ */
+function hideModeLoadingState(messageElement) {
+    const loadingCard = messageElement.querySelector('.mode-loading-state');
+    if (loadingCard) {
+        // Clear the interval if still running
+        if (loadingCard.dataset.intervalId) {
+            clearInterval(parseInt(loadingCard.dataset.intervalId));
+        }
+        loadingCard.style.opacity = '0';
+        loadingCard.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => loadingCard.remove(), 300);
+    }
+}
+
+// Expose functions globally
+window.showModeLoadingState = showModeLoadingState;
+window.updateModeLoadingState = updateModeLoadingState;
+window.hideModeLoadingState = hideModeLoadingState;
+
+/**
  * Show example queries when input is focused
  */
 function astro_showExampleQueries(inputElement) {
@@ -8909,4 +9095,43 @@ if (typeof window !== 'undefined') {
         MODE_TEMPLATES
     };
 }
+
+// ================================================
+// THEME TOGGLE - Light/Dark Mode
+// ================================================
+
+/**
+ * Toggle between light and dark mode
+ * @param {boolean} isLight - true for light mode, false for dark mode
+ */
+function toggleLightMode(isLight) {
+    if (isLight) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('iceburg-theme', 'light');
+        console.log('Theme: Light mode enabled');
+    } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('iceburg-theme', 'dark');
+        console.log('Theme: Dark mode enabled');
+    }
+}
+
+/**
+ * Load saved theme preference on page load
+ */
+function loadThemePreference() {
+    const savedTheme = localStorage.getItem('iceburg-theme');
+    const themeToggle = document.getElementById('themeToggle');
+
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.checked = true;
+    }
+}
+
+// Load theme on page ready
+document.addEventListener('DOMContentLoaded', loadThemePreference);
+
+// Expose to window for inline handler
+window.toggleLightMode = toggleLightMode;
 
