@@ -172,6 +172,17 @@ class SecretaryAgent:
                 logger.warning(f"Could not initialize tool usage: {e}. Continuing without tools.")
                 self.enable_tools = False
         
+        # Initialize MoE Router for model selection
+        try:
+            from ..router import get_moe_router
+            self.moe_router = get_moe_router(self.cfg)
+            logger.info("✅ Secretary MoE Router initialized")
+        except Exception as e:
+            logger.warning(f"Could not initialize MoE Router: {e}. Continuing without MoE routing.")
+            self.moe_router = None
+            
+        logger.info("SecretaryAgent initialized (v2 Hybrid Search + MoE)")
+        
         # Initialize blackboard/workspace
         self.workspace = None
         self.agent_comm = None
@@ -450,8 +461,16 @@ Please answer the user's question directly and naturally. If the question is abo
             
             provider = provider_factory(cfg)
             
-            # Get model from config
-            model_to_use = getattr(self.cfg, "surveyor_model", None) or getattr(self.cfg, "primary_model", None) or "gemini-2.0-flash-exp"
+            # MoE Routing: Use specialized models based on domain
+            expert_domain = "general"
+            if hasattr(self, "moe_router") and self.moe_router:
+                moe_decision = self.moe_router.route_to_expert(query)
+                model_to_use = moe_decision.model_id
+                expert_domain = moe_decision.expert_domain
+                logger.info(f"🚀 MoE Routing: Using {expert_domain} expert coach ({model_to_use})")
+            else:
+                # Fallback to config
+                model_to_use = getattr(self.cfg, "surveyor_model", None) or getattr(self.cfg, "primary_model", None) or "gemini-2.0-flash-exp"
             
             # Call provider directly
             response = provider.chat_complete(
