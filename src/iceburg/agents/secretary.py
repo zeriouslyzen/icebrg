@@ -244,8 +244,113 @@ class SecretaryAgent:
             logger.info("✅ Cache hit for query")
             return self.response_cache[cache_key]
         
-        # Check if this is a goal-driven task that needs planning
-        if self.enable_planning and self.planner:
+        # v5: Check routing decision for search-first mode
+        # Only route if routing_mode was not provided by server (fixes double routing)
+        if routing_mode is None:
+            try:
+                from ..router.request_router import get_request_router
+                router = get_request_router()
+                routing_decision = await asyncio.to_thread(router.route, query, context={"user_id": user_id})
+                routing_mode = routing_decision.mode
+                logger.info(f"🔍 v5 Routing: mode={routing_mode}, confidence={routing_decision.confidence:.2f}")
+            except Exception as e:
+                logger.debug(f"Routing check failed: {e}, defaulting to normal mode")
+                routing_mode = None
+        else:
+            logger.info(f"🔍 Using provided routing_mode: {routing_mode} (from server)")
+            
+            # If web_research mode, perform search first
+            if routing_mode == "web_research":
+                logger.info(f"🔍 Search mode detected: web_research - initiating search for query: {query[:100]}")
+                if thinking_callback:
+                    thinking_callback("Searching the web for current information...")
+                
+                try:
+                    from ..agents.search_planner_agent import get_search_planner_agent
+                    import concurrent.futures
+                    
+                    search_planner = get_search_planner_agent()
+                    # Run async search in separate thread with new event loop
+                    # This avoids "asyncio.run() cannot be called from a running event loop" error
+                    def run_search_in_thread():
+                        """Run async search in thread with new event loop"""
+                        return asyncio.run(search_planner.plan_and_search(query))
+                    
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                        future = executor.submit(run_search_in_thread)
+                        # Wait up to 5 seconds for search to complete
+                        evidence_pack = future.result(timeout=5.0)
+                    
+                    logger.info(f"✅ Web search completed: {len(evidence_pack.evidence_items)} evidence items")
+                except concurrent.futures.TimeoutError:
+                    logger.warning(f"Web search timed out after 5 seconds, continuing without evidence")
+                    evidence_pack = None
+                except Exception as e:
+                    logger.warning(f"Web search failed: {e}, continuing without evidence", exc_info=True)
+                    evidence_pack = None
+        
+        # Check if this requires direct execution (bypass planning for action queries)
+        requires_execution = self._requires_execution(query)
+        # execution_results already initialized above
+        
+        # If execution is needed, do it directly first, then let LLM respond
+        if requires_execution and self.executor:
+            try:
+                execution_results = self._execute_directly(query)
+                if execution_results and "✅" in execution_results:
+                    # Execution succeeded - include results in prompt but continue to LLM response
+                    logger.info("Direct execution completed, including results in response")
+            except Exception as e:
+                logger.warning(f"Direct execution failed: {e}, continuing with normal flow")
+                execution_results = ""
+        
+        # Check if this is a goal-driven task that needs planning (only if not execution query)
+        # IMPORTANT: Disable planning for chat mode - chat should be fast and direct
+        # Planning should only be used in research/protocol modes where multi-step tasks are expected
+        # For chat mode, always answer directly - no planning overhead
+        
+        # STRUCTURAL FIX: Check simple question patterns FIRST (fast regex) before expensive LLM call
+        is_simple_question = self._is_simple_question_pattern(query)
+        
+        # Check BOTH the original mode (user selection) AND routing_mode (router decision)
+        # If user selected "chat" mode, skip planning regardless of what router says
+        # The router might return "web_research" even in chat mode, but we should respect user's choice
+        user_selected_chat = mode in ["chat", "fast"] or mode is None
+        
+        if user_selected_chat:
+            # Chat mode: Skip planning entirely for fast, direct answers
+            logger.info(f"✅ Chat mode detected (mode={mode}): Skipping goal-driven planning for direct answer")
+            
+            # HYBRID SEARCH: Auto-trigger web search for current events in chat mode
+            try:
+                from ..search import is_current_event_query, answer_query
+                if is_current_event_query(query):
+                    logger.info("🌐 Current event detected in chat mode - triggering hybrid web search")
+                    if thinking_callback:
+                        thinking_callback("Searching the web for current information...")
+                    
+                    try:
+                        import ollama
+                        llm_client = ollama
+                    except ImportError:
+                        llm_client = None
+                    
+                    search_result = answer_query(query, llm_client=llm_client)
+                    
+                    answer = search_result['answer']
+                    sources = search_result['sources']
+                    if sources:
+                        answer += "\n\n**Sources:**\n"
+                        for src in sources:
+                            answer += f"{src['number']}. [{src['title']}]({src['url']})\n"
+                    
+                    return answer
+            except Exception as e:
+                logger.warning(f"Hybrid search failed, falling back to LLM knowledge: {e}")
+
+        elif not requires_execution and self.enable_planning and self.planner and not is_simple_question:
+            # Only use planning for non-chat modes AND non-simple questions
+            # Check simple patterns first to avoid expensive LLM call
             try:
                 goals = self.planner.extract_goals(query)
                 if goals:
@@ -253,6 +358,8 @@ class SecretaryAgent:
                     return self._handle_goal_driven_query(query, goals, conversation_id, user_id, thinking_callback)
             except Exception as e:
                 logger.warning(f"Error in goal detection: {e}. Falling back to normal mode.")
+
+
         
         # Check for agent messages from blackboard
         agent_context = ""

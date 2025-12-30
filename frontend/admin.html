@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICEBURG Admin Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lib/litegraph.css">
+    <script type="text/javascript" src="/lib/litegraph.min.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-section">
+                    <span class="logo-icon"></span>
+                    <span class="logo-text">ICEBURG</span>
+                </div>
+                <span class="admin-badge">Admin</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <span class="nav-icon"></span>
+                    <span>Overview</span>
+                </a>
+                <a href="#performance" class="nav-item" data-section="performance">
+                    <span class="nav-icon"></span>
+                    <span>Performance</span>
+                </a>
+                <a href="#costs" class="nav-item" data-section="costs">
+                    <span class="nav-icon"></span>
+                    <span>Costs</span>
+                </a>
+                <a href="#quality" class="nav-item" data-section="quality">
+                    <span class="nav-icon"></span>
+                    <span>Quality</span>
+                </a>
+                <a href="#benchmarks" class="nav-item" data-section="benchmarks">
+                    <span class="nav-icon"></span>
+                    <span>Benchmarks</span>
+                </a>
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <span class="nav-icon"></span>
+                    <span>Settings</span>
+                </a>
+                <a href="#resources" class="nav-item" data-section="resources">
+                    <span class="nav-icon"></span>
+                    <span>Resources</span>
+                </a>
+
+                <div class="nav-divider"></div>
+
+                <a href="#traces" class="nav-item" data-section="traces">
+                    <span class="nav-icon"></span>
+                    <span>Traces</span>
+                </a>
+                <a href="#analytics" class="nav-item" data-section="analytics">
+                    <span class="nav-icon"></span>
+                    <span>Analytics</span>
+                </a>
+                <a href="#prompts" class="nav-item" data-section="prompts">
+                    <span class="nav-icon"></span>
+                    <span>Prompts</span>
+                </a>
+                <a href="#sessions" class="nav-item" data-section="sessions">
+                    <span class="nav-icon"></span>
+                    <span>Sessions</span>
+                </a>
+                <a href="#security" class="nav-item" data-section="security">
+                    <span class="nav-icon"></span>
+                    <span>Security</span>
+                </a>
+                <a href="#training" class="nav-item" data-section="training">
+                    <span class="nav-icon"></span>
+                    <span>Training (V4)</span>
+                </a>
+                <a href="#data" class="nav-item" data-section="data">
+                    <span class="nav-icon"></span>
+                    <span>Data (V5)</span>
+                </a>
+                <a href="#lab" class="nav-item" data-section="lab" style="color: var(--admin-accent);">
+                    <span class="nav-icon"></span>
+                    <span>Command Center (V7)</span>
+                </a>
+                <a href="#civilization" class="nav-item" data-section="civilization"
+                    style="color: var(--admin-accent);">
+                    <span class="nav-icon">🏛️</span>
+                    <span>Civilization (V8)</span>
+                </a>
+
+                <!-- V9: Studio -->
+                <a href="#studio" class="nav-item" data-section="studio" style="color: #4a9eff;">
+                    <span class="nav-icon">🏗️</span>
+                    <span>Studio (V9)</span>
+                </a>
+
+                <!-- V10: Finance & Prediction -->
+                <a href="#finance" class="nav-item" data-section="finance" style="color: #38c878;">
+                    <span class="nav-icon">💰</span>
+                    <span>Finance & Prediction (V10)</span>
+                </a>
+
+                <!-- V2: Intelligence System -->
+                <a href="#v2-intelligence" class="nav-item" data-section="v2-intelligence" style="color: #ff4444;">
+                    <span class="nav-icon">🎯</span>
+                    <span>Intelligence (V2)</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/" class="back-link">← Back to Chat</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 id="section-title">Overview</h1>
+                <div class="header-actions">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">System Online</span>
+                    <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview" class="admin-section active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"></div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="avg-latency">--</span>
+                            <span class="metric-label">Avg Latency</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"></div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="total-requests">--</span>
+                            <span class="metric-label">Total Requests</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"></div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="accuracy-score">--</span>
+                            <span class="metric-label">Accuracy</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💎</div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="total-tokens">--</span>
+                            <span class="metric-label">Total Tokens</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Latency Over Time</h3>
+                        <canvas id="latency-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Request Distribution</h3>
+                        <canvas id="request-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-time">Just now</span>
+                            <span class="activity-text">Dashboard initialized</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Section -->
+            <section id="performance" class="admin-section">
+                <div class="metrics-grid">
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon"></span>
+                            <span class="metric-title">Time to First Token (TTFT)</span>
+                        </div>
+                        <span class="metric-value" id="ttft">--</span>
+                        <span class="metric-unit">ms</span>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon">🔤</span>
+                            <span class="metric-title">Time Per Output Token (TPOT)</span>
+                        </div>
+                        <span class="metric-value" id="tpot">--</span>
+                        <span class="metric-unit">ms/token</span>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon"></span>
+                            <span class="metric-title">Tokens Per Second (TPS)</span>
+                        </div>
+                        <span class="metric-value" id="tps">--</span>
+                        <span class="metric-unit">tokens/s</span>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon">🔄</span>
+                            <span class="metric-title">Requests Per Second (RPS)</span>
+                        </div>
+                        <span class="metric-value" id="rps">--</span>
+                        <span class="metric-unit">req/s</span>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width">
+                    <h3>Latency Percentiles</h3>
+                    <canvas id="percentile-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- Costs Section -->
+            <section id="costs" class="admin-section">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">📥</div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="input-tokens">--</span>
+                            <span class="metric-label">Input Tokens</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📤</div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="output-tokens">--</span>
+                            <span class="metric-label">Output Tokens</span>
+                        </div>
+                    </div>
+                    <div class="metric-card highlight">
+                        <div class="metric-icon">💵</div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="total-cost">$0.00</span>
+                            <span class="metric-label">Total Cost</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"></div>
+                        <div class="metric-content">
+                            <span class="metric-value" id="cost-per-query">--</span>
+                            <span class="metric-label">Avg Cost/Query</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Cost by Provider</h3>
+                        <canvas id="cost-provider-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Token Usage Over Time</h3>
+                        <canvas id="token-usage-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quality Section -->
+            <section id="quality" class="admin-section">
+                <div class="metrics-grid">
+                    <div class="metric-card large success">
+                        <div class="metric-header">
+                            <span class="metric-icon"></span>
+                            <span class="metric-title">Accuracy Score</span>
+                        </div>
+                        <span class="metric-value" id="quality-accuracy">--</span>
+                        <span class="metric-unit">%</span>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon"></span>
+                            <span class="metric-title">Avg Confidence</span>
+                        </div>
+                        <span class="metric-value" id="avg-confidence">--</span>
+                        <span class="metric-unit">%</span>
+                    </div>
+                    <div class="metric-card large warning">
+                        <div class="metric-header">
+                            <span class="metric-icon"></span>
+                            <span class="metric-title">Hallucination Rate</span>
+                        </div>
+                        <span class="metric-value" id="hallucination-rate">--</span>
+                        <span class="metric-unit">%</span>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon">🧠</span>
+                            <span class="metric-title">Symbolic Hit Rate</span>
+                        </div>
+                        <span class="metric-value" id="symbolic-rate">--</span>
+                        <span class="metric-unit">%</span>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Reasoning Module Usage</h3>
+                        <canvas id="module-usage-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Quality Trend</h3>
+                        <canvas id="quality-trend-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Benchmarks Section -->
+            <section id="benchmarks" class="admin-section">
+                <div class="benchmark-header">
+                    <h3>Benchmark History</h3>
+                    <button class="btn-primary" onclick="runBenchmark()"> Run Benchmark</button>
+                </div>
+
+                <div class="benchmark-summary">
+                    <div class="metric-card">
+                        <div class="metric-content">
+                            <span class="metric-value" id="latest-score">100%</span>
+                            <span class="metric-label">Latest Score</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-content">
+                            <span class="metric-value" id="baseline-score">48%</span>
+                            <span class="metric-label">Baseline</span>
+                        </div>
+                    </div>
+                    <div class="metric-card highlight">
+                        <div class="metric-content">
+                            <span class="metric-value positive" id="improvement">+52%</span>
+                            <span class="metric-label">Improvement</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="benchmark-table-container">
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Test Type</th>
+                                <th>Score</th>
+                                <th>Tasks</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmark-tbody">
+                            <tr>
+                                <td>2025-12-28</td>
+                                <td>Direct Modules</td>
+                                <td class="score-high">100%</td>
+                                <td>10/10</td>
+                                <td>0.1s</td>
+                                <td><span class="status-badge success">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-12-28</td>
+                                <td>Protocol Integrated</td>
+                                <td class="score-low">30%</td>
+                                <td>3/10</td>
+                                <td>43s</td>
+                                <td><span class="status-badge warning">Partial</span></td>
+                            </tr>
+                            <tr>
+                                <td>Pre-Enhancement</td>
+                                <td>Baseline (Est.)</td>
+                                <td class="score-medium">48%</td>
+                                <td>~5/10</td>
+                                <td>--</td>
+                                <td><span class="status-badge">Baseline</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="chart-card full-width">
+                    <h3>Score by Category</h3>
+                    <canvas id="category-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="admin-section">
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Model Configuration</h3>
+                        <div class="setting-row">
+                            <label>Default Model</label>
+                            <select id="default-model">
+                                <option value="gemma3:4b">gemma3:4b (Fast)</option>
+                                <option value="llama3.2:3b">llama3.2:3b</option>
+                                <option value="qwen2.5:7b" selected>qwen2.5:7b (Balanced)</option>
+                                <option value="deepseek-r1:14b">deepseek-r1:14b (Deep)</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label>Synthesist Model</label>
+                            <select id="synthesist-model">
+                                <option value="qwen2.5:7b" selected>qwen2.5:7b</option>
+                                <option value="deepseek-r1:14b">deepseek-r1:14b</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label>V-JEPA Model</label>
+                            <select id="vjepa-model">
+                                <option value="vjepa2-vitl" selected>ViT-Large (300M)</option>
+                                <option value="vjepa2-vith">ViT-Huge (600M)</option>
+                                <option value="vjepa2-vitg">ViT-Giant (1.2B)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Feature Flags</h3>
+                        <div class="setting-row">
+                            <label>Formal Reasoning Modules</label>
+                            <input type="checkbox" id="formal-reasoning" checked>
+                        </div>
+                        <div class="setting-row">
+                            <label>V-JEPA Visual Encoder</label>
+                            <input type="checkbox" id="vjepa-enabled" checked>
+                        </div>
+                        <div class="setting-row">
+                            <label>Smart Query Routing</label>
+                            <input type="checkbox" id="smart-routing" checked>
+                        </div>
+                        <div class="setting-row">
+                            <label>Hybrid Mode (Cloud + Local)</label>
+                            <input type="checkbox" id="hybrid-mode">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Provider Settings</h3>
+                        <div class="setting-row">
+                            <label>Ollama URL</label>
+                            <input type="text" id="ollama-url" value="http://localhost:11434"
+                                placeholder="http://localhost:11434">
+                        </div>
+                        <div class="setting-row">
+                            <label>Request Timeout (s)</label>
+                            <input type="number" id="timeout" value="300" min="30" max="600">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>API Keys</h3>
+                        <div class="setting-row">
+                            <label>Gemini API Key</label>
+                            <input type="password" id="gemini-key" placeholder="Optional">
+                        </div>
+                        <div class="setting-row">
+                            <label>Claude API Key</label>
+                            <input type="password" id="claude-key" placeholder="Optional">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                    <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                </div>
+            </section>
+
+            <!-- Resources Section -->
+            <section id="resources" class="admin-section">
+                <div class="metrics-grid">
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon">💾</span>
+                            <span class="metric-title">Memory Usage</span>
+                        </div>
+                        <span class="metric-value" id="memory-usage">--</span>
+                        <span class="metric-unit">GB</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memory-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="metric-card large">
+                        <div class="metric-header">
+                            <span class="metric-icon">🎮</span>
+                            <span class="metric-title">GPU/MPS Usage</span>
+                        </div>
+                        <span class="metric-value" id="gpu-usage">--</span>
+                        <span class="metric-unit">%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill gpu" id="gpu-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="model-status">
+                    <h3>Model Status</h3>
+                    <div class="model-list">
+                        <div class="model-item">
+                            <span class="model-name">Ollama (qwen2.5:7b)</span>
+                            <span class="status-badge success" id="ollama-status">Online</span>
+                        </div>
+                        <div class="model-item">
+                            <span class="model-name">V-JEPA 2 (ViT-Large)</span>
+                            <span class="status-badge success" id="vjepa-status">Loaded</span>
+                        </div>
+                        <div class="model-item">
+                            <span class="model-name">Reasoning Router</span>
+                            <span class="status-badge success">Active</span>
+                        </div>
+                        <div class="model-item">
+                            <span class="model-name">Formal Reasoners (7 modules)</span>
+                            <span class="status-badge success">Ready</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agent-status">
+                    <h3>Agent Registry</h3>
+                    <div class="agent-grid" id="agent-grid">
+                        <div class="agent-card">
+                            <span class="agent-name">abstract_transformer</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">analogical_mapper</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">compositional_engine</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">hierarchical_reasoner</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">spatial_reasoner</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">visual_reasoner</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                        <div class="agent-card">
+                            <span class="agent-name">reasoning_router</span>
+                            <span class="agent-status active"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V2: Traces Section -->
+            <section id="traces" class="admin-section">
+                <div class="section-header">
+                    <h3>Agent Trace Visualization</h3>
+                    <div class="trace-controls">
+                        <select id="trace-select">
+                            <option value="latest">Latest Query</option>
+                            <option value="recent-1">2 queries ago</option>
+                            <option value="recent-2">3 queries ago</option>
+                        </select>
+                        <button class="btn-secondary" onclick="refreshTrace()">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <div class="trace-diagram">
+                    <div class="mermaid" id="trace-mermaid">
+                        graph LR
+                        Q[Query] --> R[Reasoning Router]
+                        R -->|formal| FR[Formal Reasoner]
+                        R -->|general| S[Synthesist]
+                        FR --> AR[Abstract Transformer]
+                        FR --> AM[Analogical Mapper]
+                        FR --> HR[Hierarchical Reasoner]
+                        AR --> Response
+                        AM --> Response
+                        HR --> Response
+                        S --> O[Oracle]
+                        O --> Response
+                    </div>
+                </div>
+
+                <div class="trace-timeline">
+                    <h4>Execution Timeline</h4>
+                    <div class="timeline-list" id="timeline-list">
+                        <div class="timeline-item">
+                            <span class="time">0ms</span>
+                            <span class="agent">reasoning_router</span>
+                            <span class="duration">5ms</span>
+                            <span class="tokens">0 tokens</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="time">5ms</span>
+                            <span class="agent">hierarchical_reasoner</span>
+                            <span class="duration">12ms</span>
+                            <span class="tokens">0 tokens (symbolic)</span>
+                        </div>
+                        <div class="timeline-item highlight">
+                            <span class="time">17ms</span>
+                            <span class="agent">Response Complete</span>
+                            <span class="duration">--</span>
+                            <span class="tokens">Total: 0 tokens</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trace-details">
+                    <h4>Token Attribution</h4>
+                    <canvas id="token-attribution-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- V2: Analytics Section -->
+            <section id="analytics" class="admin-section">
+                <div class="section-header">
+                    <h3>Advanced Analytics</h3>
+                    <div class="analytics-controls">
+                        <input type="date" id="date-from" value="2025-12-21">
+                        <span>to</span>
+                        <input type="date" id="date-to" value="2025-12-28">
+                        <button class="btn-primary" onclick="applyDateRange()">Apply</button>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h4>Cost Projection</h4>
+                        <div class="projection-value">
+                            <span class="current">$0.00</span>
+                            <span class="projected">(Est. $0.00/month)</span>
+                        </div>
+                        <div class="projection-bar">
+                            <div class="projection-fill" style="width: 5%"></div>
+                        </div>
+                        <p class="projection-note">Based on current usage rate</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Quality Trend</h4>
+                        <div class="trend-indicator positive">
+                            <span class="trend-arrow">↑</span>
+                            <span class="trend-value">+52%</span>
+                        </div>
+                        <p class="trend-note">vs. baseline</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Regression Alerts</h4>
+                        <div class="alert-list">
+                            <div class="alert-item success">
+                                <span class="alert-icon"></span>
+                                <span>No regressions detected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ab-comparison">
+                    <h4>A/B Model Comparison</h4>
+                    <div class="ab-controls">
+                        <select id="model-a">
+                            <option value="qwen2.5:7b">qwen2.5:7b</option>
+                            <option value="gemma3:4b">gemma3:4b</option>
+                        </select>
+                        <span>vs</span>
+                        <select id="model-b">
+                            <option value="deepseek-r1:14b">deepseek-r1:14b</option>
+                            <option value="llama3.2:3b">llama3.2:3b</option>
+                        </select>
+                        <button class="btn-secondary" onclick="runABTest()">Compare</button>
+                    </div>
+                    <div class="ab-results" id="ab-results">
+                        <p class="placeholder">Select models and click Compare to run A/B test</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V2: Prompts Section -->
+            <section id="prompts" class="admin-section">
+                <div class="section-header">
+                    <h3>Prompt Playground</h3>
+                </div>
+
+                <div class="playground-grid">
+                    <div class="playground-input">
+                        <h4>Test Query</h4>
+                        <textarea id="playground-query"
+                            placeholder="Enter a test query... e.g., 'Book : Library :: Fish : ?'"></textarea>
+                        <div class="playground-options">
+                            <select id="playground-model">
+                                <option value="auto">Auto (Router)</option>
+                                <option value="symbolic">Force Symbolic</option>
+                                <option value="llm">Force LLM</option>
+                            </select>
+                            <button class="btn-primary" onclick="runPlayground()"> Run</button>
+                        </div>
+                    </div>
+                    <div class="playground-output">
+                        <h4>Response</h4>
+                        <div class="output-content" id="playground-response">
+                            <p class="placeholder">Response will appear here...</p>
+                        </div>
+                        <div class="output-meta" id="playground-meta">
+                            <span>--ms</span>
+                            <span>-- tokens</span>
+                            <span>--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-templates">
+                    <h4>Saved Templates</h4>
+                    <div class="template-list" id="template-list">
+                        <div class="template-item" onclick="loadTemplate('analogy')">
+                            <span class="template-name">Analogy Test</span>
+                            <span class="template-preview">Book : Library :: Fish : ?</span>
+                        </div>
+                        <div class="template-item" onclick="loadTemplate('hierarchy')">
+                            <span class="template-name">Hierarchy Test</span>
+                            <span class="template-preview">A contains B and C. What is the depth of B?</span>
+                        </div>
+                        <div class="template-item" onclick="loadTemplate('pattern')">
+                            <span class="template-name">Pattern Test</span>
+                            <span class="template-preview">2, 6, 18, 54, ?</span>
+                        </div>
+                    </div>
+                    <button class="btn-secondary" onclick="saveTemplate()">+ Save Current as Template</button>
+                </div>
+            </section>
+
+            <!-- V2: Sessions Section -->
+            <section id="sessions" class="admin-section">
+                <div class="section-header">
+                    <h3>Session History</h3>
+                    <div class="session-controls">
+                        <input type="text" id="session-search" placeholder="Search queries...">
+                        <button class="btn-secondary" onclick="searchSessions()"> Search</button>
+                        <button class="btn-secondary" onclick="exportSessions()">📥 Export</button>
+                    </div>
+                </div>
+
+                <div class="sessions-list" id="sessions-list">
+                    <div class="session-item">
+                        <div class="session-header">
+                            <span class="session-time">2025-12-28 22:08</span>
+                            <span class="session-type">Hierarchical</span>
+                            <span class="session-status success"></span>
+                        </div>
+                        <div class="session-query">"A contains B and C. B contains D and E. What is the depth of E?"
+                        </div>
+                        <div class="session-response">Path: A → B → E, Depth: 3</div>
+                        <div class="session-meta">
+                            <span>17ms</span>
+                            <span>0 tokens</span>
+                            <span>Symbolic</span>
+                        </div>
+                    </div>
+                    <div class="session-item">
+                        <div class="session-header">
+                            <span class="session-time">2025-12-28 22:05</span>
+                            <span class="session-type">Analogical</span>
+                            <span class="session-status success"></span>
+                        </div>
+                        <div class="session-query">"Book : Library :: Fish : ?"</div>
+                        <div class="session-response">Ocean (containment relationship)</div>
+                        <div class="session-meta">
+                            <span>12ms</span>
+                            <span>0 tokens</span>
+                            <span>Symbolic</span>
+                        </div>
+                    </div>
+                    <div class="session-item">
+                        <div class="session-header">
+                            <span class="session-time">2025-12-28 21:55</span>
+                            <span class="session-type">Visual</span>
+                            <span class="session-status success"></span>
+                        </div>
+                        <div class="session-query">"[[1,2],[3,4]] → [[3,1],[4,2]] what transformation?"</div>
+                        <div class="session-response">Rotation 90°</div>
+                        <div class="session-meta">
+                            <span>43s</span>
+                            <span>0 tokens</span>
+                            <span>V-JEPA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-pagination">
+                    <button class="btn-secondary" disabled>← Previous</button>
+                    <span>Page 1 of 1</span>
+                    <button class="btn-secondary" disabled>Next →</button>
+                </div>
+            </section>
+
+            <!-- V2: Security Section -->
+            <section id="security" class="admin-section">
+                <div class="section-header">
+                    <h3>Security & Audit</h3>
+                </div>
+
+                <div class="security-grid">
+                    <div class="security-card">
+                        <h4>Access Control</h4>
+                        <div class="access-info">
+                            <div class="access-item">
+                                <span class="access-label">Current Role:</span>
+                                <span class="access-value admin">Administrator</span>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-label">Last Login:</span>
+                                <span class="access-value">2025-12-28 22:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="security-card">
+                        <h4>API Key Status</h4>
+                        <div class="key-status-list">
+                            <div class="key-status">
+                                <span class="key-name">Gemini</span>
+                                <span class="key-badge inactive">Not Set</span>
+                            </div>
+                            <div class="key-status">
+                                <span class="key-name">Claude</span>
+                                <span class="key-badge inactive">Not Set</span>
+                            </div>
+                            <div class="key-status">
+                                <span class="key-name">Ollama</span>
+                                <span class="key-badge active">Local (No Key)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- V3: Active Alerts Panel -->
+                <div class="security-card" style="margin-bottom: 1.5rem;">
+                    <h4>Active Alerts <button class="btn-secondary" onclick="refreshAlerts()"
+                            style="margin-left: 1rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">Refresh</button>
+                    </h4>
+                    <div id="alerts-list" style="max-height: 200px; overflow-y: auto;">
+                        <p style="color: var(--admin-text-muted); font-style: italic; padding: 0.5rem 0;">Loading
+                            alerts...</p>
+                    </div>
+                </div>
+
+                <!-- V3: Hallucination Detection Stats -->
+                <div class="security-grid" style="margin-bottom: 1.5rem;">
+                    <div class="security-card">
+                        <h4>Hallucination Detection</h4>
+                        <div class="access-info">
+                            <div class="access-item">
+                                <span class="access-label">Responses Checked:</span>
+                                <span id="hall-total" class="access-value">0</span>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-label">Hallucinations Detected:</span>
+                                <span id="hall-detected" class="access-value"
+                                    style="color: var(--admin-warning);">0</span>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-label">Detection Rate:</span>
+                                <span id="hall-rate" class="access-value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="audit-log">
+                    <h4>Audit Log</h4>
+                    <div class="audit-filter">
+                        <select id="audit-type">
+                            <option value="all">All Events</option>
+                            <option value="settings">Settings Changes</option>
+                            <option value="api">API Access</option>
+                            <option value="auth">Authentication</option>
+                        </select>
+                        <button class="btn-secondary" onclick="exportAuditLog()">📥 Export Log</button>
+                    </div>
+                    <table class="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Event</th>
+                                <th>Details</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-tbody">
+                            <tr>
+                                <td>2025-12-28 22:10</td>
+                                <td>Settings Changed</td>
+                                <td>formal_reasoning enabled</td>
+                                <td>admin</td>
+                            </tr>
+                            <tr>
+                                <td>2025-12-28 22:08</td>
+                                <td>Benchmark Run</td>
+                                <td>ARC-AGI 10/10 (100%)</td>
+                                <td>admin</td>
+                            </tr>
+                            <tr>
+                                <td>2025-12-28 22:00</td>
+                                <td>Dashboard Accessed</td>
+                                <td>Admin dashboard opened</td>
+                                <td>admin</td>
+                            </tr>
+                            <tr>
+                                <td>2025-12-28 21:35</td>
+                                <td>V-JEPA Loaded</td>
+                                <td>Model: vjepa2-vitl (1.3GB)</td>
+                                <td>system</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- V4: Fine-Tuning & Training Section -->
+            <section id="training" class="admin-section">
+                <div class="section-header">
+                    <h3>Fine-Tuning & Prompt Evolution</h3>
+                    <div class="refresh-controls">
+                        <span class="last-updated">Updated: <span id="training-updated">Never</span></span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <!-- Fine-Tuning Data Stats -->
+                    <div class="metric-card">
+                        <div class="metric-icon">📚</div>
+                        <div class="metric-info">
+                            <span class="metric-label">Training Conversations</span>
+                            <span class="metric-value" id="train-conv-count">0</span>
+                            <span class="metric-trend positive" id="train-conv-tokens">0 tokens</span>
+                        </div>
+                    </div>
+                    <!-- Tuning Jobs -->
+                    <div class="metric-card">
+                        <div class="metric-icon">⚙️</div>
+                        <div class="metric-info">
+                            <span class="metric-label">Active Tuning Jobs</span>
+                            <span class="metric-value" id="train-jobs-active">0</span>
+                            <span class="metric-trend neutral" id="train-jobs-completed">0 completed</span>
+                        </div>
+                    </div>
+                    <!-- Evolution -->
+                    <div class="metric-card">
+                        <div class="metric-icon">🧬</div>
+                        <div class="metric-info">
+                            <span class="metric-label">Evolved Prompts</span>
+                            <span class="metric-value" id="train-evolved-count">0</span>
+                            <span class="metric-trend positive" id="train-evolved-rate">+0.0% improvement</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Fine-Tuning Data Panel -->
+                    <div class="chart-container half-width">
+                        <div class="chart-header">
+                            <h4>Fine-Tuning Data Quality</h4>
+                            <button class="btn-secondary small" onclick="exportTrainingData()">Export JSONL</button>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="trainingDataChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Evolution Timeline -->
+                    <div class="chart-container half-width">
+                        <div class="chart-header">
+                            <h4>Prompt Evolution History</h4>
+                        </div>
+                        <div class="chart-content">
+                            <div id="evolution-timeline" class="activity-feed"
+                                style="max-height: 250px; overflow-y: auto;">
+                                <div class="activity-item">Loading evolution history...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Tuning Jobs -->
+                <div class="security-card" style="margin-top: 1.5rem;">
+                    <h4>Recent Model Tuning Jobs</h4>
+                    <table class="session-table">
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>Model Type</th>
+                                <th>Optimization Target</th>
+                                <th>Status</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tuning-jobs-tbody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--admin-text-muted);">No tuning
+                                    jobs recorded</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- V5: Data Explorer Section -->
+            <section id="data" class="admin-section">
+                <div class="section-header">
+                    <h3>Data Explorer</h3>
+                    <div class="refresh-controls">
+                        <span id="current-path"
+                            style="font-family: monospace; color: var(--admin-text-muted); margin-right: 1rem;">/</span>
+                        <button class="btn-secondary" onclick="refreshFileList()">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <div class="data-explorer-layout"
+                    style="display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem; height: calc(100vh - 200px);">
+                    <!-- File Tree -->
+                    <div class="security-card" style="display: flex; flex-direction: column; padding: 0;">
+                        <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--admin-border);">
+                            <h4>Files</h4>
+                        </div>
+                        <div id="file-tree" style="flex: 1; overflow-y: auto; padding: 0.5rem;">
+                            <div class="file-item loading">Loading files...</div>
+                        </div>
+                    </div>
+
+                    <!-- Content Viewer -->
+                    <div class="security-card"
+                        style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                        <div class="card-header"
+                            style="padding: 1rem; border-bottom: 1px solid var(--admin-border); display: flex; justify-content: space-between; align-items: center;">
+                            <h4 id="file-name">Select a file</h4>
+                            <div id="file-actions" style="display: none;">
+                                <span id="file-size"
+                                    style="margin-right: 1rem; color: var(--admin-text-muted); font-size: 0.8rem;"></span>
+                                <button class="btn-secondary small" id="quarantine-approve-btn"
+                                    style="display: none; color: var(--admin-success);"
+                                    onclick="reviewQuarantine('approve')">✓ Analyze</button>
+                                <button class="btn-secondary small" id="quarantine-reject-btn"
+                                    style="display: none; color: var(--admin-danger);"
+                                    onclick="reviewQuarantine('reject')">✕ Archive</button>
+                            </div>
+                        </div>
+                        <div class="code-editor" style="flex: 1; position: relative;">
+                            <textarea id="json-viewer" readonly
+                                style="width: 100%; height: 100%; border: none; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; background: var(--admin-bg); color: var(--admin-text); resize: none;">Select a file to view contents</textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V7: Neural Command Center (Mission Control) -->
+            <section id="lab" class="admin-section">
+                <div class="section-header" style="border-bottom: 2px solid var(--admin-accent);">
+                    <h3>NEURAL COMMAND CENTER <span class="admin-badge"
+                            style="background: var(--admin-danger); color: #000;">SYSTEM GOD MODE</span></h3>
+                    <div class="refresh-controls">
+                        <span
+                            style="color: var(--admin-accent); font-family: 'Fira Code', monospace; font-size: 0.8rem; letter-spacing: 0.1em;">
+                            [ STATUS: ONLINE ] [ SECURITY: LEVEL 0 ]
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Industrial Grid Layout -->
+                <div class="command-grid"
+                    style="display: grid; grid-template-columns: 3fr 1fr; grid-template-rows: 2fr 1fr; gap: 4px; height: calc(100vh - 160px); background: #000; border: 1px solid #333;">
+
+                    <!-- 1. Neural Graph (Main View) -->
+                    <div class="panel-graph"
+                        style="grid-column: 1 / 2; grid-row: 1 / 2; background: #050505; position: relative; border-right: 1px solid #333; border-bottom: 1px solid #333;">
+                        <div
+                            style="position: absolute; top: 10px; left: 10px; z-index: 10; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: #666;">
+                            // SWARM_TOPOLOGY_VISUALIZER
+                        </div>
+                        <div id="cy" style="width: 100%; height: 100%;"></div>
+                        <!-- Overlay Stats -->
+                        <div
+                            style="position: absolute; bottom: 10px; right: 10px; text-align: right; font-family: monospace; color: var(--admin-accent); font-size: 0.8rem;">
+                            NODES: <span id="stat-nodes">0</span><br>
+                            EDGES: <span id="stat-edges">0</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Inspector Panel (Right Side) -->
+                    <div class="panel-inspector"
+                        style="grid-column: 2 / 3; grid-row: 1 / 3; background: #080808; border-left: 1px solid #333; display: flex; flex-direction: column; font-family: 'Fira Code', monospace;">
+                        <div class="panel-header"
+                            style="background: #111; padding: 0.5rem; border-bottom: 1px solid #333; font-size: 0.8rem; color: #888;">
+                            >> INSPECTOR
+                        </div>
+                        <div id="inspector-content"
+                            style="flex: 1; padding: 1rem; overflow-y: auto; color: #ccc; font-size: 0.85rem;">
+                            <div style="color: #444; text-align: center; margin-top: 2rem;">
+                                [ SELECT A NODE ]
+                            </div>
+                        </div>
+                        <!-- Manual Override Controls -->
+                        <div style="border-top: 1px solid #333; padding: 1rem;">
+                            <h5 style="color: var(--admin-danger); margin: 0 0 0.5rem 0; font-size: 0.7rem;">MANUAL
+                                OVERRIDE</h5>
+                            <button class="btn-sci-fi danger" onclick="executeOverride('kill')">KILL PROCESS</button>
+                            <button class="btn-sci-fi warning" onclick="executeOverride('freeze')">FREEZE</button>
+                            <button class="btn-sci-fi" onclick="executeOverride('resume')">RESUME</button>
+                        </div>
+                    </div>
+
+                    <!-- 3. God Mode Console (Bottom) -->
+                    <div class="panel-console"
+                        style="grid-column: 1 / 2; grid-row: 2 / 3; background: #000; padding: 0.5rem; font-family: 'Fira Code', monospace; display: flex; flex-direction: column;">
+                        <div style="font-size: 0.7rem; color: #444; margin-bottom: 0.5rem;">>> SYSTEM_LOG_STREAM</div>
+                        <div id="console-output"
+                            style="flex: 1; overflow-y: auto; color: #33ff00; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                            > SYSTEM INITIALIZED...
+                            > AWAITING COMMAND...
+                        </div>
+                        <div style="display: flex;">
+                            <span style="color: #33ff00; margin-right: 0.5rem;">$</span>
+                            <input type="text" id="console-input"
+                                style="flex: 1; background: transparent; border: none; color: #fff; font-family: 'Fira Code', monospace; outline: none;"
+                                placeholder="Enter command..." onkeydown="handleConsoleCommand(event)">
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- V8: ICEBURG Civilization Dashboard (Architectural Visualization) -->
+            <section id="civilization" class="admin-section">
+                <!-- Header is hidden for this full-screen experience -->
+                <div class="civilization-wrapper"
+                    style="width: 100%; height: calc(100vh - 40px); background: #f5f0e1; position: relative; overflow: hidden; border-radius: 8px; border: 1px solid #d4cfc0;">
+                    <!-- Grid Background -->
+                    <div class="grid-background"
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(#d4cfc0 1px, transparent 1px), linear-gradient(90deg, #d4cfc0 1px, transparent 1px); background-size: 20px 20px; pointer-events: none; opacity: 0.5;">
+                    </div>
+
+                    <!-- Header inside the wrapper -->
+                    <div class="civ-header"
+                        style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; background: linear-gradient(180deg, #1a2a4a 0%, #3a4a6a 100%); color: #f5f0e1; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #e8a838;">
+                        <h1
+                            style="font-family: 'Orbitron', 'Courier New', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin: 0;">
+                            ICEBURG Civilization</h1>
+                        <div class="header-status" style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="status-indicator"
+                                style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.5rem; background: rgba(56, 200, 120, 0.2); border: 1px solid #38c878; border-radius: 4px;">
+                                <div class="status-dot"
+                                    style="width: 8px; height: 8px; border-radius: 50%; background: #38c878; animation: pulse 2s infinite;">
+                                </div>
+                                <span id="civ-system-status"
+                                    style="font-family: 'Share Tech Mono', monospace; font-size: 0.8rem;">ONLINE</span>
+                            </div>
+                            <span id="civ-timestamp"
+                                style="font-family: 'Share Tech Mono', monospace; font-size: 0.8rem;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="civ-main"
+                        style="position: absolute; top: 50px; left: 0; right: 0; bottom: 0; padding: 1rem; display: grid; grid-template-columns: 1fr 300px; gap: 1rem;">
+
+                        <!-- Schematic Map -->
+                        <div class="civ-map"
+                            style="background: rgba(255, 255, 255, 0.8); border: 2px solid #1a2a4a; border-radius: 8px; position: relative; overflow: hidden;">
+                            <div
+                                style="position: absolute; top: 1rem; left: 1rem; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: #3a4a6a; text-transform: uppercase; letter-spacing: 2px;">
+                                System Architecture Schematic</div>
+                            <canvas id="civilization-canvas" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+
+                        <!-- Side Panel -->
+                        <aside class="civ-side-panel"
+                            style="display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;">
+                            <!-- System Summary -->
+                            <div class="civ-panel-section"
+                                style="background: rgba(255, 255, 255, 0.9); border: 2px solid #1a2a4a; border-radius: 8px; padding: 1rem;">
+                                <h2
+                                    style="font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #3a4a6a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #6a7a9a;">
+                                    System Summary</h2>
+                                <div class="civ-metrics-grid"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <div class="civ-metric-item"
+                                        style="background: #f5f0e1; padding: 0.5rem; border: 1px solid #6a7a9a; border-radius: 4px;">
+                                        <div
+                                            style="font-size: 0.6rem; color: #6a7a9a; text-transform: uppercase; margin-bottom: 0.1rem; font-family: 'Share Tech Mono', monospace;">
+                                            Buildings</div>
+                                        <div style="font-size: 1rem; font-weight: bold; color: #1a2a4a; font-family: 'Share Tech Mono', monospace;"
+                                            id="civ-buildings-count">--</div>
+                                    </div>
+                                    <div class="civ-metric-item"
+                                        style="background: #f5f0e1; padding: 0.5rem; border: 1px solid #6a7a9a; border-radius: 4px;">
+                                        <div
+                                            style="font-size: 0.6rem; color: #6a7a9a; text-transform: uppercase; margin-bottom: 0.1rem; font-family: 'Share Tech Mono', monospace;">
+                                            Flows</div>
+                                        <div style="font-size: 1rem; font-weight: bold; color: #1a2a4a; font-family: 'Share Tech Mono', monospace;"
+                                            id="civ-flows-count">--</div>
+                                    </div>
+                                    <div class="civ-metric-item"
+                                        style="background: #f5f0e1; padding: 0.5rem; border: 1px solid #6a7a9a; border-radius: 4px;">
+                                        <div
+                                            style="font-size: 0.6rem; color: #6a7a9a; text-transform: uppercase; margin-bottom: 0.1rem; font-family: 'Share Tech Mono', monospace;">
+                                            Agents</div>
+                                        <div style="font-size: 1rem; font-weight: bold; color: #e8a838; font-family: 'Share Tech Mono', monospace;"
+                                            id="civ-agents-count">--</div>
+                                    </div>
+                                    <div class="civ-metric-item"
+                                        style="background: #f5f0e1; padding: 0.5rem; border: 1px solid #6a7a9a; border-radius: 4px;">
+                                        <div
+                                            style="font-size: 0.6rem; color: #6a7a9a; text-transform: uppercase; margin-bottom: 0.1rem; font-family: 'Share Tech Mono', monospace;">
+                                            Cooperation</div>
+                                        <div style="font-size: 1rem; font-weight: bold; color: #1a2a4a; font-family: 'Share Tech Mono', monospace;"
+                                            id="civ-cooperation-rate">--%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Building Detail (shown on hover/click) -->
+                            <div class="civ-panel-section" id="civ-building-detail"
+                                style="background: rgba(255, 255, 255, 0.9); border: 2px solid #1a2a4a; border-radius: 8px; padding: 1rem; display: none;">
+                                <h2
+                                    style="font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #3a4a6a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #6a7a9a;">
+                                    Inspector</h2>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <div id="civ-detail-icon"
+                                        style="width: 32px; height: 32px; background: #1a2a4a; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #f5f0e1; font-size: 1rem;">
+                                        🏛️</div>
+                                    <div id="civ-detail-title"
+                                        style="font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: #1a2a4a;">
+                                        Select a Building</div>
+                                </div>
+                                <p id="civ-detail-description"
+                                    style="font-size: 0.75rem; color: #3a4a6a; margin-bottom: 1rem; line-height: 1.4; font-family: 'Share Tech Mono', monospace;">
+                                    Hover over a building on the schematic to see its details.
+                                </p>
+                                <div id="civ-detail-metrics"
+                                    style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                            </div>
+
+                            <!-- Flow Legend -->
+                            <div class="civ-panel-section"
+                                style="background: rgba(255, 255, 255, 0.9); border: 2px solid #1a2a4a; border-radius: 8px; padding: 1rem;">
+                                <h2
+                                    style="font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #3a4a6a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #6a7a9a;">
+                                    Data Flow Legend</h2>
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <div
+                                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'Share Tech Mono', monospace; color: #1a2a4a;">
+                                        <div style="width: 30px; height: 2px; background: #e8a838;"></div>
+                                        <span>Lab Results</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'Share Tech Mono', monospace; color: #1a2a4a;">
+                                        <div style="width: 30px; height: 2px; background: #38b8c8;"></div>
+                                        <span>Curiosity Queries</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'Share Tech Mono', monospace; color: #1a2a4a;">
+                                        <div style="width: 30px; height: 2px; background: #38c878;"></div>
+                                        <span>Truth Discoveries</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'Share Tech Mono', monospace; color: #1a2a4a;">
+                                        <div style="width: 30px; height: 2px; background: #c83838;"></div>
+                                        <span>Security Findings</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V9: ICEBURG Studio Section -->
+            <section id="studio" class="admin-section">
+                <style>
+                    /* Studio specific overrides for embedded view */
+                    .studio-wrapper {
+                        width: 100%;
+                        height: calc(100vh - 40px);
+                        display: flex;
+                        flex-direction: column;
+                        background: #111;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        border: 1px solid #333;
+                    }
+
+                    .studio-header {
+                        height: 50px;
+                        background: #222;
+                        border-bottom: 1px solid #444;
+                        display: flex;
+                        align-items: center;
+                        padding: 0 20px;
+                        justify-content: space-between;
+                    }
+
+                    .studio-controls {
+                        display: flex;
+                        gap: 10px;
+                    }
+
+                    .studio-btn {
+                        background: #333;
+                        border: 1px solid #555;
+                        color: #eee;
+                        padding: 5px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-family: 'Inter', sans-serif;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        font-weight: 600;
+                    }
+
+                    .studio-btn:hover {
+                        background: #444;
+                        border-color: #4a9eff;
+                    }
+
+                    .studio-btn.primary {
+                        background: #4a9eff;
+                        border-color: #4a9eff;
+                        color: #000;
+                    }
+
+                    #studio-workspace {
+                        flex: 1;
+                        position: relative;
+                        background: #000;
+                    }
+
+                    /* LiteGraph Grid Fix */
+                    .lgraphcanvas {
+                        background-color: #111 !important;
+                    }
+
+                    /* Modals */
+                    .studio-modal-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(0, 0, 0, 0.8);
+                        display: none;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 1000;
+                    }
+
+                    .studio-modal {
+                        background: #222;
+                        border: 1px solid #444;
+                        border-radius: 8px;
+                        width: 400px;
+                        padding: 20px;
+                        color: #eee;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                    }
+
+                    .studio-modal h2 {
+                        margin-top: 0;
+                        font-family: 'Orbitron', sans-serif;
+                        font-size: 16px;
+                        color: #4a9eff;
+                    }
+
+                    .studio-form-group {
+                        margin-bottom: 15px;
+                    }
+
+                    .studio-form-group label {
+                        display: block;
+                        font-size: 12px;
+                        margin-bottom: 5px;
+                        color: #aaa;
+                    }
+
+                    .studio-form-group input,
+                    .studio-form-group textarea {
+                        width: 100%;
+                        background: #111;
+                        border: 1px solid #333;
+                        color: #fff;
+                        padding: 8px;
+                        border-radius: 4px;
+                        font-family: 'Inter', sans-serif;
+                    }
+
+                    .studio-modal-footer {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        margin-top: 20px;
+                    }
+
+                    .workflow-list-item {
+                        padding: 10px;
+                        border-bottom: 1px solid #333;
+                        cursor: pointer;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .workflow-list-item:hover {
+                        background: #333;
+                    }
+
+                    .workflow-meta {
+                        font-size: 10px;
+                        color: #666;
+                    }
+                </style>
+
+                <div class="studio-wrapper">
+                    <div class="studio-header">
+                        <h1
+                            style="color: #ccc; font-size: 16px; margin: 0; display: flex; alignItems: center; gap: 8px;">
+                            <span style="color: #4a9eff;">🏗️</span> ICEBURG Workflow Studio
+                            <span id="current-workflow-name"
+                                style="font-size: 12px; color: #666; margin-left: 10px;border: 1px solid #333; padding: 2px 8px; border-radius: 12px;">Untitled
+                                Workflow</span>
+                        </h1>
+                        <div class="studio-controls">
+                            <button class="studio-btn" onclick="Studio.newWorkflow()">New</button>
+                            <button class="studio-btn" onclick="Studio.showLoadModal()">Load</button>
+                            <button class="studio-btn" onclick="Studio.showSaveModal()">Save</button>
+                            <div style="width: 1px; background: #444; margin: 0 5px;"></div>
+                            <button class="studio-btn primary" onclick="Studio.runWorkflow()">▶ Run Workflow</button>
+                        </div>
+                    </div>
+                    <div id="studio-workspace">
+                        <canvas id="studio-canvas" style="width: 100%; height: 100%;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Save Modal -->
+                <div id="studio-save-modal" class="studio-modal-overlay">
+                    <div class="studio-modal">
+                        <h2>Save Workflow</h2>
+                        <div class="studio-form-group">
+                            <label>Workflow Name</label>
+                            <input type="text" id="save-workflow-name" placeholder="e.g. Daily Research Routine">
+                        </div>
+                        <div class="studio-form-group">
+                            <label>Description</label>
+                            <textarea id="save-workflow-desc" placeholder="What does this workflow do?"></textarea>
+                        </div>
+                        <div class="studio-modal-footer">
+                            <button class="studio-btn" onclick="Studio.closeModals()">Cancel</button>
+                            <button class="studio-btn primary" onclick="Studio.confirmSave()">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load Modal -->
+                <div id="studio-load-modal" class="studio-modal-overlay">
+                    <div class="studio-modal" style="width: 500px;">
+                        <h2>Load Workflow</h2>
+                        <div id="workflow-list"
+                            style="height: 300px; overflow-y: auto; border: 1px solid #333; margin-bottom: 10px; border-radius: 4px;">
+                            <!-- Items injected by JS -->
+                        </div>
+                        <div class="studio-modal-footer">
+                            <button class="studio-btn" onclick="Studio.closeModals()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V10: Finance & Prediction Dashboard -->
+            <section id="finance" class="admin-section">
+                <div class="section-header" style="border-bottom: 2px solid #38c878;">
+                    <h3>💰 FINANCE & PREDICTION <span class="admin-badge" style="background: #38c878; color: #000;">AI
+                            POWERED</span></h3>
+                    <div class="refresh-controls">
+                        <button class="btn-secondary" onclick="refreshFinanceData()">🔄 Refresh All</button>
+                    </div>
+                </div>
+
+                <!-- Market Data Panel -->
+                <div class="security-card" style="margin-bottom: 1.5rem;">
+                    <h4>📈 Live Market Data</h4>
+                    <div id="market-data-grid" class="metrics-grid"
+                        style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="metric-card">
+                            <div class="metric-content">
+                                <span class="metric-label">Loading markets...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Signals Panel -->
+                <div class="security-card" style="margin-bottom: 1.5rem;">
+                    <h4>🤖 AI Trading Signals</h4>
+                    <div id="ai-signals-list" style="max-height: 400px; overflow-y: auto;">
+                        <p style="color: var(--admin-text-muted);">Loading AI signals...</p>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <!-- Technical Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>📊 Technical Analysis</h4>
+                            <select id="finance-symbol-selector" onchange="loadFinanceChart()">
+                                <option value="AAPL">AAPL</option>
+                                <option value="GOOGL">GOOGL</option>
+                                <option value="TSLA">TSLA</option>
+                                <option value="BTC-USD">BTC-USD</option>
+                                <option value="ETH-USD">ETH-USD</option>
+                            </select>
+                        </div>
+                        <div id="finance-chart"
+                            style="height: 400px; background: #050505; display: flex; align-items: center; justify-content: center; color: #666;">
+                            TradingView Chart Loading...
+                        </div>
+                    </div>
+
+                    <!-- Predictions Panel -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>🔮 AI Predictions</h4>
+                        </div>
+                        <div id="predictions-panel" style="height: 400px; overflow-y: auto; padding: 1rem;">
+                            <p style="color: var(--admin-text-muted);">Select a symbol to see AI predictions...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio & Wallet Row -->
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- Portfolio Panel -->
+                    <div class="security-card">
+                        <h4>💼 Portfolio</h4>
+                        <div id="portfolio-summary" style="margin-bottom: 1rem;">
+                            <div class="metrics-grid" style="grid-template-columns: repeat(2, 1fr);">
+                                <div class="metric-card small">
+                                    <span class="metric-label">Total Value</span>
+                                    <span class="metric-value" id="portfolio-value">$0.00</span>
+                                </div>
+                                <div class="metric-card small">
+                                    <span class="metric-label">P&L Today</span>
+                                    <span class="metric-value" id="portfolio-pnl">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="portfolio-positions" style="max-height: 300px; overflow-y: auto;">
+                            <p style="color: var(--admin-text-muted); font-size: 0.85rem;">No positions. Connect a
+                                broker to see your portfolio.</p>
+                        </div>
+                    </div>
+
+                    <!-- Wallet Panel -->
+                    <div class="security-card">
+                        <h4>🔐 Crypto Wallets</h4>
+                        <div id="wallet-summary" style="margin-bottom: 1rem;">
+                            <div class="metric-card small">
+                                <span class="metric-label">Total Crypto Value</span>
+                                <span class="metric-value" id="wallet-total">$0.00</span>
+                            </div>
+                        </div>
+                        <div id="wallet-balances" style="max-height: 300px; overflow-y: auto;">
+                            <p style="color: var(--admin-text-muted); font-size: 0.85rem;">No wallets configured. Set up
+                                wallet credentials to see balances.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- V2: INTELLIGENCE DASHBOARD -->
+            <section id="v2-intelligence" class="admin-section">
+                <div class="section-header">
+                    <h2>🎯 V2 INTELLIGENCE & PREDICTION SYSTEM</h2>
+                    <span class="badge"
+                        style="background: linear-gradient(135deg, #ff4444, #cc0000);">PALANTIR-LEVEL</span>
+                </div>
+
+                <!-- Intelligence Feed Panel -->
+                <div class="panel"
+                    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-left: 3px solid #ff4444;">
+                    <div class="panel-header">
+                        <h3>LIVE INTELLIGENCE FEED</h3>
+                        <div>
+                            <select id="v2-intelligence-priority"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem; border-radius: 4px; margin-right: 0.5rem;">
+                                <option value="">All Priorities</option>
+                                <option value="critical">CRITICAL</option>
+                                <option value="high">HIGH</option>
+                                <option value="medium">MEDIUM</option>
+                                <option value="low">LOW</option>
+                            </select>
+                            <button onclick="refreshV2Intelligence()" class="btn-secondary">🔄 Refresh</button>
+                        </div>
+                    </div>
+                    <div id="v2-intelligence-feed" style="max-height: 400px; overflow-y: auto; padding: 1rem;">
+                        <p style="color: var(--admin-text-muted);">Loading intelligence...</p>
+                    </div>
+                </div>
+
+                <!-- Event Predictions Panel -->
+                <div class="panel"
+                    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-left: 3px solid #f39c12;">
+                    <div class="panel-header">
+                        <h3>EVENT PREDICTIONS</h3>
+                        <div>
+                            <select id="v2-prediction-category"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem; border-radius: 4px; margin-right: 0.5rem;">
+                                <option value="">All Categories</option>
+                                <option value="geopolitical">Geopolitical</option>
+                                <option value="economic">Economic</option>
+                                <option value="technological">Technological</option>
+                                <option value="black_swan">Black Swans</option>
+                            </select>
+                            <button onclick="loadV2Predictions()" class="btn-secondary">🔄 Reload</button>
+                        </div>
+                    </div>
+                    <div id="v2-predictions-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem;">
+                        <p style="color: var(--admin-text-muted);">Loading predictions...</p>
+                    </div>
+                </div>
+
+                <!-- Network Analysis Panel -->
+                <div class="panel"
+                    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-left: 3px solid #9b59b6;">
+                    <div class="panel-header">
+                        <h3>NETWORK ANALYSIS</h3>
+                        <button onclick="loadV2PowerCenters()" class="btn-secondary">🔄 Refresh</button>
+                    </div>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 1rem;">
+                        <div>
+                            <h4 style="color: var(--admin-primary); margin-bottom: 0.5rem;">Power Centers</h4>
+                            <div id="v2-power-centers" style="max-height: 300px; overflow-y: auto;">
+                                <p style="color: var(--admin-text-muted); font-size: 0.85rem;">No network data loaded
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--admin-primary); margin-bottom: 0.5rem;">Cascade Prediction</h4>
+                            <div style="margin-bottom: 0.5rem;">
+                                <input type="text" id="v2-cascade-trigger" placeholder="Trigger node (e.g., AAPL)"
+                                    style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                <button onclick="runCascadePrediction()" class="btn-primary"
+                                    style="width: 100%;">Predict Cascade</button>
+                            </div>
+                            <div id="v2-cascade-result"
+                                style="max-height: 200px; overflow-y: auto; font-size: 0.85rem;">
+                                <p style="color: var(--admin-text-muted);">Enter trigger node to predict</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation & Monte Carlo Panel -->
+                <div class="panel"
+                    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-left: 3px solid #3498db;">
+                    <div class="panel-header">
+                        <h3>MONTE CARLO SIMULATION</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; color: var(--admin-text-muted); font-size: 0.85rem;">Number
+                                    of Simulations</label>
+                                <input type="number" id="v2-sim-count" value="10000" min="1000" max="1000000"
+                                    style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; color: var(--admin-text-muted); font-size: 0.85rem;">Confidence
+                                    Level</label>
+                                <select id="v2-sim-confidence"
+                                    style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px;">
+                                    <option value="0.90">90%</option>
+                                    <option value="0.95" selected>95%</option>
+                                    <option value="0.99">99%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="runMonteCarloSimulation()" class="btn-primary"
+                            style="width: 100%; margin-bottom: 1rem;">🎲 Run Simulation</button>
+                        <div id="v2-simulation-results"
+                            style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px;">
+                            <p style="color: var(--admin-text-muted); font-size: 0.85rem;">Select a prediction and run
+                                simulation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OpSec Controls Panel -->
+                <div class="panel"
+                    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-left: 3px solid #e74c3c;">
+                    <div class="panel-header">
+                        <h3>🔒 OPERATIONAL SECURITY</h3>
+                        <span class="badge" style="background: #e74c3c;">CLASSIFIED</span>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                            <div class="metric-card small"
+                                style="background: rgba(255,68,68,0.1); border-left: 3px solid #ff4444;">
+                                <span class="metric-label">Encrypted Predictions</span>
+                                <span class="metric-value" id="v2-encrypted-count">0</span>
+                            </div>
+                            <div class="metric-card small"
+                                style="background: rgba(52,152,219,0.1); border-left: 3px solid #3498db;">
+                                <span class="metric-label">ZK Proofs Generated</span>
+                                <span class="metric-value" id="v2-zkp-count">0</span>
+                            </div>
+                            <div class="metric-card small"
+                                style="background: rgba(231,76,60,0.1); border-left: 3px solid #e74c3c;">
+                                <span class="metric-label">Threat Score</span>
+                                <span class="metric-value" id="v2-threat-score">0.00</span>
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                            <h4 style="color: var(--admin-primary); margin-bottom: 0.5rem; font-size: 0.9rem;">Encrypt
+                                Sensitive Prediction</h4>
+                            <textarea id="v2-opsec-prediction" placeholder="Enter sensitive prediction data..."
+                                style="width: 100%; height: 80px; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; margin-bottom: 0.5rem; font-family: monospace;"></textarea>
+                            <select id="v2-opsec-level"
+                                style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                <option value="confidential">CONFIDENTIAL</option>
+                                <option value="secret" selected>SECRET</option>
+                                <option value="top_secret">TOP SECRET</option>
+                            </select>
+                            <button onclick="encryptPrediction()" class="btn-primary" style="width: 100%;">🔒 Encrypt &
+                                Store</button>
+                        </div>
+                        <div id="v2-surveillance-log"
+                            style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px;">
+                            <h4 style="color: var(--admin-primary); margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                Surveillance Log</h4>
+                            <p style="color: var(--admin-text-muted); font-size: 0.8rem; font-family: monospace;">No
+                                security events detected</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <script src="/civilization.js"></script>
+            <script src="/studio.js"></script>
+            <script src="/admin.js"></script>
+</body>
+
+</html>

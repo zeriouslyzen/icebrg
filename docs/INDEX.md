@@ -1,6 +1,6 @@
 # ICEBURG Documentation Index
 
-**Last Updated**: December 22, 2025
+**Last Updated**: December 29, 2025
 
 This is the master index for all ICEBURG documentation. Files are organized by category for easy navigation.
 
@@ -69,6 +69,8 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 ## 🔧 Implementation Details
 
 ### Secretary Agent
+- **[Secretary V2 Implementation Plan](research/implementation_plan.md)** - 🚀 Hybrid search & recursive research
+- **[Secretary Modes Comparison](research/secretary_modes_comparison.md)** - Fast vs Research mode differences
 - **[Secretary Implementation Complete](implementation/SECRETARY_IMPLEMENTATION_COMPLETE.md)** - Final implementation
 - **[Secretary Phase 1 Implementation](implementation/SECRETARY_PHASE1_IMPLEMENTATION.md)** - Initial implementation
 - **[Secretary Phase 2 Implementation](implementation/SECRETARY_PHASE2_IMPLEMENTATION.md)** - Advanced features
@@ -148,9 +150,7 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 - **Planning improvements**: [Roadmap](planning/ROADMAP_TO_10_OUT_OF_10.md)
 
 ### By Component
-- **Secretary Agent**: Check `implementation/SECRETARY_*` and `guides/SECRETARY_*`
-- **Frontend**: [UX Architecture](architecture/UX_ARCHITECTURE_ASSESSMENT.md)
-- **API Server**: [Query Processing](architecture/QUERY_PROCESSING_ANALYSIS.md)
+- **Admin Dashboard**: [Dashboard Guide](../frontend/ADMIN_README.md)
 - **Multi-Agent Research**: [Research outputs](../data/research_outputs/)
 
 ---

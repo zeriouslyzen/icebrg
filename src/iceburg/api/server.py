@@ -267,6 +267,55 @@ else:
 # Include additional routes
 app.include_router(router)
 
+# V10: Finance & Prediction Dashboard
+try:
+    from ..monitoring.finance_controller import router as finance_router
+    app.include_router(finance_router)
+    logger.info("Finance & Prediction Dashboard API registered")
+except Exception as e:
+    logger.warning(f"Could not register Finance Dashboard API: {e}")
+
+# V2-V10 Bridge: Intelligence → Finance Integration
+try:
+    from ..monitoring.intelligence_bridge import router as intelligence_bridge_router
+    app.include_router(intelligence_bridge_router)
+    logger.info("V2-V10 Intelligence Bridge API registered")
+except Exception as e:
+    logger.warning(f"Could not register Intelligence Bridge API: {e}")
+
+# V2: Advanced Intelligence & Prediction System
+try:
+    from ..monitoring.intelligence_controller import router as intelligence_v2_router
+    app.include_router(intelligence_v2_router)
+    logger.info("V2 Intelligence System API registered")
+except Exception as e:
+    logger.warning(f"Could not register V2 Intelligence API: {e}")
+
+# V2: Event Prediction System
+try:
+    from ..monitoring.prediction_controller import router as prediction_v2_router
+    app.include_router(prediction_v2_router)
+    logger.info("V2 Prediction System API registered")
+except Exception as e:
+    logger.warning(f"Could not register V2 Prediction API: {e}")
+
+# V2: Network Analysis System
+try:
+    from ..monitoring.network_controller import router as network_v2_router
+    app.include_router(network_v2_router)
+    logger.info("V2 Network Analysis System API registered")
+except Exception as e:
+    logger.warning(f"Could not register V2 Network API: {e}")
+
+# V2: Simulation & OpSec Systems
+try:
+    from ..monitoring.simulation_opsec_controller import router as simulation_v2_router, opsec_router
+    app.include_router(simulation_v2_router)
+    app.include_router(opsec_router)
+    logger.info("V2 Simulation & OpSec Systems API registered")
+except Exception as e:
+    logger.warning(f"Could not register V2 Simulation/OpSec API: {e}")
+
 # WebSocket connections
 active_connections: List[WebSocket] = []
 # Track connection metadata for debugging

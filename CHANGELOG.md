@@ -2,7 +2,38 @@
 
 All notable changes to the ICEBURG project will be documented in this file.
 
-## [3.4.0] - 2025-12-23
+## [3.6.0] - 2025-12-29
+
+### Added
+- **Secretary V2 (Hybrid Search Engine)**: Implemented Perplexity-style search-to-answer pipeline.
+  - Hybrid retrieval combining BM25 (lexical) and Semantic (vector) search.
+  - Neural reranking for high-precision grounding.
+  - Real-time web integration (Brave Search, DuckDuckGo, arXiv).
+  - Inline citation system [Source N] with URL verification.
+  - Automated current event detection (triggers web search for "today", "prices", "news").
+- **V2 Intelligence & V10 Finance Integration**: Full bridge between prediction markets and trading dashboard.
+  - New `intelligence_bridge.py` API for signal conversion.
+  - Admin dashboard now displays V2 intelligence signals, alpha conversion, and event predictions.
+  - Cross-navigation between Finance and Intelligence modules.
+- **Uncensored Model Pool**: Switched primary chat agent to `dolphin-mistral` (uncensored) for direct, unhedged responses.
+- **Project Structure**: Created `src/iceburg/search/` for centralized ground intelligence.
+
+### Fixed
+- **Admin Dashboard**: Resolved critical syntax errors in `admin.js` affecting AI signal rendering.
+- **Process Management**: Fixed "Address already in use" port conflicts during server restarts.
+- **Typing Compatibility**: Fixed Python 3.9 typing issues in finance controllers.
+
+## [3.5.0] - 2025-12-27
+
+### Added
+- **M4 Optimization Strategy**: Optimized model pool for Apple M4 (Llama 3.2 3B, DeepSeek R1 8B, Phi-4 14B, Qwen 2.5 32B).
+- **Fine-Tuning Manager**: New `src/iceburg/fine_tuning/` module for MLX-based model distillation.
+- **Deep Intelligence Analysis**: Created comprehensive research reports on Iceburg's Psyche, Linguistics, and Protocol internals.
+- **Root Cleanup**: Reorganized root directory - moved logs to `logs/`, backups to `backups/`, and misc files to `docs/project_state/`.
+
+### Changed
+- **UI Refactor**: Disabled the brainwave-based "orb color system" in favor of a neutral white pulse for a cleaner interface.
+- **Organization**: Centralized research documents in `antigravity/brain/`.
 
 ### Added
 - **Metacognitive Enhancement**: Integrated `DeliberationAgent` methods (`semantic_alignment`, `contradiction_detection`, `reasoning_complexity`) into core protocol.
