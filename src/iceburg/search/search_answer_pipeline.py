@@ -199,6 +199,20 @@ def is_current_event_query(query: str) -> bool:
     ]
     
     query_lower = query.lower()
+    
+    # EXCEPTION: If asking about today's date or time specifically, let ContextService handle it
+    # These are handled internally by the agent's runtime context
+    internal_context_patterns = [
+        "what is the date", "whats the date", "what's the date",
+        "what day is it", "what is today", "what's today",
+        "what time is it", "current time", "time now"
+    ]
+    
+    if any(pattern in query_lower for pattern in internal_context_patterns):
+        # Unless it asks for "news" or "weather" along with it
+        if not any(k in query_lower for k in ['news', 'weather', 'happening', 'latest']):
+            return False
+    
     return any(keyword in query_lower for keyword in keywords)
 
 

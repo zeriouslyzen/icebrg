@@ -234,6 +234,22 @@ class SecretaryAgent:
                 routing_mode = None
         else:
             logger.info(f"🔍 Using provided routing_mode: {routing_mode} (from server)")
+            
+        # OVERRIDE: Check for simple context queries that don't need web search
+        # If asking about date, time, identity, or "what can you do", handle internally
+        context_patterns = [
+            "what is the date", "whats the date", "what's the date",
+            "what day is it", "what is today", "what's today",
+            "what time is it", "current time", "time now",
+            "who are you", "what is your name", "what can you do"
+        ]
+        query_lower = query.lower()
+        if any(p in query_lower for p in context_patterns):
+            # Unless explicitly asking for news/weather
+            if not any(k in query_lower for k in ['news', 'weather', 'happening', 'latest']):
+                if verbose:
+                    logger.info("⚡️ Context query detected - forcing chat mode (bypassing web search)")
+                routing_mode = "chat"
         
         # If web_research mode, perform search first
         if routing_mode == "web_research":
