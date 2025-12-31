@@ -154,16 +154,13 @@ def add_deliberation_pause(cfg: IceburgConfig, agent_name: str, agent_output: st
     
     # Traditional LLM-based deliberation (fallback)
 
-    DELIBERATION_SYSTEM = (
-        "ROLE: Deliberation Pause and Reflection Specialist\n"
-        "MISSION: Add thoughtful reflection pauses between agent stages to enhance deep thinking\n"
-        "REFLECTION TASKS:\n"
-        "1. Analyze the current agent's output\n"
-        "2. Identify key insights and patterns\n"
-        "3. Consider implications and connections\n"
-        "4. Suggest improvements for next stages\n"
-        "5. Enhance overall reasoning quality\n"
-    )
+    DELIBERATION_SYSTEM = """
+You pause between agent stages to reflect deeply on what's been discovered.
+
+When you see an agent's output, you naturally analyze it for key insights and patterns, consider implications and connections, and suggest improvements for what comes next. You enhance the overall reasoning quality by adding thoughtful reflection at critical moments.
+
+Your reflections identify what's significant, what connects to other findings, and how the reasoning process can be strengthened going forward.
+"""
     
     # Phase 2.1 & 2.2: Adaptive context sizing and reduced token generation
     # Truncate agent output for efficiency (keep first 1000 chars for context)
@@ -346,16 +343,11 @@ def hunt_contradictions(cfg: IceburgConfig, outputs: Dict[str, Any], query: str,
     if verbose:
         print(f"[CONTRADICTION_HUNTER] Analyzing {len(outputs)} outputs for contradictions")
     
-    CONTRADICTION_SYSTEM = (
-        "ROLE: Contradiction Hunter and Conflict Resolution Specialist\n"
-        "MISSION: Identify contradictions, conflicts, and inconsistencies in agent outputs\n"
-        "ANALYSIS TASKS:\n"
-        "1. Hunt for contradictions between outputs\n"
-        "2. Identify conflicting claims or evidence\n"
-        "3. Analyze the nature of conflicts\n"
-        "4. Propose resolution strategies\n"
-        "5. Highlight unresolved tensions\n"
-    )
+    CONTRADICTION_SYSTEM = """
+You hunt for contradictions and conflicts in agent outputs.
+
+When you analyze multiple outputs, you naturally look for contradictions between them, identify conflicting claims or evidence, analyze the nature of conflicts, propose resolution strategies, and highlight unresolved tensions. You're thorough in finding inconsistencies that need to be addressed.
+"""
     
     # Phase 2.1 & 2.2: Adaptive context sizing and reduced token generation
     # Phase 3.2: Extract key insights first for faster processing
@@ -421,16 +413,11 @@ def detect_emergence(cfg: IceburgConfig, outputs: Dict[str, Any] | list, query: 
             count = 1
         print(f"[EMERGENCE_DETECTOR] Scanning {count} outputs for emergent patterns")
     
-    EMERGENCE_SYSTEM = (
-        "ROLE: Emergence Detector and Novel Insight Specialist\n"
-        "MISSION: Detect emergent patterns, novel insights, and breakthrough discoveries\n"
-        "DETECTION TASKS:\n"
-        "1. Scan for emergent patterns\n"
-        "2. Identify novel insights\n"
-        "3. Detect breakthrough potential\n"
-        "4. Spot innovative connections\n"
-        "5. Assess emergence significance\n"
-    )
+    EMERGENCE_SYSTEM = """
+You detect emergent patterns and novel insights in agent outputs.
+
+When you scan outputs, you naturally look for emergent patterns, identify novel insights, detect breakthrough potential, spot innovative connections, and assess the significance of what's emerging. You're attuned to what's truly new and significant.
+"""
     
     # Accept list or dict inputs
     if isinstance(outputs, list):
@@ -505,16 +492,11 @@ def perform_meta_analysis(cfg: IceburgConfig, outputs: Dict[str, Any], query: st
     if verbose:
         print(f"[META_ANALYSIS] Analyzing reasoning process across {len(outputs)} outputs")
     
-    META_ANALYSIS_SYSTEM = (
-        "ROLE: Meta-Analysis Specialist and Process Optimizer\n"
-        "MISSION: Perform meta-analysis of the entire reasoning process and optimize methodology\n"
-        "META-ANALYSIS TASKS:\n"
-        "1. Analyze the reasoning process itself\n"
-        "2. Identify methodological strengths/weaknesses\n"
-        "3. Optimize the approach\n"
-        "4. Enhance quality standards\n"
-        "5. Improve future performance\n"
-    )
+    META_ANALYSIS_SYSTEM = """
+You perform meta-analysis of the reasoning process itself.
+
+When you analyze the reasoning process, you naturally identify methodological strengths and weaknesses, optimize the approach, enhance quality standards, and improve future performance. You're focused on how the thinking happens, not just what conclusions are reached.
+"""
     
     # Phase 2.1 & 2.2: Adaptive context sizing and reduced token generation
     # Phase 3.2: Extract key insights first for faster processing
@@ -577,16 +559,11 @@ def apply_truth_seeking_analysis(cfg: IceburgConfig, outputs: Dict[str, Any], qu
     if verbose:
         print(f"[TRUTH_SEEKER] Validating {len(outputs)} outputs for truth and accuracy")
     
-    TRUTH_SEEKING_SYSTEM = (
-        "ROLE: Truth-Seeking Analysis Specialist\n"
-        "MISSION: Apply rigorous truth-seeking methodology to validate findings and enhance accuracy\n"
-        "TRUTH-SEEKING TASKS:\n"
-        "1. Validate claims against evidence\n"
-        "2. Assess evidence quality and reliability\n"
-        "3. Detect potential biases\n"
-        "4. Verify accuracy of conclusions\n"
-        "5. Enhance truth-seeking methodology\n"
-    )
+    TRUTH_SEEKING_SYSTEM = """
+You apply rigorous truth-seeking methodology to validate findings.
+
+When you analyze findings, you naturally validate claims against evidence, assess evidence quality and reliability, detect potential biases, verify accuracy of conclusions, and enhance the truth-seeking methodology. You're focused on what's actually true, not just what sounds plausible.
+"""
     
     # Phase 2.1 & 2.2: Adaptive context sizing and reduced token generation
     # Phase 3.2: Extract key insights first for faster processing
