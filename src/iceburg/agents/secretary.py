@@ -20,90 +20,34 @@ from ..llm import chat_complete
 logger = logging.getLogger(__name__)
 
 
-# ICEBURG Knowledge Base (built-in, no VectorStore needed)
+# ICEBURG Knowledge Base (Optimized for Local/Ollama)
 ICEBURG_KNOWLEDGE = """
-ICEBURG (ICEBERG) is an advanced AI research and knowledge system designed for truth-finding and deep knowledge discovery.
+ICEBURG is an advanced AI research system designed for truth-finding and deep knowledge discovery.
 
 CORE CAPABILITIES:
-- Deep research and analysis across multiple domains
-- Multi-agent system with specialized agents (Surveyor, Dissident, Archaeologist, Synthesist, Oracle, etc.)
-- Knowledge base with semantic search (when available)
-- Real-time streaming responses
-- Multiple modes: Chat (Fast), Research, Software, Science, Civilization
-- Support for multiple LLM providers: Gemini (default), OpenAI, Anthropic
+- Deep domain research & multi-agent coordination (Surveyor, Dissident, etc.)
+- Real-time streaming & persistent memory systems.
+- Modes: Chat (Fast), Research, Software, Science, Civilization.
 
 AGENTS:
-- Surveyor: Research agent that searches knowledge base and synthesizes information
-- Dissident: Challenges assumptions and finds contradictions
-- Archaeologist: Discovers suppressed or forgotten knowledge
-- Synthesist: Combines insights across domains
-- Oracle: Provides evidence-weighted answers
-- Secretary: Friendly assistant that knows about ICEBURG (this agent)
-
-MODES:
-- Chat (Fast): Quick responses for simple questions
-- Research: Deep analysis with full protocol
-- Software: Application generation
-- Science: Scientific experiment design
-- Civilization: AGI civilization simulation
-
-TECHNICAL DETAILS:
-- Built with Python, FastAPI, and modern AI frameworks
-- Uses Gemini 2.0 Flash as default LLM (fast and cost-effective)
-- Supports streaming responses for real-time interaction
-- Has knowledge base integration (when VectorStore is available)
-- Designed for cloud LLMs (Gemini, OpenAI, Anthropic)
+- Surveyor (Research), Dissident (Critique), Synthesist (Integration), Oracle (Evidence), Secretary (Assistant/Bridge).
 
 CURRENT STATUS:
-- Default LLM: Google Gemini (cloud-based, fast)
-- Uses cloud LLM (Gemini) - no local models needed
-- VectorStore: Optional (system works without it using LLM knowledge)
-- Frontend: Web interface at localhost:3000
-- API: REST and WebSocket at localhost:8000
+- Default LLM: Ollama (Local) - optimized for M4/Unified Memory.
+- API: REST/WebSocket at localhost:8000. Web UI at localhost:3000.
 """
 
 
-SECRETARY_SYSTEM_PROMPT = """You are ICEBURG Secretary, a friendly and helpful assistant that knows all about ICEBURG.
+SECRETARY_SYSTEM_PROMPT = """You are ICEBURG Secretary, a friendly assistant for the ICEBURG research platform.
 
-YOUR ROLE:
-- Help users understand what ICEBURG is and what it can do
-- Answer questions about ICEBURG's capabilities, agents, and features
-- Provide friendly, conversational responses
-- Guide users on how to use ICEBURG effectively
-- Be concise but helpful
+ROLE:
+- Help users navigate ICEBURG's capabilities (Research, Software, Science, etc.).
+- When asked "what can it do?", answer with DETAILED info about ICEBURG.
+- Be concise, professional, and helpful.
 
-CRITICAL CONTEXT UNDERSTANDING:
-- When users ask "what can it do?", "what does it do?", "what can you do?", or similar questions, they are ALWAYS asking about ICEBURG's capabilities
-- "it" refers to ICEBURG in this context
-- "you" can refer to you (Secretary) OR ICEBURG - use context to determine, but when asking about capabilities, assume they mean ICEBURG
-- Answer capability questions with DETAILED, SPECIFIC information about what ICEBURG can do
-- Don't give generic responses - be specific about ICEBURG's features
-
-YOUR KNOWLEDGE:
-You have built-in knowledge about ICEBURG's:
-- Core capabilities and features
-- Available agents and their purposes
-- Different modes (Chat, Research, Software, Science, Civilization)
-- Technical architecture
-- Current configuration and status
-
-RESPONSE STYLE:
-- Friendly and conversational
-- Clear and concise
-- Helpful without being overly technical
-- Use natural language, not jargon
-- When asked about capabilities, provide DETAILED, SPECIFIC answers
-- If you don't know something specific, say so honestly
-- Answer the user's ACTUAL question - do NOT default to generic greetings
-- If the user asks a specific question, answer it directly - don't give a generic response
-
-IMPORTANT:
-- You work WITHOUT needing a knowledge base (VectorStore)
-- You use the LLM's training data plus your built-in ICEBURG knowledge
-- You're optimized for speed and helpfulness
-- You're perfect for chat mode - fast responses, no deep research needed
-- ALWAYS interpret capability questions ("what can it do?", "what does it do?") as asking about ICEBURG's capabilities
-- CRITICAL: Answer the user's specific question. Do NOT give the same generic greeting response for every query.
+LOCAL OPTIMIZATION:
+- You are running on LOCAL HARDWARE (Ollama). Keep responses punchy to maintain high token velocity.
+- You work WITHOUT a VectorStore; use your built-in ICEBURG knowledge and training data.
 """
 
 
@@ -140,6 +84,15 @@ class SecretaryAgent:
         self.enable_cache = enable_cache
         self.enable_planning = enable_planning
         self.enable_knowledge_base = enable_knowledge_base
+        
+        # Initialize Context Service (NEW)
+        self.context_service = None
+        try:
+            from ..core.context_service import get_context_service
+            self.context_service = get_context_service(cfg)
+            logger.info("✅ Secretary ContextService initialized")
+        except Exception as e:
+            logger.warning(f"Could not initialize ContextService: {e}. Continuing without context service.")
         
         # Initialize memory systems
         self.memory = None
@@ -232,6 +185,8 @@ class SecretaryAgent:
         thinking_callback: Optional[callable] = None,
         files: Optional[List[Dict[str, Any]]] = None,
         multimodal_input: Optional[Any] = None,
+        mode: Optional[str] = None,
+        routing_mode: Optional[str] = None,
     ) -> str:
         """
         Enhanced Secretary agent with memory persistence.
@@ -242,10 +197,16 @@ class SecretaryAgent:
             user_id: User ID for cross-session memory
             verbose: Enable verbose logging
             thinking_callback: Optional callback for thinking messages
+            files: Optional list of files to process
+            multimodal_input: Optional multimodal input
+            mode: User-selected mode (chat, research, etc.)
+            routing_mode: Router-determined mode (web_research, etc.)
         
         Returns:
             Response string
         """
+        import concurrent.futures
+        
         # Log the actual query received
         logger.info(f"🔍🔍🔍 SECRETARY: Received query='{query}' (type={type(query).__name__}, length={len(query) if query else 0})")
         
@@ -255,13 +216,18 @@ class SecretaryAgent:
             logger.info("✅ Cache hit for query")
             return self.response_cache[cache_key]
         
+        # Initialize tracking variables
+        evidence_pack = None
+        execution_results = ""
+        
         # v5: Check routing decision for search-first mode
         # Only route if routing_mode was not provided by server (fixes double routing)
         if routing_mode is None:
             try:
                 from ..router.request_router import get_request_router
                 router = get_request_router()
-                routing_decision = await asyncio.to_thread(router.route, query, context={"user_id": user_id})
+                # Use synchronous routing (no await needed)
+                routing_decision = router.route(query, context={"user_id": user_id})
                 routing_mode = routing_decision.mode
                 logger.info(f"🔍 v5 Routing: mode={routing_mode}, confidence={routing_decision.confidence:.2f}")
             except Exception as e:
@@ -269,18 +235,23 @@ class SecretaryAgent:
                 routing_mode = None
         else:
             logger.info(f"🔍 Using provided routing_mode: {routing_mode} (from server)")
+        
+        # If web_research mode, perform search first
+        if routing_mode == "web_research":
+            logger.info(f"🔍 Search mode detected: web_research - initiating search for query: {query[:100]}")
+            if thinking_callback:
+                thinking_callback("Searching the web for current information...")
             
-            # If web_research mode, perform search first
-            if routing_mode == "web_research":
-                logger.info(f"🔍 Search mode detected: web_research - initiating search for query: {query[:100]}")
-                if thinking_callback:
-                    thinking_callback("Searching the web for current information...")
-                
+            try:
+                import asyncio
                 try:
                     from ..agents.search_planner_agent import get_search_planner_agent
-                    import concurrent.futures
-                    
                     search_planner = get_search_planner_agent()
+                except ImportError:
+                    logger.warning("Search planner agent not found, skipping web search")
+                    search_planner = None
+                
+                if search_planner:
                     # Run async search in separate thread with new event loop
                     # This avoids "asyncio.run() cannot be called from a running event loop" error
                     def run_search_in_thread():
@@ -291,31 +262,18 @@ class SecretaryAgent:
                         future = executor.submit(run_search_in_thread)
                         # Wait up to 5 seconds for search to complete
                         evidence_pack = future.result(timeout=5.0)
-                    
+                
                     logger.info(f"✅ Web search completed: {len(evidence_pack.evidence_items)} evidence items")
-                except concurrent.futures.TimeoutError:
-                    logger.warning(f"Web search timed out after 5 seconds, continuing without evidence")
-                    evidence_pack = None
-                except Exception as e:
-                    logger.warning(f"Web search failed: {e}, continuing without evidence", exc_info=True)
-                    evidence_pack = None
-        
-        # Check if this requires direct execution (bypass planning for action queries)
-        requires_execution = self._requires_execution(query)
-        # execution_results already initialized above
-        
-        # If execution is needed, do it directly first, then let LLM respond
-        if requires_execution and self.executor:
-            try:
-                execution_results = self._execute_directly(query)
-                if execution_results and "✅" in execution_results:
-                    # Execution succeeded - include results in prompt but continue to LLM response
-                    logger.info("Direct execution completed, including results in response")
+                else: 
+                    logger.info("Search skipped (no planner)")
+            except concurrent.futures.TimeoutError:
+                logger.warning(f"Web search timed out after 5 seconds, continuing without evidence")
+                evidence_pack = None
             except Exception as e:
-                logger.warning(f"Direct execution failed: {e}, continuing with normal flow")
-                execution_results = ""
+                logger.warning(f"Web search failed: {e}, continuing without evidence", exc_info=True)
+                evidence_pack = None
         
-        # Check if this is a goal-driven task that needs planning (only if not execution query)
+        # Check if this is a goal-driven task that needs planning
         # IMPORTANT: Disable planning for chat mode - chat should be fast and direct
         # Planning should only be used in research/protocol modes where multi-step tasks are expected
         # For chat mode, always answer directly - no planning overhead
@@ -459,7 +417,7 @@ Please answer the user's question directly and naturally. If the question is abo
             # Use the provider from the config
             from ..providers.factory import provider_factory
             
-            provider = provider_factory(cfg)
+            provider = provider_factory(self.cfg)
             
             # MoE Routing: Use specialized models based on domain
             expert_domain = "general"
@@ -472,11 +430,29 @@ Please answer the user's question directly and naturally. If the question is abo
                 # Fallback to config
                 model_to_use = getattr(self.cfg, "surveyor_model", None) or getattr(self.cfg, "primary_model", None) or "gemini-2.0-flash-exp"
             
+            # Build context-aware system prompt (NEW)
+            context_aware_system_prompt = SECRETARY_SYSTEM_PROMPT
+            if self.context_service:
+                try:
+                    context_str = self.context_service.build_context_prompt(
+                        agent_name="secretary",
+                        query=query,
+                        user_id=user_id,
+                        conversation_id=conversation_id,
+                        mode=mode,
+                        include_conversation_history=True,
+                        include_user_memory=True
+                    )
+                    context_aware_system_prompt = f"{context_str}\n\n{SECRETARY_SYSTEM_PROMPT}"
+                    logger.debug("✅ Injected runtime context into system prompt")
+                except Exception as e:
+                    logger.warning(f"Could not build context prompt: {e}")
+            
             # Call provider directly
             response = provider.chat_complete(
                 model=model_to_use,
                 prompt=enhanced_prompt,
-                system=SECRETARY_SYSTEM_PROMPT,
+                system=context_aware_system_prompt,
                 temperature=0.7,
                 options={"max_tokens": 1000},
             )
@@ -720,6 +696,42 @@ Please answer the user's question directly and naturally. If the question is abo
             except Exception as e:
                 logger.debug(f"Could not store in AgentMemory: {e}")
     
+    def _is_simple_question_pattern(self, query: str) -> bool:
+        """
+        Check if query matches simple question patterns that don't need planning.
+        
+        Fast regex-based check to avoid expensive LLM calls for simple queries.
+        
+        Args:
+            query: User query
+        
+        Returns:
+            True if this is a simple question pattern
+        """
+        import re
+        
+        # Simple question patterns that don't need goal-driven planning
+        simple_patterns = [
+            r'^(what|who|where|when|why|how)\s+(is|are|was|were|do|does|did|can|could|will|would|should)\s+',
+            r'^(tell me|explain|describe|define|show me)\s+',
+            r'^(hi|hello|hey|thanks|thank you|bye|goodbye)',
+            r'^(yes|no|ok|okay|sure|maybe)',
+            r'^\w+\?$',  # Single word questions
+        ]
+        
+        query_lower = query.lower().strip()
+        
+        # Check if query is short (likely simple)
+        if len(query.split()) <= 5:
+            return True
+        
+        # Check against patterns
+        for pattern in simple_patterns:
+            if re.match(pattern, query_lower, re.IGNORECASE):
+                return True
+        
+        return False
+    
     def _needs_tools(self, query: str) -> bool:
         """
         Determine if query needs tools.
@@ -879,16 +891,57 @@ Please answer the user's question directly and naturally. If the question is abo
             return ""
         
         try:
-            # Get recent messages from other agents
-            # Note: receive_messages is async, but we're in sync context
-            # For now, return empty - can be enhanced with proper async handling
-            # messages = await self.agent_comm.receive_messages("secretary", limit=5)
-            # This will be implemented when we have proper async support
-            return ""
+            import asyncio
+            import concurrent.futures
+            
+            # Run async receive_messages in a separate thread with new event loop
+            def get_messages_sync():
+                """Synchronous wrapper for async receive_messages"""
+                try:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    try:
+                        messages = loop.run_until_complete(
+                            self.agent_comm.receive_messages("secretary", limit=5)
+                        )
+                        return messages
+                    finally:
+                        loop.close()
+                except Exception as e:
+                    logger.debug(f"Error in async message retrieval: {e}")
+                    return []
+            
+            # Execute with timeout
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(get_messages_sync)
+                try:
+                    messages = future.result(timeout=1.0)  # 1 second timeout
+                except concurrent.futures.TimeoutError:
+                    logger.debug("Agent message retrieval timed out")
+                    return ""
+            
+            if not messages:
+                return ""
+            
+            # Build context from messages
+            context_parts = ["AGENT MESSAGES:"]
+            for msg in messages:
+                from_agent = msg.get("from", "unknown")
+                message_content = msg.get("message", {})
+                msg_type = message_content.get("type", "general")
+                
+                if msg_type == "escalation":
+                    context_parts.append(f"  - {from_agent} escalated: {message_content.get('query', '')[:100]}")
+                elif msg_type == "finding":
+                    context_parts.append(f"  - {from_agent} found: {message_content.get('insight', '')[:100]}")
+                else:
+                    context_parts.append(f"  - {from_agent}: {str(message_content)[:100]}")
+            
+            return "\n".join(context_parts) + "\n"
+            
         except Exception as e:
             logger.debug(f"Could not get agent context: {e}")
-        
-        return ""
+            return ""
     
     def _is_significant_response(self, query: str, response: str) -> bool:
         """Determine if response is significant enough to publish"""
@@ -1058,6 +1111,7 @@ def run(
     user_id: Optional[str] = None,
     files: Optional[List[Dict[str, Any]]] = None,
     multimodal_input: Optional[Any] = None,
+    **kwargs: Any,
 ) -> str:
     """
     Secretary agent - friendly assistant that knows about ICEBURG.
@@ -1085,7 +1139,7 @@ def run(
                 cfg, 
                 enable_memory=bool(conversation_id or user_id), 
                 enable_tools=True,
-                enable_blackboard=False,  # Disable blackboard for now (async issues)
+                enable_blackboard=True,  # Blackboard integration now working synchronously
                 enable_cache=True,
                 enable_planning=True,  # Enable goal-driven planning
                 enable_knowledge_base=True  # Enable self-updating knowledge base
@@ -1097,7 +1151,8 @@ def run(
                 verbose=verbose,
                 thinking_callback=thinking_callback,
                 files=files,
-                multimodal_input=multimodal_input
+                multimodal_input=multimodal_input,
+                **kwargs
             )
         except Exception as e:
             logger.warning(f"Enhanced Secretary failed, falling back to basic: {e}", exc_info=True)
