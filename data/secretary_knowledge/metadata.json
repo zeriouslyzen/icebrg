@@ -1,0 +1,333 @@
+{
+  "version": "1.0",
+  "created": "2025-12-30T04:46:19.517071",
+  "topics": {
+    "France": {
+      "created": "2025-12-30T04:46:29.224554",
+      "file": "topics/France.md",
+      "last_updated": "2025-12-30T04:49:59.150719",
+      "metadata": {
+        "conversation_id": "9125fac0-6bb3-4702-9229-725afb3b1cf9",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:49:59.147713"
+      }
+    },
+    "History": {
+      "created": "2025-12-30T04:46:29.225218",
+      "file": "topics/History.md",
+      "last_updated": "2025-12-30T04:46:29.225244",
+      "metadata": {
+        "conversation_id": "67a8a386-483f-4700-a2dd-a6d077a76e37",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:46:29.223560"
+      }
+    },
+    "Culture": {
+      "created": "2025-12-30T04:46:29.225709",
+      "file": "topics/Culture.md",
+      "last_updated": "2025-12-30T04:46:29.225728",
+      "metadata": {
+        "conversation_id": "67a8a386-483f-4700-a2dd-a6d077a76e37",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:46:29.223560"
+      }
+    },
+    "Geography": {
+      "created": "2025-12-30T04:48:41.197550",
+      "file": "topics/Geography.md",
+      "last_updated": "2025-12-30T04:55:19.460182",
+      "metadata": {
+        "conversation_id": "cabd2482-c4f9-4aae-824c-21cd86768577",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:55:19.458958"
+      }
+    },
+    "French history": {
+      "created": "2025-12-30T04:53:10.332887",
+      "file": "topics/French-history.md",
+      "last_updated": "2025-12-30T04:53:10.332901",
+      "metadata": {
+        "conversation_id": "d1a2a8c9-0cef-4c02-b12f-06eb9ceb3f04",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:53:10.332462"
+      }
+    },
+    "French culture": {
+      "created": "2025-12-30T04:53:10.333341",
+      "file": "topics/French-culture.md",
+      "last_updated": "2025-12-30T04:53:10.333360",
+      "metadata": {
+        "conversation_id": "d1a2a8c9-0cef-4c02-b12f-06eb9ceb3f04",
+        "user_id": null,
+        "extracted_at": "2025-12-30T04:53:10.332462"
+      }
+    },
+    "ICEBURG": {
+      "created": "2025-12-30T05:02:46.178899",
+      "file": "topics/ICEBURG.md",
+      "last_updated": "2025-12-30T05:03:31.326981",
+      "metadata": {
+        "conversation_id": "b86adc51-4148-4178-92ec-1939a3c5b164",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:31.325060"
+      }
+    },
+    "AI research system": {
+      "created": "2025-12-30T05:02:46.242310",
+      "file": "topics/AI-research-system.md",
+      "last_updated": "2025-12-30T05:03:12.519462",
+      "metadata": {
+        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:12.518396"
+      }
+    },
+    "truth-finding": {
+      "created": "2025-12-30T05:02:46.242614",
+      "file": "topics/truth-finding.md",
+      "last_updated": "2025-12-30T05:03:12.520658",
+      "metadata": {
+        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:12.518396"
+      }
+    },
+    "deep knowledge discovery": {
+      "created": "2025-12-30T05:02:46.242864",
+      "file": "topics/deep-knowledge-discovery.md",
+      "last_updated": "2025-12-30T05:03:12.521429",
+      "metadata": {
+        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:12.518396"
+      }
+    },
+    "starting a research task": {
+      "created": "2025-12-30T05:03:31.325731",
+      "file": "topics/starting-a-research-task.md",
+      "last_updated": "2025-12-30T05:03:31.325770",
+      "metadata": {
+        "conversation_id": "b86adc51-4148-4178-92ec-1939a3c5b164",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:31.325060"
+      }
+    },
+    "Research mode": {
+      "created": "2025-12-30T05:03:31.327683",
+      "file": "topics/Research-mode.md",
+      "last_updated": "2025-12-30T05:03:31.327707",
+      "metadata": {
+        "conversation_id": "b86adc51-4148-4178-92ec-1939a3c5b164",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:31.325060"
+      }
+    },
+    "Surveyor and Dissident agents": {
+      "created": "2025-12-30T05:03:53.567635",
+      "file": "topics/Surveyor-and-Dissident-agents.md",
+      "last_updated": "2025-12-30T05:03:53.567711",
+      "metadata": {
+        "conversation_id": "669d79ad-ef96-4fbf-977e-91ae0d2cc3dc",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:53.566427"
+      }
+    },
+    "ICEBURG's multi-agent coordination system": {
+      "created": "2025-12-30T05:03:53.569127",
+      "file": "topics/ICEBURGs-multi-agent-coordination-system.md",
+      "last_updated": "2025-12-30T05:03:53.569156",
+      "metadata": {
+        "conversation_id": "669d79ad-ef96-4fbf-977e-91ae0d2cc3dc",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:03:53.566427"
+      }
+    },
+    "software application design": {
+      "created": "2025-12-30T05:04:06.332395",
+      "file": "topics/software-application-design.md",
+      "last_updated": "2025-12-30T05:04:06.332509",
+      "metadata": {
+        "conversation_id": "d144fb84-d1e0-479e-b85e-6fb551ad6f33",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:06.331930"
+      }
+    },
+    "app purpose": {
+      "created": "2025-12-30T05:04:06.333109",
+      "file": "topics/app-purpose.md",
+      "last_updated": "2025-12-30T05:04:06.333125",
+      "metadata": {
+        "conversation_id": "d144fb84-d1e0-479e-b85e-6fb551ad6f33",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:06.331930"
+      }
+    },
+    "target audience": {
+      "created": "2025-12-30T05:04:06.333667",
+      "file": "topics/target-audience.md",
+      "last_updated": "2025-12-30T05:04:06.333678",
+      "metadata": {
+        "conversation_id": "d144fb84-d1e0-479e-b85e-6fb551ad6f33",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:06.331930"
+      }
+    },
+    "features": {
+      "created": "2025-12-30T05:04:06.334485",
+      "file": "topics/features.md",
+      "last_updated": "2025-12-30T05:04:06.334535",
+      "metadata": {
+        "conversation_id": "d144fb84-d1e0-479e-b85e-6fb551ad6f33",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:06.331930"
+      }
+    },
+    "AGI civilization simulation": {
+      "created": "2025-12-30T05:04:31.463767",
+      "file": "topics/AGI-civilization-simulation.md",
+      "last_updated": "2025-12-30T05:04:31.463809",
+      "metadata": {
+        "conversation_id": "cd055842-d846-47db-8665-97a7ea4bd84a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:31.463056"
+      }
+    },
+    "ICEBURG's Science framework": {
+      "created": "2025-12-30T05:04:31.465937",
+      "file": "topics/ICEBURGs-Science-framework.md",
+      "last_updated": "2025-12-30T05:04:31.465977",
+      "metadata": {
+        "conversation_id": "cd055842-d846-47db-8665-97a7ea4bd84a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:31.463056"
+      }
+    },
+    "Artificial General Intelligence": {
+      "created": "2025-12-30T05:04:31.467709",
+      "file": "topics/Artificial-General-Intelligence.md",
+      "last_updated": "2025-12-30T05:04:31.467740",
+      "metadata": {
+        "conversation_id": "cd055842-d846-47db-8665-97a7ea4bd84a",
+        "user_id": null,
+        "extracted_at": "2025-12-30T05:04:31.463056"
+      }
+    },
+    "conversation": {
+      "created": "2025-12-30T19:19:53.650695",
+      "file": "topics/conversation.md",
+      "last_updated": "2025-12-30T19:19:53.650741",
+      "metadata": {
+        "conversation_id": "test_semantic_2",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:19:53.649969"
+      }
+    },
+    "research": {
+      "created": "2025-12-30T19:19:53.651889",
+      "file": "topics/research.md",
+      "last_updated": "2025-12-30T19:19:53.651917",
+      "metadata": {
+        "conversation_id": "test_semantic_2",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:19:53.649969"
+      }
+    },
+    "Capabilities of ICEBURG": {
+      "created": "2025-12-30T19:20:19.402073",
+      "file": "topics/Capabilities-of-ICEBURG.md",
+      "last_updated": "2025-12-30T19:20:19.402119",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:20:19.397721"
+      }
+    },
+    "Modes of ICEBURG": {
+      "created": "2025-12-30T19:20:19.403270",
+      "file": "topics/Modes-of-ICEBURG.md",
+      "last_updated": "2025-12-30T19:20:19.403284",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:20:19.397721"
+      }
+    },
+    "Agents of ICEBURG": {
+      "created": "2025-12-30T19:20:19.403729",
+      "file": "topics/Agents-of-ICEBURG.md",
+      "last_updated": "2025-12-30T19:20:19.403741",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:20:19.397721"
+      }
+    },
+    "Real-time streaming and persistent memory systems": {
+      "created": "2025-12-30T19:20:19.404076",
+      "file": "topics/Real-time-streaming-and-persistent-memory-systems.md",
+      "last_updated": "2025-12-30T19:20:19.404088",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:20:19.397721"
+      }
+    },
+    "deep domain research": {
+      "created": "2025-12-30T19:21:12.325436",
+      "file": "topics/deep-domain-research.md",
+      "last_updated": "2025-12-30T19:21:12.325514",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:21:12.324258"
+      }
+    },
+    "multi-agent coordination": {
+      "created": "2025-12-30T19:21:12.326833",
+      "file": "topics/multi-agent-coordination.md",
+      "last_updated": "2025-12-30T19:21:12.326852",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:21:12.324258"
+      }
+    },
+    "research mode": {
+      "created": "2025-12-30T19:21:12.328144",
+      "file": "topics/research-mode.md",
+      "last_updated": "2025-12-30T19:21:12.328164",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:21:12.324258"
+      }
+    },
+    "software development mode": {
+      "created": "2025-12-30T19:21:12.329123",
+      "file": "topics/software-development-mode.md",
+      "last_updated": "2025-12-30T19:21:12.329144",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:21:12.324258"
+      }
+    },
+    "science mode": {
+      "created": "2025-12-30T19:21:12.330084",
+      "file": "topics/science-mode.md",
+      "last_updated": "2025-12-30T19:21:12.330103",
+      "metadata": {
+        "conversation_id": "test_semantic_3",
+        "user_id": "test_user",
+        "extracted_at": "2025-12-30T19:21:12.324258"
+      }
+    }
+  },
+  "personas": {
+    "test_user": {
+      "created": "2025-12-30T19:19:53.652972",
+      "last_updated": "2025-12-30T19:21:12.331292"
+    }
+  },
+  "last_updated": "2025-12-30T19:21:12.331298"
+}

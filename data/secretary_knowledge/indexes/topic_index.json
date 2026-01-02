@@ -1,0 +1,101 @@
+{
+  "topics": {
+    "France": {
+      "file": "topics/France.md",
+      "created": "2025-12-30T04:46:29.224554",
+      "last_updated": "2025-12-30T04:49:59.150719"
+    },
+    "History": {
+      "file": "topics/History.md",
+      "created": "2025-12-30T04:46:29.225218",
+      "last_updated": "2025-12-30T04:46:29.225244"
+    },
+    "Culture": {
+      "file": "topics/Culture.md",
+      "created": "2025-12-30T04:46:29.225709",
+      "last_updated": "2025-12-30T04:46:29.225728"
+    },
+    "Geography": {
+      "file": "topics/Geography.md",
+      "created": "2025-12-30T04:48:41.197550",
+      "last_updated": "2025-12-30T04:55:19.460182"
+    },
+    "French history": {
+      "file": "topics/French-history.md",
+      "created": "2025-12-30T04:53:10.332887",
+      "last_updated": "2025-12-30T04:53:10.332901"
+    },
+    "French culture": {
+      "file": "topics/French-culture.md",
+      "created": "2025-12-30T04:53:10.333341",
+      "last_updated": "2025-12-30T04:53:10.333360"
+    },
+    "ICEBURG": {
+      "file": "topics/ICEBURG.md",
+      "created": "2025-12-30T05:02:46.178899",
+      "last_updated": "2025-12-30T05:02:46.178973"
+    },
+    "AI research system": {
+      "file": "topics/AI-research-system.md",
+      "created": "2025-12-30T05:02:46.242310",
+      "last_updated": "2025-12-30T05:03:12.519462"
+    },
+    "truth-finding": {
+      "file": "topics/truth-finding.md",
+      "created": "2025-12-30T05:02:46.242614",
+      "last_updated": "2025-12-30T05:03:12.520658"
+    },
+    "deep knowledge discovery": {
+      "file": "topics/deep-knowledge-discovery.md",
+      "created": "2025-12-30T05:02:46.242864",
+      "last_updated": "2025-12-30T05:03:12.521429"
+    }
+  },
+  "cross_references": {
+    "History": [
+      {
+        "topic": "French history",
+        "common_words": [
+          "history"
+        ]
+      }
+    ],
+    "Culture": [
+      {
+        "topic": "French culture",
+        "common_words": [
+          "culture"
+        ]
+      }
+    ],
+    "French history": [
+      {
+        "topic": "History",
+        "common_words": [
+          "history"
+        ]
+      },
+      {
+        "topic": "French culture",
+        "common_words": [
+          "french"
+        ]
+      }
+    ],
+    "French culture": [
+      {
+        "topic": "Culture",
+        "common_words": [
+          "culture"
+        ]
+      },
+      {
+        "topic": "French history",
+        "common_words": [
+          "french"
+        ]
+      }
+    ]
+  },
+  "last_built": "2025-12-30T05:03:12.522489"
+}

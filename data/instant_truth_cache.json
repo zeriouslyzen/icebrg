@@ -1,0 +1,29 @@
+{
+  "medical research funding": {
+    "query_pattern": "medical research funding",
+    "truth_type": "known_pattern",
+    "direct_insight": "Medical research funding is influenced by multiple factors including disease prevalence, treatment costs, market potential, and public health priorities. Funding distribution varies significantly across different disease areas.",
+    "confidence": 0.85,
+    "evidence": [
+      "NIH funding statistics by disease area",
+      "Pharmaceutical industry investment patterns",
+      "Academic research funding distribution studies"
+    ],
+    "timestamp": 1767229934.246475,
+    "verification_count": 1
+  },
+  "research suppression": {
+    "query_pattern": "research suppression",
+    "truth_type": "known_pattern",
+    "direct_insight": "Systematic research suppression occurs across academic, financial, regulatory, and social systems to protect vested interests and maintain power structures.",
+    "confidence": 0.9,
+    "evidence": [
+      "Cross-domain suppression patterns",
+      "Institutional corruption evidence",
+      "Career destruction cases"
+    ],
+    "timestamp": 1767229934.246507,
+    "verification_count": 1
+  }
+}
+}

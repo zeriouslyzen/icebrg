@@ -43,7 +43,7 @@ def test_task_creation():
     assert task.dependencies == []
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_extract_goals_simple_query(mock_factory, planner):
     """Test goal extraction for simple query (no goals)."""
     mock_provider = Mock()
@@ -54,7 +54,7 @@ def test_extract_goals_simple_query(mock_factory, planner):
     assert goals == []
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_extract_goals_with_goal(mock_factory, planner):
     """Test goal extraction for goal-driven query."""
     mock_provider = Mock()
@@ -74,7 +74,7 @@ def test_extract_goals_with_goal(mock_factory, planner):
     assert len(goals[0]["sub_goals"]) == 3
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_plan_task_with_subgoals(mock_factory, planner):
     """Test task planning with provided sub-goals."""
     goal = {
@@ -93,7 +93,7 @@ def test_plan_task_with_subgoals(mock_factory, planner):
     assert tasks[2].dependencies == [tasks[0].task_id, tasks[1].task_id]
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_plan_task_without_subgoals(mock_factory, planner):
     """Test task planning without sub-goals (LLM decomposition)."""
     mock_provider = Mock()
@@ -105,7 +105,7 @@ def test_plan_task_without_subgoals(mock_factory, planner):
     assert len(tasks) >= 1
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_execute_task_success(mock_factory, planner):
     """Test successful task execution."""
     mock_provider = Mock()
@@ -120,7 +120,7 @@ def test_execute_task_success(mock_factory, planner):
     assert task.result is not None
 
 
-@patch('src.iceburg.agents.secretary_planner.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_execute_plan_sequential(mock_factory, planner):
     """Test executing a plan with multiple tasks."""
     mock_provider = Mock()

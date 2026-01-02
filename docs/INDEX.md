@@ -57,9 +57,19 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 
 ---
 
+## 🤖 Training & Fine-Tuning
+
+### Internal Framework
+- **[Fine-Tuning Complete Documentation](training/FINE_TUNING_COMPLETE_DOCUMENTATION.md)** - Full audit of fine-tuning work, accomplishments, and roadmap
+- **[ICEBURG Internal Fine-Tuning](training/ICEBURG_INTERNAL_FINETUNING.md)** - Custom fine-tuning framework for ICEBURG-specialized LLMs
+- **[ICEBURG Lab Roadmap](training/ICEBURG_LAB_ROADMAP.md)** - World-class AI lab practices and future phases
+- **[Dolphin-Mistral Fine-Tuning Roadmap](planning/DOLPHIN_MISTRAL_FINETUNING_ROADMAP.md)** - Step-by-step guide for fine-tuning with ICEBURG data
+
+---
+
 ## 📋 Planning & Roadmap
 
-- **[Roadmap to 10/10](planning/ROADMAP_TO_10_OUT_OF_10.md)** - Future development roadmap
+- **[Roadmap](ROADMAP.md)** - General development roadmap
 - **[Secretary AGI Enhancement Plan](planning/SECRETARY_AGI_ENHANCEMENT_PLAN.md)** - Secretary improvement plans
 - **[Secretary Immediate Tuning Plan](planning/SECRETARY_IMMEDIATE_TUNING_PLAN.md)** - Short-term improvements
 - **[Constitution Compliance Review](planning/CONSTITUTION_COMPLIANCE_REVIEW.md)** - Code quality review

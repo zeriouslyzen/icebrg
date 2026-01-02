@@ -25,12 +25,14 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        app: fileURLToPath(new URL('./app.html', import.meta.url)),
         encyclopedia: fileURLToPath(new URL('./encyclopedia.html', import.meta.url)),
         wiki: fileURLToPath(new URL('./wiki.html', import.meta.url)),
         features: fileURLToPath(new URL('./features.html', import.meta.url)),
         research: fileURLToPath(new URL('./research.html', import.meta.url)),
         study: fileURLToPath(new URL('./study.html', import.meta.url)),
-        protocols: fileURLToPath(new URL('./protocols.html', import.meta.url))
+        protocols: fileURLToPath(new URL('./protocols.html', import.meta.url)),
+        admin: fileURLToPath(new URL('./admin.html', import.meta.url))
       }
     }
   },

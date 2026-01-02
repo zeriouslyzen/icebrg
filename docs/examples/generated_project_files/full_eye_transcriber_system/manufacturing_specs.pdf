@@ -1,0 +1,7 @@
+Manufacturing Specifications for Eye/Retina Transcriber Glasses
+
+- Dimensions: Glasses frame 150mm x 50mm
+- Materials: Plastic/metal frame, glass lenses
+- Production Process: 3D printing for prototype, injection molding for mass production
+- Human Trial Protocols: Test with 50 participants, monitor health metrics, comply with FDA
+- Bio/Physics Lab Integration: Use LLaMACCP for speech + retina data processing; integrate with lab equipment for analysis

@@ -192,3 +192,4 @@ def get_request_router(use_llm_fallback: bool = False) -> RequestRouter:
         _router = RequestRouter(use_llm_fallback=use_llm_fallback)
     return _router
 
+

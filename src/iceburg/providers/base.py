@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, Protocol
+from typing import Any, Protocol, Optional, Dict, List
 
 
 class LLMProvider(Protocol):
@@ -7,10 +7,10 @@ class LLMProvider(Protocol):
         self,
         model: str,
         prompt: str,
-        system: str | None = None,
+        system: Optional[str] = None,
         temperature: float = 0.2,
-        options: dict[str, Any] | None = None,
-        images: list[str] | None = None,
+        options: Optional[Dict[str, Any]] = None,
+        images: Optional[List[str]] = None,
     ) -> str:
         ...
 

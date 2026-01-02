@@ -126,7 +126,7 @@ def test_get_persona_nonexistent(knowledge_base):
     assert persona is None
 
 
-@patch('src.iceburg.agents.secretary_knowledge.provider_factory')
+@patch('src.iceburg.providers.factory.provider_factory')
 def test_extract_knowledge(mock_factory, knowledge_base):
     """Test knowledge extraction."""
     mock_provider = Mock()

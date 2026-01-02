@@ -1,20 +1,21 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Optional, Union
 import os
 
 from .base import LLMProvider
 
 
-_PROVIDER_SINGLETON: LLMProvider | None = None
+
+_PROVIDER_SINGLETON: Optional[LLMProvider] = None
+
 
 
 def provider_factory(cfg: Any) -> LLMProvider:
     global _PROVIDER_SINGLETON
     if _PROVIDER_SINGLETON is not None:
         return _PROVIDER_SINGLETON
-    # Respect config, but allow env to prefer high-capacity backends in server contexts
-    # Default to Google/Gemini (no fallback)
-    provider = (getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER") or "google").lower()
+    # Default to Ollama (no fallback)
+    provider = (getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER") or "ollama").lower()
     prefer_vllm = os.getenv("ICEBURG_PREFER_VLLM", "0") == "1"
     host = getattr(cfg, "provider_host", None) or os.getenv("HOST", "localhost")
     port = getattr(cfg, "provider_port", None) or os.getenv("OLLAMA_PORT", "11434")
@@ -40,8 +41,8 @@ def provider_factory(cfg: Any) -> LLMProvider:
         _PROVIDER_SINGLETON = OllamaProvider(base_url=url, timeout_s=timeout_s)
         return _PROVIDER_SINGLETON
 
-    # Try Google/Gemini first (default)
-    if provider == "google" or provider == "gemini" or provider == "auto" or not provider:
+    # Try Google/Gemini specifically
+    if provider == "google" or provider == "gemini" or provider == "auto":
         try:
             from .google_provider import GoogleProvider
             _PROVIDER_SINGLETON = GoogleProvider(timeout_s=timeout_s)

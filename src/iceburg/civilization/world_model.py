@@ -15,13 +15,14 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-class WorldState(Enum):
+class SimulationState(Enum):
     """World simulation states."""
     INITIALIZING = "initializing"
     RUNNING = "running"
     PAUSED = "paused"
     STOPPED = "stopped"
     ERROR = "error"
+
 
 
 @dataclass
@@ -89,7 +90,7 @@ class WorldState:
         self.max_events = max_events
         
         # World state
-        self.state = WorldState.INITIALIZING
+        self.state = SimulationState.INITIALIZING
         self.current_time = time.time()
         self.simulation_step = 0
         
@@ -128,7 +129,7 @@ class WorldState:
         """Initialize the world with initial resources and state."""
         logger.info("Initializing AGI civilization world...")
         
-        self.state = WorldState.INITIALIZING
+        self.state = SimulationState.INITIALIZING
         
         # Add initial resources
         if initial_resources:
@@ -143,7 +144,7 @@ class WorldState:
         # Set initial environmental factors
         self._update_environmental_factors()
         
-        self.state = WorldState.RUNNING
+        self.state = SimulationState.RUNNING
         logger.info(f"World initialized with {len(self.resources)} resources")
     
     def add_resource(self, 
@@ -364,6 +365,9 @@ class WorldState:
     
     def _update_resources(self, delta_time: float):
         """Update all resources in the world."""
+        # Collect resources to remove (can't modify dict during iteration)
+        resources_to_remove = []
+        
         for resource in self.resources.values():
             # Regeneration
             if resource.regeneration_rate > 0:
@@ -376,9 +380,13 @@ class WorldState:
             if resource.decay_rate > 0:
                 resource.amount = max(0.0, resource.amount - resource.decay_rate * delta_time)
             
-            # Remove depleted resources
+            # Mark depleted resources for removal
             if resource.amount <= 0:
-                self.remove_resource(resource.name)
+                resources_to_remove.append(resource.name)
+        
+        # Remove depleted resources after iteration
+        for resource_name in resources_to_remove:
+            self.remove_resource(resource_name)
     
     def _update_environmental_factors(self):
         """Update environmental factors based on world state."""
@@ -679,50 +687,23 @@ class AGICivilization:
         }
 
 
-# Placeholder classes for social systems (to be implemented)
-class SocialNormSystem:
-    """Social norm formation and enforcement system."""
-    
-    def __init__(self):
-        self.norms = {}
-        self.enforcement_history = []
-    
-    def initialize(self):
-        """Initialize the social norm system."""
-        pass
-    
-    def update(self, actions: List[Dict[str, Any]]):
-        """Update norms based on actions."""
-        pass
-    
-    def get_norms(self) -> Dict[str, Any]:
-        """Get current social norms."""
-        return self.norms.copy()
+# Import real implementations from separate modules
+# These replace the placeholder classes
+from iceburg.civilization.social_norms import SocialNormSystem
+from iceburg.civilization.resource_economy import ResourceEconomy
+from iceburg.civilization.emergence_detector import EmergenceDetector
 
 
-class ResourceEconomy:
-    """Resource trading and economy system."""
-    
-    def __init__(self):
-        self.trades = []
-        self.market_prices = {}
-    
-    def initialize(self):
-        """Initialize the resource economy."""
-        pass
-    
-    def update(self, actions: List[Dict[str, Any]]):
-        """Update economy based on actions."""
-        pass
+# Re-export for backwards compatibility
+__all__ = [
+    'SimulationState',
+    'Resource',
+    'WorldEvent',
+    'AgentPerception',
+    'WorldState',
+    'AGICivilization',
+    'SocialNormSystem',
+    'ResourceEconomy',
+    'EmergenceDetector'
+]
 
-
-class EmergenceDetector:
-    """Detects emergent behaviors and patterns."""
-    
-    def __init__(self):
-        self.patterns = []
-        self.emergence_threshold = 0.8
-    
-    def check(self, world_state: WorldState) -> List[Dict[str, Any]]:
-        """Check for emergence in the world state."""
-        return []

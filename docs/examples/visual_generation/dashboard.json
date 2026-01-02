@@ -1,0 +1,389 @@
+{
+  "name": "analytics_dashboard",
+  "version": "1.0",
+  "author": "ICEBURG",
+  "created_at": "2025-10-14T00:00:00Z",
+  "components": [
+    {
+      "component_type": "header",
+      "id": "dashboard_header",
+      "properties": {
+        "title": "Analytics Dashboard"
+      },
+      "children": [
+        {
+          "component_type": "text",
+          "id": "header_title",
+          "properties": {
+            "text": "Analytics Dashboard"
+          },
+          "accessibility": {
+            "role": "heading",
+            "aria-level": "1"
+          }
+        },
+        {
+          "component_type": "navigation",
+          "id": "main_nav",
+          "children": [
+            {
+              "component_type": "link",
+              "id": "nav_overview",
+              "properties": {
+                "text": "Overview",
+                "href": "#overview"
+              },
+              "accessibility": {
+                "aria-label": "Go to overview section"
+              }
+            },
+            {
+              "component_type": "link",
+              "id": "nav_reports",
+              "properties": {
+                "text": "Reports",
+                "href": "#reports"
+              },
+              "accessibility": {
+                "aria-label": "Go to reports section"
+              }
+            },
+            {
+              "component_type": "link",
+              "id": "nav_settings",
+              "properties": {
+                "text": "Settings",
+                "href": "#settings"
+              },
+              "accessibility": {
+                "aria-label": "Go to settings section"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component_type": "container",
+      "id": "dashboard_content",
+      "properties": {
+        "layout": "flex"
+      },
+      "children": [
+        {
+          "component_type": "container",
+          "id": "sidebar",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "card",
+              "id": "user_profile",
+              "children": [
+                {
+                  "component_type": "image",
+                  "id": "user_avatar",
+                  "properties": {
+                    "src": "/images/avatar.jpg",
+                    "alt": "User avatar"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "user_name",
+                  "properties": {
+                    "text": "John Doe"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "user_role",
+                  "properties": {
+                    "text": "Administrator"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "list",
+              "id": "quick_actions",
+              "children": [
+                {
+                  "component_type": "button",
+                  "id": "action_export",
+                  "properties": {
+                    "text": "Export Data"
+                  },
+                  "interactions": [
+                    {
+                      "event_type": "click",
+                      "handler_description": "Export dashboard data"
+                    }
+                  ],
+                  "accessibility": {
+                    "aria-label": "Export dashboard data"
+                  }
+                },
+                {
+                  "component_type": "button",
+                  "id": "action_refresh",
+                  "properties": {
+                    "text": "Refresh"
+                  },
+                  "interactions": [
+                    {
+                      "event_type": "click",
+                      "handler_description": "Refresh dashboard data"
+                    }
+                  ],
+                  "accessibility": {
+                    "aria-label": "Refresh dashboard data"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component_type": "container",
+          "id": "main_content",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "container",
+              "id": "metrics_grid",
+              "properties": {
+                "layout": "grid"
+              },
+              "children": [
+                {
+                  "component_type": "card",
+                  "id": "metric_users",
+                  "children": [
+                    {
+                      "component_type": "text",
+                      "id": "metric_users_title",
+                      "properties": {
+                        "text": "Total Users"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_users_value",
+                      "properties": {
+                        "text": "12,345"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_users_change",
+                      "properties": {
+                        "text": "+5.2%"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component_type": "card",
+                  "id": "metric_revenue",
+                  "children": [
+                    {
+                      "component_type": "text",
+                      "id": "metric_revenue_title",
+                      "properties": {
+                        "text": "Revenue"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_revenue_value",
+                      "properties": {
+                        "text": "$45,678"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_revenue_change",
+                      "properties": {
+                        "text": "+12.8%"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component_type": "card",
+                  "id": "metric_orders",
+                  "children": [
+                    {
+                      "component_type": "text",
+                      "id": "metric_orders_title",
+                      "properties": {
+                        "text": "Orders"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_orders_value",
+                      "properties": {
+                        "text": "2,456"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_orders_change",
+                      "properties": {
+                        "text": "+8.1%"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component_type": "card",
+                  "id": "metric_conversion",
+                  "children": [
+                    {
+                      "component_type": "text",
+                      "id": "metric_conversion_title",
+                      "properties": {
+                        "text": "Conversion Rate"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_conversion_value",
+                      "properties": {
+                        "text": "3.2%"
+                      }
+                    },
+                    {
+                      "component_type": "text",
+                      "id": "metric_conversion_change",
+                      "properties": {
+                        "text": "-0.5%"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component_type": "container",
+              "id": "charts_section",
+              "properties": {
+                "layout": "flex"
+              },
+              "children": [
+                {
+                  "component_type": "card",
+                  "id": "chart_container",
+                  "children": [
+                    {
+                      "component_type": "text",
+                      "id": "chart_title",
+                      "properties": {
+                        "text": "Sales Trend"
+                      }
+                    },
+                    {
+                      "component_type": "image",
+                      "id": "chart_placeholder",
+                      "properties": {
+                        "src": "/images/chart-placeholder.png",
+                        "alt": "Sales trend chart"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component_type": "footer",
+      "id": "dashboard_footer",
+      "children": [
+        {
+          "component_type": "text",
+          "id": "footer_text",
+          "properties": {
+            "text": "© 2025 Analytics Dashboard. All rights reserved."
+          }
+        }
+      ]
+    }
+  ],
+  "layout": {
+    "layout_type": "flex",
+    "direction": "column",
+    "gap": "0",
+    "padding": "0",
+    "align_items": "stretch",
+    "justify_content": "flex-start"
+  },
+  "theme": {
+    "name": "analytics_dashboard",
+    "primary_color": "#2563EB",
+    "secondary_color": "#64748B",
+    "background_color": "#F8FAFC",
+    "text_color": "#1E293B",
+    "font_family": "Inter, system-ui, sans-serif",
+    "font_size_base": "16px",
+    "border_radius": "8px",
+    "shadow_base": "0 1px 3px rgba(0,0,0,0.1)"
+  },
+  "interactions": [
+    {
+      "event_type": "click",
+      "handler_description": "Handle navigation clicks",
+      "target_selector": "a"
+    },
+    {
+      "event_type": "click",
+      "handler_description": "Handle button actions",
+      "target_selector": "button"
+    }
+  ],
+  "accessibility_requirements": {
+    "wcag_level": "AA",
+    "min_contrast_ratio": 4.5,
+    "keyboard_navigable": true,
+    "screen_reader_compatible": true,
+    "aria_labels_required": true,
+    "focus_indicators": true,
+    "alt_text_required": true,
+    "semantic_html": true
+  },
+  "performance_budget": {
+    "max_load_time_ms": 200,
+    "max_bundle_size_kb": 100,
+    "max_dom_nodes": 200,
+    "max_reflows": 5,
+    "max_repaints": 8,
+    "cumulative_layout_shift": 0.1,
+    "first_contentful_paint_ms": 150,
+    "largest_contentful_paint_ms": 300
+  },
+  "security_contracts": [
+    "no_external_scripts",
+    "no_inline_eval",
+    "sanitized_content",
+    "csp_compliant",
+    "no_dangerous_urls",
+    "wcag_aa_compliant",
+    "keyboard_navigable",
+    "screen_reader_compatible",
+    "has_aria_labels",
+    "fast_load",
+    "small_bundle",
+    "no_layout_shift",
+    "no_tracking",
+    "no_third_party_embeds",
+    "local_storage_only",
+    "no_pii_exposure"
+  ]
+}

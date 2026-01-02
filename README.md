@@ -13,7 +13,7 @@ ICEBURG currently provides:
 - **Web Frontend**: Mobile-first UI with real-time SSE streaming (http://localhost:3000)
 - **Conversation Memory**: Context-aware follow-up questions
 - **Conversation Memory**: Context-aware follow-up questions
-- **Knowledge Base**: 233-entry Celestial Encyclopedia on bioelectricity & consciousness
+- **Knowledge Base**: 302-entry Celestial Encyclopedia on bioelectricity & consciousness
 - **Metacognition**: Self-correction and contradiction detection (v3.4)
 - **Quarantine System**: Safe storage for novel/contradictory ideas
 

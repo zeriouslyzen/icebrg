@@ -143,6 +143,19 @@ streaming_handler = StreamingHandler()
 telemetry = AdvancedTelemetry()
 reflex_agent = ReflexAgent()
 
+# Initialize Semantic Cache (Edge Browsing Optimization)
+from ..caching.semantic_cache import SemanticCache
+from ..llm import embed_texts # For generating embeddings
+semantic_cache = SemanticCache(similarity_threshold=0.85)
+
+# Warm cache in background
+try:
+    transcript_path = os.path.join(os.getcwd(), "fast_mode_transcript.md")
+    if os.path.exists(transcript_path):
+        semantic_cache.warm_from_transcript(transcript_path)
+except Exception as e:
+    logger.warning(f"Failed to warm semantic cache: {e}")
+
 # Initialize local persistence (similar to browser storage but for long-term)
 local_persistence = LocalPersistence()
 
@@ -266,6 +279,23 @@ else:
 
 # Include additional routes
 app.include_router(router)
+
+# Admin routes
+try:
+    from .admin_routes import router as admin_router
+    app.include_router(admin_router)
+    logger.info("Admin API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register Admin API routes: {e}")
+
+# Civilization routes (AGI Civilization simulation)
+try:
+    from .civilization_routes import router as civilization_router
+    app.include_router(civilization_router)
+    logger.info("Civilization API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register Civilization API routes: {e}")
+
 
 # V10: Finance & Prediction Dashboard
 try:
@@ -1100,6 +1130,28 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 # Pass routing_mode to agent (fixes double routing)
                                 routing_mode_sse = routing_decision.mode if routing_decision else None
                                 
+                                # Check Semantic Cache (optimization)
+                                cached_response = None
+                                try:
+                                    # Generate embedding for query
+                                    query_embeddings = embed_texts("nomic-embed-text", [enhanced_query])
+                                    if query_embeddings:
+                                        cached_response = semantic_cache.get(enhanced_query, embedding=query_embeddings[0])
+                                        if cached_response:
+                                            logger.info(f"⚡️ Cache Hit for '{enhanced_query}'")
+                                except Exception as e:
+                                    logger.warning(f"Cache check failed: {e}")
+
+                                if cached_response:
+                                    # Stream cached response instantly
+                                    yield f"data: {json.dumps({'type': 'thinking_stream', 'content': '⚡️ Instantly retrieved from knowledge cache', 'timestamp': time.time()})}\n\n"
+                                    # Stream words fast
+                                    for word in cached_response.split():
+                                        yield f"data: {json.dumps({'type': 'chunk', 'content': word + ' ', 'timestamp': time.time()})}\n\n"
+                                        await asyncio.sleep(0.005) 
+                                    yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
+                                    return
+
                                 # Wrap with global middleware if available
                                 if global_middleware:
                                     secretary_response = await global_middleware.execute_agent(
@@ -1115,8 +1167,9 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                         mode=mode  # Pass original mode for chat detection
                                     )
                                 else:
-                                    # Directly await since run() is now async
-                                    secretary_response = await secretary_run(
+                                    # Use asyncio.to_thread for synchronous secretary_run
+                                    secretary_response = await asyncio.to_thread(
+                                        secretary_run,
                                         secretary_cfg,
                                         enhanced_query,
                                         verbose=False,
@@ -1146,6 +1199,24 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                     secretary_response = re.sub(r"All tasks have been executed.*?(?=\n|\Z)", "", secretary_response)
                                     # Clean up multiple newlines
                                     secretary_response = re.sub(r"\n{3,}", "\n\n", secretary_response).strip()
+
+                                    # Log metrics to telemetry (moved here to catch empty responses too)
+                                    try:
+                                        from ..telemetry.advanced_telemetry import PromptMetrics
+                                        metric = PromptMetrics(
+                                            prompt_id=prompt_id,
+                                            prompt_text=query,
+                                            response_time=time.time() - prompt_start_time,
+                                            token_count=len(secretary_response) // 4 if secretary_response else 0,
+                                            model_used=primary_model,
+                                            success=bool(secretary_response),
+                                            quality_score=1.0 if secretary_response else 0.0
+                                        )
+                                        telemetry.track_prompt(metric)
+                                        logger.info(f"📊 Telemetry logged: {metric.response_time:.2f}s, {metric.token_count} tokens")
+                                    except Exception as tel_err:
+                                        logger.warning(f"⚠️ Failed to log telemetry: {tel_err}")
+
                                     logger.info(f"✅ Sanitized response length={len(secretary_response)}, preview='{secretary_response[:100]}...'")
                                 
                                 # Stream the response
@@ -1223,24 +1294,83 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                         full_prompt = query
                         logger.info(f"📝 Conversation history DISABLED - answering query independently")
                         
-                        # Send thinking messages even in non-Surveyor path
-                        thinking_msg = "I'm processing your query..."
+                        # Send thinking messages
+                        thinking_msg = "I'm orchestrating a parallel swarm debate..."
                         yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                        await asyncio.sleep(0.05)
-                        thinking_msg = "I'm generating a response..."
-                        yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
-                        await asyncio.sleep(0.05)
                         
-                        # Call LLM
-                        agent_response = await asyncio.to_thread(
-                            provider.chat_complete,
-                            model=primary_model,
-                            prompt=full_prompt,
-                            system=system_prompt,
-                            temperature=temperature,
-                            options={"max_tokens": max_tokens} if max_tokens else None
-                        )
+                        # --- PHASE 3: PARALLEL SWARM EXECUTION ---
+                        if mode == "research" or agent == "surveyor":
+                            from ..core.swarm_orchestrator import swarm, AgentTask
+                            from ..agents.surveyor import SURVEYOR_SYSTEM
+                            from ..agents.dissident import DISSIDENT_SYSTEM
+                            
+                            # Define parallel tasks
+                            tasks = [
+                                AgentTask(
+                                    name="surveyor",
+                                    func=provider.chat_complete,
+                                    args=(),
+                                    kwargs={
+                                        "model": primary_model,
+                                        "prompt": query,
+                                        "system": SURVEYOR_SYSTEM,
+                                        "temperature": temperature
+                                    }
+                                ),
+                                AgentTask(
+                                    name="dissident",
+                                    func=provider.chat_complete,
+                                    args=(),
+                                    kwargs={
+                                        "model": primary_model,
+                                        "prompt": f"Critique this query and provide counter-arguments: {query}",
+                                        "system": DISSIDENT_SYSTEM,
+                                        "temperature": temperature
+                                    }
+                                )
+                            ]
+                            
+                            # Execute Swarm
+                            results = await swarm.run_swarm("research_debate", tasks)
+                            
+                            # Synthesize results (Judge-in-the-Loop)
+                            surveyor_out = results["surveyor"]["output"] if results["surveyor"]["success"] else "Surveyor failed."
+                            dissident_out = results["dissident"]["output"] if results["dissident"]["success"] else "Dissident failed."
+                            
+                            # Judge Synthesis
+                            judge_prompt = f"""
+                            Review the following debate:
+                            
+                            [RESEARCHER]: {surveyor_out}
+                            
+                            [CRITIC]: {dissident_out}
+                            
+                            Synthesize a final, balanced answer that incorporates valid critiques.
+                            """
+                            
+                            agent_response = await asyncio.to_thread(
+                                provider.chat_complete,
+                                model=primary_model,
+                                prompt=judge_prompt,
+                                system="You are an impartial Judge synthesizing a research debate.",
+                                temperature=temperature
+                            )
+                            
+                        else:
+                            # Standard single agent fallback for other modes
+                            thinking_msg = "I'm processing your query..."
+                            yield f"data: {json.dumps({'type': 'thinking_stream', 'content': thinking_msg, 'timestamp': time.time()})}\n\n"
+                            
+                            agent_response = await asyncio.to_thread(
+                                provider.chat_complete,
+                                model=primary_model,
+                                prompt=full_prompt,
+                                system=system_prompt,
+                                temperature=temperature,
+                                options={"max_tokens": max_tokens} if max_tokens else None
+                            )
                         
+                        # Check for empty response
                         if not agent_response or not agent_response.strip():
                             agent_response = "I received your query but couldn't generate a response. Please try rephrasing your question."
                         
@@ -1251,8 +1381,8 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 timestamp=datetime.now().isoformat(),
                                 user_message=query,
                                 assistant_message=agent_response,
-                                agent_used="single_llm",
-                                mode="chat",
+                                agent_used="swarm_debate" if (mode == "research" or agent == "surveyor") else "single_llm",
+                                mode=mode,
                                 metadata={}
                             )
                             local_persistence.save_conversation(conversation_entry)
@@ -1608,7 +1738,9 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                 
                 # Call Secretary agent (with executor and date injection)
                 # Now async - directly await
-                secretary_response = await secretary_run(
+                # Now async - directly await (via to_thread since run is sync)
+                secretary_response = await asyncio.to_thread(
+                    secretary_run,
                     cfg=secretary_cfg,
                     query=query,
                     verbose=False,
@@ -2240,6 +2372,31 @@ async def websocket_endpoint(websocket: WebSocket):
             query = sanitize_input(query)
             mode = sanitize_input(str(mode), max_length=50) if mode else "chat"
             agent = sanitize_input(str(agent), max_length=50) if agent else "auto"
+
+            # FAST PATH: Instant response for simple queries
+            simple_queries = ["hi", "hello", "hey", "thanks", "thank you", "bye", "goodbye"]
+            if query.lower().strip() in simple_queries:
+                logger.info(f"🚀 FAST PATH: Instant response for '{query}'")
+                responses = {
+                    "hi": "Hello! How can I help you today?",
+                    "hello": "Hello! How can I help you today?",
+                    "hey": "Hey there! What's on your mind?",
+                    "thanks": "You're very welcome!",
+                    "thank you": "You're very welcome!",
+                    "bye": "Goodbye! Have a great day!",
+                    "goodbye": "Goodbye! Have a great day!"
+                }
+                response_text = responses.get(query.lower().strip(), "Hello! How can I help you today?")
+                
+                # Stream the response instantly
+                for chunk in response_text:
+                    await safe_send_json(websocket, {"type": "chunk", "content": chunk})
+                
+                await safe_send_json(websocket, {
+                    "type": "done",
+                    "metadata": {"mode": "fast_path", "processing_time": 0.001}
+                })
+                continue
             
             # Track prompt start time and ID for telemetry
             prompt_start_time = time.time()

@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import time
 
 from .orchestrator import TradingOrchestrator
@@ -16,7 +16,9 @@ from .adapters.alpaca_adapter import AlpacaAdapter
 from .adapters.binance_adapter import BinanceUSAdapter
 
 
-def load_config(path: str | None) -> Dict[str, Any]:
+
+def load_config(path: Optional[str]) -> Dict[str, Any]:
+
     default_path = Path("config/trading_config.json")
     cfg_path = Path(path) if path else default_path
     if cfg_path.exists():

@@ -176,9 +176,9 @@ function renderMath(content) {
 
 // Initialize WebSocket connection
 let reconnectAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 10; // Increased attempts before fallback
+const MAX_RECONNECT_ATTEMPTS = 10;
 let reconnectTimeout = null;
-let useFallback = true; // FORCE HTTP/SSE mode for now (WebSocket has connection issues)
+let useFallback = false; // Enabled WebSocket by default
 let fallbackEventSource = null; // SSE connection for fallback
 let isConnecting = false; // Track if a connection attempt is in progress
 let connectionAttemptTimeout = null; // Track connection attempt timeout

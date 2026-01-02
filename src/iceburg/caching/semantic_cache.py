@@ -102,21 +102,102 @@ class SemanticCache:
         
         return dot_product / (magnitude1 * magnitude2)
     
-    def cleanup_expired(self) -> int:
-        """Clean up expired entries"""
-        now = time.time()
-        expired_keys = [
-            key for key, entry in self.cache.items()
-            if now > entry["expires_at"]
-        ]
-        
-        for key in expired_keys:
-            del self.cache[key]
-            if key in self.embeddings:
-                del self.embeddings[key]
-        
-        return len(expired_keys)
     
+    def save(self, path: str) -> bool:
+        """Save cache to disk"""
+        try:
+            data = {
+                "cache": self.cache,
+                "embeddings": self.embeddings,
+                "stats": self.stats
+            }
+            with open(path, 'w') as f:
+                json.dump(data, f)
+            return True
+        except Exception as e:
+            print(f"Failed to save cache: {e}")
+            return False
+            
+    def load(self, path: str) -> bool:
+        """Load cache from disk"""
+        try:
+            import os
+            if not os.path.exists(path):
+                return False
+                
+            with open(path, 'r') as f:
+                data = json.load(f)
+                
+            self.cache = data.get("cache", {})
+            self.embeddings = data.get("embeddings", {})
+            self.stats = data.get("stats", {
+                "hits": 0,
+                "misses": 0,
+                "sets": 0
+            })
+            return True
+        except Exception as e:
+            print(f"Failed to load cache: {e}")
+            return False
+
+    def warm_from_transcript(self, transcript_path: str):
+        """Warm cache from transcript markdown"""
+        try:
+            import os
+            import re
+            from ..llm import embed_texts
+            
+            if not os.path.exists(transcript_path):
+                print(f"Transcript not found: {transcript_path}")
+                return
+                
+            print(f"Warming cache from {transcript_path}...")
+            
+            with open(transcript_path, 'r') as f:
+                content = f.read()
+                
+            # Split by queries
+            # Format: ## Query: <query>\n...### Response:\n<response>\n\n---
+            sections = content.split("## Query: ")
+            count = 0
+            
+            for section in sections[1:]: # Skip header
+                try:
+                    # Extract query
+                    query_end = section.find("\n")
+                    if query_end == -1: continue
+                    query = section[:query_end].strip()
+                    
+                    # Extract response
+                    resp_start = section.find("### Response:\n")
+                    if resp_start == -1: continue
+                    resp_start += len("### Response:\n")
+                    
+                    resp_end = section.find("\n\n---")
+                    if resp_end == -1: 
+                        resp_end = len(section)
+                        
+                    response = section[resp_start:resp_end].strip()
+                    
+                    if query and response:
+                        # Skip if already cached
+                        if self.get(query):
+                            continue
+                            
+                        # Generate embedding
+                        embeddings = embed_texts("nomic-embed-text", [query])
+                        if embeddings:
+                            self.set(query, response, embedding=embeddings[0], ttl=86400*7) # 1 week TTL
+                            count += 1
+                except Exception as e:
+                    print(f"Error parsing section: {e}")
+                    continue
+            
+            print(f"✅ Warmed cache with {count} entries")
+            
+        except Exception as e:
+            print(f"Failed to warm cache: {e}")
+
     def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics"""
         total_requests = self.stats["hits"] + self.stats["misses"]

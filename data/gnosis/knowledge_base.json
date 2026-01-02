@@ -1,0 +1,297 @@
+{
+  "knowledge_items": {
+    "knowledge_0": {
+      "knowledge_id": "knowledge_0",
+      "content": "Term: tell | Etymology: tell (English: Meaning of tell)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_tell"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.672476"
+    },
+    "knowledge_1": {
+      "knowledge_id": "knowledge_1",
+      "content": "Term: more | Etymology: more (English: Meaning of more)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_more"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.688204"
+    },
+    "knowledge_2": {
+      "knowledge_id": "knowledge_2",
+      "content": "Term: about | Etymology: about (English: Meaning of about)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_about"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.695188"
+    },
+    "knowledge_3": {
+      "knowledge_id": "knowledge_3",
+      "content": "Term: what | Etymology: what (English: Meaning of what)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_what"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.340941"
+    },
+    "knowledge_4": {
+      "knowledge_id": "knowledge_4",
+      "content": "Term: meaning | Etymology: meaning (English: Meaning of meaning)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_meaning"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.348089"
+    },
+    "knowledge_5": {
+      "knowledge_id": "knowledge_5",
+      "content": "Term: life? | Etymology: life? (English: Meaning of life?)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_life?"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.353150"
+    },
+    "knowledge_6": {
+      "knowledge_id": "knowledge_6",
+      "content": "Term: hello, | Etymology: hello, (English: Meaning of hello,)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_hello,"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T11:04:47.583659"
+    },
+    "knowledge_7": {
+      "knowledge_id": "knowledge_7",
+      "content": "Term: there? | Etymology: there? (English: Meaning of there?)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_there?"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2025-12-30T11:04:47.595538"
+    }
+  },
+  "insights": [
+    {
+      "insight_id": "insight_0_1767115592.67246",
+      "source_conversation_id": "total_knowledge_total_tell",
+      "insight_type": "fact",
+      "content": "Term: tell | Etymology: tell (English: Meaning of tell)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is tell?",
+        "Term: tell | Etymology: tell (English: Meaning of tell)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.672476"
+    },
+    {
+      "insight_id": "insight_0_1767115592.6882",
+      "source_conversation_id": "total_knowledge_total_more",
+      "insight_type": "fact",
+      "content": "Term: more | Etymology: more (English: Meaning of more)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is more?",
+        "Term: more | Etymology: more (English: Meaning of more)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.688204"
+    },
+    {
+      "insight_id": "insight_0_1767115592.695185",
+      "source_conversation_id": "total_knowledge_total_about",
+      "insight_type": "fact",
+      "content": "Term: about | Etymology: about (English: Meaning of about)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is about?",
+        "Term: about | Etymology: about (English: Meaning of about)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T09:26:32.695188"
+    },
+    {
+      "insight_id": "insight_0_1767120981.340937",
+      "source_conversation_id": "total_knowledge_total_what",
+      "insight_type": "fact",
+      "content": "Term: what | Etymology: what (English: Meaning of what)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is what?",
+        "Term: what | Etymology: what (English: Meaning of what)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.340941"
+    },
+    {
+      "insight_id": "insight_0_1767120981.348086",
+      "source_conversation_id": "total_knowledge_total_meaning",
+      "insight_type": "fact",
+      "content": "Term: meaning | Etymology: meaning (English: Meaning of meaning)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is meaning?",
+        "Term: meaning | Etymology: meaning (English: Meaning of meaning)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.348089"
+    },
+    {
+      "insight_id": "insight_0_1767120981.353146",
+      "source_conversation_id": "total_knowledge_total_life?",
+      "insight_type": "fact",
+      "content": "Term: life? | Etymology: life? (English: Meaning of life?)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is life??",
+        "Term: life? | Etymology: life? (English: Meaning of life?)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T10:56:21.353150"
+    },
+    {
+      "insight_id": "insight_0_1767121487.583656",
+      "source_conversation_id": "total_knowledge_total_hello,",
+      "insight_type": "fact",
+      "content": "Term: hello, | Etymology: hello, (English: Meaning of hello,)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is hello,?",
+        "Term: hello, | Etymology: hello, (English: Meaning of hello,)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T11:04:47.583659"
+    },
+    {
+      "insight_id": "insight_0_1767121487.595535",
+      "source_conversation_id": "total_knowledge_total_there?",
+      "insight_type": "fact",
+      "content": "Term: there? | Etymology: there? (English: Meaning of there?)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is there??",
+        "Term: there? | Etymology: there? (English: Meaning of there?)"
+      ],
+      "metadata": {},
+      "timestamp": "2025-12-30T11:04:47.595538"
+    }
+  ],
+  "total_conversations": 8,
+  "total_insights": 8,
+  "last_updated": "2025-12-30T11:04:47.599119"
+}

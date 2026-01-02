@@ -23,6 +23,9 @@ fi
 # Navigate to project root
 cd "$(dirname "$0")/.."
 
+# Create logs directory if it doesn't exist
+mkdir -p logs
+
 # Check if Ollama is running
 if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
     echo "⚠️  Ollama is not running. Starting Ollama..."
@@ -32,7 +35,12 @@ fi
 
 # Start API server
 echo "🌐 Starting API server on http://localhost:8000..."
-python3 -m uvicorn src.iceburg.api.server:app --host 0.0.0.0 --port 8000 --reload > logs/api_server.log 2>&1 &
+if [ -d "venv" ]; then
+    echo "🐍 Using virtual environment (venv)..."
+    ./venv/bin/python3 -m uvicorn src.iceburg.api.server:app --host 0.0.0.0 --port 8000 --reload > logs/api_server.log 2>&1 &
+else
+    python3 -m uvicorn src.iceburg.api.server:app --host 0.0.0.0 --port 8000 --reload > logs/api_server.log 2>&1 &
+fi
 API_PID=$!
 
 # Wait for API server to start

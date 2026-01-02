@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "model_name": "iceburg-surveyor-20251231_162751",
+  "model_path": "models/iceburg/iceburg-surveyor-20251231_162751",
+  "training_time_seconds": 15.634307861328125,
+  "total_samples": 3,
+  "filtered_samples": 3,
+  "final_loss": 3.286240259806315,
+  "evaluation_metrics": {
+    "samples_evaluated": 3,
+    "generation_success_rate": 1.0
+  },
+  "export_paths": {
+    "huggingface": "models/iceburg/iceburg-surveyor-20251231_162751/huggingface",
+    "ollama": "models/iceburg/iceburg-surveyor-20251231_162751/Modelfile"
+  },
+  "error_message": null
+}

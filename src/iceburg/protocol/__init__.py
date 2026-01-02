@@ -22,7 +22,7 @@ from .models import Query, Mode, AgentTask, AgentResult, EvidenceBundle, Protoco
 
 # Minimal modular orchestrator to run full protocol without importing legacy at import-time
 import asyncio
-from typing import Any, List
+from typing import Any, List, Optional, Dict
 
 
 async def run_protocol_modular(query: Query, cfg: ProtocolConfig) -> ProtocolReport:
@@ -69,7 +69,7 @@ async def run_protocol_modular(query: Query, cfg: ProtocolConfig) -> ProtocolRep
                 return f"DISSIDENT: alternative framing vs. ({surveyor_output[:60]})"
         if get_agent_runner("synthesist") is None:
             @register_agent("synthesist")
-            def _sy(cfg: ProtocolConfig, query: str, enhanced_context: dict | None = None, **_):
+            def _sy(cfg: ProtocolConfig, query: str, enhanced_context: Optional[dict] = None, **_):
                 ctx = enhanced_context or {}
                 return f"SYNTHESIS: {ctx.get('alternatives','')} + {ctx.get('consensus','')}"
         if get_agent_runner("oracle") is None:
@@ -78,7 +78,7 @@ async def run_protocol_modular(query: Query, cfg: ProtocolConfig) -> ProtocolRep
                 return f"ORACLE PRINCIPLE: distilled insight from synthesis ({len(synthesis_output)} chars)"
         if get_agent_runner("supervisor") is None:
             @register_agent("supervisor")
-            def _sp(cfg: ProtocolConfig, stage_outputs: dict | None = None, **_):
+            def _sp(cfg: ProtocolConfig, stage_outputs: Optional[dict] = None, **_):
                 return "SUPERVISOR: quality OK"
     from .synthesis.fusion import fuse as fuse_evidence
     from .reporting.formatter import format_report

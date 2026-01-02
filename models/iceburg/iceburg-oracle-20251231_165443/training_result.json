@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "model_name": "iceburg-oracle-20251231_165443",
+  "model_path": "models/iceburg/iceburg-oracle-20251231_165443",
+  "training_time_seconds": 41.22287392616272,
+  "total_samples": 8,
+  "filtered_samples": 8,
+  "final_loss": 3.0478899002075197,
+  "evaluation_metrics": {
+    "samples_evaluated": 8,
+    "generation_success_rate": 1.0
+  },
+  "export_paths": {
+    "huggingface": "models/iceburg/iceburg-oracle-20251231_165443/huggingface",
+    "ollama": "models/iceburg/iceburg-oracle-20251231_165443/Modelfile"
+  },
+  "error_message": null
+}

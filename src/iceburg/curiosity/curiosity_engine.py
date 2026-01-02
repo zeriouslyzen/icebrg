@@ -21,12 +21,14 @@ def _get_memory_persistence():
     if _memory_persistence is None:
         try:
             from ..database.memory_persistence import MemoryPersistenceLayer
+
             from ..database.unified_database import UnifiedDatabase
-            from ..config import IceburgConfig
+            from ..config import load_config
             
-            cfg = IceburgConfig()
+            cfg = load_config()
             db = UnifiedDatabase(cfg)
             _memory_persistence = MemoryPersistenceLayer(db)
+
         except Exception as e:
             logger.warning(f"Could not initialize MemoryPersistenceLayer: {e}")
             _memory_persistence = None
@@ -523,53 +525,75 @@ class CuriosityEngine:
     
     # ========== Persistence Methods ==========
     
+    def _run_async_safe(self, coro):
+        """Safely run a coroutine whether in an event loop or not."""
+        try:
+            loop = asyncio.get_running_loop()
+            # If we're effectively in a synchronous context but with a running loop (common in Uvicorn init),
+            # we can't easily wait for the result without blocking appropriately or using internal APIs.
+            # Ideally, this should be refactored to be fully async.
+            # For now, we schedule it as a task for fire-and-forget operations,
+            # or simply return the task.
+            return loop.create_task(coro)
+        except RuntimeError:
+            # No running event loop, use asyncio.run
+            return asyncio.run(coro)
+
     def _load_from_database(self):
         """Load existing curiosity queries and knowledge gaps from database"""
         if not self.persistence:
             return
         
         try:
-            import asyncio
+            # We schedule the load as a task if we are in a loop.
+            # This means data might not be available IMMEDIATELY upon init completion,
+            # but it prevents the crash.
             
-            # Load recent queries (last 100)
-            queries_data = asyncio.run(self.persistence.get_curiosity_queries(limit=100))
-            
-            for q_data in queries_data:
-                query = CuriosityQuery(
-                    id=q_data.get('query_id', ''),
-                    query_text=q_data.get('query_text', ''),
-                    uncertainty_score=q_data.get('uncertainty_score', 0.0),
-                    novelty_score=q_data.get('novelty_score', 0.0),
-                    exploration_type=q_data.get('exploration_type', ''),
-                    domains=q_data.get('domains', []) if isinstance(q_data.get('domains'), list) else [],
-                    priority=q_data.get('priority', 0.0),
-                    timestamp=q_data.get('timestamp', time.time()),
-                    metadata=q_data.get('metadata', {}) if isinstance(q_data.get('metadata'), dict) else {}
-                )
-                if query.id not in [q.id for q in self.exploration_history]:
-                    self.exploration_history.append(query)
-            
-            # Load unresolved knowledge gaps
-            gaps_data = asyncio.run(self.persistence.get_knowledge_gaps(resolved=False, limit=100))
-            
-            for g_data in gaps_data:
-                gap = KnowledgeGap(
-                    id=g_data.get('gap_id', ''),
-                    gap_description=g_data.get('gap_description', ''),
-                    uncertainty_level=g_data.get('uncertainty_level', 0.0),
-                    related_domains=g_data.get('related_domains', []) if isinstance(g_data.get('related_domains'), list) else [],
-                    exploration_priority=g_data.get('exploration_priority', 0.0),
-                    suggested_queries=g_data.get('suggested_queries', []) if isinstance(g_data.get('suggested_queries'), list) else [],
-                    timestamp=g_data.get('timestamp', time.time()),
-                    metadata=g_data.get('metadata', {}) if isinstance(g_data.get('metadata'), dict) else {}
-                )
-                if gap.id not in [g.id for g in self.knowledge_gaps]:
-                    self.knowledge_gaps.append(gap)
-            
-            logger.info(f"Loaded {len(queries_data)} queries and {len(gaps_data)} gaps from database")
+            async def _load_task():
+                try:
+                    # Load recent queries (last 100)
+                    queries_data = await self.persistence.get_curiosity_queries(limit=100)
+                    
+                    for q_data in queries_data:
+                        query = CuriosityQuery(
+                            id=q_data.get('query_id', ''),
+                            query_text=q_data.get('query_text', ''),
+                            uncertainty_score=q_data.get('uncertainty_score', 0.0),
+                            novelty_score=q_data.get('novelty_score', 0.0),
+                            exploration_type=q_data.get('exploration_type', ''),
+                            domains=q_data.get('domains', []) if isinstance(q_data.get('domains'), list) else [],
+                            priority=q_data.get('priority', 0.0),
+                            timestamp=q_data.get('timestamp', time.time()),
+                            metadata=q_data.get('metadata', {}) if isinstance(q_data.get('metadata'), dict) else {}
+                        )
+                        if query.id not in [q.id for q in self.exploration_history]:
+                            self.exploration_history.append(query)
+                    
+                    # Load unresolved knowledge gaps
+                    gaps_data = await self.persistence.get_knowledge_gaps(resolved=False, limit=100)
+                    
+                    for g_data in gaps_data:
+                        gap = KnowledgeGap(
+                            id=g_data.get('gap_id', ''),
+                            gap_description=g_data.get('gap_description', ''),
+                            uncertainty_level=g_data.get('uncertainty_level', 0.0),
+                            related_domains=g_data.get('related_domains', []) if isinstance(g_data.get('related_domains'), list) else [],
+                            exploration_priority=g_data.get('exploration_priority', 0.0),
+                            suggested_queries=g_data.get('suggested_queries', []) if isinstance(g_data.get('suggested_queries'), list) else [],
+                            timestamp=g_data.get('timestamp', time.time()),
+                            metadata=g_data.get('metadata', {}) if isinstance(g_data.get('metadata'), dict) else {}
+                        )
+                        if gap.id not in [g.id for g in self.knowledge_gaps]:
+                            self.knowledge_gaps.append(gap)
+                    
+                    logger.info(f"Loaded {len(queries_data)} queries and {len(gaps_data)} gaps from database")
+                except Exception as e:
+                    logger.warning(f"Error executing database load task: {e}")
+
+            self._run_async_safe(_load_task())
             
         except Exception as e:
-            logger.warning(f"Could not load from database: {e}")
+            logger.warning(f"Could not init load task: {e}")
     
     def _persist_queries(self, queries: List[CuriosityQuery]):
         """Persist curiosity queries to database"""
@@ -577,24 +601,27 @@ class CuriosityEngine:
             return
         
         try:
-            import asyncio
-            
-            for query in queries:
-                asyncio.run(self.persistence.store_curiosity_query(
-                    query_id=query.id,
-                    query_text=query.query_text,
-                    uncertainty_score=query.uncertainty_score,
-                    novelty_score=query.novelty_score,
-                    exploration_type=query.exploration_type,
-                    domains=query.domains,
-                    priority=query.priority,
-                    timestamp=query.timestamp,
-                    answered=False,
-                    answer_quality=None,
-                    metadata=query.metadata
-                ))
-            
-            logger.debug(f"Persisted {len(queries)} curiosity queries to database")
+            async def _persist_task():
+                try:
+                    for query in queries:
+                        await self.persistence.store_curiosity_query(
+                            query_id=query.id,
+                            query_text=query.query_text,
+                            uncertainty_score=query.uncertainty_score,
+                            novelty_score=query.novelty_score,
+                            exploration_type=query.exploration_type,
+                            domains=query.domains,
+                            priority=query.priority,
+                            timestamp=query.timestamp,
+                            answered=False,
+                            answer_quality=None,
+                            metadata=query.metadata
+                        )
+                    logger.debug(f"Persisted {len(queries)} curiosity queries to database")
+                except Exception as e:
+                    logger.warning(f"Error persisting queries: {e}")
+
+            self._run_async_safe(_persist_task())
             
         except Exception as e:
             logger.warning(f"Could not persist queries: {e}")
@@ -605,24 +632,27 @@ class CuriosityEngine:
             return
         
         try:
-            import asyncio
-            
-            for gap in gaps:
-                asyncio.run(self.persistence.store_knowledge_gap(
-                    gap_id=gap.id,
-                    gap_description=gap.gap_description,
-                    uncertainty_level=gap.uncertainty_level,
-                    related_domains=gap.related_domains,
-                    exploration_priority=gap.exploration_priority,
-                    suggested_queries=gap.suggested_queries,
-                    timestamp=gap.timestamp,
-                    resolved=False,
-                    resolution_timestamp=None,
-                    resolution_quality=None,
-                    metadata=gap.metadata
-                ))
-            
-            logger.debug(f"Persisted {len(gaps)} knowledge gaps to database")
+            async def _persist_task():
+                try:
+                    for gap in gaps:
+                        await self.persistence.store_knowledge_gap(
+                            gap_id=gap.id,
+                            gap_description=gap.gap_description,
+                            uncertainty_level=gap.uncertainty_level,
+                            related_domains=gap.related_domains,
+                            exploration_priority=gap.exploration_priority,
+                            suggested_queries=gap.suggested_queries,
+                            timestamp=gap.timestamp,
+                            resolved=False,
+                            resolution_timestamp=None,
+                            resolution_quality=None,
+                            metadata=gap.metadata
+                        )
+                    logger.debug(f"Persisted {len(gaps)} knowledge gaps to database")
+                except Exception as e:
+                    logger.warning(f"Error persisting knowledge gaps: {e}")
+
+            self._run_async_safe(_persist_task())
             
         except Exception as e:
             logger.warning(f"Could not persist knowledge gaps: {e}")

@@ -4,6 +4,7 @@ Routes queries to specialized models based on domain and complexity.
 """
 
 import logging
+import re
 from typing import Dict, Any, Optional
 from dataclasses import dataclass
 from .request_router import get_request_router, RoutingDecision

@@ -1,7 +1,7 @@
 from __future__ import annotations
 import json
 import os
-from typing import Any
+from typing import Any, Optional, Dict, List
 import urllib.request
 
 
@@ -16,10 +16,10 @@ class OllamaProvider:
         self,
         model: str,
         prompt: str,
-        system: str | None = None,
+        system: Optional[str] = None,
         temperature: float = 0.2,
-        options: dict[str, Any] | None = None,
-        images: list[str] | None = None,
+        options: Optional[Dict[str, Any]] = None,
+        images: Optional[List[str]] = None,
     ) -> str:
         payload: dict[str, Any] = {
             "model": model,

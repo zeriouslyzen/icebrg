@@ -1,0 +1,11 @@
+Assembly Instructions for Eye/Retina Transcriber Glasses
+
+1. Solder ESP32 to PCB board.
+2. Connect OV7670 camera to I2C pins.
+3. Attach microphone to ADC input.
+4. Mount LCD display and connect via SPI.
+5. Install battery pack and test power.
+6. Flash firmware.bin to ESP32.
+7. Run main.py for software integration.
+
+Safety Note: Ensure electromagnetic compatibility for retina scanning. For human trials, follow FDA guidelines and monitor for eye strain.

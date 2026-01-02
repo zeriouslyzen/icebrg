@@ -165,7 +165,7 @@ class ReflexiveRoutingSystem:
             candidates: List[Tuple[str, float]] = []
 
             # Simple similarity proxy: inverse distance; coverage by unique terms; brevity by length
-            def _score(snippet: str, distance: float | None) -> float:
+            def _score(snippet: str, distance: Optional[float]) -> float:
                 sim = 1.0 / (1.0 + (distance or 1.0))
                 uniq_terms = len(set(t for t in snippet.lower().split() if len(t) > 3))
                 coverage = min(1.0, uniq_terms / 50.0)

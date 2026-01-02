@@ -1,12 +1,26 @@
 """
 Real-time market data integration with technical analysis
 """
-import yfinance as yf
+try:
+    import yfinance as yf
+except (ImportError, TypeError):
+    # Handle both missing module and python version incompatibility in yfinance (Python 3.9 vs 3.10 syntax)
+    yf = None
+
 import pandas as pd
-import pandas_ta as ta
+
+try:
+    import pandas_ta as ta
+except ImportError:
+    ta = None
+
 import requests
 import json
-import ccxt
+try:
+    import ccxt
+except ImportError:
+    ccxt = None
+
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 import time
@@ -17,14 +31,24 @@ class MarketDataProvider:
     def __init__(self):
         self.cache = {}
         self.cache_duration = 60  # 1 minute cache
-        self.binance = ccxt.binanceus({'enableRateLimit': True})
+        if ccxt:
+            self.binance = ccxt.binanceus({'enableRateLimit': True})
+        else:
+            self.binance = None
         
     def get_real_time_price(self, symbol: str) -> float:
         """Get real-time price for a symbol"""
         try:
             # Check if it's a USDT pair (Binance.US)
             if '/USDT' in symbol:
-                return self._get_binance_price(symbol)
+                if self.binance:
+                    return self._get_binance_price(symbol)
+                else:
+                    return 0.0 # Or error
+
+            
+            if yf is None:
+                return 0.0
             
             # Convert symbol format (BTC/USDC -> BTC-USD)
             yf_symbol = symbol.replace('/', '-').replace('USDC', 'USD')
@@ -55,7 +79,13 @@ class MarketDataProvider:
         try:
             # Handle USDT pairs differently
             if '/USDT' in symbol:
-                return self._get_binance_technical_indicators(symbol)
+                if self.binance:
+                    return self._get_binance_technical_indicators(symbol)
+                else:
+                    return {"error": "Binance integration not available (ccxt missing)"}
+            
+            if yf is None:
+                return {"error": "yfinance not available (dependency error)"}
             
             yf_symbol = symbol.replace('/', '-').replace('USDC', 'USD')
             ticker = yf.Ticker(yf_symbol)
@@ -65,6 +95,9 @@ class MarketDataProvider:
             
             if data.empty:
                 return {"error": "No data available"}
+            
+            if ta is None:
+                return {"error": "Technical analysis library (pandas_ta) not available"}
             
             # Calculate technical indicators
             indicators = {}
@@ -123,6 +156,9 @@ class MarketDataProvider:
             df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
             df.set_index('timestamp', inplace=True)
             
+            if ta is None:
+                return {"error": "Technical analysis library (pandas_ta) not available"}
+            
             # Calculate technical indicators
             indicators = {}
             
@@ -169,6 +205,9 @@ class MarketDataProvider:
     def _analyze_trend(self, data: pd.DataFrame) -> Dict[str, Any]:
         """Analyze trend direction and strength"""
         try:
+            if ta is None:
+                 return {"direction": "unknown", "strength": 0, "reason": "pandas_ta missing"}
+
             # Simple trend analysis
             sma_20 = ta.sma(data['Close'], length=20)
             sma_50 = ta.sma(data['Close'], length=50)

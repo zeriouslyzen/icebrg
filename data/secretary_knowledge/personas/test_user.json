@@ -1,0 +1,17 @@
+{
+  "preferences": {
+    "research mode": true,
+    "software development mode": false,
+    "science mode": false
+  },
+  "expertise": [
+    "deep domain research",
+    "multi-agent coordination",
+    "coding",
+    "testing",
+    "debugging software projects",
+    "complex scientific concepts and theories"
+  ],
+  "last_updated": "2025-12-30T19:21:12.331079",
+  "created": "2025-12-30T19:19:53.652690"
+}

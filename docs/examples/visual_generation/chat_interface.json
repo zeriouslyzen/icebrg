@@ -1,0 +1,380 @@
+{
+  "name": "chat_interface",
+  "version": "1.0",
+  "author": "ICEBURG",
+  "created_at": "2025-10-14T00:00:00Z",
+  "components": [
+    {
+      "component_type": "header",
+      "id": "chat_header",
+      "children": [
+        {
+          "component_type": "container",
+          "id": "header_content",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "image",
+              "id": "chat_avatar",
+              "properties": {
+                "src": "/images/chat-avatar.png",
+                "alt": "Chat avatar"
+              }
+            },
+            {
+              "component_type": "container",
+              "id": "chat_info",
+              "children": [
+                {
+                  "component_type": "text",
+                  "id": "chat_title",
+                  "properties": {
+                    "text": "ICEBURG Assistant"
+                  },
+                  "accessibility": {
+                    "role": "heading",
+                    "aria-level": "2"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "chat_status",
+                  "properties": {
+                    "text": "Online"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "button",
+              "id": "settings_button",
+              "properties": {
+                "text": "⚙️",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Open chat settings"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Open chat settings"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component_type": "container",
+      "id": "chat_messages",
+      "properties": {
+        "layout": "flex"
+      },
+      "children": [
+        {
+          "component_type": "card",
+          "id": "message_1",
+          "children": [
+            {
+              "component_type": "container",
+              "id": "message_header_1",
+              "properties": {
+                "layout": "flex"
+              },
+              "children": [
+                {
+                  "component_type": "text",
+                  "id": "sender_1",
+                  "properties": {
+                    "text": "User"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "timestamp_1",
+                  "properties": {
+                    "text": "2:30 PM"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "text",
+              "id": "message_content_1",
+              "properties": {
+                "text": "Hello! Can you help me generate a UI?"
+              }
+            }
+          ]
+        },
+        {
+          "component_type": "card",
+          "id": "message_2",
+          "children": [
+            {
+              "component_type": "container",
+              "id": "message_header_2",
+              "properties": {
+                "layout": "flex"
+              },
+              "children": [
+                {
+                  "component_type": "text",
+                  "id": "sender_2",
+                  "properties": {
+                    "text": "ICEBURG"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "timestamp_2",
+                  "properties": {
+                    "text": "2:31 PM"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "text",
+              "id": "message_content_2",
+              "properties": {
+                "text": "Absolutely! I can help you generate UIs using ICEBURG's Visual Generation system. What kind of interface would you like to create?"
+              }
+            }
+          ]
+        },
+        {
+          "component_type": "card",
+          "id": "message_3",
+          "children": [
+            {
+              "component_type": "container",
+              "id": "message_header_3",
+              "properties": {
+                "layout": "flex"
+              },
+              "children": [
+                {
+                  "component_type": "text",
+                  "id": "sender_3",
+                  "properties": {
+                    "text": "User"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "timestamp_3",
+                  "properties": {
+                    "text": "2:32 PM"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "text",
+              "id": "message_content_3",
+              "properties": {
+                "text": "I need a simple contact form with name, email, and message fields."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component_type": "container",
+      "id": "chat_input_area",
+      "properties": {
+        "layout": "flex"
+      },
+      "children": [
+        {
+          "component_type": "container",
+          "id": "input_container",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "input",
+              "id": "message_input",
+              "properties": {
+                "type": "text",
+                "placeholder": "Type your message..."
+              },
+              "accessibility": {
+                "aria-label": "Type your message",
+                "role": "textbox"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "send_button",
+              "properties": {
+                "text": "Send",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Send message"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Send message"
+              }
+            }
+          ]
+        },
+        {
+          "component_type": "container",
+          "id": "quick_actions",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "button",
+              "id": "quick_form",
+              "properties": {
+                "text": "📝 Form"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Generate form template"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Generate form template"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "quick_button",
+              "properties": {
+                "text": "🔘 Button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Generate button template"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Generate button template"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "quick_dashboard",
+              "properties": {
+                "text": "📊 Dashboard"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Generate dashboard template"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Generate dashboard template"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component_type": "footer",
+      "id": "chat_footer",
+      "children": [
+        {
+          "component_type": "text",
+          "id": "footer_text",
+          "properties": {
+            "text": "Powered by ICEBURG Visual Generation"
+          }
+        }
+      ]
+    }
+  ],
+  "layout": {
+    "layout_type": "flex",
+    "direction": "column",
+    "gap": "0",
+    "padding": "0",
+    "align_items": "stretch",
+    "justify_content": "flex-start"
+  },
+  "theme": {
+    "name": "chat_interface",
+    "primary_color": "#3B82F6",
+    "secondary_color": "#64748B",
+    "background_color": "#FFFFFF",
+    "text_color": "#1F2937",
+    "font_family": "Inter, system-ui, sans-serif",
+    "font_size_base": "16px",
+    "border_radius": "12px",
+    "shadow_base": "0 4px 6px rgba(0,0,0,0.1)"
+  },
+  "interactions": [
+    {
+      "event_type": "click",
+      "handler_description": "Handle button clicks",
+      "target_selector": "button"
+    },
+    {
+      "event_type": "keydown",
+      "handler_description": "Handle keyboard input",
+      "target_selector": "input"
+    },
+    {
+      "event_type": "submit",
+      "handler_description": "Handle form submission",
+      "target_selector": "form"
+    }
+  ],
+  "accessibility_requirements": {
+    "wcag_level": "AA",
+    "min_contrast_ratio": 4.5,
+    "keyboard_navigable": true,
+    "screen_reader_compatible": true,
+    "aria_labels_required": true,
+    "focus_indicators": true,
+    "alt_text_required": true,
+    "semantic_html": true
+  },
+  "performance_budget": {
+    "max_load_time_ms": 180,
+    "max_bundle_size_kb": 80,
+    "max_dom_nodes": 120,
+    "max_reflows": 4,
+    "max_repaints": 6,
+    "cumulative_layout_shift": 0.06,
+    "first_contentful_paint_ms": 130,
+    "largest_contentful_paint_ms": 250
+  },
+  "security_contracts": [
+    "no_external_scripts",
+    "no_inline_eval",
+    "sanitized_content",
+    "csp_compliant",
+    "no_dangerous_urls",
+    "wcag_aa_compliant",
+    "keyboard_navigable",
+    "screen_reader_compatible",
+    "has_aria_labels",
+    "fast_load",
+    "small_bundle",
+    "no_layout_shift",
+    "no_tracking",
+    "no_third_party_embeds",
+    "local_storage_only",
+    "no_pii_exposure"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "model_name": "iceburg-synthesist-20251231_162836",
+  "model_path": "models/iceburg/iceburg-synthesist-20251231_162836",
+  "training_time_seconds": 11.503602981567383,
+  "total_samples": 2,
+  "filtered_samples": 2,
+  "final_loss": 3.025470733642578,
+  "evaluation_metrics": {
+    "samples_evaluated": 2,
+    "generation_success_rate": 1.0
+  },
+  "export_paths": {
+    "huggingface": "models/iceburg/iceburg-synthesist-20251231_162836/huggingface",
+    "ollama": "models/iceburg/iceburg-synthesist-20251231_162836/Modelfile"
+  },
+  "error_message": null
+}

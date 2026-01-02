@@ -119,3 +119,7 @@ _quarantine/
 docs/archive/experimental/_quarantine/
 *.tar.gz
 backup_*.tar.gz
+.build/
+**/.build/
+.swiftpm/
+xcuserdata/

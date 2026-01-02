@@ -93,7 +93,25 @@ function initNavigation() {
 
             // Show target section
             sections.forEach(section => section.classList.remove('active'));
-            document.getElementById(targetSection).classList.add('active');
+            const activeSection = document.getElementById(targetSection);
+            if (activeSection) {
+                activeSection.classList.add('active');
+                
+                // Render mermaid diagrams when traces section becomes active
+                if (targetSection === 'traces' && typeof mermaid !== 'undefined') {
+                    setTimeout(() => {
+                        try {
+                            const mermaidEl = document.getElementById('trace-mermaid');
+                            if (mermaidEl && mermaidEl.offsetParent !== null) {
+                                mermaidEl.removeAttribute('data-processed');
+                                mermaid.run();
+                            }
+                        } catch (e) {
+                            console.warn('Mermaid render error:', e);
+                        }
+                    }, 100);
+                }
+            }
 
             // Update title
             sectionTitle.textContent = this.querySelector('span:last-child').textContent;
@@ -591,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof mermaid !== 'undefined') {
         try {
             mermaid.initialize({
-                startOnLoad: true,
+                startOnLoad: false, // Don't auto-render, we'll do it manually
                 securityLevel: 'loose', // Allow scripts if needed
                 theme: 'dark',
                 themeVariables: {
@@ -636,6 +654,19 @@ document.addEventListener('DOMContentLoaded', function () {
 function refreshTrace() {
     addActivity('Trace refreshed');
     showNotification('Trace data refreshed');
+    
+    // Re-render mermaid diagram when trace section is visible
+    if (typeof mermaid !== 'undefined') {
+        const mermaidEl = document.getElementById('trace-mermaid');
+        if (mermaidEl && mermaidEl.offsetParent !== null) {
+            try {
+                mermaidEl.removeAttribute('data-processed');
+                mermaid.run();
+            } catch (e) {
+                console.warn('Mermaid render error:', e);
+            }
+        }
+    }
 }
 
 // Analytics Section
@@ -1367,6 +1398,11 @@ function initNeuralGraph() {
 
     const container = document.getElementById('cy');
     if (!container) return;
+
+    if (typeof cytoscape === 'undefined') {
+        console.warn('Cytoscape not loaded, skipping neural graph initialization');
+        return;
+    }
 
     cy = cytoscape({
         container: container,

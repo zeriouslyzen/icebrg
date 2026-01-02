@@ -1,0 +1,98 @@
+{
+  "system": {
+    "name": "Iceburg Personality System",
+    "version": "1.0.0",
+    "description": "Conversational AI personality layer for Iceburg Protocol",
+    "author": "Praxis Research & Engineering Inc.",
+    "license": "Proprietary"
+  },
+  "architecture": {
+    "layers": [
+      "interfaces",
+      "core",
+      "memory",
+      "storage",
+      "security",
+      "learning"
+    ],
+    "data_isolation": true,
+    "governance_enabled": true,
+    "learning_feedback": true
+  },
+  "storage": {
+    "personality_data": "personality_system/data/personality_states",
+    "conversation_data": "personality_system/data/conversations",
+    "learning_insights": "personality_system/data/learning_insights",
+    "shared_knowledge": "personality_system/data/shared_knowledge",
+    "backup_enabled": true,
+    "compression_enabled": true
+  },
+  "security": {
+    "access_governance": true,
+    "data_encryption": true,
+    "audit_logging": true,
+    "rate_limiting": true,
+    "privacy_protection": true
+  },
+  "learning": {
+    "insight_extraction": true,
+    "pattern_recognition": true,
+    "main_system_feedback": true,
+    "continuous_adaptation": true,
+    "knowledge_sharing": "bidirectional"
+  },
+  "personalities": {
+    "grok_inspired": {
+      "enabled": true,
+      "traits": ["helpful", "maximally_truthful", "witty", "insightful"],
+      "access_level": "full_research"
+    },
+    "researcher": {
+      "enabled": true,
+      "traits": ["thorough", "evidence_based", "methodical"],
+      "access_level": "full_research"
+    },
+    "teacher": {
+      "enabled": true,
+      "traits": ["patient", "explanatory", "encouraging"],
+      "access_level": "educational_research"
+    },
+    "investigator": {
+      "enabled": true,
+      "traits": ["curious", "analytical", "skeptical"],
+      "access_level": "investigative_research"
+    }
+  },
+  "interfaces": {
+    "research_bridge": {
+      "enabled": true,
+      "max_depth": "full",
+      "caching_enabled": true,
+      "usage_tracking": true
+    },
+    "data_sharing": {
+      "enabled": true,
+      "direction": "bidirectional",
+      "governance_required": true,
+      "privacy_filters": true
+    },
+    "feedback_loop": {
+      "enabled": true,
+      "learning_rate": 0.1,
+      "adaptation_enabled": true,
+      "main_system_integration": true
+    }
+  },
+  "performance": {
+    "max_concurrent_conversations": 10,
+    "response_timeout_seconds": 30,
+    "memory_limit_mb": 512,
+    "cpu_limit_percent": 80
+  },
+  "monitoring": {
+    "metrics_collection": true,
+    "performance_monitoring": true,
+    "error_tracking": true,
+    "usage_analytics": true
+  }
+}

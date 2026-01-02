@@ -1,0 +1,6 @@
+Component,Description,Quantity,Part Number,Supplier
+ESP32 Module,Microcontroller,1,ESP32-WROOM-32,Adafruit
+OV7670 Camera,Camera Module,1,OV7670,Amazon
+Microphone,Omnidirectional Mic,1,Shure SM7B,Best Buy
+LCD Display,6-inch Touchscreen,1,OLED-6INCH,AliExpress
+Battery Pack,Li-ion 500mAh,1,BATT-500MAH,DigiKey

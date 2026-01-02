@@ -1,0 +1,19 @@
+# Eye/Retina Transcriber Glasses PCB Layout
+
+## Layers
+
+* Top Layer: Tracks and pads for signal routing
+* Bottom Layer: Ground plane and power distribution
+* Dimensions: 50mm x 30mm board size
+* Component Placement: U1 (ESP32) at center, C1 (Camera) at edge, D1 (Display) on top, B1 (Battery) on bottom
+
+## Tracks
+
+* VCC track: 0.5mm width from B1 to U1, C1, D1
+* GND plane: Full bottom layer with vias to top
+* Data lines: 0.3mm width for I2C/SPI between U1 and C1/D1
+
+## Vias and Holes
+
+* 10 vias for GND connections
+* Mounting holes: 2x 3mm for glasses frame attachment

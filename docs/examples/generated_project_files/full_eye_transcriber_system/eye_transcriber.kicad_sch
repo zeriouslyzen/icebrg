@@ -1,0 +1,37 @@
+# Eye/Retina Transcriber Glasses Schematic
+
+## Components
+
+* ESP32 Module: U1
+* OV7670 Camera Module: C1
+* LCD Display: D1
+* Battery Pack: B1
+* JST-XH Connectors: J1-J4
+
+## Connections
+
+* U1:VCC -> B1:VCC
+* U1:GND -> B1:GND
+* C1:VCC -> U1:VCC
+* C1:GND -> U1:GND
+* D1:VCC -> U1:VCC
+* D1:GND -> U1:GND
+* J1:VCC -> B1:VCC
+* J2:GND -> B1:GND
+* J3:VCC -> C1:VCC
+* J4:GND -> C1:GND
+
+## Power Supply
+
+* B1:VCC -> U1:VCC (5V)
+* B1:GND -> U1:GND (GND)
+
+## Camera Interface
+
+* C1:VCC -> U1:VCC (3.3V)
+* C1:GND -> U1:GND (GND)
+
+## Display Interface
+
+* D1:VCC -> U1:VCC (5V)
+* D1:GND -> U1:GND (GND)

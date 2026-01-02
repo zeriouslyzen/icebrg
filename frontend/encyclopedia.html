@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +45,17 @@
         }
 
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
         }
 
         /* Enhanced Hero Section */
@@ -107,6 +117,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -118,6 +129,7 @@
                 width: 0;
                 opacity: 0;
             }
+
             to {
                 width: 120px;
                 opacity: 1;
@@ -863,6 +875,7 @@
             from {
                 transform: translateX(0);
             }
+
             to {
                 transform: translateX(-50%);
             }
@@ -1008,7 +1021,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .news-grid {
@@ -1179,7 +1194,8 @@
         }
 
         /* Prevent text overlap and ensure proper spacing */
-        .source-item, .study-item {
+        .source-item,
+        .study-item {
             margin-bottom: 1rem !important;
             padding: 0.75rem !important;
             word-wrap: break-word;
@@ -1187,7 +1203,8 @@
             max-width: 100%;
         }
 
-        .source-item a, .study-item a {
+        .source-item a,
+        .study-item a {
             white-space: nowrap;
             display: inline-block;
         }
@@ -1580,6 +1597,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Celestial Background Animation -->
     <div class="celestial-background">
@@ -1587,7 +1605,7 @@
         <div class="celestial-glow"></div>
     </div>
 
-        <!-- Encyclopedia Navbar -->
+    <!-- Encyclopedia Navbar -->
     <nav class="encyclopedia-navbar">
         <!-- News Ticker -->
         <div class="news-ticker" id="newsTicker">
@@ -1599,7 +1617,8 @@
     </nav>
 
     <button class="encyclopedia-back-button" onclick="window.location.href='/'" aria-label="Back to ICEBURG">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
     </button>
@@ -1638,13 +1657,17 @@
                 <div class="encyclopedia-search-wrapper">
                     <div class="encyclopedia-search">
                         <svg class="encyclopedia-search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19 19L14.65 14.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path
+                                d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M19 19L14.65 14.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
                         </svg>
                         <input type="text" id="searchInput" placeholder="Search entries, categories, or concepts...">
                         <button class="search-filter-btn" id="filterToggle" title="Advanced Filters">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                <path d="M2 4H16M5 9H13M7 14H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M2 4H16M5 9H13M7 14H11" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" />
                             </svg>
                         </button>
                     </div>
@@ -1666,15 +1689,36 @@
                 <h2 class="intro-title">Understanding Celestial-Biological Correlations</h2>
             </div>
             <div class="intro-content">
-                <p>The Celestial Encyclopedia represents a systematic investigation into the fundamental patterns connecting celestial phenomena and biological systems. This knowledge base synthesizes rigorous scientific research, empirical observations, and evidence-based correlations to map the intricate relationships between electromagnetic fields, planetary dynamics, cosmic events, and biological processes.</p>
-                
-                <p><strong>Pattern Recognition and Holistic Understanding:</strong> The encyclopedia employs advanced pattern recognition methodologies to identify recurring correlations across multiple domains. Rather than isolated observations, entries are organized to reveal holistic applications—showing how celestial influences manifest across biological systems, from molecular processes to organ function, from cellular rhythms to systemic responses.</p>
-                
-                <p><strong>Evidence-Based Framework:</strong> Every entry is grounded in scientific evidence, with clear distinctions between established findings, theoretical models, and speculative hypotheses. Evidence levels are explicitly marked, allowing users to understand the strength and reliability of each correlation. Research sources, study methodologies, and peer-reviewed publications are documented to enable verification and deeper investigation.</p>
-                
-                <p><strong>Logical Structure and Accessibility:</strong> The knowledge base is organized into 18 distinct domains, each representing a coherent area of investigation. Categories range from fundamental biological systems (neurotransmitters, hormones, cellular processes) to celestial phenomena (electromagnetic environment, Schumann resonance, geomagnetic activity) to advanced research domains (quantum biology, coherence systems, institutional research). This structure enables both targeted exploration and cross-domain pattern discovery.</p>
-                
-                <p><strong>Practical Applications:</strong> Beyond theoretical understanding, the encyclopedia provides insights into practical applications. Entries include information on how celestial-biological correlations can inform health optimization, circadian rhythm alignment, stress management, and environmental adaptation. The holistic approach recognizes that biological systems operate as integrated networks, responding to multiple environmental factors simultaneously.</p>
+                <p>The Celestial Encyclopedia represents a systematic investigation into the fundamental patterns
+                    connecting celestial phenomena and biological systems. This knowledge base synthesizes rigorous
+                    scientific research, empirical observations, and evidence-based correlations to map the intricate
+                    relationships between electromagnetic fields, planetary dynamics, cosmic events, and biological
+                    processes.</p>
+
+                <p><strong>Pattern Recognition and Holistic Understanding:</strong> The encyclopedia employs advanced
+                    pattern recognition methodologies to identify recurring correlations across multiple domains. Rather
+                    than isolated observations, entries are organized to reveal holistic applications—showing how
+                    celestial influences manifest across biological systems, from molecular processes to organ function,
+                    from cellular rhythms to systemic responses.</p>
+
+                <p><strong>Evidence-Based Framework:</strong> Every entry is grounded in scientific evidence, with clear
+                    distinctions between established findings, theoretical models, and speculative hypotheses. Evidence
+                    levels are explicitly marked, allowing users to understand the strength and reliability of each
+                    correlation. Research sources, study methodologies, and peer-reviewed publications are documented to
+                    enable verification and deeper investigation.</p>
+
+                <p><strong>Logical Structure and Accessibility:</strong> The knowledge base is organized into 18
+                    distinct domains, each representing a coherent area of investigation. Categories range from
+                    fundamental biological systems (neurotransmitters, hormones, cellular processes) to celestial
+                    phenomena (electromagnetic environment, Schumann resonance, geomagnetic activity) to advanced
+                    research domains (quantum biology, coherence systems, institutional research). This structure
+                    enables both targeted exploration and cross-domain pattern discovery.</p>
+
+                <p><strong>Practical Applications:</strong> Beyond theoretical understanding, the encyclopedia provides
+                    insights into practical applications. Entries include information on how celestial-biological
+                    correlations can inform health optimization, circadian rhythm alignment, stress management, and
+                    environmental adaptation. The holistic approach recognizes that biological systems operate as
+                    integrated networks, responding to multiple environmental factors simultaneously.</p>
             </div>
             <div class="intro-sections">
                 <div class="intro-section">
@@ -1682,7 +1726,8 @@
                         <div class="intro-section-title">Pattern Recognition</div>
                     </div>
                     <div class="intro-section-content">
-                        Advanced pattern recognition identifies recurring correlations across biological and celestial domains, revealing systemic relationships rather than isolated phenomena.
+                        Advanced pattern recognition identifies recurring correlations across biological and celestial
+                        domains, revealing systemic relationships rather than isolated phenomena.
                     </div>
                 </div>
                 <div class="intro-section">
@@ -1690,7 +1735,8 @@
                         <div class="intro-section-title">Evidence-Based</div>
                     </div>
                     <div class="intro-section-content">
-                        All entries include explicit evidence levels, research sources, and study methodologies, enabling users to assess the reliability and scientific foundation of each correlation.
+                        All entries include explicit evidence levels, research sources, and study methodologies,
+                        enabling users to assess the reliability and scientific foundation of each correlation.
                     </div>
                 </div>
                 <div class="intro-section">
@@ -1698,7 +1744,8 @@
                         <div class="intro-section-title">Holistic Applications</div>
                     </div>
                     <div class="intro-section-content">
-                        Entries reveal how celestial influences manifest across multiple biological systems simultaneously, providing insights for health optimization and environmental adaptation.
+                        Entries reveal how celestial influences manifest across multiple biological systems
+                        simultaneously, providing insights for health optimization and environmental adaptation.
                     </div>
                 </div>
                 <div class="intro-section">
@@ -1706,7 +1753,8 @@
                         <div class="intro-section-title">Logical Structure</div>
                     </div>
                     <div class="intro-section-content">
-                        Organized into 18 coherent knowledge domains with clear categorization, enabling both targeted exploration and cross-domain pattern discovery.
+                        Organized into 18 coherent knowledge domains with clear categorization, enabling both targeted
+                        exploration and cross-domain pattern discovery.
                     </div>
                 </div>
             </div>
@@ -1738,7 +1786,9 @@
                 <h2 class="news-title">Research News & Updates</h2>
                 <button class="news-refresh-btn" id="newsRefreshBtn">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                        <path d="M9 1V5M9 13V17M1 9H5M13 9H17M3.64 3.64L6.17 6.17M11.83 11.83L14.36 14.36M3.64 14.36L6.17 11.83M11.83 6.17L14.36 3.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path
+                            d="M9 1V5M9 13V17M1 9H5M13 9H17M3.64 3.64L6.17 6.17M11.83 11.83L14.36 14.36M3.64 14.36L6.17 11.83M11.83 6.17L14.36 3.64"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
                     Refresh
                 </button>
@@ -1769,7 +1819,7 @@
                 <h2 class="entry-modal-title" id="modalTitle">Entry Details</h2>
                 <button class="entry-modal-close" onclick="closeEntryModal()">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
                 </button>
             </div>
@@ -1785,7 +1835,7 @@
             <div class="entry-explain-title" id="explainTitle">ICEBURG Explanation</div>
             <button class="entry-explain-close" onclick="closeExplainPanel()" aria-label="Close explanation">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </button>
         </div>
@@ -1800,7 +1850,7 @@
         // On production: uses same origin or configured API URL
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const API_URL = isLocalhost ? 'http://localhost:8000' : window.location.origin;
-        
+
         console.log('Encyclopedia API URL:', API_URL, 'Hostname:', window.location.hostname);
 
         let encyclopediaData = null;
@@ -1825,11 +1875,18 @@
             { id: 'morphic_fields', name: 'Morphic Fields', description: 'Morphic resonance theory and field effects' },
             { id: 'vedic_knowledge', name: 'Vedic Knowledge', description: 'Ayurveda, Jyotish, Nakshatras, Doshas' },
             { id: 'schumann_resonance', name: 'Schumann Resonance', description: 'Earth frequency and biological correlations' },
-            { id: 'government_research', name: 'Government Research', description: 'Declassified government programs and consciousness research' },
+            { id: 'government_research', name: 'Government Research', description: 'Declassified CIA, DIA, Army programs - MK-Ultra, Stargate, Gateway Process, and more' },
+            { id: 'suppressed_research', name: 'Suppressed Research', description: 'Marginalized science - Reich, Rife, Tesla, Priore, Becker, and forbidden discoveries' },
+            { id: 'occult_psychology', name: 'Occult Psychology', description: 'Jung, synchronicity, collective unconscious, egregores, and consciousness research' },
+            { id: 'documented_anomalies', name: 'Documented Anomalies', description: 'Terminal lucidity, placebo surgery, NDEs, acquired savants - measured edge science' },
+            { id: 'astro_archaeology', name: 'Astro-Archaeology', description: 'Göbekli Tepe, Stonehenge, Great Pyramid - ancient astronomical alignments' },
+            { id: 'ancient_technology', name: 'Ancient Technology', description: 'Antikythera mechanism, Baghdad batteries, Roman concrete - lost capabilities' },
+            { id: 'pyramid_studies', name: 'Pyramid Studies', description: 'Electromagnetic focusing (ITMO 2018), acoustic resonance, and materials engineering' },
+            { id: 'entheogens', name: 'Entheogens & Sacred Plants', description: 'Eleusinian kykeon, Soma, Ayahuasca, and the pharmacology of ancient rituals' },
+            { id: 'mystery_traditions', name: 'Secret Societies', description: 'Pythagoreans, Templars, Rosicrucians, and the lineage of hidden knowledge' },
             { id: 'field_topologies', name: 'Field Topologies', description: 'Cardiac torus fields, cortical standing waves, and other biofield geometries' },
             { id: 'collective_states', name: 'Collective States', description: 'Group coherence, mass attention events, and planetary-scale human states' },
             { id: 'information_dynamics', name: 'Information Dynamics', description: 'HRV coherence, EEG global coherence, and information-theoretic descriptors' },
-            { id: 'anomalous_phenomena', name: 'Anomalous Phenomena', description: 'High-strangeness reports and multi-domain anomalies with explicit evidence grading' },
             { id: 'patents', name: 'Patents', description: 'Patents related to EM fields, consciousness technologies, and biological effects' },
             { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' }
         ];
@@ -1837,26 +1894,26 @@
         async function loadEncyclopedia() {
             const loadingEl = document.getElementById('loadingIndicator');
             const errorEl = document.getElementById('errorIndicator');
-            
+
             loadingEl.style.display = 'block';
             errorEl.style.display = 'none';
 
             try {
                 console.log('Fetching encyclopedia from:', `${API_URL}/api/encyclopedia`);
                 const response = await fetch(`${API_URL}/api/encyclopedia`);
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
                 }
-                
+
                 encyclopediaData = await response.json();
                 console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
-                
+
                 if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
                     throw new Error('Encyclopedia data is empty');
                 }
-                
+
                 renderCategories();
                 // Auto-select first category if available
                 if (categories.length > 0 && encyclopediaData[categories[0].id]) {
@@ -1924,12 +1981,12 @@
         function renderCategories() {
             const container = document.getElementById('categoriesContainer');
             const sidebarList = document.getElementById('sidebarCategoryList');
-            
+
             // Render category cards
             container.innerHTML = categories.map(cat => {
                 const count = encyclopediaData[cat.id] ? Object.keys(encyclopediaData[cat.id]).length : 0;
                 const description = cat.description || 'Explore entries in this category';
-                
+
                 return `
                     <div class="category-card" data-category="${cat.id}">
                         <div class="category-header">
@@ -1978,7 +2035,7 @@
 
         function selectCategory(categoryId) {
             currentCategory = categoryId;
-            
+
             // Update active state for cards
             document.querySelectorAll('.category-card').forEach(card => {
                 card.classList.toggle('active', card.dataset.category === categoryId);
@@ -2068,7 +2125,7 @@
 
         function renderItemSections(item) {
             const sections = [];
-            
+
             // Description (always show, even if placeholder)
             sections.push(`
                 <div class="item-section">
@@ -2091,22 +2148,22 @@
                         <div class="item-section-title">Details</div>
                         <div class="item-section-content">
                             ${keyValuePairs.map(([key, value]) => {
-                                if (Array.isArray(value)) {
-                                    const formattedArray = value.map(v => formatValue(v)).join(', ');
-                                    return `
+                    if (Array.isArray(value)) {
+                        const formattedArray = value.map(v => formatValue(v)).join(', ');
+                        return `
                                         <div class="item-key-value">
                                             <div class="item-key">${formatKey(key)}</div>
                                             <div class="item-value">${formattedArray}</div>
                                         </div>
                                     `;
-                                } else if (typeof value === 'object' && value !== null) {
-                                    // Format objects nicely - check if it's a simple object with arrays of numbers (like TCM data)
-                                    const entries = Object.entries(value);
-                                    const isSimpleNumberArrays = entries.every(([k, v]) => Array.isArray(v) && v.every(item => typeof item === 'number'));
-                                    
-                                    if (isSimpleNumberArrays && entries.length > 0) {
-                                        // Display as a clean list of key-value pairs
-                                        return `
+                    } else if (typeof value === 'object' && value !== null) {
+                        // Format objects nicely - check if it's a simple object with arrays of numbers (like TCM data)
+                        const entries = Object.entries(value);
+                        const isSimpleNumberArrays = entries.every(([k, v]) => Array.isArray(v) && v.every(item => typeof item === 'number'));
+
+                        if (isSimpleNumberArrays && entries.length > 0) {
+                            // Display as a clean list of key-value pairs
+                            return `
                                             <div class="item-key-value" style="margin-bottom: 8px;">
                                                 <div class="item-key" style="font-weight: 600; margin-bottom: 4px; color: var(--accent-primary);">${formatKey(key)}</div>
                                                 <div class="item-value" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px; font-size: 0.9em;">
@@ -2119,66 +2176,66 @@
                                                 </div>
                                             </div>
                                         `;
-                                    } else {
-                                        // Complex object - format as nested structure
-                                        let formattedValue = '';
-                                        if (Array.isArray(value)) {
-                                            formattedValue = value.map((item, idx) => {
-                                                if (typeof item === 'object' && item !== null) {
-                                                    const objStr = Object.entries(item)
-                                                        .map(([k, v]) => {
-                                                            let val = v;
-                                                            if (typeof v === 'object' && v !== null) {
-                                                                if (Array.isArray(v)) {
-                                                                    val = v.map(item => formatValue(item)).join(', ');
-                                                                } else {
-                                                                    val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
-                                                                }
-                                                            } else {
-                                                                val = formatValue(v);
-                                                            }
-                                                            return `${formatKey(k)}: ${val}`;
-                                                        })
-                                                        .join(', ');
-                                                    return `${idx + 1}. ${objStr}`;
-                                                }
-                                                return formatValue(String(item));
-                                            }).join('; ');
-                                        } else {
-                                            // Format object as key-value pairs
-                                            formattedValue = Object.entries(value)
-                                                .map(([k, v]) => {
-                                                    const formattedKey = formatKey(k);
-                                                    let val = v;
-                                                    if (typeof v === 'object' && v !== null) {
-                                                        if (Array.isArray(v)) {
-                                                            val = v.map(item => formatValue(item)).join(', ');
-                                                        } else {
-                                                            val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
-                                                        }
+                        } else {
+                            // Complex object - format as nested structure
+                            let formattedValue = '';
+                            if (Array.isArray(value)) {
+                                formattedValue = value.map((item, idx) => {
+                                    if (typeof item === 'object' && item !== null) {
+                                        const objStr = Object.entries(item)
+                                            .map(([k, v]) => {
+                                                let val = v;
+                                                if (typeof v === 'object' && v !== null) {
+                                                    if (Array.isArray(v)) {
+                                                        val = v.map(item => formatValue(item)).join(', ');
                                                     } else {
-                                                        val = formatValue(v);
+                                                        val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
                                                     }
-                                                    return `${formattedKey}: ${val}`;
-                                                })
-                                                .join('; ');
+                                                } else {
+                                                    val = formatValue(v);
+                                                }
+                                                return `${formatKey(k)}: ${val}`;
+                                            })
+                                            .join(', ');
+                                        return `${idx + 1}. ${objStr}`;
+                                    }
+                                    return formatValue(String(item));
+                                }).join('; ');
+                            } else {
+                                // Format object as key-value pairs
+                                formattedValue = Object.entries(value)
+                                    .map(([k, v]) => {
+                                        const formattedKey = formatKey(k);
+                                        let val = v;
+                                        if (typeof v === 'object' && v !== null) {
+                                            if (Array.isArray(v)) {
+                                                val = v.map(item => formatValue(item)).join(', ');
+                                            } else {
+                                                val = Object.entries(v).map(([sk, sv]) => `${formatKey(sk)}: ${formatValue(sv)}`).join(', ');
+                                            }
+                                        } else {
+                                            val = formatValue(v);
                                         }
-                                        return `
+                                        return `${formattedKey}: ${val}`;
+                                    })
+                                    .join('; ');
+                            }
+                            return `
                                             <div class="item-key-value">
                                                 <div class="item-key">${formatKey(key)}</div>
                                                 <div class="item-value">${formattedValue || 'N/A'}</div>
                                             </div>
                                         `;
-                                    }
-                                } else {
-                                    return `
+                        }
+                    } else {
+                        return `
                                         <div class="item-key-value">
                                             <div class="item-key">${formatKey(key)}</div>
                                             <div class="item-value">${formatValue(value)}</div>
                                         </div>
                                     `;
-                                }
-                            }).join('')}
+                    }
+                }).join('')}
                         </div>
                     </div>
                 `);
@@ -2186,10 +2243,10 @@
 
             // Evidence Level Badge (always show, defaulting when missing)
             const evidenceColors = {
-                    'measured': { bg: 'rgba(76, 175, 80, 0.2)', color: '#4caf50', border: '#4caf50' },
-                    'theoretical': { bg: 'rgba(33, 150, 243, 0.2)', color: '#2196f3', border: '#2196f3' },
-                    'speculative': { bg: 'rgba(255, 152, 0, 0.2)', color: '#ff9800', border: '#ff9800' },
-                    'documented': { bg: 'rgba(156, 39, 176, 0.2)', color: '#9c27b0', border: '#9c27b0' }
+                'measured': { bg: 'rgba(76, 175, 80, 0.2)', color: '#4caf50', border: '#4caf50' },
+                'theoretical': { bg: 'rgba(33, 150, 243, 0.2)', color: '#2196f3', border: '#2196f3' },
+                'speculative': { bg: 'rgba(255, 152, 0, 0.2)', color: '#ff9800', border: '#ff9800' },
+                'documented': { bg: 'rgba(156, 39, 176, 0.2)', color: '#9c27b0', border: '#9c27b0' }
             };
             const evidenceKey = item.evidence_level || 'theoretical';
             const colors = evidenceColors[evidenceKey] || evidenceColors.theoretical;
@@ -2211,9 +2268,9 @@
                         <div class="item-section-title">Related Entries</div>
                         <div class="item-section-content">
                             ${item.related_entries.map(relId => {
-                                const relName = relId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                                return `<a href="#" class="related-entry-link" data-entry-id="${relId}" style="display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.25rem 0.5rem; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; color: var(--accent-primary); text-decoration: none; font-size: 0.85rem; transition: all 0.2s;">${relName}</a>`;
-                            }).join('')}
+                    const relName = relId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    return `<a href="#" class="related-entry-link" data-entry-id="${relId}" style="display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.25rem 0.5rem; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; color: var(--accent-primary); text-decoration: none; font-size: 0.85rem; transition: all 0.2s;">${relName}</a>`;
+                }).join('')}
                         </div>
                     </div>
                 `);
@@ -2313,7 +2370,7 @@
             try {
                 const response = await fetch(`${API_URL}/api/encyclopedia/search/${encodeURIComponent(query)}`);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const data = await response.json();
                 displaySearchResults(data);
             } catch (error) {
@@ -2324,7 +2381,7 @@
         function displaySearchResults(data) {
             const searchResults = document.getElementById('searchResults');
             const contentContainer = document.getElementById('contentContainer');
-            
+
             contentContainer.style.display = 'none';
             searchResults.style.display = 'block';
 
@@ -2342,7 +2399,7 @@
         // Search input handler
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim();
-            
+
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 searchEncyclopedia(query);
@@ -2616,14 +2673,14 @@ Write in clear, professional language with no emojis and no headings. Use number
         function initStarfield() {
             const canvas = document.getElementById('starfieldCanvas');
             if (!canvas) return;
-            
+
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
+
             const stars = [];
             const starCount = 150;
-            
+
             for (let i = 0; i < starCount; i++) {
                 stars.push({
                     x: Math.random() * canvas.width,
@@ -2633,28 +2690,28 @@ Write in clear, professional language with no emojis and no headings. Use number
                     opacity: Math.random() * 0.5 + 0.3
                 });
             }
-            
+
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
+
                 stars.forEach(star => {
                     star.y += star.speed;
                     if (star.y > canvas.height) {
                         star.y = 0;
                         star.x = Math.random() * canvas.width;
                     }
-                    
+
                     ctx.beginPath();
                     ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                     ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
                     ctx.fill();
                 });
-                
+
                 requestAnimationFrame(animate);
             }
-            
+
             animate();
-            
+
             window.addEventListener('resize', () => {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
@@ -2664,18 +2721,18 @@ Write in clear, professional language with no emojis and no headings. Use number
         // Calculate and display statistics
         function updateStats() {
             if (!encyclopediaData) return;
-            
+
             let totalEntries = 0;
             let totalSources = 0;
             const categories = new Set();
-            
+
             Object.keys(encyclopediaData).forEach(category => {
                 if (category === 'metadata') return;
                 const entries = encyclopediaData[category];
                 if (entries && typeof entries === 'object') {
                     totalEntries += Object.keys(entries).length;
                     categories.add(category);
-                    
+
                     Object.values(entries).forEach(entry => {
                         if (entry.sources && Array.isArray(entry.sources)) {
                             totalSources += entry.sources.length;
@@ -2683,14 +2740,14 @@ Write in clear, professional language with no emojis and no headings. Use number
                     });
                 }
             });
-            
+
             // Animate numbers
             function animateNumber(element, target) {
                 const duration = 1500;
                 const start = 0;
                 const increment = target / (duration / 16);
                 let current = start;
-                
+
                 const timer = setInterval(() => {
                     current += increment;
                     if (current >= target) {
@@ -2701,7 +2758,7 @@ Write in clear, professional language with no emojis and no headings. Use number
                     }
                 }, 16);
             }
-            
+
             animateNumber(document.getElementById('totalEntries'), totalEntries);
             animateNumber(document.getElementById('totalCategories'), categories.size);
             animateNumber(document.getElementById('totalSources'), totalSources);
@@ -2709,13 +2766,13 @@ Write in clear, professional language with no emojis and no headings. Use number
 
         // Filter functionality
         let activeFilter = 'all';
-        
+
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
                 activeFilter = chip.dataset.filter;
-                
+
                 if (activeFilter === 'all') {
                     renderCategories();
                 } else {
@@ -2728,26 +2785,26 @@ Write in clear, professional language with no emojis and no headings. Use number
         async function loadEncyclopedia() {
             const loadingEl = document.getElementById('loadingIndicator');
             const errorEl = document.getElementById('errorIndicator');
-            
+
             loadingEl.style.display = 'block';
             errorEl.style.display = 'none';
 
             try {
                 console.log('Fetching encyclopedia from:', `${API_URL}/api/encyclopedia`);
                 const response = await fetch(`${API_URL}/api/encyclopedia`);
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
                 }
-                
+
                 encyclopediaData = await response.json();
                 console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
-                
+
                 if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
                     throw new Error('Encyclopedia data is empty');
                 }
-                
+
                 renderCategories();
                 // Auto-select first category if available
                 if (categories.length > 0 && encyclopediaData[categories[0].id]) {
@@ -2773,25 +2830,25 @@ Write in clear, professional language with no emojis and no headings. Use number
 
         // News Ticker Functions
         let tickerUpdates = [];
-        
+
         async function loadTickerUpdates() {
             try {
                 const response = await fetch(`${API_URL}/api/encyclopedia/news`);
                 if (!response.ok) return;
-                
+
                 const data = await response.json();
                 const articles = data.articles || [];
-                
+
                 // Create ticker items from article titles
                 tickerUpdates = articles.slice(0, 10).map(article => {
                     const suppressed = article.is_suppressed ? '[SUPPRESSED] ' : '';
                     return `${suppressed}${article.title}`;
                 });
-                
+
                 if (tickerUpdates.length === 0) {
                     tickerUpdates = ['No new updates available'];
                 }
-                
+
                 updateTicker();
             } catch (error) {
                 console.error('Error loading ticker updates:', error);
@@ -2799,11 +2856,11 @@ Write in clear, professional language with no emojis and no headings. Use number
                 updateTicker();
             }
         }
-        
+
         function updateTicker() {
             const tickerContent = document.getElementById('tickerContent');
             if (!tickerContent) return;
-            
+
             const items = tickerUpdates.map(item => `<span class="ticker-item">${item}</span>`).join('');
             tickerContent.innerHTML = `<span class="ticker-label">Updates:</span>${items}${items}`; // Duplicate for seamless loop
         }
@@ -2852,7 +2909,7 @@ Write in clear, professional language with no emojis and no headings. Use number
 
         function renderNews(articles) {
             const newsGrid = document.getElementById('newsGrid');
-            
+
             if (articles.length === 0) {
                 newsGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; padding: 2rem; text-align: center; color: var(--text-secondary);">
@@ -2900,7 +2957,7 @@ Write in clear, professional language with no emojis and no headings. Use number
 
         function filterNews(filter) {
             currentNewsFilter = filter;
-            
+
             // Update filter buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.filter === filter);
@@ -2935,7 +2992,7 @@ Write in clear, professional language with no emojis and no headings. Use number
             const newsSection = document.getElementById('newsSection');
             const isVisible = newsSection.style.display !== 'none';
             newsSection.style.display = isVisible ? 'none' : 'block';
-            
+
             if (!isVisible && newsArticles.length === 0) {
                 loadNews();
             }
@@ -2955,12 +3012,12 @@ Write in clear, professional language with no emojis and no headings. Use number
         initStarfield();
         loadEncyclopedia();
         loadTickerUpdates();
-        
+
         // Refresh ticker every 5 minutes
         setInterval(loadTickerUpdates, 5 * 60 * 1000);
-    
+
         // Related entry click handler
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.classList.contains('related-entry-link')) {
                 e.preventDefault();
                 const entryId = e.target.getAttribute('data-entry-id');
@@ -2979,8 +3036,8 @@ Write in clear, professional language with no emojis and no headings. Use number
                 }
             }
         });
-    
+
     </script>
 </body>
-</html>
 
+</html>

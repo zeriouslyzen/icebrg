@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "model_name": "iceburg-dissident-20251231_165312",
+  "model_path": "models/iceburg/iceburg-dissident-20251231_165312",
+  "training_time_seconds": 43.96378707885742,
+  "total_samples": 16,
+  "filtered_samples": 9,
+  "final_loss": 3.4537326812744142,
+  "evaluation_metrics": {
+    "samples_evaluated": 9,
+    "generation_success_rate": 1.0
+  },
+  "export_paths": {
+    "huggingface": "models/iceburg/iceburg-dissident-20251231_165312/huggingface",
+    "ollama": "models/iceburg/iceburg-dissident-20251231_165312/Modelfile"
+  },
+  "error_message": null
+}

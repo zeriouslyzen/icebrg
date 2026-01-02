@@ -1,0 +1,322 @@
+{
+  "name": "todo_application",
+  "version": "1.0",
+  "author": "ICEBURG",
+  "created_at": "2025-10-14T00:00:00Z",
+  "components": [
+    {
+      "component_type": "header",
+      "id": "app_header",
+      "children": [
+        {
+          "component_type": "text",
+          "id": "app_title",
+          "properties": {
+            "text": "Todo App"
+          },
+          "accessibility": {
+            "role": "heading",
+            "aria-level": "1"
+          }
+        }
+      ]
+    },
+    {
+      "component_type": "container",
+      "id": "main_content",
+      "properties": {
+        "layout": "flex"
+      },
+      "children": [
+        {
+          "component_type": "form",
+          "id": "add_todo_form",
+          "children": [
+            {
+              "component_type": "input",
+              "id": "todo_input",
+              "properties": {
+                "type": "text",
+                "placeholder": "Add a new todo..."
+              },
+              "accessibility": {
+                "aria-label": "New todo item",
+                "role": "textbox"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "add_button",
+              "properties": {
+                "text": "Add",
+                "type": "submit"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Add new todo item"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Add todo item"
+              }
+            }
+          ]
+        },
+        {
+          "component_type": "container",
+          "id": "filter_controls",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "button",
+              "id": "filter_all",
+              "properties": {
+                "text": "All",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Show all todos"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Show all todos"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "filter_active",
+              "properties": {
+                "text": "Active",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Show active todos"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Show active todos"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "filter_completed",
+              "properties": {
+                "text": "Completed",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Show completed todos"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Show completed todos"
+              }
+            }
+          ]
+        },
+        {
+          "component_type": "list",
+          "id": "todo_list",
+          "children": [
+            {
+              "component_type": "card",
+              "id": "todo_item_1",
+              "children": [
+                {
+                  "component_type": "input",
+                  "id": "todo_checkbox_1",
+                  "properties": {
+                    "type": "checkbox"
+                  },
+                  "accessibility": {
+                    "aria-label": "Mark todo as complete"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "todo_text_1",
+                  "properties": {
+                    "text": "Learn ICEBURG Visual Generation"
+                  }
+                },
+                {
+                  "component_type": "button",
+                  "id": "delete_button_1",
+                  "properties": {
+                    "text": "Delete",
+                    "type": "button"
+                  },
+                  "interactions": [
+                    {
+                      "event_type": "click",
+                      "handler_description": "Delete todo item"
+                    }
+                  ],
+                  "accessibility": {
+                    "aria-label": "Delete todo item"
+                  }
+                }
+              ]
+            },
+            {
+              "component_type": "card",
+              "id": "todo_item_2",
+              "children": [
+                {
+                  "component_type": "input",
+                  "id": "todo_checkbox_2",
+                  "properties": {
+                    "type": "checkbox"
+                  },
+                  "accessibility": {
+                    "aria-label": "Mark todo as complete"
+                  }
+                },
+                {
+                  "component_type": "text",
+                  "id": "todo_text_2",
+                  "properties": {
+                    "text": "Build amazing UIs with IIR"
+                  }
+                },
+                {
+                  "component_type": "button",
+                  "id": "delete_button_2",
+                  "properties": {
+                    "text": "Delete",
+                    "type": "button"
+                  },
+                  "interactions": [
+                    {
+                      "event_type": "click",
+                      "handler_description": "Delete todo item"
+                    }
+                  ],
+                  "accessibility": {
+                    "aria-label": "Delete todo item"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component_type": "container",
+          "id": "footer_actions",
+          "properties": {
+            "layout": "flex"
+          },
+          "children": [
+            {
+              "component_type": "text",
+              "id": "todo_count",
+              "properties": {
+                "text": "2 items left"
+              }
+            },
+            {
+              "component_type": "button",
+              "id": "clear_completed",
+              "properties": {
+                "text": "Clear Completed",
+                "type": "button"
+              },
+              "interactions": [
+                {
+                  "event_type": "click",
+                  "handler_description": "Clear all completed todos"
+                }
+              ],
+              "accessibility": {
+                "aria-label": "Clear completed todos"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "layout": {
+    "layout_type": "flex",
+    "direction": "column",
+    "gap": "20px",
+    "padding": "30px",
+    "align_items": "stretch",
+    "justify_content": "flex-start"
+  },
+  "theme": {
+    "name": "todo_app",
+    "primary_color": "#10B981",
+    "secondary_color": "#6B7280",
+    "background_color": "#FFFFFF",
+    "text_color": "#111827",
+    "font_family": "Inter, system-ui, sans-serif",
+    "font_size_base": "16px",
+    "border_radius": "8px",
+    "shadow_base": "0 1px 3px rgba(0,0,0,0.1)"
+  },
+  "interactions": [
+    {
+      "event_type": "click",
+      "handler_description": "Handle todo item interactions",
+      "target_selector": "button"
+    },
+    {
+      "event_type": "change",
+      "handler_description": "Handle checkbox changes",
+      "target_selector": "input[type='checkbox']"
+    },
+    {
+      "event_type": "submit",
+      "handler_description": "Handle form submission",
+      "target_selector": "form"
+    }
+  ],
+  "accessibility_requirements": {
+    "wcag_level": "AA",
+    "min_contrast_ratio": 4.5,
+    "keyboard_navigable": true,
+    "screen_reader_compatible": true,
+    "aria_labels_required": true,
+    "focus_indicators": true,
+    "alt_text_required": false,
+    "semantic_html": true
+  },
+  "performance_budget": {
+    "max_load_time_ms": 150,
+    "max_bundle_size_kb": 75,
+    "max_dom_nodes": 150,
+    "max_reflows": 4,
+    "max_repaints": 6,
+    "cumulative_layout_shift": 0.08,
+    "first_contentful_paint_ms": 120,
+    "largest_contentful_paint_ms": 200
+  },
+  "security_contracts": [
+    "no_external_scripts",
+    "no_inline_eval",
+    "sanitized_content",
+    "csp_compliant",
+    "no_dangerous_urls",
+    "wcag_aa_compliant",
+    "keyboard_navigable",
+    "screen_reader_compatible",
+    "has_aria_labels",
+    "fast_load",
+    "small_bundle",
+    "no_layout_shift",
+    "no_tracking",
+    "no_third_party_embeds",
+    "local_storage_only",
+    "no_pii_exposure"
+  ]
+}

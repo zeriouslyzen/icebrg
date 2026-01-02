@@ -1,7 +1,7 @@
 import random
 import time
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 from ..portfolio.portfolio_manager import Fill
 
@@ -12,7 +12,7 @@ class MarketState:
 
 
 class PaperBroker:
-    def __init__(self, initial_prices: Dict[str, float] | None = None, seed: int = 42) -> None:
+    def __init__(self, initial_prices: Optional[Dict[str, float]] = None, seed: int = 42) -> None:
         random.seed(seed)
         self.state: Dict[str, MarketState] = {}
         initial_prices = initial_prices or {"BTC/USDC": 60000.0, "ETH/USDC": 3000.0}

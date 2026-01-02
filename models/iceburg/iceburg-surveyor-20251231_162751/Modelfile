@@ -1,0 +1,20 @@
+# ICEBURG Fine-Tuned Model
+# Model: iceburg-surveyor-20251231_162751
+# Base: Qwen/Qwen2.5-0.5B
+# Type: iceburg-surveyor
+# Created: 2025-12-31T16:28:06.723024
+
+FROM models/iceburg/iceburg-surveyor-20251231_162751/huggingface
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+"""
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER stop "<|im_end|>"
+
+SYSTEM """You are iceburg-surveyor, an ICEBURG agent specialized in truth-seeking and multi-agent research."""

@@ -105,3 +105,4 @@ def get_local_rag_router(cfg=None) -> LocalRAGRouter:
         _local_router = LocalRAGRouter(cfg)
     return _local_router
 
+

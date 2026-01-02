@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d2" for="edge" attr.name="id" attr.type="string"/>
+<key id="d1" for="edge" attr.name="type" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="Collective Consciousness Drives Evolution">
+  <data key="d0">principle</data>
+</node>
+<node id="Ecological succession">
+  <data key="d0">domain</data>
+</node>
+<node id="Cultural transmission">
+  <data key="d0">domain</data>
+</node>
+<node id="Quantum entanglement">
+  <data key="d0">domain</data>
+</node>
+<node id="Human evolution is influenced by subtle, collective consciousness, driving adaptation and cultural transmission.">
+  <data key="d0">principle</data>
+</node>
+<node id="Hidden Patterns Principle">
+  <data key="d0">principle</data>
+</node>
+<node id="finance">
+  <data key="d0">domain</data>
+</node>
+<node id="biology">
+  <data key="d0">domain</data>
+</node>
+<node id="psychology">
+  <data key="d0">domain</data>
+</node>
+<node id="Humans' seemingly irrational decisions are influenced by subconscious patterns rooted in collective unconscious.">
+  <data key="d0">principle</data>
+</node>
+<node id="Pattern Recognition in Complex Systems">
+  <data key="d0">principle</data>
+</node>
+<node id="complex systems">
+  <data key="d0">domain</data>
+</node>
+<node id="chaos theory">
+  <data key="d0">domain</data>
+</node>
+<node id="ecology">
+  <data key="d0">domain</data>
+</node>
+<node id="social networks">
+  <data key="d0">domain</data>
+</node>
+<node id="Recognizing and modeling the underlying dynamics in complex systems can uncover hidden patterns governing their behavior.">
+  <data key="d0">principle</data>
+</node>
+<node id="Convergent Evolution Framework">
+  <data key="d0">principle</data>
+</node>
+<node id="Biology">
+  <data key="d0">domain</data>
+</node>
+<node id="Ecology">
+  <data key="d0">domain</data>
+</node>
+<node id="The rapid development of complex life forms on Earth is driven by a combination of genetic and environmental factors, resulting in a convergent evolution that shapes species' adaptations to their environments.">
+  <data key="d0">principle</data>
+</node>
+<node id="Emergent Consciousness Principle">
+  <data key="d0">principle</data>
+</node>
+<node id="Chaos Theory">
+  <data key="d0">domain</data>
+</node>
+<node id="Psychology">
+  <data key="d0">domain</data>
+</node>
+<node id="Neuroimaging">
+  <data key="d0">domain</data>
+</node>
+<node id="Human consciousness is an emergent property of complex neural networks influenced by subtle patterns in our environment.">
+  <data key="d0">principle</data>
+</node>
+<edge source="Collective Consciousness Drives Evolution" target="Ecological succession">
+  <data key="d1">touches</data>
+  <data key="d2">0</data>
+</edge>
+<edge source="Collective Consciousness Drives Evolution" target="Cultural transmission">
+  <data key="d1">touches</data>
+  <data key="d2">0</data>
+</edge>
+<edge source="Collective Consciousness Drives Evolution" target="Quantum entanglement">
+  <data key="d1">touches</data>
+  <data key="d2">0</data>
+</edge>
+<edge source="Collective Consciousness Drives Evolution" target="Human evolution is influenced by subtle, collective consciousness, driving adaptation and cultural transmission.">
+  <data key="d1">implies</data>
+  <data key="d2">0</data>
+</edge>
+<edge source="Hidden Patterns Principle" target="finance">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Hidden Patterns Principle" target="biology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Hidden Patterns Principle" target="psychology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Hidden Patterns Principle" target="Humans' seemingly irrational decisions are influenced by subconscious patterns rooted in collective unconscious.">
+  <data key="d1">implies</data>
+</edge>
+<edge source="Pattern Recognition in Complex Systems" target="complex systems">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Pattern Recognition in Complex Systems" target="chaos theory">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Pattern Recognition in Complex Systems" target="ecology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Pattern Recognition in Complex Systems" target="social networks">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Pattern Recognition in Complex Systems" target="Recognizing and modeling the underlying dynamics in complex systems can uncover hidden patterns governing their behavior.">
+  <data key="d1">implies</data>
+</edge>
+<edge source="Convergent Evolution Framework" target="Biology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Convergent Evolution Framework" target="Ecology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Convergent Evolution Framework" target="The rapid development of complex life forms on Earth is driven by a combination of genetic and environmental factors, resulting in a convergent evolution that shapes species' adaptations to their environments.">
+  <data key="d1">implies</data>
+</edge>
+<edge source="Emergent Consciousness Principle" target="Chaos Theory">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Emergent Consciousness Principle" target="Ecology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Emergent Consciousness Principle" target="Psychology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Emergent Consciousness Principle" target="Neuroimaging">
+  <data key="d1">touches</data>
+</edge>
+<edge source="Emergent Consciousness Principle" target="Human consciousness is an emergent property of complex neural networks influenced by subtle patterns in our environment.">
+  <data key="d1">implies</data>
+</edge>
+</graph></graphml>
