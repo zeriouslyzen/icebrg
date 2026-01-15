@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "model_name": "iceburg-surveyor-quality",
+  "model_path": "models/iceburg/iceburg-surveyor-quality",
+  "training_time_seconds": 2.8626439571380615,
+  "total_samples": 18,
+  "filtered_samples": 13,
+  "final_loss": 0.5,
+  "evaluation_metrics": {
+    "mock_eval": 0.85
+  },
+  "export_paths": {
+    "huggingface": "models/iceburg/iceburg-surveyor-quality/huggingface",
+    "ollama": "models/iceburg/iceburg-surveyor-quality/Modelfile"
+  },
+  "error_message": null
+}

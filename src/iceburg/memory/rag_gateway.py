@@ -45,3 +45,4 @@ def get_rag_gateway(cfg=None) -> RAGGateway:
         _gateway = RAGGateway(cfg)
     return _gateway
 
+

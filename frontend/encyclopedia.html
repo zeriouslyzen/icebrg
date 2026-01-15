@@ -58,6 +58,477 @@
             }
         }
 
+        /* ===== SCIENCE THEME ENHANCEMENTS ===== */
+
+        /* DNA Helix Animation Overlay */
+        .science-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dna-helix {
+            position: absolute;
+            width: 60px;
+            height: 100%;
+            left: 2%;
+            opacity: 0.08;
+        }
+
+        .dna-helix::before,
+        .dna-helix::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    transparent 0px,
+                    transparent 20px,
+                    rgba(0, 212, 255, 0.4) 20px,
+                    rgba(0, 212, 255, 0.4) 22px,
+                    transparent 22px,
+                    transparent 40px);
+            animation: dna-twist 8s linear infinite;
+        }
+
+        .dna-helix::after {
+            animation-delay: -4s;
+            opacity: 0.6;
+        }
+
+        @keyframes dna-twist {
+            0% {
+                transform: translateY(0) rotateY(0deg);
+            }
+
+            100% {
+                transform: translateY(-40px) rotateY(360deg);
+            }
+        }
+
+        /* Neural Network Mesh */
+        .neural-mesh {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            opacity: 0.04;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.3) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 150, 0.3) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.3) 1px, transparent 1px);
+            background-size: 60px 60px, 80px 80px, 100px 100px;
+            animation: neural-pulse 6s ease-in-out infinite;
+        }
+
+        @keyframes neural-pulse {
+
+            0%,
+            100% {
+                opacity: 0.04;
+            }
+
+            50% {
+                opacity: 0.08;
+            }
+        }
+
+        /* Frequency Waveform */
+        .frequency-wave {
+            position: absolute;
+            bottom: 10%;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            opacity: 0.06;
+            overflow: hidden;
+        }
+
+        .wave-line {
+            position: absolute;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(0, 212, 255, 0.8) 25%,
+                    rgba(255, 0, 150, 0.8) 50%,
+                    rgba(0, 212, 255, 0.8) 75%,
+                    transparent 100%);
+            animation: wave-scroll 12s linear infinite;
+        }
+
+        .wave-line:nth-child(2) {
+            top: 20px;
+            animation-delay: -4s;
+            opacity: 0.7;
+        }
+
+        .wave-line:nth-child(3) {
+            top: 40px;
+            animation-delay: -8s;
+            opacity: 0.5;
+        }
+
+        @keyframes wave-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ===== ICEBURG CHAT ASSISTANT ===== */
+
+        .iceburg-chat-bubble {
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            cursor: pointer;
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: chat-pulse 3s ease-in-out infinite;
+        }
+
+        .iceburg-chat-bubble:hover {
+            transform: scale(1.1);
+            border-color: rgba(0, 212, 255, 0.8);
+            box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .iceburg-chat-bubble.hidden {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .iceburg-chat-bubble svg {
+            width: 28px;
+            height: 28px;
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        @keyframes chat-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.05);
+            }
+
+            50% {
+                box-shadow: 0 4px 30px rgba(0, 212, 255, 0.4), inset 0 0 30px rgba(0, 212, 255, 0.1);
+            }
+        }
+
+        .iceburg-chat-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            width: 380px;
+            height: 500px;
+            background: linear-gradient(145deg, rgba(10, 10, 15, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .iceburg-chat-panel.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .iceburg-chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 150, 0.05) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .iceburg-chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .iceburg-chat-title svg {
+            width: 22px;
+            height: 22px;
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        .iceburg-chat-context {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .iceburg-chat-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .iceburg-chat-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .iceburg-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: message-fade-in 0.3s ease-out;
+        }
+
+        @keyframes message-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 150, 255, 0.15) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--text-primary);
+        }
+
+        .chat-message.assistant {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .chat-message.typing {
+            display: flex;
+            gap: 4px;
+            padding: 16px 20px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(0, 212, 255, 0.6);
+            border-radius: 50%;
+            animation: typing-bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .iceburg-chat-input-container {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 10px;
+        }
+
+        .iceburg-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            resize: none;
+            min-height: 44px;
+            max-height: 100px;
+            transition: border-color 0.2s;
+        }
+
+        .iceburg-chat-input:focus {
+            outline: none;
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .iceburg-chat-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .iceburg-chat-send {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3) 0%, rgba(0, 150, 255, 0.2) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0, 212, 255, 0.9);
+            transition: all 0.2s;
+        }
+
+        .iceburg-chat-send:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.5) 0%, rgba(0, 150, 255, 0.4) 100%);
+            transform: scale(1.05);
+        }
+
+        .iceburg-chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== ENHANCED KNOWLEDGE GRAPH ===== */
+
+        .knowledge-graph-overlay {
+            background: linear-gradient(135deg, rgba(5, 5, 15, 0.98) 0%, rgba(10, 10, 25, 0.98) 100%) !important;
+        }
+
+        .graph-category-legend {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .graph-category-legend h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .legend-item:hover {
+            color: var(--text-primary);
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .graph-stats {
+            position: absolute;
+            top: 1rem;
+            right: 80px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            backdrop-filter: blur(10px);
+        }
+
+        .graph-stats span {
+            color: rgba(0, 212, 255, 0.9);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .iceburg-chat-panel {
+                width: calc(100vw - 32px);
+                right: 16px;
+                bottom: 80px;
+                height: 60vh;
+            }
+
+            .graph-category-legend {
+                display: none;
+            }
+        }
+
         /* Enhanced Hero Section */
         .encyclopedia-hero {
             margin-bottom: 4rem;
@@ -1595,6 +2066,320 @@
             border-color: var(--accent-primary);
             background: rgba(255, 255, 255, 0.1);
         }
+
+        /* ========== FEATURE A: Collapsible Intro ========== */
+        .encyclopedia-intro {
+            transition: all 0.3s ease;
+        }
+
+        .encyclopedia-intro.collapsed {
+            padding: 1rem 3rem;
+        }
+
+        .encyclopedia-intro.collapsed .intro-content,
+        .encyclopedia-intro.collapsed .intro-sections {
+            display: none;
+        }
+
+        .intro-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .intro-toggle-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .intro-toggle-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .skip-to-entries-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .skip-to-entries-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ========== FEATURE B: Reactive Search with Results Count ========== */
+        .search-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            min-height: 24px;
+        }
+
+        .search-status.active {
+            color: var(--text-secondary);
+        }
+
+        .search-result-count {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .search-highlight {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        .search-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* ========== FEATURE C: Research Leads Section ========== */
+        .research-leads-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+        }
+
+        .research-leads-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .research-leads-title svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .research-leads-subsection {
+            margin-bottom: 1.25rem;
+        }
+
+        .research-leads-subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .research-leads-label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .research-leads-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .research-lead-tag {
+            padding: 0.375rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .research-lead-tag:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .research-leads-questions {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .research-leads-questions li {
+            padding: 0.5rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .research-leads-questions li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* ========== FEATURE D: Knowledge Graph ========== */
+        .knowledge-graph-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: var(--bg-elevated);
+            border: 1px solid var(--accent-primary);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .knowledge-graph-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .knowledge-graph-toggle svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-primary);
+        }
+
+        .knowledge-graph-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .knowledge-graph-overlay.active {
+            display: flex;
+        }
+
+        .knowledge-graph-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .knowledge-graph-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .knowledge-graph-close {
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-graph-close:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .knowledge-graph-canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #knowledgeGraphCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .graph-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .graph-controls {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .graph-control-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .graph-control-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .knowledge-graph-toggle {
+                bottom: 1rem;
+                right: 1rem;
+                width: 48px;
+                height: 48px;
+            }
+
+            .intro-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 
@@ -1603,6 +2388,61 @@
     <div class="celestial-background">
         <canvas id="starfieldCanvas"></canvas>
         <div class="celestial-glow"></div>
+    </div>
+
+    <!-- Science Theme Overlays -->
+    <div class="science-overlay">
+        <div class="dna-helix"></div>
+        <div class="neural-mesh"></div>
+        <div class="frequency-wave">
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+        </div>
+    </div>
+
+    <!-- ICEBURG Chat Assistant -->
+    <button class="iceburg-chat-bubble" id="icebergChatBubble" title="Ask ICEBURG">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 19L10 4.5C10.6 3.3 11.1 3 12 3C12.9 3 13.4 3.3 14 4.5L21 19H3Z" />
+            <path d="M5 19L9 12L12 17L15 11L19 19H5Z" />
+        </svg>
+    </button>
+
+    <div class="iceburg-chat-panel" id="icebergChatPanel">
+        <div class="iceburg-chat-header">
+            <div class="iceburg-chat-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 19L10 4.5C10.6 3.3 11.1 3 12 3C12.9 3 13.4 3.3 14 4.5L21 19H3Z" />
+                    <path d="M5 19L9 12L12 17L15 11L19 19H5Z" />
+                </svg>
+                ICEBURG Assistant
+            </div>
+            <button class="iceburg-chat-close" id="icebergChatClose">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="iceburg-chat-context" id="icebergChatContext">
+            📚 Exploring the Celestial Encyclopedia
+        </div>
+        <div class="iceburg-chat-messages" id="icebergChatMessages">
+            <div class="chat-message assistant">
+                Welcome! I'm ICEBURG, your physiology and field-theory research assistant. Ask me anything about the
+                encyclopedia entries, celestial-biological correlations, or how different systems connect.
+            </div>
+        </div>
+        <div class="iceburg-chat-input-container">
+            <textarea class="iceburg-chat-input" id="icebergChatInput" placeholder="Ask about an entry..."
+                rows="1"></textarea>
+            <button class="iceburg-chat-send" id="icebergChatSend">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- Encyclopedia Navbar -->
@@ -1679,14 +2519,25 @@
                         <button class="filter-chip" data-filter="hormones">Hormones</button>
                         <button class="filter-chip" data-filter="tcm_correlations">TCM</button>
                     </div>
+                    <!-- Search Status -->
+                    <div class="search-status" id="searchStatus"></div>
                 </div>
             </div>
         </div>
 
         <!-- Introduction Section -->
-        <div class="encyclopedia-intro">
+        <div class="encyclopedia-intro" id="encyclopediaIntro">
             <div class="intro-header">
-                <h2 class="intro-title">Understanding Celestial-Biological Correlations</h2>
+                <div class="intro-controls">
+                    <h2 class="intro-title">Understanding Celestial-Biological Correlations</h2>
+                    <button class="intro-toggle-btn" id="introToggleBtn" title="Collapse/Expand">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M4 6L8 10L12 6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span id="introToggleText">Collapse</span>
+                    </button>
+                </div>
             </div>
             <div class="intro-content">
                 <p>The Celestial Encyclopedia represents a systematic investigation into the fundamental patterns
@@ -1758,6 +2609,13 @@
                     </div>
                 </div>
             </div>
+            <button class="skip-to-entries-btn" id="skipToEntriesBtn">
+                Skip to entries
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
+                    style="margin-left: 0.5rem;">
+                    <path d="M8 3L8 13M8 13L13 8M8 13L3 8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
         </div>
 
         <!-- Main Layout with Sidebar -->
@@ -1844,6 +2702,48 @@
         </div>
     </div>
 
+    <!-- Knowledge Graph Toggle Button -->
+    <button class="knowledge-graph-toggle" id="knowledgeGraphToggle" title="View Connections">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="18" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="18" r="3" />
+            <circle cx="12" cy="12" r="3" />
+            <path d="M8.5 8.5L9.5 9.5M14.5 9.5L15.5 8.5M8.5 15.5L9.5 14.5M14.5 14.5L15.5 15.5" />
+        </svg>
+    </button>
+
+    <!-- Knowledge Graph Overlay -->
+    <div class="knowledge-graph-overlay" id="knowledgeGraphOverlay">
+        <div class="knowledge-graph-header">
+            <h2 class="knowledge-graph-title">Entry Connections</h2>
+            <button class="knowledge-graph-close" id="knowledgeGraphClose">Close</button>
+        </div>
+        <div class="knowledge-graph-canvas-container">
+            <canvas id="knowledgeGraphCanvas"></canvas>
+            <div class="graph-legend">Drag to pan · Scroll to zoom · Click nodes to view entries</div>
+            <div class="graph-stats"><span>0</span> nodes · <span>0</span> connections</div>
+            <div class="graph-controls">
+                <button class="graph-control-btn" id="graphZoomIn" title="Zoom In">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 4V16M4 10H16" />
+                    </svg>
+                </button>
+                <button class="graph-control-btn" id="graphZoomOut" title="Zoom Out">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 10H16" />
+                    </svg>
+                </button>
+                <button class="graph-control-btn" id="graphReset" title="Reset View">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4L16 16M16 4L4 16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Use backend API URL (port 8000 for localhost, or detect from environment)
         // On localhost: uses http://localhost:8000 (backend API)
@@ -1853,6 +2753,8 @@
 
         console.log('Encyclopedia API URL:', API_URL, 'Hostname:', window.location.hostname);
 
+        // Make encyclopediaData globally accessible for all scripts (including knowledge graph)
+        window.encyclopediaData = null;
         let encyclopediaData = null;
         let currentCategory = null;
         let searchTimeout = null;
@@ -1888,7 +2790,11 @@
             { id: 'collective_states', name: 'Collective States', description: 'Group coherence, mass attention events, and planetary-scale human states' },
             { id: 'information_dynamics', name: 'Information Dynamics', description: 'HRV coherence, EEG global coherence, and information-theoretic descriptors' },
             { id: 'patents', name: 'Patents', description: 'Patents related to EM fields, consciousness technologies, and biological effects' },
-            { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' }
+            { id: 'cern_research', name: 'CERN Research', description: 'CERN particle physics research related to biological systems' },
+            { id: 'suppressed_physics', name: 'Suppressed Energy Physics', description: 'Zero Point Energy, Scalar Waves, Electrogravitics - physics beyond the standard model' },
+            { id: 'forbidden_archaeology', name: 'Forbidden Archaeology', description: 'Giant skeletons, OOPARTS, pre-ice age civilizations, and anomalies ignored by academia' },
+            { id: 'resonant_technologies', name: 'Resonant Technologies', description: 'Rife frequencies, Cymatics, MWO, and technologies utilizing harmonic resonance' },
+            { id: 'visionary_science', name: 'Visionary Science', description: 'Russell, Schauberger, Reich, Tesla - holistic scientific frameworks' }
         ];
 
         async function loadEncyclopedia() {
@@ -1908,6 +2814,7 @@
                 }
 
                 encyclopediaData = await response.json();
+                window.encyclopediaData = encyclopediaData; // Sync to global for other scripts
                 console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
 
                 if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
@@ -2799,6 +3706,7 @@ Write in clear, professional language with no emojis and no headings. Use number
                 }
 
                 encyclopediaData = await response.json();
+                window.encyclopediaData = encyclopediaData; // Sync to global for other scripts
                 console.log('Encyclopedia data loaded:', Object.keys(encyclopediaData || {}));
 
                 if (!encyclopediaData || Object.keys(encyclopediaData).length === 0) {
@@ -3036,6 +3944,928 @@ Write in clear, professional language with no emojis and no headings. Use number
                 }
             }
         });
+
+        // ========== FEATURE A: Collapsible Intro ==========
+        const introSection = document.getElementById('encyclopediaIntro');
+        const introToggleBtn = document.getElementById('introToggleBtn');
+        const introToggleText = document.getElementById('introToggleText');
+        const skipToEntriesBtn = document.getElementById('skipToEntriesBtn');
+
+        // Check localStorage for preference
+        const introCollapsed = localStorage.getItem('encyclopediaIntroCollapsed') === 'true';
+        if (introCollapsed) {
+            introSection?.classList.add('collapsed');
+            if (introToggleText) introToggleText.textContent = 'Expand';
+        }
+
+        introToggleBtn?.addEventListener('click', () => {
+            const isCollapsed = introSection.classList.toggle('collapsed');
+            localStorage.setItem('encyclopediaIntroCollapsed', isCollapsed);
+            introToggleText.textContent = isCollapsed ? 'Expand' : 'Collapse';
+        });
+
+        skipToEntriesBtn?.addEventListener('click', () => {
+            document.getElementById('categoriesContainer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Also collapse the intro
+            introSection?.classList.add('collapsed');
+            localStorage.setItem('encyclopediaIntroCollapsed', 'true');
+            if (introToggleText) introToggleText.textContent = 'Expand';
+        });
+
+        // ========== FEATURE B: Reactive Instant Search ==========
+        const searchInput = document.getElementById('searchInput');
+        const searchStatus = document.getElementById('searchStatus');
+        let searchDebounceTimer = null;
+
+        function highlightText(text, query) {
+            if (!query || !text) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function searchAllEntries(query) {
+            if (!encyclopediaData || !query) return [];
+
+            const results = [];
+            const lowerQuery = query.toLowerCase();
+
+            for (const categoryId in encyclopediaData) {
+                if (categoryId === 'metadata') continue;
+                const categoryData = encyclopediaData[categoryId];
+                if (!categoryData || typeof categoryData !== 'object') continue;
+
+                for (const entryId in categoryData) {
+                    const entry = categoryData[entryId];
+                    const searchFields = [
+                        entry.name || entryId,
+                        entry.description || '',
+                        entry.research_notes || '',
+                        entry.origin_story || '',
+                        Array.isArray(entry.biological_correlations) ? entry.biological_correlations.join(' ') : '',
+                        Array.isArray(entry.related_entries) ? entry.related_entries.join(' ') : ''
+                    ].join(' ').toLowerCase();
+
+                    if (searchFields.includes(lowerQuery)) {
+                        results.push({ ...entry, id: entryId, category: categoryId });
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        function renderReactiveSearchResults(results, query) {
+            const contentContainer = document.getElementById('contentContainer');
+            const searchResults = document.getElementById('searchResults');
+            const categoriesContainer = document.getElementById('categoriesContainer');
+
+            if (results.length === 0) {
+                searchResults.style.display = 'none';
+                contentContainer.style.display = 'none';
+                categoriesContainer.style.display = 'grid';
+                searchStatus.innerHTML = `No results found for "<strong>${query}</strong>"`;
+                searchStatus.classList.add('active');
+                return;
+            }
+
+            // Hide normal views, show search results
+            categoriesContainer.style.display = 'none';
+            contentContainer.style.display = 'none';
+            searchResults.style.display = 'block';
+
+            searchStatus.innerHTML = `<span class="search-result-count">${results.length}</span> entries found for "<strong>${query}</strong>"`;
+            searchStatus.classList.add('active');
+
+            searchResults.innerHTML = `
+                <div class="search-results-grid">
+                    ${results.map(item => {
+                const name = highlightText(item.name || item.id, query);
+                const desc = item.description ? highlightText(item.description.substring(0, 150), query) + '...' : '';
+                return `
+                            <div class="encyclopedia-item-card" data-item-id="${item.id}" data-category="${item.category}">
+                                <div class="item-card-header">
+                                    <div class="item-card-name">${name}</div>
+                                    <span class="item-card-category">${item.category.replace(/_/g, ' ')}</span>
+                                </div>
+                                <div class="item-card-preview">
+                                    <div class="item-card-description">${desc}</div>
+                                </div>
+                                <div class="item-card-footer">
+                                    <button class="item-card-view-btn" onclick="openEntryModal('${item.id}', '${item.category}')">View Details</button>
+                                </div>
+                            </div>
+                        `;
+            }).join('')}
+                </div>
+            `;
+        }
+
+        function clearSearch() {
+            const searchResults = document.getElementById('searchResults');
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            searchResults.style.display = 'none';
+            categoriesContainer.style.display = 'grid';
+            searchStatus.innerHTML = '';
+            searchStatus.classList.remove('active');
+        }
+
+        searchInput?.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+
+            clearTimeout(searchDebounceTimer);
+
+            if (!query) {
+                clearSearch();
+                return;
+            }
+
+            searchStatus.innerHTML = 'Searching...';
+            searchStatus.classList.add('active');
+
+            searchDebounceTimer = setTimeout(() => {
+                const results = searchAllEntries(query);
+                renderReactiveSearchResults(results, query);
+            }, 150);
+        });
+
+        // ========== FEATURE C: Research Leads in Modal ==========
+        function renderResearchLeads(item) {
+            // Check if item has research_leads or generate from related_entries
+            const leads = item.research_leads || {};
+            const relatedEntries = item.related_entries || [];
+
+            // Generate search terms from entry name and key fields
+            const searchTerms = leads.search_terms || [];
+            if (searchTerms.length === 0 && item.name) {
+                searchTerms.push(item.name);
+                if (item.category) searchTerms.push(item.category.replace(/_/g, ' '));
+            }
+
+            // Generate rabbit hole questions based on entry type
+            const questions = leads.rabbit_holes || [];
+            if (questions.length === 0) {
+                if (item.evidence_level === 'Suppressed' || item.category === 'suppressed_research') {
+                    questions.push('What led to the suppression of this research?');
+                    questions.push('Are there modern replications or continuations?');
+                }
+                if (relatedEntries.length > 0) {
+                    questions.push(`How does this connect to ${relatedEntries[0]}?`);
+                }
+            }
+
+            // Only render if we have content
+            if (searchTerms.length === 0 && questions.length === 0 && relatedEntries.length === 0) {
+                return '';
+            }
+
+            return `
+                <div class="research-leads-section">
+                    <div class="research-leads-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21L16.65 16.65"/>
+                        </svg>
+                        Research Leads
+                    </div>
+                    ${searchTerms.length > 0 ? `
+                        <div class="research-leads-subsection">
+                            <div class="research-leads-label">Search Terms</div>
+                            <div class="research-leads-tags">
+                                ${searchTerms.map(term => `
+                                    <span class="research-lead-tag" onclick="document.getElementById('searchInput').value='${term}';document.getElementById('searchInput').dispatchEvent(new Event('input'));">${term}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${relatedEntries.length > 0 ? `
+                        <div class="research-leads-subsection">
+                            <div class="research-leads-label">Connected Entries</div>
+                            <div class="research-leads-tags">
+                                ${relatedEntries.slice(0, 5).map(entry => `
+                                    <span class="research-lead-tag related-entry-link" data-entry-id="${entry}">${entry.replace(/_/g, ' ')}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${questions.length > 0 ? `
+                        <div class="research-leads-subsection">
+                            <div class="research-leads-label">Questions to Explore</div>
+                            <ul class="research-leads-questions">
+                                ${questions.map(q => `<li>${q}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Patch the existing openEntryModal to include research leads
+        const originalOpenEntryModal = window.openEntryModal;
+        window.openEntryModal = function (entryId, categoryId) {
+            if (originalOpenEntryModal) {
+                originalOpenEntryModal(entryId, categoryId);
+            }
+
+            // After modal renders, append research leads
+            setTimeout(() => {
+                const modalBody = document.getElementById('modalBody');
+                if (modalBody && encyclopediaData && encyclopediaData[categoryId] && encyclopediaData[categoryId][entryId]) {
+                    const item = encyclopediaData[categoryId][entryId];
+                    const researchLeadsHtml = renderResearchLeads({ ...item, id: entryId, category: categoryId });
+                    if (researchLeadsHtml && !modalBody.querySelector('.research-leads-section')) {
+                        modalBody.insertAdjacentHTML('beforeend', researchLeadsHtml);
+                    }
+                }
+            }, 100);
+        };
+
+        // ========== FEATURE D: Knowledge Graph - ADVANCED FORCE-DIRECTED ==========
+        const graphToggle = document.getElementById('knowledgeGraphToggle');
+        const graphOverlay = document.getElementById('knowledgeGraphOverlay');
+        const graphClose = document.getElementById('knowledgeGraphClose');
+        const graphCanvas = document.getElementById('knowledgeGraphCanvas');
+        let graphCtx = null;
+        let graphNodes = [];
+        let graphEdges = [];
+        let graphTransform = { x: 0, y: 0, scale: 1, vx: 0, vy: 0 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let animationId = null;
+        let isSimulating = true;
+        let selectedNode = null;
+        let hoveredNode = null;
+        let lastTime = 0;
+        let pulsePhase = 0;
+
+        // Category color palette - science-inspired
+        const categoryColors = {
+            'celestial_bodies': '#00d4ff',
+            'voltage_gates': '#ff6b9d',
+            'neurotransmitters': '#00ff88',
+            'hormones': '#ffaa00',
+            'biophysical_parameters': '#aa88ff',
+            'molecular_chemistry': '#ff4466',
+            'electromagnetic_environment': '#00ffff',
+            'organ_systems': '#ff88aa',
+            'cellular_processes': '#88ff88',
+            'circadian_biology': '#ffdd44',
+            'quantum_biology': '#dd88ff',
+            'research_methodologies': '#88ddff',
+            'tcm_correlations': '#ffbb88',
+            'coherence_systems': '#88ffdd',
+            'morphic_fields': '#ff88dd',
+            'vedic_knowledge': '#ddaa88',
+            'schumann_resonance': '#88aaff',
+            'government_research': '#aaaaaa',
+            'suppressed_research': '#ff4444',
+            'occult_psychology': '#aa44aa',
+            'documented_anomalies': '#44aaaa',
+            'astro_archaeology': '#ddbb66',
+            'ancient_technology': '#998866',
+            'pyramid_studies': '#ddcc88',
+            'entheogens': '#66aa66',
+            'mystery_traditions': '#886688',
+            'field_topologies': '#66dddd',
+            'collective_states': '#dd6688',
+            'information_dynamics': '#6688dd',
+            'patents': '#888888',
+            'cern_research': '#4488dd',
+            'suppressed_physics': '#dd4488',
+            'forbidden_archaeology': '#88aa44',
+            'resonant_technologies': '#44ddaa',
+            'visionary_science': '#aa44dd'
+        };
+
+        // Physics constants
+        const PHYSICS = {
+            repulsion: 3000,
+            attraction: 0.008,
+            damping: 0.92,
+            centerGravity: 0.01,
+            maxVelocity: 15,
+            minDistance: 30,
+            edgeLength: 120
+        };
+
+        function getNodeColor(category) {
+            return categoryColors[category] || '#ffffff';
+        }
+
+        function buildGraphData() {
+            // Use window.encyclopediaData for cross-script access
+            const data = window.encyclopediaData || encyclopediaData;
+            if (!data) return;
+
+            graphNodes = [];
+            graphEdges = [];
+            const nodeMap = {};
+
+            // Build nodes with physics properties
+            let nodeIndex = 0;
+            const totalNodes = Object.keys(data).reduce((sum, cat) => {
+                if (cat === 'metadata') return sum;
+                return sum + Object.keys(data[cat] || {}).length;
+            }, 0);
+
+            for (const categoryId in data) {
+                if (categoryId === 'metadata') continue;
+                const categoryData = data[categoryId];
+                if (!categoryData || typeof categoryData !== 'object') continue;
+
+                for (const entryId in categoryData) {
+                    const entry = categoryData[entryId];
+                    const angle = (nodeIndex / totalNodes) * Math.PI * 2 + Math.random() * 0.5;
+                    const radius = 150 + Math.random() * 350;
+
+                    nodeMap[entryId] = graphNodes.length;
+                    graphNodes.push({
+                        id: entryId,
+                        name: entry.name || entryId,
+                        category: categoryId,
+                        x: Math.cos(angle) * radius,
+                        y: Math.sin(angle) * radius,
+                        vx: 0,
+                        vy: 0,
+                        radius: 5 + Math.min(5, (entry.related_entries?.length || 0) * 0.5),
+                        color: getNodeColor(categoryId),
+                        connections: entry.related_entries?.length || 0
+                    });
+                    nodeIndex++;
+                }
+            }
+
+            // Build edges
+            for (const categoryId in data) {
+                if (categoryId === 'metadata') continue;
+                const categoryData = data[categoryId];
+                if (!categoryData || typeof categoryData !== 'object') continue;
+
+                for (const entryId in categoryData) {
+                    const entry = categoryData[entryId];
+                    const relatedEntries = entry.related_entries || [];
+                    const sourceIndex = nodeMap[entryId];
+
+                    for (const relatedId of relatedEntries) {
+                        const targetIndex = nodeMap[relatedId];
+                        if (targetIndex !== undefined && sourceIndex !== targetIndex) {
+                            // Avoid duplicate edges
+                            const exists = graphEdges.some(e =>
+                                (e.source === sourceIndex && e.target === targetIndex) ||
+                                (e.source === targetIndex && e.target === sourceIndex)
+                            );
+                            if (!exists) {
+                                graphEdges.push({
+                                    source: sourceIndex,
+                                    target: targetIndex,
+                                    pulseOffset: Math.random() * Math.PI * 2
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function applyPhysics(deltaTime) {
+            if (!isSimulating || graphNodes.length === 0) return;
+
+            const dt = Math.min(deltaTime, 50) / 1000;
+
+            // Apply repulsion between all nodes
+            for (let i = 0; i < graphNodes.length; i++) {
+                for (let j = i + 1; j < graphNodes.length; j++) {
+                    const nodeA = graphNodes[i];
+                    const nodeB = graphNodes[j];
+
+                    const dx = nodeB.x - nodeA.x;
+                    const dy = nodeB.y - nodeA.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+
+                    if (distance < PHYSICS.minDistance * 10) {
+                        const force = PHYSICS.repulsion / (distance * distance);
+                        const fx = (dx / distance) * force * dt;
+                        const fy = (dy / distance) * force * dt;
+
+                        nodeA.vx -= fx;
+                        nodeA.vy -= fy;
+                        nodeB.vx += fx;
+                        nodeB.vy += fy;
+                    }
+                }
+            }
+
+            // Apply attraction along edges
+            for (const edge of graphEdges) {
+                const source = graphNodes[edge.source];
+                const target = graphNodes[edge.target];
+
+                const dx = target.x - source.x;
+                const dy = target.y - source.y;
+                const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+
+                const force = (distance - PHYSICS.edgeLength) * PHYSICS.attraction * dt;
+                const fx = (dx / distance) * force;
+                const fy = (dy / distance) * force;
+
+                source.vx += fx;
+                source.vy += fy;
+                target.vx -= fx;
+                target.vy -= fy;
+            }
+
+            // Apply center gravity and update positions
+            for (const node of graphNodes) {
+                // Center gravity
+                node.vx -= node.x * PHYSICS.centerGravity * dt;
+                node.vy -= node.y * PHYSICS.centerGravity * dt;
+
+                // Apply damping
+                node.vx *= PHYSICS.damping;
+                node.vy *= PHYSICS.damping;
+
+                // Clamp velocity
+                const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+                if (speed > PHYSICS.maxVelocity) {
+                    node.vx = (node.vx / speed) * PHYSICS.maxVelocity;
+                    node.vy = (node.vy / speed) * PHYSICS.maxVelocity;
+                }
+
+                // Update position (skip if being dragged)
+                if (node !== selectedNode) {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                }
+            }
+        }
+
+        function drawGraph(timestamp) {
+            if (!graphCtx || !graphCanvas) return;
+
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+            pulsePhase += deltaTime * 0.002;
+
+            // Apply momentum to pan
+            if (!isDragging) {
+                graphTransform.x += graphTransform.vx;
+                graphTransform.y += graphTransform.vy;
+                graphTransform.vx *= 0.95;
+                graphTransform.vy *= 0.95;
+            }
+
+            applyPhysics(deltaTime);
+
+            const width = graphCanvas.width;
+            const height = graphCanvas.height;
+
+            // Clear with gradient background
+            const bgGradient = graphCtx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width / 2);
+            bgGradient.addColorStop(0, 'rgba(10, 10, 20, 1)');
+            bgGradient.addColorStop(1, 'rgba(5, 5, 10, 1)');
+            graphCtx.fillStyle = bgGradient;
+            graphCtx.fillRect(0, 0, width, height);
+
+            graphCtx.save();
+
+            // Apply transform with smooth centering
+            graphCtx.translate(width / 2 + graphTransform.x, height / 2 + graphTransform.y);
+            graphCtx.scale(graphTransform.scale, graphTransform.scale);
+
+            // Draw edges with animated pulses
+            for (const edge of graphEdges) {
+                const source = graphNodes[edge.source];
+                const target = graphNodes[edge.target];
+                if (!source || !target) continue;
+
+                const isConnectedToHovered = hoveredNode &&
+                    (source === hoveredNode || target === hoveredNode);
+
+                // Base edge
+                graphCtx.beginPath();
+                graphCtx.moveTo(source.x, source.y);
+                graphCtx.lineTo(target.x, target.y);
+
+                if (isConnectedToHovered) {
+                    graphCtx.strokeStyle = `rgba(0, 212, 255, 0.6)`;
+                    graphCtx.lineWidth = 2 / graphTransform.scale;
+                } else {
+                    graphCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                    graphCtx.lineWidth = 1 / graphTransform.scale;
+                }
+                graphCtx.stroke();
+
+                // Animated pulse on connected edges
+                if (isConnectedToHovered) {
+                    const pulsePos = (Math.sin(pulsePhase + edge.pulseOffset) + 1) / 2;
+                    const px = source.x + (target.x - source.x) * pulsePos;
+                    const py = source.y + (target.y - source.y) * pulsePos;
+
+                    graphCtx.beginPath();
+                    graphCtx.arc(px, py, 3 / graphTransform.scale, 0, Math.PI * 2);
+                    graphCtx.fillStyle = 'rgba(0, 212, 255, 0.8)';
+                    graphCtx.fill();
+                }
+            }
+
+            // Draw nodes with glow
+            for (const node of graphNodes) {
+                const isHovered = node === hoveredNode;
+                const isConnected = hoveredNode && graphEdges.some(e =>
+                    (graphNodes[e.source] === hoveredNode && graphNodes[e.target] === node) ||
+                    (graphNodes[e.target] === hoveredNode && graphNodes[e.source] === node)
+                );
+
+                // Glow effect
+                if (isHovered || isConnected) {
+                    const glowGradient = graphCtx.createRadialGradient(
+                        node.x, node.y, 0,
+                        node.x, node.y, (node.radius * 3) / graphTransform.scale
+                    );
+                    glowGradient.addColorStop(0, node.color + '60');
+                    glowGradient.addColorStop(1, 'transparent');
+                    graphCtx.fillStyle = glowGradient;
+                    graphCtx.fillRect(
+                        node.x - 30 / graphTransform.scale,
+                        node.y - 30 / graphTransform.scale,
+                        60 / graphTransform.scale,
+                        60 / graphTransform.scale
+                    );
+                }
+
+                // Node circle
+                graphCtx.beginPath();
+                graphCtx.arc(node.x, node.y, node.radius / graphTransform.scale, 0, Math.PI * 2);
+
+                if (isHovered) {
+                    graphCtx.fillStyle = '#ffffff';
+                    graphCtx.shadowColor = node.color;
+                    graphCtx.shadowBlur = 20;
+                } else {
+                    graphCtx.fillStyle = node.color + (isConnected ? 'ff' : '99');
+                    graphCtx.shadowBlur = 0;
+                }
+                graphCtx.fill();
+                graphCtx.shadowBlur = 0;
+
+                // Label for hovered node
+                if (isHovered) {
+                    const fontSize = Math.max(12, 14 / graphTransform.scale);
+                    graphCtx.font = `600 ${fontSize}px Inter, system-ui, sans-serif`;
+                    graphCtx.fillStyle = '#ffffff';
+                    graphCtx.textAlign = 'center';
+
+                    // Background for label
+                    const textMetrics = graphCtx.measureText(node.name);
+                    const labelY = node.y - (node.radius + 8) / graphTransform.scale;
+                    graphCtx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    graphCtx.fillRect(
+                        node.x - textMetrics.width / 2 - 8,
+                        labelY - fontSize,
+                        textMetrics.width + 16,
+                        fontSize + 8
+                    );
+
+                    graphCtx.fillStyle = '#ffffff';
+                    graphCtx.fillText(node.name, node.x, labelY);
+                }
+            }
+
+            graphCtx.restore();
+
+            // Continue animation
+            if (graphOverlay.classList.contains('active')) {
+                animationId = requestAnimationFrame(drawGraph);
+            }
+        }
+
+        function getMousePos(e) {
+            const rect = graphCanvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left - graphCanvas.width / 2 - graphTransform.x) / graphTransform.scale,
+                y: (e.clientY - rect.top - graphCanvas.height / 2 - graphTransform.y) / graphTransform.scale
+            };
+        }
+
+        function findNodeAt(mouseX, mouseY) {
+            for (const node of graphNodes) {
+                const dx = mouseX - node.x;
+                const dy = mouseY - node.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < (node.radius + 10) / graphTransform.scale) {
+                    return node;
+                }
+            }
+            return null;
+        }
+
+        function initKnowledgeGraph() {
+            if (!graphCanvas) return;
+
+            graphCanvas.width = graphCanvas.parentElement.clientWidth;
+            graphCanvas.height = graphCanvas.parentElement.clientHeight;
+            graphCtx = graphCanvas.getContext('2d');
+
+            buildGraphData();
+            graphTransform = { x: 0, y: 0, scale: 0.7, vx: 0, vy: 0 };
+            isSimulating = true;
+            lastTime = performance.now();
+
+            // Update stats
+            const statsEl = document.querySelector('.graph-stats');
+            if (statsEl) {
+                statsEl.innerHTML = `<span>${graphNodes.length}</span> nodes · <span>${graphEdges.length}</span> connections`;
+            }
+
+            // Start animation
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = requestAnimationFrame(drawGraph);
+
+            // Mouse events with momentum
+            let lastMousePos = { x: 0, y: 0 };
+            let lastMouseTime = 0;
+
+            graphCanvas.addEventListener('mousedown', (e) => {
+                const mouse = getMousePos(e);
+                const node = findNodeAt(mouse.x, mouse.y);
+
+                if (node) {
+                    selectedNode = node;
+                } else {
+                    isDragging = true;
+                    dragStart = { x: e.clientX - graphTransform.x, y: e.clientY - graphTransform.y };
+                }
+                lastMousePos = { x: e.clientX, y: e.clientY };
+                lastMouseTime = performance.now();
+                graphTransform.vx = 0;
+                graphTransform.vy = 0;
+            });
+
+            graphCanvas.addEventListener('mousemove', (e) => {
+                const mouse = getMousePos(e);
+                hoveredNode = findNodeAt(mouse.x, mouse.y);
+                graphCanvas.style.cursor = hoveredNode ? 'pointer' : (isDragging ? 'grabbing' : 'grab');
+
+                if (selectedNode) {
+                    selectedNode.x = mouse.x;
+                    selectedNode.y = mouse.y;
+                    selectedNode.vx = 0;
+                    selectedNode.vy = 0;
+                } else if (isDragging) {
+                    const now = performance.now();
+                    const dt = now - lastMouseTime;
+                    if (dt > 0) {
+                        graphTransform.vx = (e.clientX - lastMousePos.x) / dt * 10;
+                        graphTransform.vy = (e.clientY - lastMousePos.y) / dt * 10;
+                    }
+                    graphTransform.x = e.clientX - dragStart.x;
+                    graphTransform.y = e.clientY - dragStart.y;
+                    lastMousePos = { x: e.clientX, y: e.clientY };
+                    lastMouseTime = now;
+                }
+            });
+
+            graphCanvas.addEventListener('mouseup', () => {
+                selectedNode = null;
+                isDragging = false;
+            });
+
+            graphCanvas.addEventListener('mouseleave', () => {
+                selectedNode = null;
+                isDragging = false;
+                hoveredNode = null;
+            });
+
+            graphCanvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomFactor = e.deltaY > 0 ? 0.92 : 1.08;
+                const newScale = Math.max(0.2, Math.min(3, graphTransform.scale * zoomFactor));
+
+                // Zoom toward mouse position
+                const mouse = getMousePos(e);
+                const scaleDiff = newScale - graphTransform.scale;
+                graphTransform.x -= mouse.x * scaleDiff;
+                graphTransform.y -= mouse.y * scaleDiff;
+                graphTransform.scale = newScale;
+            }, { passive: false });
+
+            graphCanvas.addEventListener('click', (e) => {
+                const mouse = getMousePos(e);
+                const node = findNodeAt(mouse.x, mouse.y);
+                if (node && !isDragging) {
+                    // Keep graph open but open modal on top
+                    // The graph remains visible behind the modal
+                    openEntryModal(node.id, node.category);
+                }
+            });
+
+            // Touch support
+            let lastTouchDist = 0;
+            graphCanvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    isDragging = true;
+                    dragStart = { x: touch.clientX - graphTransform.x, y: touch.clientY - graphTransform.y };
+                } else if (e.touches.length === 2) {
+                    const dx = e.touches[0].clientX - e.touches[1].clientX;
+                    const dy = e.touches[0].clientY - e.touches[1].clientY;
+                    lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+                }
+            }, { passive: true });
+
+            graphCanvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (e.touches.length === 1 && isDragging) {
+                    const touch = e.touches[0];
+                    graphTransform.x = touch.clientX - dragStart.x;
+                    graphTransform.y = touch.clientY - dragStart.y;
+                } else if (e.touches.length === 2) {
+                    const dx = e.touches[0].clientX - e.touches[1].clientX;
+                    const dy = e.touches[0].clientY - e.touches[1].clientY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const scale = dist / lastTouchDist;
+                    graphTransform.scale = Math.max(0.2, Math.min(3, graphTransform.scale * scale));
+                    lastTouchDist = dist;
+                }
+            }, { passive: false });
+
+            graphCanvas.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+
+        graphToggle?.addEventListener('click', () => {
+            graphOverlay.classList.add('active');
+            setTimeout(initKnowledgeGraph, 100);
+        });
+
+        graphClose?.addEventListener('click', () => {
+            graphOverlay.classList.remove('active');
+            if (animationId) cancelAnimationFrame(animationId);
+        });
+
+        document.getElementById('graphZoomIn')?.addEventListener('click', () => {
+            graphTransform.scale = Math.min(3, graphTransform.scale * 1.3);
+        });
+
+        document.getElementById('graphZoomOut')?.addEventListener('click', () => {
+            graphTransform.scale = Math.max(0.2, graphTransform.scale * 0.7);
+        });
+
+        document.getElementById('graphReset')?.addEventListener('click', () => {
+            graphTransform = { x: 0, y: 0, scale: 0.7, vx: 0, vy: 0 };
+            buildGraphData();
+        });
+
+        // ========== FEATURE E: ICEBURG CHAT ASSISTANT ==========
+        const chatBubble = document.getElementById('icebergChatBubble');
+        const chatPanel = document.getElementById('icebergChatPanel');
+        const chatClose = document.getElementById('icebergChatClose');
+        const chatMessages = document.getElementById('icebergChatMessages');
+        const chatInput = document.getElementById('icebergChatInput');
+        const chatSend = document.getElementById('icebergChatSend');
+        const chatContext = document.getElementById('icebergChatContext');
+        let chatCurrentEntry = null;
+        let chatIsLoading = false;
+
+        function updateChatContext(entry, category) {
+            chatCurrentEntry = { entry, category };
+            if (chatContext) {
+                if (entry) {
+                    chatContext.textContent = `📖 Viewing: ${entry.name || entry.id} (${category?.replace(/_/g, ' ') || 'Unknown'})`;
+                } else {
+                    chatContext.textContent = '📚 Exploring the Celestial Encyclopedia';
+                }
+            }
+        }
+
+        function addChatMessage(content, isUser = false) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `chat-message ${isUser ? 'user' : 'assistant'}`;
+            messageEl.textContent = content;
+            chatMessages?.appendChild(messageEl);
+            chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        function showTypingIndicator() {
+            const typingEl = document.createElement('div');
+            typingEl.className = 'chat-message assistant typing';
+            typingEl.id = 'typingIndicator';
+            typingEl.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatMessages?.appendChild(typingEl);
+            chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        function removeTypingIndicator() {
+            document.getElementById('typingIndicator')?.remove();
+        }
+
+        async function sendChatMessage() {
+            if (!chatInput || chatIsLoading) return;
+
+            const query = chatInput.value.trim();
+            if (!query) return;
+
+            chatIsLoading = true;
+            chatInput.value = '';
+            chatSend.disabled = true;
+
+            addChatMessage(query, true);
+            showTypingIndicator();
+
+            // Build context for the query
+            let contextParts = [`User query: ${query}`];
+            if (chatCurrentEntry?.entry) {
+                const entry = chatCurrentEntry.entry;
+                contextParts.push(`Current entry: ${entry.name || entry.id}`);
+                contextParts.push(`Category: ${chatCurrentEntry.category}`);
+                if (entry.description) contextParts.push(`Description: ${entry.description}`);
+            }
+
+            const systemPrompt = `You are ICEBURG, an expert research assistant specializing in physiology, field-theory biology, celestial-biological correlations, and evidence-based science. You help users understand encyclopedia entries and how different biological systems connect. Be concise but informative. Use clear, professional language.`;
+
+            const requestBody = {
+                query: `${systemPrompt}\n\nContext:\n${contextParts.join('\n')}\n\nRespond helpfully and concisely.`,
+                mode: 'chat',
+                agent: 'physiology',
+                degradation_mode: false,
+                settings: {
+                    primaryModel: 'llama3:8b',
+                    temperature: 0.5,
+                    maxTokens: 500
+                },
+                conversation_id: getOrCreateConversationId(),
+                metadata: {
+                    source: 'encyclopedia_chat',
+                    entry_id: chatCurrentEntry?.entry?.id || null
+                }
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                removeTypingIndicator();
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                const content = data.result || data.content || data.results?.content || 'I apologize, I was unable to generate a response.';
+                addChatMessage(content);
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Chat error:', error);
+                addChatMessage('I encountered an error connecting to the ICEBURG system. Please try again.');
+            } finally {
+                chatIsLoading = false;
+                chatSend.disabled = false;
+                chatInput?.focus();
+            }
+        }
+
+        chatBubble?.addEventListener('click', () => {
+            chatBubble.classList.add('hidden');
+            chatPanel?.classList.add('active');
+            chatInput?.focus();
+        });
+
+        chatClose?.addEventListener('click', () => {
+            chatPanel?.classList.remove('active');
+            setTimeout(() => chatBubble?.classList.remove('hidden'), 300);
+        });
+
+        chatSend?.addEventListener('click', sendChatMessage);
+
+        chatInput?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+
+        // Auto-resize input
+        chatInput?.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+        });
+
+        // Hook into entry modal to update chat context (chain after research leads wrapper)
+        const openEntryModalWithResearchLeads = window.openEntryModal;
+        window.openEntryModal = function (itemId, categoryId) {
+            if (openEntryModalWithResearchLeads) {
+                openEntryModalWithResearchLeads(itemId, categoryId);
+            }
+            // Update chat context with current entry
+            const data = window.encyclopediaData || encyclopediaData;
+            if (data?.[categoryId]?.[itemId]) {
+                updateChatContext(
+                    { id: itemId, ...data[categoryId][itemId] },
+                    categoryId
+                );
+            }
+        };
 
     </script>
 </body>

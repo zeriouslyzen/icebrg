@@ -39,21 +39,21 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
-    
+
     // Skip Vite dev server requests (HMR, etc.)
-    if (url.pathname.includes('@vite') || 
-        url.pathname.includes('?html-proxy') || 
+    if (url.pathname.includes('@vite') ||
+        url.pathname.includes('?html-proxy') ||
         url.pathname.includes('?t=') ||
         url.hostname === 'localhost' && url.port === '3000' && url.pathname.includes('main.js')) {
         // Let Vite dev server handle these directly
         return;
     }
-    
+
     // Skip WebSocket connections
     if (url.protocol === 'ws:' || url.protocol === 'wss:') {
         return;
     }
-    
+
     // Cache API responses
     if (url.pathname.startsWith('/api/')) {
         event.respondWith(

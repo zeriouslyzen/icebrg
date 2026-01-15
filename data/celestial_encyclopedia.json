@@ -11,7 +11,7 @@
       "research",
       "truth_seeking"
     ],
-    "total_entries": 302,
+    "total_entries": 337,
     "categories": [
       "celestial_bodies",
       "voltage_gates",
@@ -40,7 +40,11 @@
       "entheogens",
       "mystery_traditions",
       "patents",
-      "cern_research"
+      "cern_research",
+      "suppressed_physics",
+      "forbidden_archaeology",
+      "resonant_technologies",
+      "visionary_science"
     ],
     "category_counts": {
       "celestial_bodies": 9,
@@ -70,7 +74,11 @@
       "entheogens": 10,
       "mystery_traditions": 10,
       "patents": 5,
-      "cern_research": 3
+      "cern_research": 3,
+      "suppressed_physics": 5,
+      "forbidden_archaeology": 5,
+      "resonant_technologies": 5,
+      "visionary_science": 5
     }
   },
   "celestial_bodies": {
@@ -12785,524 +12793,2701 @@
       "active_compounds": "Aporphine and Nuciferine (dopamine agonists)",
       "usage": "Steeped in wine, depicted in tombs and erotic papyri",
       "effects": "Euphoria, aphrodisiac, mild hallucinations",
-    "biological_correlations": [
-      "dopamine_system",
-      "sexual_function",
-      "lucid_dreaming"
-    ],
-    "sources": [
-      {
-        "type": "research_paper",
-        "title": "The Sacred Narcotic Lily of the Nile",
-        "authors": [
-          "Emboden, William"
-        ],
-        "journal": "Economic Botany",
-        "year": 1978,
-        "key_findings": "Identification of psychoactive properties in Egyptian art and botany"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "The Blue Lotus is ubiquitous in Egyptian art, often held to the nose or steeped in wine jars. For decades it was considered purely decorative. Analysis revealed it contains aporphine and nuciferine, alkaloids that act as dopamine agonists. It was likely used as a ritual sacrament for inducing trance-like states, lucid dreaming, and as an aphrodisiac, playing a central role in the Egyptian regeneration cult.",
-    "related_entries": [
-      "ancient_egypt",
-      "dopamine",
-      "altered_states"
-    ]
+      "biological_correlations": [
+        "dopamine_system",
+        "sexual_function",
+        "lucid_dreaming"
+      ],
+      "sources": [
+        {
+          "type": "research_paper",
+          "title": "The Sacred Narcotic Lily of the Nile",
+          "authors": [
+            "Emboden, William"
+          ],
+          "journal": "Economic Botany",
+          "year": 1978,
+          "key_findings": "Identification of psychoactive properties in Egyptian art and botany"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "The Blue Lotus is ubiquitous in Egyptian art, often held to the nose or steeped in wine jars. For decades it was considered purely decorative. Analysis revealed it contains aporphine and nuciferine, alkaloids that act as dopamine agonists. It was likely used as a ritual sacrament for inducing trance-like states, lucid dreaming, and as an aphrodisiac, playing a central role in the Egyptian regeneration cult.",
+      "related_entries": [
+        "ancient_egypt",
+        "dopamine",
+        "altered_states"
+      ]
     },
-  "amanita_santa": {
-    "id": "amanita_santa",
-    "name": "Amanita Muscaria & Santa Claus",
-    "category": "entheogens",
-    "description": "Theory connecting Christmas folklore to Siberian shamanic mushroom rituals",
-    "correlations": [
-      "Red and white mushroom = Santa's suit",
-      "Shamans entered through smoke holes (chimneys)",
-      "Reindeer eat mushrooms and have 'flying' visions",
-      "Mushrooms dried on pine trees (ornaments)"
-    ],
-    "biological_correlations": [
-      "seasonal_rituals",
-      "gaba_receptors",
-      "neurotoxicity"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "Mushrooms, Russia and History",
-        "authors": [
-          "Wasson, R.G.",
-          "Wasson, V.P."
-        ],
-        "year": 1957,
-        "key_findings": "Ethnomycological study of Siberian shamanism and mushroom use"
-      }
-    ],
-    "evidence_level": "theoretical",
-    "origin_story": "The parallels between the Santa Claus myth and Siberian shamanic practices are striking. Shamans in the Arctic circle used Amanita muscaria (red with white dots) for winter solstice rituals. They would dry the mushrooms on pine branches (Christmas trees) and, when snow blocked doors, enter yurts through the smoke hole (chimney). Reindeer love these mushrooms and become intoxicated, leading to the 'flying reindeer' trope. The 'gifts' were the mushrooms themselves.",
-    "related_entries": [
-      "shamanism",
-      "seasonal_cycles",
-      "gaba"
-    ]
+    "amanita_santa": {
+      "id": "amanita_santa",
+      "name": "Amanita Muscaria & Santa Claus",
+      "category": "entheogens",
+      "description": "Theory connecting Christmas folklore to Siberian shamanic mushroom rituals",
+      "correlations": [
+        "Red and white mushroom = Santa's suit",
+        "Shamans entered through smoke holes (chimneys)",
+        "Reindeer eat mushrooms and have 'flying' visions",
+        "Mushrooms dried on pine trees (ornaments)"
+      ],
+      "biological_correlations": [
+        "seasonal_rituals",
+        "gaba_receptors",
+        "neurotoxicity"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "Mushrooms, Russia and History",
+          "authors": [
+            "Wasson, R.G.",
+            "Wasson, V.P."
+          ],
+          "year": 1957,
+          "key_findings": "Ethnomycological study of Siberian shamanism and mushroom use"
+        }
+      ],
+      "evidence_level": "theoretical",
+      "origin_story": "The parallels between the Santa Claus myth and Siberian shamanic practices are striking. Shamans in the Arctic circle used Amanita muscaria (red with white dots) for winter solstice rituals. They would dry the mushrooms on pine branches (Christmas trees) and, when snow blocked doors, enter yurts through the smoke hole (chimney). Reindeer love these mushrooms and become intoxicated, leading to the 'flying reindeer' trope. The 'gifts' were the mushrooms themselves.",
+      "related_entries": [
+        "shamanism",
+        "seasonal_cycles",
+        "gaba"
+      ]
     },
-  "dmt_pineal": {
-    "id": "dmt_pineal",
-    "name": "Endogenous DMT & Pineal Gland",
-    "category": "entheogens",
-    "description": "Research into the production of Dimethyltryptamine in the human brain",
-    "hypothesis": {
-      "researcher": "Rick Strassman",
-      "location": "Pineal Gland",
-      "timing": "Released at birth, death, and during dreaming",
-      "function": "Reality switching/spirit molecule"
+    "dmt_pineal": {
+      "id": "dmt_pineal",
+      "name": "Endogenous DMT & Pineal Gland",
+      "category": "entheogens",
+      "description": "Research into the production of Dimethyltryptamine in the human brain",
+      "hypothesis": {
+        "researcher": "Rick Strassman",
+        "location": "Pineal Gland",
+        "timing": "Released at birth, death, and during dreaming",
+        "function": "Reality switching/spirit molecule"
+      },
+      "biological_correlations": [
+        "near_death_experience",
+        "dreaming",
+        "pineal_calcification"
+      ],
+      "sources": [
+        {
+          "type": "research_paper",
+          "title": "Biosynthesis of N,N-dimethyltryptamine (DMT) in the Rat Brain",
+          "authors": [
+            "Dean, J.G.",
+            "et al."
+          ],
+          "journal": "Scientific Reports (Nature)",
+          "year": 2019,
+          "doi": "10.1038/s41598-019-45812-w",
+          "key_findings": "Confirmed DMT presence and biosynthesis in rat pineal glands and cortex"
+        }
+      ],
+      "evidence_level": "measured",
+      "origin_story": "Dr. Rick Strassman hypothesized that the pineal gland produces DMT, facilitating out-of-body experiences and death transitions. While long debated, a 2019 study published in Nature Scientific Reports confirmed the presence of DMT in rat pineal glands and, surprisingly, the cerebral cortex. This supports the ancient view of the pineal as the 'Third Eye' and suggests the brain has its own mechanism for generating powerful psychedelic states.",
+      "related_entries": [
+        "pineal_gland",
+        "near_death_experience",
+        "consciousness"
+      ]
     },
-    "biological_correlations": [
-      "near_death_experience",
-      "dreaming",
-      "pineal_calcification"
-    ],
-    "sources": [
-      {
-        "type": "research_paper",
-        "title": "Biosynthesis of N,N-dimethyltryptamine (DMT) in the Rat Brain",
-        "authors": [
-          "Dean, J.G.",
-          "et al."
-        ],
-        "journal": "Scientific Reports (Nature)",
-        "year": 2019,
-        "doi": "10.1038/s41598-019-45812-w",
-        "key_findings": "Confirmed DMT presence and biosynthesis in rat pineal glands and cortex"
-      }
-    ],
-    "evidence_level": "measured",
-    "origin_story": "Dr. Rick Strassman hypothesized that the pineal gland produces DMT, facilitating out-of-body experiences and death transitions. While long debated, a 2019 study published in Nature Scientific Reports confirmed the presence of DMT in rat pineal glands and, surprisingly, the cerebral cortex. This supports the ancient view of the pineal as the 'Third Eye' and suggests the brain has its own mechanism for generating powerful psychedelic states.",
-    "related_entries": [
-      "pineal_gland",
-      "near_death_experience",
-      "consciousness"
-    ]
+    "delphi_vapors": {
+      "id": "delphi_vapors",
+      "name": "Oracle of Delphi Vapors",
+      "category": "entheogens",
+      "description": "Geological explanation for the trance states of the Pythia",
+      "mechanism": "Ethylene gas release from fault lines beneath the temple",
+      "biological_effect": "Mild hydrocarbon intoxication, euphoria, trance",
+      "historical_context": "Oracle functioned for 1,000+ years",
+      "biological_correlations": [
+        "altered_states",
+        "toxicology",
+        "prophecy"
+      ],
+      "sources": [
+        {
+          "type": "research_paper",
+          "title": "Questioning the Delphic Oracle",
+          "authors": [
+            "De Boer, J.Z.",
+            "et al."
+          ],
+          "journal": "Scientific American",
+          "year": 2001,
+          "key_findings": "Geological team identified fault lines and ethylene traces at Delphi"
+        }
+      ],
+      "evidence_level": "measured",
+      "origin_story": "For centuries, scholars dismissed accounts of vapors inspiring the Oracle of Delphi as myth, as no fissure was visible. In 2001, a geologist and toxicologist team proved that two fault lines intersect directly under the temple. Analysis of the spring water revealed hydrocarbon gases, specifically ethylene, which induces a sweet-smelling trance state consistent with Plutarch's descriptions of the Pythia's behavior.",
+      "related_entries": [
+        "ancient_greece",
+        "geology",
+        "altered_states"
+      ]
     },
-  "delphi_vapors": {
-    "id": "delphi_vapors",
-    "name": "Oracle of Delphi Vapors",
-    "category": "entheogens",
-    "description": "Geological explanation for the trance states of the Pythia",
-    "mechanism": "Ethylene gas release from fault lines beneath the temple",
-    "biological_effect": "Mild hydrocarbon intoxication, euphoria, trance",
-    "historical_context": "Oracle functioned for 1,000+ years",
-    "biological_correlations": [
-      "altered_states",
-      "toxicology",
-      "prophecy"
-    ],
-    "sources": [
-      {
-        "type": "research_paper",
-        "title": "Questioning the Delphic Oracle",
-        "authors": [
-          "De Boer, J.Z.",
-          "et al."
-        ],
-        "journal": "Scientific American",
-        "year": 2001,
-        "key_findings": "Geological team identified fault lines and ethylene traces at Delphi"
-      }
-    ],
-    "evidence_level": "measured",
-    "origin_story": "For centuries, scholars dismissed accounts of vapors inspiring the Oracle of Delphi as myth, as no fissure was visible. In 2001, a geologist and toxicologist team proved that two fault lines intersect directly under the temple. Analysis of the spring water revealed hydrocarbon gases, specifically ethylene, which induces a sweet-smelling trance state consistent with Plutarch's descriptions of the Pythia's behavior.",
-    "related_entries": [
-      "ancient_greece",
-      "geology",
-      "altered_states"
-    ]
+    "mushroom_stones": {
+      "id": "mushroom_stones",
+      "name": "Maya Mushroom Stones",
+      "category": "entheogens",
+      "description": "Carved stone artifacts depicting mushrooms found in Mesoamerica",
+      "date": "1000 BCE - 900 CE",
+      "significance": "Evidence of a long-standing psilocybin cult",
+      "suppression": "Destroyed by Catholic missionaries",
+      "biological_correlations": [
+        "religious_iconography",
+        "shamanism",
+        "mycology"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "Mushroom Stones of Middle America",
+          "authors": [
+            "Borhegyi, Stephan"
+          ],
+          "year": 1961,
+          "key_findings": "Catalogued hundreds of mushroom effigies proving ancient cultic use"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Hundreds of stone carvings depicting mushrooms, often with human or animal figures, have been found in Guatemala and Mexico, dating back to 1000 BCE. For years, archaeologists misidentified them as pottery molds or phallic symbols. In the 1950s, the rediscovery of living mushroom rituals by Wasson proved these stones were religious icons of a sophisticated entheogenic cult that survived underground for centuries after the Spanish conquest.",
+      "related_entries": [
+        "maya_calendar",
+        "stoned_ape",
+        "shamanism"
+      ]
     },
-  "mushroom_stones": {
-    "id": "mushroom_stones",
-    "name": "Maya Mushroom Stones",
-    "category": "entheogens",
-    "description": "Carved stone artifacts depicting mushrooms found in Mesoamerica",
-    "date": "1000 BCE - 900 CE",
-    "significance": "Evidence of a long-standing psilocybin cult",
-    "suppression": "Destroyed by Catholic missionaries",
-    "biological_correlations": [
-      "religious_iconography",
-      "shamanism",
-      "mycology"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "Mushroom Stones of Middle America",
-        "authors": [
-          "Borhegyi, Stephan"
-        ],
-        "year": 1961,
-        "key_findings": "Catalogued hundreds of mushroom effigies proving ancient cultic use"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Hundreds of stone carvings depicting mushrooms, often with human or animal figures, have been found in Guatemala and Mexico, dating back to 1000 BCE. For years, archaeologists misidentified them as pottery molds or phallic symbols. In the 1950s, the rediscovery of living mushroom rituals by Wasson proved these stones were religious icons of a sophisticated entheogenic cult that survived underground for centuries after the Spanish conquest.",
-    "related_entries": [
-      "maya_calendar",
-      "stoned_ape",
-      "shamanism"
-    ]
-    },
-  "iboga_bwiti": {
-    "id": "iboga_bwiti",
-    "name": "Iboga - Bwiti Initiation",
-    "category": "entheogens",
-    "description": "Root bark used by the Bwiti cult of Gabon for spiritual initiation",
-    "active_compound": "Ibogaine (oneiric/dream-inducing)",
-    "effects": "36-hour introspective trance, addiction interruption",
-    "ritual_context": "Ancestral communication",
-    "biological_correlations": [
-      "addiction_pathways",
-      "neuroplasticity",
-      "rem_sleep"
-    ],
-    "sources": [
-      {
-        "type": "research_paper",
-        "title": "Anti-Addictive Properties of Ibogaine",
-        "authors": [
-          "Mash, D.C.",
-          "et al."
-        ],
-        "journal": "Annals of the New York Academy of Sciences",
-        "year": 2000,
-        "doi": "10.1111/j.1749-6632.2000.tb05213.x",
-        "key_findings": "Confirmed efficacy in interrupting opioid withdrawal and craving"
-      }
-    ],
-    "evidence_level": "measured",
-    "origin_story": "The Bwiti religion of West Central Africa uses the root bark of the Tabernanthe iboga shrub for initiation rites. Initiates consume massive doses to enter a death-like trance where they 'meet the ancestors.' In the 1960s, Howard Lotsof serendipitously discovered that Ibogaine completely eliminates heroin withdrawal. It is now researched as a potent tool for addiction interruption and neuroplasticity, bridging ancient ritual and modern pharmacology.",
-    "related_entries": [
-      "addiction",
-      "neurotransmitters",
-      "african_tradition"
-    ]
+    "iboga_bwiti": {
+      "id": "iboga_bwiti",
+      "name": "Iboga - Bwiti Initiation",
+      "category": "entheogens",
+      "description": "Root bark used by the Bwiti cult of Gabon for spiritual initiation",
+      "active_compound": "Ibogaine (oneiric/dream-inducing)",
+      "effects": "36-hour introspective trance, addiction interruption",
+      "ritual_context": "Ancestral communication",
+      "biological_correlations": [
+        "addiction_pathways",
+        "neuroplasticity",
+        "rem_sleep"
+      ],
+      "sources": [
+        {
+          "type": "research_paper",
+          "title": "Anti-Addictive Properties of Ibogaine",
+          "authors": [
+            "Mash, D.C.",
+            "et al."
+          ],
+          "journal": "Annals of the New York Academy of Sciences",
+          "year": 2000,
+          "doi": "10.1111/j.1749-6632.2000.tb05213.x",
+          "key_findings": "Confirmed efficacy in interrupting opioid withdrawal and craving"
+        }
+      ],
+      "evidence_level": "measured",
+      "origin_story": "The Bwiti religion of West Central Africa uses the root bark of the Tabernanthe iboga shrub for initiation rites. Initiates consume massive doses to enter a death-like trance where they 'meet the ancestors.' In the 1960s, Howard Lotsof serendipitously discovered that Ibogaine completely eliminates heroin withdrawal. It is now researched as a potent tool for addiction interruption and neuroplasticity, bridging ancient ritual and modern pharmacology.",
+      "related_entries": [
+        "addiction",
+        "neurotransmitters",
+        "african_tradition"
+      ]
     }
   },
   "mystery_traditions": {
-  "pythagorean_brotherhood": {
-    "id": "pythagorean_brotherhood",
-    "name": "Pythagorean Brotherhood",
-    "category": "mystery_traditions",
-    "description": "Ancient secret society focused on mathematics as the underlying reality of the universe",
-    "core_tenets": [
-      "All is Number (mathematical ontology)",
-      "Music of the Spheres (planetary harmony)",
-      "Metempsychosis (reincarnation)",
-      "Vegetarianism (transmigration of souls)"
-    ],
-    "biological_correlations": [
-      "cognitive_mathematics",
-      "acoustic_perception",
-      "epigenetics"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Pythagorean Sourcebook and Library",
-        "authors": [
-          "Guthrie, Kenneth"
+    "pythagorean_brotherhood": {
+      "id": "pythagorean_brotherhood",
+      "name": "Pythagorean Brotherhood",
+      "category": "mystery_traditions",
+      "description": "Ancient secret society focused on mathematics as the underlying reality of the universe",
+      "core_tenets": [
+        "All is Number (mathematical ontology)",
+        "Music of the Spheres (planetary harmony)",
+        "Metempsychosis (reincarnation)",
+        "Vegetarianism (transmigration of souls)"
+      ],
+      "biological_correlations": [
+        "cognitive_mathematics",
+        "acoustic_perception",
+        "epigenetics"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Pythagorean Sourcebook and Library",
+          "authors": [
+            "Guthrie, Kenneth"
+          ],
+          "year": 1987,
+          "key_findings": "Compilation of ancient texts describing the order's practices and suppression"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Founded by Pythagoras in Croton (~530 BCE), this order was both a scientific school and a religious sect. They discovered the mathematical ratios of musical intervals and the Pythagorean theorem. Initiates took vows of silence for 5 years and lived communally. They believed the universe was a 'Kosmos' (ordered whole) governed by numerical harmony. The order was violently suppressed, and their meeting houses burned, but their teachings influenced Plato and Western science.",
+      "related_entries": [
+        "sacred_geometry",
+        "chamber_acoustics",
+        "ancient_greece"
+      ]
+    },
+    "eleusinian_mysteries_cult": {
+      "id": "eleusinian_mysteries_cult",
+      "name": "Eleusinian Mysteries - The Cult",
+      "category": "mystery_traditions",
+      "description": "The most famous secret religious rites of ancient Greece, centered on Demeter and Persephone",
+      "structure": {
+        "lesser_mysteries": "Purification (Agra)",
+        "greater_mysteries": "Initiation (Telesterion at Eleusis)",
+        "epopteia": "Highest grade of viewing the secret"
+      },
+      "influence": "Promised a better afterlife; initiated Roman Emperors and philosophers",
+      "biological_correlations": [
+        "fear_extinction",
+        "social_cohesion",
+        "transcendent_experience"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "Eleusis: Archetypal Image of Mother and Daughter",
+          "authors": [
+            "Kerényi, Carl"
+          ],
+          "year": 1967,
+          "key_findings": "Jungian analysis of the psychological depth of the rituals"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "While the 'Kykeon' was the chemical catalyst, the Eleusinian Mysteries were a highly structured institution that lasted 2,000 years. It was a state cult involved in the agricultural cycle and the myth of Persephone's descent into Hades. To reveal the secrets of the rites was punishable by death. The primary secret revealed at the climax was famously 'an ear of corn reaped in silence,' symbolizing life springing from death.",
+      "related_entries": [
+        "eleusinian_mysteries",
+        "ancient_greece",
+        "agricultural_rituals"
+      ]
+    },
+    "orphic_mysteries": {
+      "id": "orphic_mysteries",
+      "name": "Orphic Mysteries",
+      "category": "mystery_traditions",
+      "description": "Cult based on the writings of the mythical poet Orpheus, focusing on the soul's divine origin",
+      "mythology": "Dionysus dismembered by Titans; humans created from their ashes (containing Titan earth + Dionysian divine spark)",
+      "practice": "Asceticism to free the divine spark from the 'titanic' body",
+      "biological_correlations": [
+        "dualism",
+        "asceticism",
+        "impulse_control"
+      ],
+      "sources": [
+        {
+          "type": "artifact",
+          "title": "The Derveni Papyrus",
+          "year": "~340 BCE",
+          "key_findings": "Oldest surviving manuscript in Europe, containing Orphic eschatology"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Orphism taught that the human soul is divine and immortal but trap in a cycle of bodily reincarnation (metempsychosis) due to the 'original sin' of the Titans. Initiates used 'Gold Tablets' (Tottenpassen) found in graves as passports for the afterlife, giving instructions to the soul on which well to drink from in the underworld (Memory vs. Forgetfulness) to break the cycle of rebirth.",
+      "related_entries": [
+        "reincarnation",
+        "ancient_greece",
+        "soul_dualism"
+      ]
+    },
+    "hermetic_tradition": {
+      "id": "hermetic_tradition",
+      "name": "Hermetic Tradition",
+      "category": "mystery_traditions",
+      "description": "Philosophical system attributed to Hermes Trismegistus, blending Egyptian and Greek wisdom",
+      "key_texts": "Corpus Hermeticum, Emerald Tablet",
+      "principles": "The Kybalion (Seven Principles), As Above So Below, Mentalism",
+      "influence": "Renaissance magic, alchemy, modern occultism",
+      "biological_correlations": [
+        "placebo_effect",
+        "visualization",
+        "psychosomatic_medicine"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "Hermetica",
+          "authors": [
+            "Copenhaver, Brian"
+          ],
+          "year": 1992,
+          "key_findings": "Translation and commentary on the Greek Corpus Hermeticum"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "The Hermetica are a collection of texts from late antiquity (2nd-3rd century CE) claiming to be the wisdom of Thoth/Hermes. They teach that the universe is mental ('The All is Mind') and that humans can regain their divine powers through gnosis (knowledge). The axiom 'As Above, So Below' comes from the Emerald Tablet, suggesting a correspondence between the macrocosm (universe) and microcosm (human body), a foundational concept for astrology and alchemy.",
+      "related_entries": [
+        "alchemy",
+        "ancient_egypt",
+        "consciousness"
+      ]
+    },
+    "mithraic_mysteries": {
+      "id": "mithraic_mysteries",
+      "name": "Mithraic Mysteries",
+      "category": "mystery_traditions",
+      "description": "Roman mystery religion centered on the god Mithras, popular among the military",
+      "iconography": "Tauroctony (Mithras slaying the bull), zodiacal symbols",
+      "structure": "7 grades of initiation (Raven to Father), conducted in underground temples (Mithraeum)",
+      "biological_correlations": [
+        "male_bonding",
+        "hierarchy",
+        "aggression_channeling"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Origins of the Mithraic Mysteries",
+          "authors": [
+            "Ulansey, David"
+          ],
+          "year": 1989,
+          "key_findings": "Astronomical interpretation of the Tauroctony as the precession of the equinoxes"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Mithraism was the primary rival to early Christianity. It was an all-male cult that met in cavelike temples (Mithraea) lined with benches for ritual meals. The central image, the Tauroctony, depicts Mithras slaying a bull. Ulansey argues this is an astronomical star map, symbolizing the end of the Age of Taurus and the god's power to shift the cosmic axis (precession). It disappeared rapidly after the Christian decree of 392 CE.",
+      "related_entries": [
+        "astro_archaeology",
+        "ancient_rome",
+        "zodiac"
+      ]
+    },
+    "rosicrucian_manifestos": {
+      "id": "rosicrucian_manifestos",
+      "name": "Rosicrucian Order",
+      "category": "mystery_traditions",
+      "description": "17th-century movement announcing a 'universal reformation' through hidden knowledge",
+      "documents": "Fama Fraternitatis (1614), Confessio Fraternitatis (1615)",
+      "myth": "Christian Rosenkreuz, founded order in 1407, tomb rediscovered in 1604",
+      "biological_correlations": [
+        "longevity",
+        "healing_arts",
+        "altruism"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Rosicrucian Enlightenment",
+          "authors": [
+            "Yates, Frances"
+          ],
+          "year": 1972,
+          "key_findings": "Historical analysis of the movement's impact on European science and politics"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "In the early 1600s, anonymous manifestos appeared in Germany announcing the existence of a secret brotherhood of healer-alchemists, the Rosicrucians, working for the spiritual and scientific renewal of Europe. They claimed to possess the secrets of nature and invited the learned to join their 'Invisible College.' While possibly a literary hoax or allegory, it sparked a feverish 'Rosicrucian Furor' that directly influenced the founding of the Royal Society and modern science.",
+      "related_entries": [
+        "alchemy",
+        "enlightenment",
+        "hermetic_tradition"
+      ]
+    },
+    "freemasonry_geometry": {
+      "id": "freemasonry_geometry",
+      "name": "Freemasonry & Sacred Geometry",
+      "category": "mystery_traditions",
+      "description": "Fraternal organisation using stonemason tools as allegorical guides for moral development",
+      "symbolism": "Square and Compasses, Letter G (Geometry/God), Tracing Boards",
+      "origin": "Evolved from medieval stonemason guilds (1600s-1717)",
+      "biological_correlations": [
+        "ritual_behavior",
+        "moral_reasoning",
+        "symbolic_cognition"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Meaning of Masonry",
+          "authors": [
+            "Wilmshurst, W.L."
+          ],
+          "year": 1922,
+          "key_findings": "Esoteric interpretation of Masonic rituals and symbols"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Freemasonry describes itself as a 'system of morality, veiled in allegory and illustrated by symbols.' Claiming descent from the builders of Solomon's Temple (Hiram Abiff), it uses the tools of architecture (square, compass, level) to teach self-improvement ('making good men better'). The detailed attention to geometry suggests a preservation of the ancient Pythagorean idea that the divine structure of the universe is geometrical.",
+      "related_entries": [
+        "pythagorean_brotherhood",
+        "sacred_geometry",
+        "solomon_temple"
+      ]
+    },
+    "knights_templar_mystery": {
+      "id": "knights_templar_mystery",
+      "name": "Knights Templar",
+      "category": "mystery_traditions",
+      "description": "Medieval military order suppressed for heresy/secret worship",
+      "historical_facts": "Protected pilgrims, invented modern banking, extremely wealthy",
+      "accusations": "Worshipping a head/idol 'Baphomet', spitting on the cross, sodomy",
+      "legacy": "Friday the 13th (arrest date: Oct 13, 1307)",
+      "biological_correlations": [
+        "trauma_bonding",
+        "fanaticism",
+        "secrecy_psychology"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Knights Templar",
+          "authors": [
+            "Barber, Malcolm"
+          ],
+          "year": 1978,
+          "key_findings": "Detailed history of their rise and the trial proceedings"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "The Poor Fellow-Soldiers of Christ and of the Temple of Solomon became the most powerful economic and military force in the Middle Ages. They excavated under the Temple Mount in Jerusalem (Stable of Solomon) for 9 years. Rumors persist they found something (Grail, Ark, Knowledge) that gave them leverage over the Church. King Philip IV of France, indebted to them, arrested them all at dawn on Friday the 13th, 1307, torturing them into confessing to worshipping 'Baphomet.'",
+      "related_entries": [
+        "solomon_temple",
+        "banking",
+        "heresy"
+      ]
+    },
+    "theosophy_blavatsky": {
+      "id": "theosophy_blavatsky",
+      "name": "Theosophical Society",
+      "category": "mystery_traditions",
+      "description": "19th-century esoteric movement seeking the 'ancient wisdom' underlying all religions",
+      "founder": "Helena Petrovna Blavatsky (1875)",
+      "concepts": "Root Races, Akashic Records, Ascended Masters (Mahatmas)",
+      "biological_correlations": [
+        "epigenetic_memory",
+        "racial_theory_origins",
+        "channeled_states"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Secret Doctrine",
+          "authors": [
+            "Blavatsky, H.P."
+          ],
+          "year": 1888,
+          "key_findings": "Massive synthesis of science, religion, and philosophy proposing a spiritual evolution of humanity"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Madame Blavatsky claimed to be in telepathic contact with 'Masters of the Ancient Wisdom' in Tibet. Her major work, *The Secret Doctrine*, outlines a complex cosmology of planetary chains and root races (Lemurian, Atlantean, Aryan). Theosophy introduced Eastern concepts (Karma, Reincarnation) to the West and heavily influenced modern New Age thought, abstract art (Kandinsky, Mondrian), and even quantum physicists like Pauli.",
+      "related_entries": [
+        "akashic_records",
+        "ancient_civilizations",
+        "consciousness"
+      ]
+    },
+    "golden_dawn_magick": {
+      "id": "golden_dawn_magick",
+      "name": "Hermetic Order of the Golden Dawn",
+      "category": "mystery_traditions",
+      "description": "Late 19th-century order dedicated to the study and practice of the occult sciences",
+      "members": "W.B. Yeats, Aleister Crowley, Bram Stoker",
+      "system": "Synthesis of Kabbalah, Tarot, Astrology, and Alchemy",
+      "biological_correlations": [
+        "ritual_psychology",
+        "symbolic_integration",
+        "intent_manifestation"
+      ],
+      "sources": [
+        {
+          "type": "book",
+          "title": "The Golden Dawn",
+          "authors": [
+            "Regardie, Israel"
+          ],
+          "year": 1937,
+          "key_findings": "Published the complete rituals and teachings of the order"
+        }
+      ],
+      "evidence_level": "documented",
+      "origin_story": "Founded in London in 1888 based on a mysterious 'Cipher Manuscript,' the Golden Dawn created the most influential system of Western ceremonial magic. It viewed magic not as superstition but as a psychological and spiritual science ('The Art of changing consciousness at will'). Its comprehensive synthesis of Kabbalah and Tarot remains the foundation for nearly all modern western occultism.",
+      "related_entries": [
+        "kabbalah",
+        "tarot",
+        "hermetic_tradition"
+      ]
+    },
+    "field_topologies": {
+      "cardiac_torus": {
+        "id": "cardiac_torus",
+        "name": "Cardiac Torus Field",
+        "category": "field_topologies",
+        "description": "The toroidal electromagnetic field generated by the heart, extending several feet from the body.",
+        "scientific_basis": {
+          "mechanism": "Biomagnetism",
+          "key_compounds": [
+            "Electrolytes"
+          ],
+          "research_status": "documented"
+        },
+        "measurements": {
+          "frequency": "0.1 Hz (Coherence)",
+          "amplitude": "5000x stronger than brain field",
+          "range": "3-5 feet"
+        },
+        "implications": "Non-local communication via field interaction",
+        "related_entries": [
+          "heart",
+          "coherence_systems",
+          "global_coherence"
+        ]
+      },
+      "cortical_standing_waves": {
+        "id": "cortical_standing_waves",
+        "name": "Cortical Standing Waves",
+        "category": "field_topologies",
+        "description": "Resonant standing wave patterns in the neocortex associated with consciousness and holographic processing.",
+        "scientific_basis": {
+          "mechanism": "Neural Oscillation",
+          "key_compounds": [
+            "Neurotransmitters"
+          ],
+          "research_status": "theoretical"
+        },
+        "measurements": {
+          "frequency": "40 Hz (Gamma)",
+          "amplitude": "Microvolts",
+          "range": "Intracranial"
+        },
+        "implications": "Holographic memory storage",
+        "related_entries": [
+          "brain_holography",
+          "consciousness",
+          "neurotransmitters"
+        ]
+      },
+      "earth_ionosphere_cavity": {
+        "id": "earth_ionosphere_cavity",
+        "name": "Earth-Ionosphere Cavity",
+        "category": "field_topologies",
+        "description": "The global electromagnetic resonant cavity acting as a waveguide for ELF frequencies.",
+        "scientific_basis": {
+          "mechanism": "Geophysics",
+          "key_compounds": [
+            "Plasma"
+          ],
+          "research_status": "documented"
+        },
+        "measurements": {
+          "frequency": "7.83 Hz (Fundamental)",
+          "amplitude": "Picoteslas",
+          "range": "Planetary"
+        },
+        "implications": "Synchronization of biological rhythms with planetary field",
+        "related_entries": [
+          "schumann_resonance",
+          "circadian_biology",
+          "global_coherence"
+        ]
+      },
+      "dna_toroidal_compaction": {
+        "id": "dna_toroidal_compaction",
+        "name": "DNA Toroidal Compaction",
+        "category": "field_topologies",
+        "description": "The supercoiling of DNA into toroidal structures within the nucleus, facilitating information density.",
+        "scientific_basis": {
+          "mechanism": "Molecular Biology",
+          "key_compounds": [
+            "Histones"
+          ],
+          "research_status": "documented"
+        },
+        "measurements": {
+          "scale": "Nanometers",
+          "density": "High info density",
+          "geometry": "Toroidal"
+        },
+        "implications": "Fractal information storage",
+        "related_entries": [
+          "dna_phantom_effect",
+          "molecular_chemistry"
+        ]
+      },
+      "galactic_torus": {
+        "id": "galactic_torus",
+        "name": "Galactic Torus",
+        "category": "field_topologies",
+        "description": "Large-scale magnetic field topology of the Milky Way galaxy, influencing heliospheric conditions.",
+        "scientific_basis": {
+          "mechanism": "Astrophysics",
+          "key_compounds": [
+            "Interstellar Plasma"
+          ],
+          "research_status": "theoretical"
+        },
+        "measurements": {
+          "scale": "100,000 Light Years",
+          "field_strength": "Microgauss"
+        },
+        "implications": "Cosmic ray modulation affecting biological evolution",
+        "related_entries": [
+          "sun",
+          "cosmic_rays",
+          "morphic_fields"
+        ]
+      }
+    },
+    "collective_states": {
+      "global_coherence": {
+        "id": "global_coherence",
+        "name": "Global Coherence",
+        "category": "collective_states",
+        "description": "Synchronization of human heart rhythms with planetary magnetic field resonances.",
+        "scientific_basis": {
+          "mechanism": "Field Coupling",
+          "key_compounds": [
+            "Magnetite"
+          ],
+          "research_status": "research"
+        },
+        "measurements": {
+          "correlation": "Significant GCP deviations",
+          "events": "9/11, Global Meditations"
+        },
+        "implications": "Planetary consciousness network",
+        "related_entries": [
+          "heartmath",
+          "schumann_resonance",
+          "noosphere"
+        ]
+      },
+      "mass_psychogenic_illness": {
+        "id": "mass_psychogenic_illness",
+        "name": "Mass Psychogenic Illness",
+        "category": "collective_states",
+        "description": "Rapid spread of illness symptoms through a population without an organic pathogen, driven by belief/fear.",
+        "scientific_basis": {
+          "mechanism": "Mirror Neurons / Nocebo",
+          "key_compounds": [
+            "Stress Hormones"
+          ],
+          "research_status": "documented"
+        },
+        "measurements": {
+          "spread_rate": "Viral (memetic)",
+          "symptoms": "Physical manifestation of belief"
+        },
+        "implications": "Power of mind over physiology in groups",
+        "related_entries": [
+          "placebo_effect",
+          "mirror_neurons"
+        ]
+      },
+      "group_flow_states": {
+        "id": "group_flow_states",
+        "name": "Group Flow States",
+        "category": "collective_states",
+        "description": "Synchronization of peak performance and brain activity within a team or group.",
+        "scientific_basis": {
+          "mechanism": "Inter-brain synchrony",
+          "key_compounds": [
+            "Dopamine",
+            "Oxytocin"
+          ],
+          "research_status": "research"
+        },
+        "measurements": {
+          "eeg_sync": "High beta/gamma coherence",
+          "hrv_sync": "Coupled oscillations"
+        },
+        "implications": "Distributed cognition and enhanced problem solving",
+        "related_entries": [
+          "flow_state",
+          "entrainment"
+        ]
+      },
+      "egregore_interactions": {
+        "id": "egregore_interactions",
+        "name": "Egregore Interactions",
+        "category": "collective_states",
+        "description": "Autonomous psychic entities created by a collective group mind, influencing member behavior.",
+        "scientific_basis": {
+          "mechanism": "Social Psychology / Occult",
+          "key_compounds": [
+            "Memetics"
+          ],
+          "research_status": "esoteric"
+        },
+        "measurements": {
+          "lifespan": "Dependent on group attention",
+          "influence": "Behavioral modification"
+        },
+        "implications": "Ideas taking on a life of their own",
+        "related_entries": [
+          "occult_psychology",
+          "memetics",
+          "tulpa"
+        ]
+      },
+      "synchronized_cycles": {
+        "id": "synchronized_cycles",
+        "name": "Synchronized Cycles",
+        "category": "collective_states",
+        "description": "Menstrual synchrony (McClintock effect) and other biological rhythm couplings in close groups.",
+        "scientific_basis": {
+          "mechanism": "Pheromones",
+          "key_compounds": [
+            "Pheromones"
+          ],
+          "research_status": "controversial"
+        },
+        "measurements": {
+          "cycle_deviation": "Reduced variance over time",
+          "proximity_effect": "Strong correlation"
+        },
+        "implications": "Chemical communication of temporal data",
+        "related_entries": [
+          "circadian_biology",
+          "pheromones"
+        ]
+      }
+    },
+    "information_dynamics": {
+      "integrated_information_phi": {
+        "id": "integrated_information_phi",
+        "name": "Integrated Information (Phi)",
+        "category": "information_dynamics",
+        "description": "Measure of a system's consciousness based on its interconnectedness and irreducibility (Tononi).",
+        "scientific_basis": {
+          "mechanism": "Information Theory",
+          "key_compounds": [
+            "Neural Networks"
+          ],
+          "research_status": "theoretical"
+        },
+        "measurements": {
+          "phi_value": "Degree of consciousness",
+          "complexity": "High integration"
+        },
+        "implications": "Quantifiable consciousness",
+        "related_entries": [
+          "consciousness",
+          "neural_networks"
+        ]
+      },
+      "orch_or_physics": {
+        "id": "orch_or_physics",
+        "name": "Orch-OR Physics",
+        "category": "information_dynamics",
+        "description": "Orchestrated Objective Reduction - quantum computations in microtubules creating moments of consciousness.",
+        "scientific_basis": {
+          "mechanism": "Quantum Gravity",
+          "key_compounds": [
+            "Tubulin"
+          ],
+          "research_status": "theoretical"
+        },
+        "measurements": {
+          "time_scale": "25ms (Gamma synchrony)",
+          "location": "Microtubules"
+        },
+        "implications": "Quantum basis of consciousness",
+        "related_entries": [
+          "penrose",
+          "hamcrest",
+          "microtubules"
+        ]
+      },
+      "akashic_information_field": {
+        "id": "akashic_information_field",
+        "name": "Akashic Information Field",
+        "category": "information_dynamics",
+        "description": "Universal holographic field recording all events, thoughts, and emotions (Theosophy/Vedic).",
+        "scientific_basis": {
+          "mechanism": "Zero Point Field",
+          "key_compounds": [
+            "Vacuum Energy"
+          ],
+          "research_status": "esoteric"
+        },
+        "measurements": {
+          "capacity": "Infinite",
+          "access": "Altered states"
+        },
+        "implications": "Non-local memory and past life recall",
+        "related_entries": [
+          "zero_point_energy",
+          "vedic_knowledge",
+          "remote_viewing"
+        ]
+      },
+      "noosphere": {
+        "id": "noosphere",
+        "name": "Noosphere",
+        "category": "information_dynamics",
+        "description": "The sphere of human thought enveloping the earth, evolving towards a global brain (Teilhard de Chardin).",
+        "scientific_basis": {
+          "mechanism": "Global Information Network",
+          "key_compounds": [
+            "Memes"
+          ],
+          "research_status": "philosophical"
+        },
+        "measurements": {
+          "growth": "Exponential connectivity",
+          "complexity": "Increasing integration"
+        },
+        "implications": "Planetary consciousness evolution",
+        "related_entries": [
+          "global_brain",
+          "internet",
+          "collective_consciousness"
+        ]
+      },
+      "morphogenetic_resonance": {
+        "id": "morphogenetic_resonance",
+        "name": "Morphogenetic Resonance",
+        "category": "information_dynamics",
+        "description": "Memory inherent in nature; similar forms resonate across time and space to shape development (Sheldrake).",
+        "scientific_basis": {
+          "mechanism": "Non-local Resonance",
+          "key_compounds": [
+            "Morphic Fields"
+          ],
+          "research_status": "controversial"
+        },
+        "measurements": {
+          "learning_rate": "Faster in subsequent generations",
+          "crystallization": "Easier over time"
+        },
+        "implications": "Habits of nature vs immutable laws",
+        "related_entries": [
+          "sheldrake",
+          "morphic_fields",
+          "epigenetics"
+        ]
+      }
+    }
+  },
+  "suppressed_physics": {
+    "zero_point_energy": {
+      "id": "zero_point_energy",
+      "name": "Zero Point Energy",
+      "category": "suppressed_physics",
+      "type": "phenomenon",
+      "discovery_date": "1913 (Einstein/Stern proposal)",
+      "description": "The lowest possible energy state of a quantum mechanical system, representing the residual energy that remains when all other energy is removed. ZPE is the energy of the vacuum of space itself, arising from quantum fluctuations where virtual particle-antiparticle pairs constantly pop in and out of existence.",
+      "extended_description": "Despite being dismissed as 'merely theoretical' or 'not extractable,' zero point energy has been experimentally confirmed through the Casimir effect and Lamb shift. Estimates of vacuum energy density vary wildly depending on calculation method, from Planck scale (10^113 J/m³) to cosmological constant measurements (10^-9 J/m³). This 120 orders of magnitude discrepancy is called 'the worst prediction in the history of physics.' Multiple inventors claim to have built devices extracting ZPE, but face intense suppression or debunking. If even a tiny fraction of ZPE is extractable, it would provide virtually unlimited clean energy.",
+      "key_evidence": [
+        "Casimir Effect - measured attractive force between metal plates from vacuum fluctuations (1948/1997)",
+        "Lamb Shift - electron energy levels affected by ZPE (verified)",
+        "Sonoluminescence - speculated vacuum energy connection",
+        "Dynamic Casimir Effect - photons created from vacuum by moving mirrors (2011)",
+        "Casimir-Polder force - atom-surface interaction from vacuum fluctuations"
+      ],
+      "scientific_basis": {
+        "mechanism": "Quantum Vacuum Fluctuations",
+        "key_principles": [
+          "Heisenberg uncertainty prevents zero-energy state",
+          "Virtual particles constantly appear/disappear",
+          "Vacuum has inherent energy density",
+          "Electric and magnetic fields fluctuate in vacuum"
         ],
-        "year": 1987,
-        "key_findings": "Compilation of ancient texts describing the order's practices and suppression"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Founded by Pythagoras in Croton (~530 BCE), this order was both a scientific school and a religious sect. They discovered the mathematical ratios of musical intervals and the Pythagorean theorem. Initiates took vows of silence for 5 years and lived communally. They believed the universe was a 'Kosmos' (ordered whole) governed by numerical harmony. The order was violently suppressed, and their meeting houses burned, but their teachings influenced Plato and Western science.",
-    "related_entries": [
-      "sacred_geometry",
-      "chamber_acoustics",
-      "ancient_greece"
-    ]
-    },
-  "eleusinian_mysteries_cult": {
-    "id": "eleusinian_mysteries_cult",
-    "name": "Eleusinian Mysteries - The Cult",
-    "category": "mystery_traditions",
-    "description": "The most famous secret religious rites of ancient Greece, centered on Demeter and Persephone",
-    "structure": {
-      "lesser_mysteries": "Purification (Agra)",
-      "greater_mysteries": "Initiation (Telesterion at Eleusis)",
-      "epopteia": "Highest grade of viewing the secret"
-    },
-    "influence": "Promised a better afterlife; initiated Roman Emperors and philosophers",
-    "biological_correlations": [
-      "fear_extinction",
-      "social_cohesion",
-      "transcendent_experience"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "Eleusis: Archetypal Image of Mother and Daughter",
-        "authors": [
-          "Kerényi, Carl"
+        "mathematical_framework": [
+          "Quantum Electrodynamics (QED) calculations",
+          "Planck scale energy density derivation",
+          "Cosmological constant problem"
         ],
-        "year": 1967,
-        "key_findings": "Jungian analysis of the psychological depth of the rituals"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "While the 'Kykeon' was the chemical catalyst, the Eleusinian Mysteries were a highly structured institution that lasted 2,000 years. It was a state cult involved in the agricultural cycle and the myth of Persephone's descent into Hades. To reveal the secrets of the rites was punishable by death. The primary secret revealed at the climax was famously 'an ear of corn reaped in silence,' symbolizing life springing from death.",
-    "related_entries": [
-      "eleusinian_mysteries",
-      "ancient_greece",
-      "agricultural_rituals"
-    ]
-    },
-  "orphic_mysteries": {
-    "id": "orphic_mysteries",
-    "name": "Orphic Mysteries",
-    "category": "mystery_traditions",
-    "description": "Cult based on the writings of the mythical poet Orpheus, focusing on the soul's divine origin",
-    "mythology": "Dionysus dismembered by Titans; humans created from their ashes (containing Titan earth + Dionysian divine spark)",
-    "practice": "Asceticism to free the divine spark from the 'titanic' body",
-    "biological_correlations": [
-      "dualism",
-      "asceticism",
-      "impulse_control"
-    ],
-    "sources": [
-      {
-        "type": "artifact",
-        "title": "The Derveni Papyrus",
-        "year": "~340 BCE",
-        "key_findings": "Oldest surviving manuscript in Europe, containing Orphic eschatology"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Orphism taught that the human soul is divine and immortal but trap in a cycle of bodily reincarnation (metempsychosis) due to the 'original sin' of the Titans. Initiates used 'Gold Tablets' (Tottenpassen) found in graves as passports for the afterlife, giving instructions to the soul on which well to drink from in the underworld (Memory vs. Forgetfulness) to break the cycle of rebirth.",
-    "related_entries": [
-      "reincarnation",
-      "ancient_greece",
-      "soul_dualism"
-    ]
-    },
-  "hermetic_tradition": {
-    "id": "hermetic_tradition",
-    "name": "Hermetic Tradition",
-    "category": "mystery_traditions",
-    "description": "Philosophical system attributed to Hermes Trismegistus, blending Egyptian and Greek wisdom",
-    "key_texts": "Corpus Hermeticum, Emerald Tablet",
-    "principles": "The Kybalion (Seven Principles), As Above So Below, Mentalism",
-    "influence": "Renaissance magic, alchemy, modern occultism",
-    "biological_correlations": [
-      "placebo_effect",
-      "visualization",
-      "psychosomatic_medicine"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "Hermetica",
-        "authors": [
-          "Copenhaver, Brian"
+        "research_status": "theoretically established - extraction disputed"
+      },
+      "quantitative_data": {
+        "planck_energy_density": "10^113 J/m³ (theoretical)",
+        "cosmological_value": "~10^-9 J/m³ (observed)",
+        "casimir_force_measurement": "~0.2 μN/cm² at 1μm separation",
+        "discrepancy": "120 orders of magnitude (largest in physics)"
+      },
+      "claimed_extraction_devices": {
+        "moray_radiant_energy": "T. Henry Moray - 1920s solid-state device",
+        "floyd_sweet_vta": "Vacuum Triode Amplifier - self-sustaining claimed",
+        "testatika": "Methernitha community - Switzerland",
+        "joe_cell": "Water capacitor devices",
+        "meg": "Motionless Electromagnetic Generator (Bearden)"
+      },
+      "suppression_history": {
+        "institutional_dismissal": "Mainstream physics denies extractability",
+        "patent_rejection": "USPTO rejects most ZPE-related patents as impossible",
+        "inventor_fates": "Several ZPE inventors died under mysterious circumstances",
+        "funding_blockade": "Research grants denied for 'fringe' applications"
+      },
+      "key_researchers": [
+        "Hendrik Casimir - Casimir effect prediction (1948)",
+        "Harold Puthoff - Physicist, ZPE extraction advocate",
+        "Bernard Haisch - Physicist, inertia from ZPE theory",
+        "Moray B. King - Zero-point energy applications researcher",
+        "Thomas Valone - Energy inventor and researcher"
+      ],
+      "primary_sources": {
+        "papers": [
+          "Casimir, H.B.G. (1948) 'On the attraction between two perfectly conducting plates'",
+          "Puthoff, H.E. (1989) 'Gravity as a zero-point-fluctuation force'",
+          "Haisch, Rueda, Puthoff (1994) 'Inertia as a zero-point field Lorentz force'"
         ],
-        "year": 1992,
-        "key_findings": "Translation and commentary on the Greek Corpus Hermeticum"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "The Hermetica are a collection of texts from late antiquity (2nd-3rd century CE) claiming to be the wisdom of Thoth/Hermes. They teach that the universe is mental ('The All is Mind') and that humans can regain their divine powers through gnosis (knowledge). The axiom 'As Above, So Below' comes from the Emerald Tablet, suggesting a correspondence between the macrocosm (universe) and microcosm (human body), a foundational concept for astrology and alchemy.",
-    "related_entries": [
-      "alchemy",
-      "ancient_egypt",
-      "consciousness"
-    ]
-    },
-  "mithraic_mysteries": {
-    "id": "mithraic_mysteries",
-    "name": "Mithraic Mysteries",
-    "category": "mystery_traditions",
-    "description": "Roman mystery religion centered on the god Mithras, popular among the military",
-    "iconography": "Tauroctony (Mithras slaying the bull), zodiacal symbols",
-    "structure": "7 grades of initiation (Raven to Father), conducted in underground temples (Mithraeum)",
-    "biological_correlations": [
-      "male_bonding",
-      "hierarchy",
-      "aggression_channeling"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Origins of the Mithraic Mysteries",
-        "authors": [
-          "Ulansey, David"
+        "books": [
+          "The Field (Lynne McTaggart, 2001)",
+          "Quest for Zero Point Energy (Moray King, 2001)",
+          "Tapping the Zero Point Energy (Moray King, 1989)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Zero point energy extraction",
+          "Casimir effect energy harvesting",
+          "Vacuum fluctuation propulsion",
+          "Stochastic electrodynamics ZPE",
+          "Moray King ZPE",
+          "Dynamic Casimir effect"
         ],
-        "year": 1989,
-        "key_findings": "Astronomical interpretation of the Tauroctony as the precession of the equinoxes"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Mithraism was the primary rival to early Christianity. It was an all-male cult that met in cavelike temples (Mithraea) lined with benches for ritual meals. The central image, the Tauroctony, depicts Mithras slaying a bull. Ulansey argues this is an astronomical star map, symbolizing the end of the Age of Taurus and the god's power to shift the cosmic axis (precession). It disappeared rapidly after the Christian decree of 392 CE.",
-    "related_entries": [
-      "astro_archaeology",
-      "ancient_rome",
-      "zodiac"
-    ]
+        "modern_research": [
+          "MIT Casimir torque measurement (2018)",
+          "Dynamic Casimir effect verification (2011)",
+          "NASA breakthrough propulsion physics program (1996-2002)"
+        ]
+      },
+      "implications": "If ZPE extraction is possible, it would provide unlimited clean energy, revolutionizing civilization. The extreme resistance to this research from both academia and industry suggests either genuine physical impossibility OR significant economic/political motivation to suppress.",
+      "related_entries": [
+        "casimir_effect",
+        "quantum_biology",
+        "vacuum_energy",
+        "nikola_tesla",
+        "suppressed_research"
+      ]
     },
-  "rosicrucian_manifestos": {
-    "id": "rosicrucian_manifestos",
-    "name": "Rosicrucian Order",
-    "category": "mystery_traditions",
-    "description": "17th-century movement announcing a 'universal reformation' through hidden knowledge",
-    "documents": "Fama Fraternitatis (1614), Confessio Fraternitatis (1615)",
-    "myth": "Christian Rosenkreuz, founded order in 1407, tomb rediscovered in 1604",
-    "biological_correlations": [
-      "longevity",
-      "healing_arts",
-      "altruism"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Rosicrucian Enlightenment",
-        "authors": [
-          "Yates, Frances"
+    "scalar_waves": {
+      "id": "scalar_waves",
+      "name": "Scalar Waves",
+      "category": "suppressed_physics",
+      "type": "phenomenon",
+      "description": "Longitudinal electromagnetic waves where the electric field oscillates in the direction of propagation (unlike transverse EM waves where it oscillates perpendicular). Claimed to be capable of faster-than-light transmission, penetrating Faraday cages, and carrying pure potential without EM field components. First described by James Clerk Maxwell and eliminated from his equations by Oliver Heaviside.",
+      "extended_description": "The original Maxwell equations contained scalar components that Heaviside's simplification removed, leaving only the transverse (Hertzian) wave solutions. Tesla worked extensively with what he called 'longitudinal waves' or 'radiant energy,' claiming they propagated through a medium (aether) that mainstream physics denied. Lt. Col. Tom Bearden, a prominent modern scalar researcher, claims these waves can cause interference patterns in spacetime itself, enabling over-unity energy extraction, weaponized weather control, and other anomalous effects. The Soviet Union allegedly conducted extensive scalar weapons research (Woodpecker signal).",
+      "key_evidence": [
+        "Tesla's longitudinal wave experiments at Colorado Springs",
+        "Soviet Woodpecker signal (10Hz pulsed ELF)",
+        "Meyl scalar wave transmitter demonstrations",
+        "Rife machine healing effects at distance",
+        "EM potentials without fields (Aharonov-Bohm effect)"
+      ],
+      "scientific_basis": {
+        "mechanism": "Longitudinal EM wave / Scalar potential",
+        "key_principles": [
+          "Electric field oscillates parallel to propagation",
+          "Carries potential but no measurable field",
+          "Can interfere constructively/destructively in vacuum",
+          "Propagates through conductive materials",
+          "May interact with time dimension"
         ],
-        "year": 1972,
-        "key_findings": "Historical analysis of the movement's impact on European science and politics"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "In the early 1600s, anonymous manifestos appeared in Germany announcing the existence of a secret brotherhood of healer-alchemists, the Rosicrucians, working for the spiritual and scientific renewal of Europe. They claimed to possess the secrets of nature and invited the learned to join their 'Invisible College.' While possibly a literary hoax or allegory, it sparked a feverish 'Rosicrucian Furor' that directly influenced the founding of the Royal Society and modern science.",
-    "related_entries": [
-      "alchemy",
-      "enlightenment",
-      "hermetic_tradition"
-    ]
+        "theoretical_framework": [
+          "Original quaternion Maxwell equations",
+          "Aharonov-Bohm effect (verified 1959)",
+          "Whittaker potential decomposition (1903, 1904)"
+        ],
+        "research_status": "suppressed / alternative physics"
+      },
+      "quantitative_data": {
+        "claimed_velocity": "> c (superluminal, contested)",
+        "carrier_frequency": "Varies (Tesla used very low frequencies)",
+        "penetration": "Passes through Faraday cages",
+        "healing_distance": "Claimed effective at any range (non-local)"
+      },
+      "key_researchers": [
+        "Nikola Tesla - Longitudinal wave pioneer",
+        "James Clerk Maxwell - Original quaternion equations",
+        "T.E. Bearden - Scalar electromagnetics theory",
+        "Konstantin Meyl - Scalar wave physics professor",
+        "E.T. Whittaker - Scalar potential mathematics"
+      ],
+      "suppression_history": {
+        "equation_simplification": "Heaviside removed scalar terms from Maxwell equations (1880s)",
+        "tesla_suppression": "JP Morgan defunding, FBI seizure of papers",
+        "classification": "Military scalar research classified",
+        "academic_rejection": "Not taught in physics curricula",
+        "soviet_research": "Allegedly pursued scalar weapons (classified)"
+      },
+      "primary_sources": {
+        "papers": [
+          "Whittaker (1903) 'On the Partial Differential Equations of Mathematical Physics'",
+          "Whittaker (1904) 'On an Expression of the Electromagnetic Field...'",
+          "Aharonov & Bohm (1959) 'Significance of Electromagnetic Potentials...'"
+        ],
+        "books": [
+          "Fer De Lance (Tom Bearden, 2002)",
+          "Scalar Wave Transponder (Konstantin Meyl)",
+          "Tesla's Longitudinal Electricity (Gerry Vassilatos)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Scalar electromagnetics Bearden",
+          "Meyl scalar wave transmission",
+          "Aharonov-Bohm effect applications",
+          "Tesla longitudinal waves",
+          "Soviet Woodpecker signal scalar",
+          "Quaternion Maxwell equations"
+        ],
+        "experiments": [
+          "Meyl scalar wave transmission kit",
+          "Aharonov-Bohm effect replication",
+          "Tesla coil longitudinal modes"
+        ]
+      },
+      "implications": "If scalar waves exist as described, they would revolutionize physics, communications (instantaneous), medicine (remote healing), and energy (extraction from vacuum). The deletion of scalar terms from Maxwell's equations may represent the most significant suppression in physics history.",
+      "related_entries": [
+        "nikola_tesla",
+        "bio_scalar_healing",
+        "electromagnetic_environment",
+        "zero_point_energy",
+        "suppressed_research"
+      ]
     },
-  "freemasonry_geometry": {
-    "id": "freemasonry_geometry",
-    "name": "Freemasonry & Sacred Geometry",
-    "category": "mystery_traditions",
-    "description": "Fraternal organisation using stonemason tools as allegorical guides for moral development",
-    "symbolism": "Square and Compasses, Letter G (Geometry/God), Tracing Boards",
-    "origin": "Evolved from medieval stonemason guilds (1600s-1717)",
-    "biological_correlations": [
-      "ritual_behavior",
-      "moral_reasoning",
-      "symbolic_cognition"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Meaning of Masonry",
-        "authors": [
-          "Wilmshurst, W.L."
+    "electrogravitics": {
+      "id": "electrogravitics",
+      "name": "Electrogravitics",
+      "category": "suppressed_physics",
+      "type": "phenomenon",
+      "discovery_date": "1921-1956 (Brown experiments)",
+      "description": "Propulsion and lift generation using high-voltage electrostatic fields to create thrust without propellant. Also known as the Biefeld-Brown effect after its discoverers. Demonstrated publicly in the 1950s before abrupt classification. Dismissed as 'ion wind' by mainstream science despite demonstrations in vacuum.",
+      "extended_description": "Thomas Townsend Brown discovered in the 1920s that heavily charged capacitors exhibited thrust toward their positive pole, regardless of orientation. He demonstrated this to the US Navy and later founded NICAP (National Investigations Committee on Aerial Phenomena). In the 1950s, aerospace companies Lockheed, Boeing, and Convair published papers suggesting electrogravitic propulsion was imminent - then all research suddenly went black. The 1956 'Electrogravitics Systems' report compiled by Aviation Studies (International) Ltd documents this research before classification. Modern US patent applications for similar technology are being issued to military contractors.",
+      "key_evidence": [
+        "1921-1923: Brown discovers asymmetric capacitor thrust",
+        "1953: Brown demonstrates in partial vacuum (ruling out ion wind)",
+        "1956: Aviation Studies 'Electrogravitics Systems' report",
+        "1956-onwards: All public research ceases abruptly",
+        "2001: NASA Breakthrough Propulsion Physics investigates lifters",
+        "2018+: US Navy patents 'hybrid aerospace-underwater craft'"
+      ],
+      "scientific_basis": {
+        "mechanism": "Electrostatic / Electro-kinetic",
+        "key_principles": [
+          "High voltage asymmetric capacitors create thrust",
+          "Thrust direction toward positive pole",
+          "Effect persists in partial vacuum",
+          "May involve coupling to vacuum/ZPE",
+          "Possible connection to gravity polarization"
         ],
-        "year": 1922,
-        "key_findings": "Esoteric interpretation of Masonic rituals and symbols"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Freemasonry describes itself as a 'system of morality, veiled in allegory and illustrated by symbols.' Claiming descent from the builders of Solomon's Temple (Hiram Abiff), it uses the tools of architecture (square, compass, level) to teach self-improvement ('making good men better'). The detailed attention to geometry suggests a preservation of the ancient Pythagorean idea that the divine structure of the universe is geometrical.",
-    "related_entries": [
-      "pythagorean_brotherhood",
-      "sacred_geometry",
-      "solomon_temple"
-    ]
+        "mainstream_explanation": "Ion wind (rejected by Brown due to vacuum tests)",
+        "alternative_theories": [
+          "Gravity modification through charge accumulation",
+          "Coupling to quantum vacuum",
+          "Electro-kinetic momentum transfer"
+        ],
+        "research_status": "classified / partially acknowledged"
+      },
+      "quantitative_data": {
+        "brown_voltage": "50,000-300,000 volts",
+        "vacuum_test_pressure": "10^-6 Torr (not pure ion wind)",
+        "claimed_lift_thrust_ratio": "10x thrust improvement over jet",
+        "b2_bomber_edge_voltage": "Speculated 1-2 million volts"
+      },
+      "key_researchers": [
+        "Thomas Townsend Brown - Primary discoverer",
+        "Paul Alfred Biefeld - Brown's professor, Denison University",
+        "Paul LaViolette - 'Secrets of Antigravity Propulsion' author",
+        "Ning Li - NASA/DOD gravity research (disappeared from public view)"
+      ],
+      "suppression_history": {
+        "classification": "1956 - All aerospace electrogravitic research goes classified",
+        "nicap_role": "Brown's UFO organization may have been cover for continued research",
+        "patent_denials": "Antigravity patents routinely rejected by USPTO",
+        "modern_patents": "2018+ Navy patents suggest classified program matured",
+        "academic_dismissal": "Mainstream physics labels all effects as 'ion wind'"
+      },
+      "primary_sources": {
+        "documents": [
+          "Electrogravitics Systems (Aviation Studies Ltd, 1956) - declassified",
+          "The Gravitics Situation (Aviation Studies Ltd, 1956)",
+          "T.T. Brown: Electrogravity Device patent (US 3,187,206)"
+        ],
+        "books": [
+          "Secrets of Antigravity Propulsion (Paul LaViolette, 2008)",
+          "Defying Gravity (Thomas Valone, 2005)",
+          "The Hunt for Zero Point (Nick Cook, 2001)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Biefeld-Brown effect vacuum",
+          "Electrogravitics Systems 1956 report",
+          "T.T. Brown patents",
+          "Navy hybrid craft patent 2018",
+          "B2 bomber charge leading edge",
+          "Ning Li gravity research"
+        ],
+        "replication_info": [
+          "Lifter projects (high voltage asymmetric capacitors)",
+          "Jean-Louis Naudin experiments (documented online)",
+          "American Antigravity (Tim Ventura)"
+        ]
+      },
+      "implications": "The sudden 1956 classification of all electrogravitic research, combined with modern Navy patents for similar technology, strongly suggests a classified breakthrough. If true, TR-3B and similar rumored craft may use electrogravitic propulsion developed from Brown's work.",
+      "related_entries": [
+        "vimanas",
+        "ancient_technology",
+        "zero_point_energy",
+        "antigravity",
+        "suppressed_research"
+      ]
     },
-  "knights_templar_mystery": {
-    "id": "knights_templar_mystery",
-    "name": "Knights Templar",
-    "category": "mystery_traditions",
-    "description": "Medieval military order suppressed for heresy/secret worship",
-    "historical_facts": "Protected pilgrims, invented modern banking, extremely wealthy",
-    "accusations": "Worshipping a head/idol 'Baphomet', spitting on the cross, sodomy",
-    "legacy": "Friday the 13th (arrest date: Oct 13, 1307)",
-    "biological_correlations": [
-      "trauma_bonding",
-      "fanaticism",
-      "secrecy_psychology"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Knights Templar",
-        "authors": [
-          "Barber, Malcolm"
+    "cold_fusion_lenr": {
+      "id": "cold_fusion_lenr",
+      "name": "Cold Fusion / LENR",
+      "category": "suppressed_physics",
+      "type": "phenomenon",
+      "discovery_date": "1989-03-23 (Fleischmann-Pons announcement)",
+      "description": "Low Energy Nuclear Reactions producing excess heat, transmutation products, and sometimes radiation without the million-degree temperatures required for hot fusion. Initially dismissed as 'pathological science' after failed replications, LENR has been reproduced hundreds of times and is now researched by NASA, the US Navy, and multiple governments.",
+      "extended_description": "When Martin Fleischmann and Stanley Pons announced excess heat from electrolysis of heavy water using palladium electrodes, the scientific establishment initially celebrated, then rapidly condemned the discovery after MIT and others reported failed replications. Investigation later revealed MIT may have manipulated their data. Since 1989, over 200 labs have reported excess heat, helium-4 production (commensurate with heat), and low-level radiation. The mechanism remains debated - not classical fusion, but possibly involving collective nuclear effects in the metal lattice. Google's 2019 LENR research found no excess heat but recommended continued investigation.",
+      "key_evidence": [
+        "1989: Fleischmann-Pons original experiments",
+        "1991: Helium-4 correlated with excess heat (Miles)",
+        "2004: US DOE review finds evidence warrants further study",
+        "2008: SPAWAR Navy Lab publishes tritium and DNA mutations from LENR",
+        "2011: Rossi E-Cat demonstrations (controversial)",
+        "2016: Airbus patents LENR reactor design",
+        "2018: Google-funded replication attempts (inconclusive)"
+      ],
+      "scientific_basis": {
+        "mechanism": "Lattice Confined Nuclear Reactions",
+        "key_principles": [
+          "Hydrogen/deuterium loading in metal lattice",
+          "High loading ratios required (H/Pd > 0.9)",
+          "Collective nuclear effects vs two-body fusion",
+          "Phonon-mediated energy transfer",
+          "Surface effects and nanostructures important"
         ],
-        "year": 1978,
-        "key_findings": "Detailed history of their rise and the trial proceedings"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "The Poor Fellow-Soldiers of Christ and of the Temple of Solomon became the most powerful economic and military force in the Middle Ages. They excavated under the Temple Mount in Jerusalem (Stable of Solomon) for 9 years. Rumors persist they found something (Grail, Ark, Knowledge) that gave them leverage over the Church. King Philip IV of France, indebted to them, arrested them all at dawn on Friday the 13th, 1307, torturing them into confessing to worshipping 'Baphomet.'",
-    "related_entries": [
-      "solomon_temple",
-      "banking",
-      "heresy"
-    ]
+        "products_observed": [
+          "Excess heat (up to 20x input)",
+          "Helium-4 commensurate with heat",
+          "Transmutation products (new elements)",
+          "Low-level energetic particles",
+          "Tritium (in some experiments)"
+        ],
+        "research_status": "replicated but controversial"
+      },
+      "quantitative_data": {
+        "excess_heat_ratio": "200-2000% of input power",
+        "helium_heat_ratio": "24 MeV per He-4 (matches theoretical)",
+        "loading_threshold": "H/Pd > 0.9 atomic ratio",
+        "successful_replications": "Hundreds of labs worldwide",
+        "failed_replications": "Many (sensitivity to conditions)"
+      },
+      "key_researchers": [
+        "Martin Fleischmann - Electrochemist, co-discoverer",
+        "Stanley Pons - Electrochemist, co-discoverer",
+        "Michael McKubre - SRI International lead researcher",
+        "Edmund Storms - Los Alamos veteran, LENR researcher",
+        "Peter Hagelstein - MIT theorist",
+        "Dennis Letts - Laser-triggered LENR researcher"
+      ],
+      "suppression_history": {
+        "initial_condemnation": "1989 - APS meeting attacks, MIT opposition",
+        "funding_termination": "1989 - DOE cuts LENR funding",
+        "career_destruction": "Fleischmann/Pons forced to leave US",
+        "journal_blockade": "Nature, Science refuse LENR papers",
+        "rehabilitation": "2004 DOE review, NASA/Navy research programs",
+        "mit_scandal": "Evidence of data alteration in 'failed' MIT replication"
+      },
+      "primary_sources": {
+        "papers": [
+          "Fleischmann & Pons (1989) 'Electrochemically Induced Nuclear Fusion'",
+          "McKubre (2008) 'Excess Power Observations in Electrochemical Studies'",
+          "SPAWAR (2008) 'Detection of Energetic Particles Using CR-39'"
+        ],
+        "books": [
+          "Excess Heat (Charles Beaudette, 2000)",
+          "The Science of Low Energy Nuclear Reaction (Edmund Storms, 2007)",
+          "Cold Fusion: Fire from Water (documentary, 1999)"
+        ],
+        "institutions": [
+          "LENR-CANR.org - Primary document archive",
+          "ICCF conference proceedings"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "LENR excess heat helium correlation",
+          "Fleischmann Pons vindicated",
+          "MIT cold fusion data manipulation",
+          "Navy SPAWAR LENR",
+          "Brillouin Energy LENR",
+          "ICCF conference papers"
+        ],
+        "replication_resources": [
+          "MFMP (Martin Fleischmann Memorial Project)",
+          "LENR-forum.com",
+          "Cold Fusion Now"
+        ]
+      },
+      "implications": "If LENR achieves reliable reproducibility and power scaling, it would provide clean, safe, abundant nuclear energy without nuclear waste or proliferation concerns. The 1989 suppression may be the most consequential case of institutional science failure in modern history.",
+      "related_entries": [
+        "nuclear_physics",
+        "suppressed_research",
+        "energy_technology",
+        "palladium",
+        "deuterium"
+      ]
     },
-  "theosophy_blavatsky": {
-    "id": "theosophy_blavatsky",
-    "name": "Theosophical Society",
-    "category": "mystery_traditions",
-    "description": "19th-century esoteric movement seeking the 'ancient wisdom' underlying all religions",
-    "founder": "Helena Petrovna Blavatsky (1875)",
-    "concepts": "Root Races, Akashic Records, Ascended Masters (Mahatmas)",
-    "biological_correlations": [
-      "epigenetic_memory",
-      "racial_theory_origins",
-      "channeled_states"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Secret Doctrine",
-        "authors": [
-          "Blavatsky, H.P."
+    "hutchison_effect": {
+      "id": "hutchison_effect",
+      "name": "The Hutchison Effect",
+      "category": "suppressed_physics",
+      "type": "phenomenon",
+      "discovery_date": "1979 (first observed by John Hutchison)",
+      "description": "A collection of anomalous phenomena including levitation, metal softening/jellification, spontaneous fracturing, and material interpenetration, allegedly produced by interfering electromagnetic fields from Tesla coils, Van de Graaff generators, and radio frequency sources. Named after Canadian inventor John Hutchison who claims to have accidentally discovered these effects.",
+      "extended_description": "John Hutchison, working in his Vancouver apartment with salvaged military equipment, reported that random combinations of high-voltage equipment produced startling effects: heavy objects levitating, metals becoming soft like putty or fracturing with anomalous surfaces, and dissimilar materials fusing together. He provided video evidence and allowed witnesses including aerospace company representatives. The Canadian and US military allegedly investigated, then classified the results. Skeptics claim the videos are hoaxes (objects dropped upward by rotating camera), while supporters point to physical samples and corporate/military investigations that wouldn't occur for obvious fakes.",
+      "key_evidence": [
+        "1979-1991: Hundreds of documented effect occurrences",
+        "Video documentation of levitating objects",
+        "Physical samples of anomalous metal (Boeing, McDonnell Douglas examined)",
+        "German Max Planck Institute analysis of samples",
+        "US Army analysis (reported but classified)",
+        "George Hathaway engineering documentation"
+      ],
+      "scientific_basis": {
+        "mechanism": "EM Field Interference (hypothesized)",
+        "proposed_explanations": [
+          "Zero-point energy coupling through EM resonance",
+          "Localized gravitational anomalies from field interaction",
+          "Scalar wave interference effects",
+          "Coherers disrupting molecular bonds",
+          "Casimir-like cavity effects at macro scale"
         ],
-        "year": 1888,
-        "key_findings": "Massive synthesis of science, religion, and philosophy proposing a spiritual evolution of humanity"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Madame Blavatsky claimed to be in telepathic contact with 'Masters of the Ancient Wisdom' in Tibet. Her major work, *The Secret Doctrine*, outlines a complex cosmology of planetary chains and root races (Lemurian, Atlantean, Aryan). Theosophy introduced Eastern concepts (Karma, Reincarnation) to the West and heavily influenced modern New Age thought, abstract art (Kandinsky, Mondrian), and even quantum physicists like Pauli.",
-    "related_entries": [
-      "akashic_records",
-      "ancient_civilizations",
-      "consciousness"
-    ]
+        "replication_challenges": [
+          "Exact equipment configuration unknown",
+          "Effect appears random/intermittent",
+          "Requires specific 'tuning' that's undocumented",
+          "Original equipment no longer intact"
+        ],
+        "research_status": "anecdotal - not replicated independently"
+      },
+      "observed_phenomena": {
+        "levitation": "Objects up to 60lbs floating/hovering",
+        "metal_jellification": "Solid metal becoming putty-like",
+        "spontaneous_fracturing": "Metals breaking with unusual surface features",
+        "interpenetration": "Dissimilar materials merging (e.g., metal + wood)",
+        "cold_melting": "Materials deforming without heat",
+        "object_invisibility": "Reported but rare"
+      },
+      "quantitative_data": {
+        "power_input": "~4 kW total equipment",
+        "frequency_range": "RF to microwave",
+        "voltage": "15,000-250,000 volts",
+        "levitation_weight": "Up to 60 lbs reported",
+        "occurrence_rate": "Sporadic (hours to days between events)"
+      },
+      "key_researchers": [
+        "John Hutchison - Original discoverer",
+        "George Hathaway - Engineer, documented effects",
+        "Mel Winfield - Early investigator",
+        "Col. John Alexander - US Army investigator"
+      ],
+      "suppression_history": {
+        "lab_raids": "Canadian government reportedly raided lab",
+        "equipment_seizure": "Some equipment allegedly confiscated",
+        "classification": "Military investigations classified",
+        "debunking_campaigns": "Organized efforts to label effects as hoax",
+        "industry_silence": "Boeing, McDonnell Douglas silent after investigation"
+      },
+      "primary_sources": {
+        "documentation": [
+          "The Hutchison Effect - An Explanation (George Hathaway, 1991)",
+          "Multiple video recordings (available online)",
+          "Physical sample photographs and analysis reports"
+        ],
+        "media": [
+          "Japanese TV documentary (1990s)",
+          "Discovery Channel coverage",
+          "Coast to Coast AM interviews"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Hutchison Effect video analysis",
+          "John Hutchison metal samples",
+          "Hathaway Hutchison documentation",
+          "Boeing Hutchison investigation",
+          "Hutchison effect replication attempts",
+          "Max Planck Hutchison sample"
+        ],
+        "replication_attempts": [
+          "Various independent researchers (limited success)",
+          "Tim Ventura American Antigravity (documented attempts)"
+        ]
+      },
+      "controversies": [
+        "Video authenticity questioned (camera rotation theory)",
+        "Inability to replicate on demand",
+        "Original equipment no longer available",
+        "Hutchison's credibility debated",
+        "Corporate/military investigations suggest legitimacy concerns"
+      ],
+      "implications": "If genuine, the Hutchison Effect would demonstrate that specific EM field configurations can affect gravity and molecular cohesion - with obvious implications for propulsion, manufacturing, and materials science. The alleged military interest despite 'hoax' claims suggests at minimum an unexplained anomaly worth investigating.",
+      "related_entries": [
+        "resonant_technologies",
+        "scalar_waves",
+        "nikola_tesla",
+        "electrogravitics",
+        "suppressed_research"
+      ]
+    }
+  },
+  "forbidden_archaeology": {
+    "giant_skeletal_remains": {
+      "id": "giant_skeletal_remains",
+      "name": "Giant Skeletal Remains",
+      "category": "forbidden_archaeology",
+      "type": "phenomenon",
+      "period": "19th-20th century discoveries (artifacts allegedly much older)",
+      "description": "Hundreds of newspaper accounts from the 1800s-1900s documenting the discovery of unusually large human skeletal remains (7-12+ feet tall) throughout North America, particularly in Native American burial mounds. These finds are allegedly suppressed or 'lost' by the Smithsonian Institution and other museums.",
+      "extended_description": "From approximately 1850-1950, American newspapers regularly reported discoveries of giant skeletons by farmers, archaeologists, and construction workers. Common features included heights of 7-12 feet, double rows of teeth, six fingers, and massive skulls. The Smithsonian Institution was frequently mentioned as receiving or investigating these finds, yet no specimens are currently on display or acknowledged. Researcher Jim Vieira compiled over 1,500 such accounts. A 2014 NAGPRA lawsuit alleged the Smithsonian destroyed thousands of giant remains in the early 1900s to protect the conventional narrative of human evolution.",
+      "key_evidence": [
+        "1833: Soldiers at Lompoc Rancho, CA report 12-foot skeleton",
+        "1848: Abraham Lincoln references giant bones in Niagara Falls speech",
+        "1871: New York Times reports 200+ giant skeletons in Cayuga, NY",
+        "1912: Catalina Island giant skeleton photographs (Ralph Glidden)",
+        "Hundreds of 19th century newspaper accounts compiled by researchers",
+        "Native American oral traditions of giants (Si-Te-Cah, Patagonian giants)"
+      ],
+      "scientific_basis": {
+        "mechanism": "Unknown - possibly extinct hominid species or genetic variance",
+        "proposed_explanations": [
+          "Extinct human subspecies",
+          "Nephilim/biblical interpretation",
+          "Gigantism genetic line",
+          "Misidentified animal bones (mainstream dismissal)",
+          "Deliberate fraud (some confirmed)"
+        ],
+        "forensic_observations": [
+          "Heights 7-12+ feet reported",
+          "Double rows of teeth (multiple accounts)",
+          "Six fingers/toes (polydactyly)",
+          "Elongated skulls (some reports)",
+          "Massive skull circumference"
+        ],
+        "research_status": "suppressed / academically ignored"
+      },
+      "quantitative_data": {
+        "documented_finds": "1,500+ newspaper accounts (Vieira compilation)",
+        "typical_height_range": "7-12 feet",
+        "geographic_distribution": "Predominantly North American mounds",
+        "time_period_of_reports": "1800-1950 most common",
+        "current_specimens_available": "Zero (allegedly destroyed/hidden)"
+      },
+      "key_researchers": [
+        "Jim Vieira - Researcher, TED talk presenter (talk removed)",
+        "Richard Dewhurst - 'Ancient Giants Who Ruled America' author",
+        "Steve Quayle - 'Genesis 6 Giants' author",
+        "L.A. Marzulli - Researcher, documentary filmmaker",
+        "Ross Hamilton - 'A Tradition of Giants' author"
+      ],
+      "suppression_history": {
+        "smithsonian_role": "Allegedly received hundreds of specimens, none on display",
+        "nagpra_lawsuit": "2014 lawsuit claims systematic destruction of remains",
+        "ted_talk_removal": "Jim Vieira's TED talk removed for 'lack of peer review'",
+        "academic_dismissal": "Topic considered 'pseudoarchaeology'",
+        "specimen_disappearance": "No major museum acknowledges giant collections"
+      },
+      "primary_sources": {
+        "books": [
+          "The Ancient Giants Who Ruled America (Richard Dewhurst, 2013)",
+          "A Tradition of Giants (Ross Hamilton, 2001)",
+          "Genesis 6 Giants (Steve Quayle, 2002)"
+        ],
+        "newspaper_archives": [
+          "New York Times historical archives",
+          "Library of Congress Chronicling America",
+          "State historical society archives"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Smithsonian giant skeletons",
+          "Jim Vieira giants",
+          "Catalina Island giant skeleton",
+          "Native American burial mound giants",
+          "Double row teeth skeleton",
+          "Abraham Lincoln giants Niagara"
+        ],
+        "archives_to_search": [
+          "Newspapers.com historical archives",
+          "Smithsonian FOIA requests",
+          "State historical society records"
+        ]
+      },
+      "implications": "If genuine, giant skeletal remains would completely rewrite human history, suggesting an extinct race of large humans or a deliberate cover-up of human origins. The sheer volume of documented accounts makes the 'all hoaxes' explanation statistically improbable.",
+      "related_entries": [
+        "suppressed_research",
+        "ancient_civilizations",
+        "nephilim",
+        "mound_builders"
+      ]
     },
-  "golden_dawn_magick": {
-    "id": "golden_dawn_magick",
-    "name": "Hermetic Order of the Golden Dawn",
-    "category": "mystery_traditions",
-    "description": "Late 19th-century order dedicated to the study and practice of the occult sciences",
-    "members": "W.B. Yeats, Aleister Crowley, Bram Stoker",
-    "system": "Synthesis of Kabbalah, Tarot, Astrology, and Alchemy",
-    "biological_correlations": [
-      "ritual_psychology",
-      "symbolic_integration",
-      "intent_manifestation"
-    ],
-    "sources": [
-      {
-        "type": "book",
-        "title": "The Golden Dawn",
-        "authors": [
-          "Regardie, Israel"
+    "ooparts": {
+      "id": "ooparts",
+      "name": "Out-of-Place Artifacts (OOPARTS)",
+      "category": "forbidden_archaeology",
+      "type": "phenomenon",
+      "description": "Technological or manufactured artifacts discovered in geological strata or archaeological contexts that predate any known human civilization capable of creating them. These 'impossible' objects suggest either alternate timelines, cyclical civilizations, or fundamental errors in dating methodology.",
+      "extended_description": "OOPARTS challenge the standard archaeological timeline by appearing in contexts millions of years older than anatomically modern humans. Examples range from metallic objects in coal seams (formed 300 million years ago) to precision-machined spheres in 2.8 billion-year-old rock. Mainstream science typically explains these as intrusions, misidentification, or hoaxes, but the sheer volume and diversity of reported finds has led alternative researchers to propose cyclical history, ancient advanced civilizations, or even non-terrestrial origin.",
+      "key_examples": [
+        {
+          "name": "London Hammer",
+          "location": "London, Texas, USA",
+          "claimed_age": "400+ million years (Ordovician rock)",
+          "description": "Modern-looking iron hammer encased in rock nodule"
+        },
+        {
+          "name": "Klerksdorp Spheres",
+          "location": "South Africa",
+          "claimed_age": "2.8 billion years",
+          "description": "Spheres with grooves, allegedly too precise for natural formation"
+        },
+        {
+          "name": "Dorchester Pot",
+          "location": "Massachusetts, USA",
+          "claimed_age": "600 million years (from rock blast)",
+          "description": "Bell-shaped vessel with silver inlay found in solid rock"
+        },
+        {
+          "name": "Coso Artifact",
+          "location": "California, USA",
+          "claimed_age": "500,000 years (geode encasing)",
+          "description": "Apparent spark plug found inside geode"
+        },
+        {
+          "name": "Antikythera Mechanism",
+          "location": "Greece",
+          "claimed_age": "2,100 years",
+          "description": "Complex astronomical computer predating known gearing by 1,400 years"
+        }
+      ],
+      "scientific_basis": {
+        "mechanism": "Unknown / Multiple theories",
+        "mainstream_explanations": [
+          "Intrusive deposition (objects fell into cracks)",
+          "Dating errors",
+          "Misidentification of natural formations",
+          "Deliberate hoaxes"
         ],
-        "year": 1937,
-        "key_findings": "Published the complete rituals and teachings of the order"
-      }
-    ],
-    "evidence_level": "documented",
-    "origin_story": "Founded in London in 1888 based on a mysterious 'Cipher Manuscript,' the Golden Dawn created the most influential system of Western ceremonial magic. It viewed magic not as superstition but as a psychological and spiritual science ('The Art of changing consciousness at will'). Its comprehensive synthesis of Kabbalah and Tarot remains the foundation for nearly all modern western occultism.",
-    "related_entries": [
-      "kabbalah",
-      "tarot",
-      "hermetic_tradition"
-    ]
+        "alternative_theories": [
+          "Cyclical advanced civilizations",
+          "Pre-flood technology",
+          "Extraterrestrial artifacts",
+          "Time travel"
+        ],
+        "research_status": "academically ignored"
+      },
+      "key_researchers": [
+        "Michael Cremo - 'Forbidden Archaeology' co-author",
+        "Richard Thompson - 'Forbidden Archaeology' co-author",
+        "Brad Steiger - Ancient mysteries researcher",
+        "William Corliss - Anomaly compiler"
+      ],
+      "primary_sources": {
+        "books": [
+          "Forbidden Archaeology (Cremo & Thompson, 1993)",
+          "The Hidden History of the Human Race (Cremo & Thompson, 1999)",
+          "Ancient Man: A Handbook of Puzzling Artifacts (Corliss, 1978)"
+        ],
+        "archives": [
+          "Creation Evidence Museum (London Hammer)",
+          "South African geological surveys (Klerksdorp)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Out of place artifacts",
+          "London Hammer Texas",
+          "Klerksdorp Spheres South Africa",
+          "Antikythera Mechanism",
+          "Cremo forbidden archaeology",
+          "Anomalous artifacts coal seam"
+        ]
+      },
+      "implications": "OOPARTS suggest that the linear narrative of human technological progress may be fundamentally flawed, and that technologically advanced beings (human or otherwise) may have existed on Earth far earlier than accepted.",
+      "related_entries": [
+        "antikythera_mechanism",
+        "ancient_technology",
+        "forbidden_archaeology",
+        "pre_ice_age_civilizations"
+      ]
+    },
+    "pre_ice_age_civilizations": {
+      "id": "pre_ice_age_civilizations",
+      "name": "Pre-Ice Age Civilizations",
+      "category": "forbidden_archaeology",
+      "type": "theory",
+      "key_event": "Younger Dryas Impact (12,800 years ago)",
+      "description": "The hypothesis that advanced human civilizations existed before the Younger Dryas cataclysm (12,800-11,600 BP) and were largely destroyed by cosmic impact, mega-floods, and rapid climate change. Supported by sites like Göbekli Tepe and underwater ruins suggesting technological sophistication predating accepted timelines.",
+      "extended_description": "The discovery of Göbekli Tepe (dated to 11,500 BP) demonstrated sophisticated architecture and astronomical alignment thousands of years before agriculture was supposedly invented. Combined with the Younger Dryas Impact Hypothesis (confirmed by nano-diamonds, melt-glass, and platinum anomalies across 50+ sites), a picture emerges of pre-flood civilizations wiped out by cosmic bombardment. Graham Hancock, Randall Carlson, and Robert Schoch propose that ancient myths of floods, lost lands (Atlantis, Lemuria), and 'gods' teaching civilization represent cultural memories of this previous epoch.",
+      "key_evidence": [
+        "Göbekli Tepe - 11,500 BP megalithic complex with astronomical alignments",
+        "Younger Dryas nano-diamonds - Impact evidence across 50+ sites",
+        "Sphinx water weathering - Schoch's theory of 9,000+ BC construction",
+        "Underwater ruins - Yonaguni, Gulf of Khambhat, Dwarka",
+        "Piri Reis Map - Antarctica coastline shown ice-free",
+        "Gunung Padang - Indonesian pyramid dated to 20,000+ BP (disputed)"
+      ],
+      "scientific_basis": {
+        "mechanism": "Catastrophic reset of civilization",
+        "key_principles": [
+          "Cosmic impact triggered Younger Dryas cooling",
+          "Mega-floods from ice sheet collapse",
+          "Sea level rise of 400+ feet drowned coastal cities",
+          "Survivors transmitted knowledge as 'gods'"
+        ],
+        "supporting_science": [
+          "Younger Dryas Boundary impact evidence (Firestone et al.)",
+          "Channeled Scablands mega-flood evidence",
+          "Meltwater Pulse 1A sea level data"
+        ],
+        "research_status": "emerging / paradigm-shifting"
+      },
+      "quantitative_data": {
+        "younger_dryas_start": "12,800 years before present",
+        "sea_level_rise": "~400 feet total since LGM",
+        "gobekli_tepe_age": "11,500+ BP",
+        "impact_evidence_sites": "50+ globally",
+        "estimated_destruction": "Extinction of megafauna, human population collapse"
+      },
+      "key_researchers": [
+        "Graham Hancock - Author, 'Fingerprints of the Gods', 'Magicians of the Gods'",
+        "Randall Carlson - Catastrophist researcher, sacred geometry",
+        "Robert Schoch - Geologist, Sphinx water weathering theory",
+        "Dr. James Kennett - Younger Dryas impact researcher",
+        "Danny Natawidjaja - Gunung Padang researcher"
+      ],
+      "primary_sources": {
+        "books": [
+          "Fingerprints of the Gods (Graham Hancock, 1995)",
+          "Magicians of the Gods (Graham Hancock, 2015)",
+          "America Before (Graham Hancock, 2019)",
+          "Forgotten Civilization (Robert Schoch, 2012)"
+        ],
+        "papers": [
+          "Firestone et al. (2007) 'Evidence for an extraterrestrial impact 12,900 years ago'"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Younger Dryas impact hypothesis",
+          "Göbekli Tepe astronomical alignments",
+          "Graham Hancock ancient civilizations",
+          "Sphinx water erosion Schoch",
+          "Randall Carlson sacred geometry",
+          "Yonaguni underwater pyramid"
+        ]
+      },
+      "implications": "If correct, human history includes a 'lost chapter' of sophisticated pre-flood civilizations, and our current epoch represents a rebuilding from near-extinction. Ancient myths may be historical records, not fantasy.",
+      "related_entries": [
+        "gobekli_tepe",
+        "astro_archaeology",
+        "atlantis",
+        "younger_dryas_impact"
+      ]
+    },
+    "underground_cities": {
+      "id": "underground_cities",
+      "name": "Underground Cities",
+      "category": "forbidden_archaeology",
+      "type": "site",
+      "description": "Vast subterranean complexes carved into rock, capable of housing tens of thousands of people with sophisticated ventilation, water, and storage systems. Found globally, with the most famous in Cappadocia, Turkey (Derinkuyu, Kaymakli). Their true age, original purpose, and builders remain debated.",
+      "extended_description": "Derinkuyu alone extends 18 stories underground, with room for 20,000 people plus livestock and provisions. Over 200 underground cities have been discovered in Cappadocia. While mainstream archaeology dates them to Byzantine/early Christian era for refugee use, alternative researchers note the sophistication suggests older origins and a primary purpose beyond temporary hiding - possibly survival shelters from cataclysms or cosmic events. Similar tunnel networks exist worldwide, suggesting a global phenomenon.",
+      "key_sites": [
+        {
+          "name": "Derinkuyu",
+          "location": "Turkey",
+          "depth": "85 meters",
+          "capacity": "20,000 people"
+        },
+        {
+          "name": "Kaymakli",
+          "location": "Turkey",
+          "depth": "8 levels",
+          "capacity": "3,500 people"
+        },
+        {
+          "name": "Cu Chi Tunnels",
+          "location": "Vietnam",
+          "length": "250 km",
+          "capacity": "Thousands"
+        },
+        {
+          "name": "Orvieto Underground",
+          "location": "Italy",
+          "tunnels": "1,200+",
+          "age": "Etruscan"
+        },
+        {
+          "name": "Wieliczka Salt Mine",
+          "location": "Poland",
+          "depth": "327 meters",
+          "age": "700+ years"
+        }
+      ],
+      "scientific_basis": {
+        "mechanism": "Engineering (excavation)",
+        "construction_methods": [
+          "Hand carving",
+          "Volcanic tufa (soft when wet)"
+        ],
+        "features": [
+          "Ventilation shafts",
+          "Rolling stone doors",
+          "Water wells",
+          "Storage rooms",
+          "Livestock areas"
+        ],
+        "research_status": "documented / age debated"
+      },
+      "quantitative_data": {
+        "derinkuyu_depth": "85 meters (18 stories)",
+        "derinkuyu_capacity": "20,000 people",
+        "cappadocia_cities": "200+ discovered",
+        "ventilation_shafts": "52 in Derinkuyu alone"
+      },
+      "key_questions": [
+        "Who originally built them and when?",
+        "Why such massive capacity for 'refugees'?",
+        "What cataclysm required such extreme shelters?",
+        "Are they connected to pre-flood civilizations?",
+        "Do similar undiscovered networks exist worldwide?"
+      ],
+      "primary_sources": {
+        "books": [
+          "Underground Worlds (David Macaulay)",
+          "Turkey's Underground Cities (various)"
+        ],
+        "research": [
+          "Turkish Ministry of Culture surveys",
+          "UNESCO World Heritage documentation"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Derinkuyu underground city",
+          "Cappadocia underground cities",
+          "Ancient bunkers cataclysm",
+          "Global tunnel networks",
+          "Underground refuge civilizations"
+        ]
+      },
+      "implications": "The scale and sophistication of underground cities suggests anticipation of surface catastrophes - possibly cyclical cosmic events. The global distribution of similar structures hints at planetary-level threat awareness in antiquity.",
+      "related_entries": [
+        "cataclysms",
+        "ancient_technology",
+        "pre_ice_age_civilizations",
+        "younger_dryas_impact"
+      ]
+    },
+    "vimanas": {
+      "id": "vimanas",
+      "name": "Vimanas",
+      "category": "forbidden_archaeology",
+      "type": "ancient_technology",
+      "source_texts": "Vedic/Sanskrit literature (Rigveda, Mahabharata, Ramayana, Vaimanika Shastra)",
+      "description": "Flying machines described in ancient Indian Sanskrit texts with remarkable technical detail including propulsion systems, construction materials, and operational instructions. The Vaimanika Shastra provides blueprints for multiple aircraft types.",
+      "extended_description": "Vimanas appear throughout Vedic literature as the flying vehicles of gods and heroes. The Ramayana describes Ravana's 'Pushpaka Vimana' in detail. Most controversially, the Vaimanika Shastra (allegedly channeled in the early 20th century from ancient texts) provides construction specifications for mercury vortex engines, alloys, and multiple aircraft designs. While mainstream scholars dismiss this as 20th century composition, the descriptions match no known 1920s aircraft technology and include information about materials and propulsion not understood until much later.",
+      "key_texts": [
+        {
+          "name": "Rigveda",
+          "content": "Aerial chariots of gods"
+        },
+        {
+          "name": "Ramayana",
+          "content": "Detailed Pushpaka Vimana description"
+        },
+        {
+          "name": "Mahabharata",
+          "content": "Aerial battles, nuclear-like weapons"
+        },
+        {
+          "name": "Vaimanika Shastra",
+          "content": "Technical specifications for multiple vimana types"
+        },
+        {
+          "name": "Samarangana Sutradhara",
+          "content": "Mercury engine construction"
+        }
+      ],
+      "described_features": [
+        "Mercury vortex propulsion",
+        "Invisibility capability",
+        "Subsonic to supersonic speeds",
+        "Vertical lift",
+        "Weapons systems",
+        "Inter-planetary travel (some accounts)"
+      ],
+      "scientific_basis": {
+        "mechanism": "Mercury vortex / plasma propulsion (hypothesized)",
+        "key_principles": [
+          "Rotating mercury creating propulsive force",
+          "High-temperature plasma effects",
+          "Gyroscopic stabilization",
+          "Electromagnetic field generation"
+        ],
+        "modern_connections": [
+          "Mercury plasma thrusters studied by NASA",
+          "Rotating plasma propulsion concepts",
+          "Electrogravitics thrust speculation"
+        ],
+        "research_status": "historical text / unverified"
+      },
+      "key_researchers": [
+        "David Hatcher Childress - Ancient technology author",
+        "Dr. Kavya Vaddadi - Aerospace engineer, vimana researcher",
+        "Dr. Ruth Reyna - Sanskrit scholar"
+      ],
+      "primary_sources": {
+        "texts": [
+          "Vaimanika Shastra (translated by G.R. Josyer, 1973)",
+          "Ramayana (Valmiki)",
+          "Samarangana Sutradhara (King Bhoja)"
+        ],
+        "books": [
+          "Vimana Aircraft of Ancient India and Atlantis (Childress, 1999)",
+          "Technology of the Gods (Childress, 2000)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Vaimanika Shastra translation",
+          "Mercury vortex engine",
+          "Vedic flying machines",
+          "Pushpaka Vimana",
+          "Ancient Indian aerospace",
+          "Sanskrit aircraft descriptions"
+        ]
+      },
+      "implications": "If vimana descriptions reflect actual ancient technology, they represent evidence of advanced aerospace engineering in antiquity - possibly from a pre-cataclysmic civilization or non-terrestrial source.",
+      "related_entries": [
+        "vedic_knowledge",
+        "electrogravitics",
+        "ancient_technology",
+        "pre_ice_age_civilizations"
+      ]
+    }
+  },
+  "resonant_technologies": {
+    "royal_rife_frequencies": {
+      "id": "royal_rife_frequencies",
+      "name": "Royal Rife Frequencies",
+      "category": "resonant_technologies",
+      "type": "technology",
+      "inventor": "Royal Raymond Rife (1888-1971)",
+      "description": "A therapeutic approach using specific electromagnetic frequencies to destroy pathogens (viruses, bacteria, parasites) via resonance, without harming surrounding tissue. Based on the principle that every microorganism has a 'Mortal Oscillatory Rate' (MOR) at which it structurally disintegrates.",
+      "extended_description": "Rife built the most powerful optical microscope of his era (60,000x magnification) and identified the pleomorphic nature of cancer-associated microorganisms. He developed frequency generators that allegedly achieved 100% remission in 16 terminal cancer patients in a 1934 clinical trial supervised by USC. Following this success, the AMA and pharmaceutical interests allegedly orchestrated the destruction of his lab, confiscation of research, and legal harassment until he died in obscurity. Modern Rife-type devices exist but face FDA suppression.",
+      "key_evidence": [
+        "1934 USC clinical trial - 16 terminal patients reported in remission",
+        "Rife microscope - unprecedented live pathogen visualization",
+        "Johnson-Rife correspondence documenting research",
+        "Smithsonian article (1944) praising Rife",
+        "Modern replication attempts with varying success"
+      ],
+      "scientific_basis": {
+        "mechanism": "Resonant destruction / Mortal Oscillatory Rate",
+        "key_principles": [
+          "Every organism has resonant frequency",
+          "At resonance, structure fails (like opera singer shattering glass)",
+          "Frequencies can be delivered via plasma tubes or electrical contact",
+          "Multiple frequencies for different pathogens"
+        ],
+        "modern_support": [
+          "Acoustic destruction of cancer cells demonstrated (2020 Caltech)",
+          "Pulsed electric field tumor ablation (approved)",
+          "Vibration affecting cell structure documented"
+        ],
+        "research_status": "suppressed / underground continuation"
+      },
+      "quantitative_data": {
+        "microscope_magnification": "60,000x (claimed)",
+        "clinical_trial_subjects": "16 terminal cancer patients",
+        "remission_rate_claimed": "100%",
+        "frequency_range": "Audio through RF (200 Hz - 11 MHz)",
+        "plasma_tube_power": "Varies (50-500 watts)"
+      },
+      "suppression_history": {
+        "1939_lab_fire": "Suspicious fire destroyed decades of research",
+        "ama_harassment": "Morris Fishbein allegedly led campaign against Rife",
+        "colleague_deaths": "Several associated researchers died suspiciously",
+        "fda_raids": "Modern device manufacturers regularly raided",
+        "media_blackout": "Mainstream coverage ceased after 1944"
+      },
+      "key_researchers": [
+        "Royal Raymond Rife - Inventor",
+        "Milbank Johnson - USC physician, clinical trial supervisor",
+        "John Crane - Rife associate, continued research",
+        "Barry Lynes - Author, 'The Cancer Cure That Worked'"
+      ],
+      "primary_sources": {
+        "books": [
+          "The Cancer Cure That Worked (Barry Lynes, 1987)",
+          "The Rife Report (containing frequency lists)"
+        ],
+        "archives": [
+          "Rife Research archives",
+          "Johnson-Rife correspondence"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Royal Rife frequencies list",
+          "Rife machine cancer",
+          "Mortal Oscillatory Rate",
+          "1934 Rife clinical trial",
+          "AMA Rife suppression",
+          "Barry Lynes Cancer Cure"
+        ],
+        "modern_devices": [
+          "Spooky2",
+          "GB4000",
+          "Modern Rife frequency generators"
+        ]
+      },
+      "implications": "If Rife's work is valid, frequency-based pathogen destruction would obsolete antibiotics, chemotherapy, and much of pharmaceutical medicine - explaining the alleged suppression.",
+      "related_entries": [
+        "biophysical_parameters",
+        "cancer_research",
+        "suppressed_research",
+        "resonance"
+      ]
+    },
+    "cymatics": {
+      "id": "cymatics",
+      "name": "Cymatics",
+      "category": "resonant_technologies",
+      "type": "phenomenon",
+      "coined_by": "Hans Jenny (1967)",
+      "description": "The study of visible sound and vibration, demonstrating how frequencies organize matter into geometric patterns. When a surface containing particles (sand, water, etc.) is vibrated at specific frequencies, coherent geometric patterns emerge - providing visual evidence that vibration creates structure.",
+      "extended_description": "Hans Jenny's groundbreaking experiments showed that specific frequencies reliably produce specific geometric patterns, many resembling sacred geometry, cell structures, and ancient symbols. This suggests sound/vibration as a fundamental ordering principle. Ancient cultures may have understood cymatics intuitively, using mantras, singing, and acoustic architecture. Modern applications include acoustic levitation, sonochemistry, and understanding how DNA and proteins may be organized by vibrational fields.",
+      "key_evidence": [
+        "Chladni plates - geometric patterns from violin bow vibration (1787)",
+        "Jenny experiments - comprehensive cymatic photography",
+        "Water cymatics - 3D patterns in vibrating water",
+        "Rice and cornstarch showing frequency-pattern correspondence",
+        "Acoustic levitation demonstrated in labs"
+      ],
+      "scientific_basis": {
+        "mechanism": "Standing wave interference patterns",
+        "key_principles": [
+          "Particles migrate to wave nodes (areas of minimal vibration)",
+          "Higher frequencies produce more complex patterns",
+          "Geometry emerges spontaneously from frequency",
+          "Patterns are reproducible and frequency-specific"
+        ],
+        "modern_applications": [
+          "Acoustic levitation (proven)",
+          "Sonochemistry - reactions triggered by ultrasound",
+          "Medical ultrasound imaging",
+          "Non-invasive manipulation of cells/particles"
+        ],
+        "research_status": "documented / expanding"
+      },
+      "quantitative_data": {
+        "frequency_range": "20 Hz - 20 kHz (audible) + ultrasonic",
+        "pattern_complexity": "Increases with frequency",
+        "chladni_discovery": "1787",
+        "jenny_publications": "1967, 1974"
+      },
+      "key_researchers": [
+        "Ernst Chladni - Original plate experiments (1787)",
+        "Hans Jenny - Named field 'Cymatics', comprehensive research",
+        "Alexander Lauterwasser - Water cymatics, sacred geometry connections",
+        "John Stuart Reid - CymaScope inventor"
+      ],
+      "primary_sources": {
+        "books": [
+          "Cymatics: A Study of Wave Phenomena (Hans Jenny, 1967)",
+          "Water Sound Images (Alexander Lauterwasser)",
+          "The Creative Power of Sound (various)"
+        ],
+        "instruments": [
+          "CymaScope - Real-time sound visualization"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Hans Jenny cymatics",
+          "Chladni figures",
+          "CymaScope sound visualization",
+          "Water cymatics patterns",
+          "Acoustic levitation",
+          "Sound creates geometry"
+        ]
+      },
+      "implications": "Cymatics provides visual proof that vibration creates structure - supporting ancient concepts that the universe is fundamentally sound/vibration. This may explain how DNA, proteins, and morphogenesis are organized by vibrational fields.",
+      "related_entries": [
+        "sacred_geometry",
+        "sound_healing",
+        "water_memory",
+        "morphogenetic_fields"
+      ]
+    },
+    "lakhovsky_mwo": {
+      "id": "lakhovsky_mwo",
+      "name": "Lakhovsky Multi-Wave Oscillator",
+      "category": "resonant_technologies",
+      "type": "technology",
+      "inventor": "Georges Lakhovsky (1869-1942)",
+      "description": "A therapeutic device generating a broad spectrum of radio frequencies simultaneously, designed to restore cells to their natural oscillation frequencies. Based on Lakhovsky's theory that all living cells are resonating oscillators that become diseased when their oscillation is disrupted.",
+      "extended_description": "Lakhovsky theorized that the cell nucleus acts as an electrical oscillating circuit, with the chromosomes serving as inductance and capacitance elements. Disease occurs when external interference (pathogens, EMF, toxins) disrupts cellular oscillation. The MWO bathes the body in a broad spectrum of frequencies, allowing each cell to 'find' and lock onto its healthy resonant frequency. Documented successes in European hospitals during the 1930s, particularly with cancer and plant pathology, were suppressed after WWII.",
+      "key_evidence": [
+        "1930s French hospital clinical use",
+        "Plant experiments showing recovery from cancer-like growths",
+        "Italian hospital documentation",
+        "Lakhovsky's published books and papers"
+      ],
+      "scientific_basis": {
+        "mechanism": "Broadband RF resonance / cellular oscillation",
+        "key_principles": [
+          "Cells are oscillating circuits",
+          "Disease = disrupted oscillation",
+          "Multi-frequency exposure enables resonance matching",
+          "Healthy cells regenerate at proper frequency"
+        ],
+        "components": [
+          "Tesla coil base",
+          "Concentric circular antennas",
+          "Split-ring resonators for broadband output"
+        ],
+        "research_status": "historical / revival"
+      },
+      "quantitative_data": {
+        "frequency_range": "Multiple octaves of RF",
+        "treatment_sessions": "15-30 minutes typical",
+        "historical_success_claims": "Cancer, infections, plant diseases"
+      },
+      "key_researchers": [
+        "Georges Lakhovsky - Inventor",
+        "Nikola Tesla - MWO design collaboration",
+        "Mark Clement - 'The Waves That Heal'"
+      ],
+      "primary_sources": {
+        "books": [
+          "The Secret of Life (Georges Lakhovsky, 1935)",
+          "The Waves That Heal (Mark Clement)",
+          "Multi-Wave Oscillator Handbook (various)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Lakhovsky Multi-Wave Oscillator",
+          "MWO therapy",
+          "Cellular oscillation theory",
+          "Lakhovsky Tesla collaboration",
+          "Secret of Life Lakhovsky"
+        ]
+      },
+      "implications": "Lakhovsky's work suggests disease is fundamentally an electrical/frequency dysfunction, treatable by restoring proper cellular oscillation rather than chemical intervention.",
+      "related_entries": [
+        "nikola_tesla",
+        "biofield",
+        "royal_rife_frequencies",
+        "resonance"
+      ]
+    },
+    "bio_scalar_healing": {
+      "id": "bio_scalar_healing",
+      "name": "Bio-Scalar Healing",
+      "category": "resonant_technologies",
+      "type": "technology",
+      "description": "Therapeutic modality using scalar waves (longitudinal EM waves) to restructure the biofield, promote cellular healing, and protect against electromagnetic pollution. Based on the theory that scalar fields create coherence in biological systems.",
+      "extended_description": "Scalar healing proponents claim these non-Hertzian fields penetrate Faraday cages, influence DNA directly, and create cellular coherence that promotes healing. Devices typically generate opposing EM fields that cancel out the transverse component, leaving only the scalar potential. Reported effects include accelerated wound healing, improved mental clarity, EMF protection, and chronic disease remission. While mainstream science denies scalar waves' biological effects, practitioners document results consistent with restored biofield coherence.",
+      "key_evidence": [
+        "Kaznacheyev experiments - disease transmission via EM/scalar fields",
+        "Cell culture experiments showing improved vitality",
+        "Anecdotal clinical improvements",
+        "Heart coherence measurements improvement",
+        "Plant growth enhancement studies"
+      ],
+      "scientific_basis": {
+        "mechanism": "Scalar / longitudinal wave biofield effects",
+        "key_principles": [
+          "Scalar waves carry information, not energy",
+          "Create coherence in biological systems",
+          "May influence DNA through potential gradients",
+          "Protective against chaotic EMF exposure"
+        ],
+        "theoretical_basis": [
+          "Aharonov-Bohm effect (potential affects particles)",
+          "Bearden scalar electromagnetics theory",
+          "Biofield coherence research"
+        ],
+        "research_status": "alternative / experimental"
+      },
+      "key_researchers": [
+        "Tom Bearden - Scalar electromagnetics theory",
+        "V.P. Kaznacheyev - Biophoton research",
+        "Sandra Michael - EESystem developer",
+        "Valerie Hunt - Biofield researcher"
+      ],
+      "primary_sources": {
+        "books": [
+          "Energy Medicine (James Oschman)",
+          "The Field (Lynne McTaggart)",
+          "Fer De Lance (Tom Bearden)"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Scalar healing technology",
+          "EESystem energy enhancement",
+          "Biofield coherence therapy",
+          "Bearden scalar biology",
+          "Kaznacheyev biophoton experiments"
+        ],
+        "devices": [
+          "EESystem",
+          "Scalar Wave Laser",
+          "Various scalar generators"
+        ]
+      },
+      "implications": "Bio-scalar healing suggests that information, not just chemistry, is fundamental to biology - and that restoring informational coherence may be as important as addressing physical/chemical imbalances.",
+      "related_entries": [
+        "scalar_waves",
+        "biofield",
+        "dna_toroidal_compaction",
+        "coherence_systems"
+      ]
+    },
+    "pyramid_power": {
+      "id": "pyramid_power",
+      "name": "Pyramid Power",
+      "category": "resonant_technologies",
+      "type": "phenomenon",
+      "description": "The theory that pyramidal geometric structures generate beneficial energetic effects including preservation, enhanced meditation, improved plant growth, razor blade sharpening, and water structuring. Based on the premise that geometry itself channels or focuses subtle energies.",
+      "extended_description": "Experiments dating from the 1930s (Antoine Bovis, Karel Drbal) claimed that pyramid shapes preserve organic matter, sharpen razor blades, and enhance consciousness. The mechanism is variously attributed to orgone energy concentration, torsion fields, shape power, or resonance with cosmic frequencies. Russian research by Alexander Golod documented significant effects using large outdoor pyramids. While mainstream science dismisses these effects, the correlation of pyramid geometry with sacred sites worldwide suggests ancient understanding of shape-based energy dynamics.",
+      "key_evidence": [
+        "Bovis mummification claims (1930s Egypt observations)",
+        "Drbal razor blade patent (Czechoslovakia, 1959)",
+        "Golod Russian pyramid research (multiple documented effects)",
+        "Plant growth experiments",
+        "Water structuring measurements",
+        "Meditation enhancement reports"
+      ],
+      "scientific_basis": {
+        "mechanism": "Shape Power / Torsion Fields (hypothesized)",
+        "proposed_mechanisms": [
+          "Geometric resonance with cosmic frequencies",
+          "Torsion field generation",
+          "Orgone energy concentration",
+          "Scalar wave focus",
+          "Golden ratio effects"
+        ],
+        "golod_research_findings": [
+          "Agricultural yield improvement",
+          "Oil well viscosity changes",
+          "Air quality improvement",
+          "Crystallization pattern changes"
+        ],
+        "research_status": "experimental / alternative"
+      },
+      "quantitative_data": {
+        "drbal_patent_number": "91304 (1959)",
+        "golod_pyramid_height": "Up to 44 meters",
+        "claimed_effects_radius": "Extends miles from large pyramids",
+        "angle": "51°52' (Great Pyramid) or 76° (Golod)"
+      },
+      "key_researchers": [
+        "Antoine Bovis - Original observations",
+        "Karel Drbal - Razor sharpening patent",
+        "Alexander Golod - Russian pyramid researcher",
+        "Patrick Flanagan - Pyramid researcher",
+        "Dan Davidson - Shape Power author"
+      ],
+      "primary_sources": {
+        "books": [
+          "Pyramid Power (Flanagan & Flanagan, 1973)",
+          "Shape Power (Dan Davidson)",
+          "The Giza Power Plant (Christopher Dunn)"
+        ],
+        "research": [
+          "Golod pyramid research documentation",
+          "Various experiment replications"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Pyramid power experiments",
+          "Alexander Golod pyramids Russia",
+          "Drbal razor blade patent",
+          "Shape power Dan Davidson",
+          "Pyramid meditation effects",
+          "Flanagan pyramid research"
+        ]
+      },
+      "implications": "If pyramid geometry genuinely affects physical and biological processes, it suggests that shape itself is a fundamental physical variable - and that ancient pyramid builders may have understood principles lost to modern science.",
+      "related_entries": [
+        "sacred_geometry",
+        "russian_pyramids",
+        "orgone_energy",
+        "torsion_fields"
+      ]
+    }
+  },
+  "visionary_science": {
+    "walter_russell": {
+      "id": "walter_russell",
+      "name": "Walter Russell",
+      "category": "visionary_science",
+      "type": "researcher_profile",
+      "dates": {
+        "birth": "1871-05-19",
+        "death": "1963-05-19",
+        "active_period": "1920-1963"
+      },
+      "description": "American polymath (sculptor, musician, author, philosopher, painter) who claimed to have received a 39-day cosmic illumination in 1921 revealing the fundamental nature of the universe. Russell proposed a wave-based, rhythmic, tonal cosmology where all matter consists of light in various states of motion, with the periodic table arranged in octaves rather than rows.",
+      "extended_description": "Russell's 'The Universal One' (1926) presented a unified field theory predating Einstein's attempts, proposing that electricity and magnetism are not separate forces but two aspects of a single spiraling motion. His periodic table of elements, arranged in octaves based on tonal relationships, predicted the existence of elements before their discovery. Despite lack of formal scientific training, Russell corresponded with Tesla (who allegedly called him 'an inspired man') and presented his work to scientists who found it either incomprehensible or profound. His University of Science and Philosophy continues his teachings.",
+      "key_contributions": [
+        "Russell Cosmogony - wave-based universe model",
+        "Octave Periodic Table - elements arranged by tonal relationships",
+        "Twin Opposing Vortices - matter/antimatter as opposed spirals",
+        "The Universal One (1926) - unified field theory",
+        "The Secret of Light (1947) - light as the fundamental substance",
+        "Atomic Suicide? (1957) - warnings about nuclear energy",
+        "Prediction of transuranic elements (plutonium, neptunium)",
+        "Concept of rhythmic balanced interchange",
+        "Theory of transmutation via electrical pressure"
+      ],
+      "scientific_basis": {
+        "mechanism": "Wave Mechanics / Tonal Octaves",
+        "key_principles": [
+          "All matter is light in various states of motion",
+          "Electricity and magnetism are one force (spiraling)",
+          "Universe breathes (expansion/contraction cycles)",
+          "Elements exist in octave relationships",
+          "Mind is the source of all motion"
+        ],
+        "predictions_validated": [
+          "Existence of deuterium (heavy hydrogen)",
+          "Existence of tritium",
+          "Transuranic elements structure"
+        ],
+        "research_status": "theoretical - ahead of time"
+      },
+      "quantitative_data": {
+        "illumination_duration": "39 days (1921)",
+        "periodic_table_octaves": "9 octaves of elements",
+        "predicted_elements": "Several before discovery",
+        "sculptures_created": "Notable Mark Twain bust, FDR memorial",
+        "books_authored": "12+ major works"
+      },
+      "key_quotes": [
+        "In the wave lies the secret of creation.",
+        "The universe is not a thing of created matter but a creating thing.",
+        "All motion is curved and all curvature is spiral.",
+        "The secret of light is that every wave is a particle and every particle is a wave.",
+        "Man's concept of matter is that of a solid. Nature's concept is that of motion only."
+      ],
+      "primary_sources": {
+        "books": [
+          "The Universal One (1926)",
+          "The Secret of Light (1947)",
+          "The Message of the Divine Iliad (1948-49)",
+          "Atomic Suicide? (1957)",
+          "A New Concept of the Universe (1953)"
+        ],
+        "institutions": [
+          "University of Science and Philosophy (Swannanoa, Virginia)",
+          "Russell Foundation"
+        ],
+        "key_researchers": [
+          "Lao Russell - wife and collaborator",
+          "Timothy Binder - Russell scholar",
+          "Chester Hatstat - Russell science researcher"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Russell cosmogony",
+          "Walter Russell periodic table",
+          "Twin opposing vortices",
+          "Russell Tesla correspondence",
+          "Swannanoa Russell archives",
+          "Russell transmutation"
+        ],
+        "archives": [
+          "University of Science and Philosophy",
+          "Walter Russell Foundation archives"
+        ],
+        "modern_connections": [
+          "Plasma cosmology conceptual overlap",
+          "Vortex mathematics (Marko Rodin)",
+          "Electric Universe theory parallels"
+        ]
+      },
+      "controversies": [
+        "Lack of mathematical formalization",
+        "Mystical illumination as source of science",
+        "Ignored by mainstream physics",
+        "Tesla endorsement authenticity",
+        "Transmutation claims unverified"
+      ],
+      "implications": "Russell's cosmology suggests that mainstream physics may be fundamentally incomplete in treating matter as primary rather than motion/light. His octave-based element theory and prediction of undiscovered elements lends credence to an underlying order not captured by standard quantum mechanics.",
+      "related_entries": [
+        "nikola_tesla",
+        "sacred_geometry",
+        "vortex_mathematics",
+        "electric_universe",
+        "transmutation"
+      ]
+    },
+    "viktor_schauberger": {
+      "id": "viktor_schauberger",
+      "name": "Viktor Schauberger",
+      "category": "visionary_science",
+      "type": "researcher_profile",
+      "dates": {
+        "birth": "1885-06-30",
+        "death": "1958-09-25",
+        "active_period": "1920-1958"
+      },
+      "description": "Austrian forester, naturalist, and inventor known as the 'Water Wizard' who pioneered the study of water vortices, implosion technology, and biomimetic design. Schauberger observed that nature operates primarily through implosion (inward spiraling, cooling) rather than explosion (outward, heating) and developed technologies mimicking natural water and air flows. His work was seized by Nazi Germany for secret projects and later by the US, with much of it remaining classified or 'lost'.",
+      "extended_description": "Schauberger's insights came from decades of observing pristine forest streams and the behavior of trout that could remain stationary in powerful currents. He concluded that water is alive, with optimal temperature (4°C) and spiral motion being critical to its vitality. His log flumes that transported heavier-than-water logs mystified engineers. He developed the 'Repulsine' - an implosion-based flying disc that allegedly achieved lift. After WWII, the US brought him to Texas where he signed over all his work under duress; he died five days after returning to Austria, reportedly saying 'They took everything from me.'",
+      "key_contributions": [
+        "Living Water theory - water as organism with optimal states",
+        "Implosion technology - centripetal vortex energy (opposite of combustion)",
+        "The Repulsine - implosion-based disc allegedly producing lift",
+        "Log flumes - transporting heavier-than-water timber",
+        "The Trout Turbine - inspired by fish propulsion",
+        "Copper agricultural implements - soil microbiome preservation",
+        "Vortex water treatment - structured water concepts",
+        "Klimator - air conditioning via implosion",
+        "Egg-shaped water storage - optimal geometry for vitality",
+        "Forest management principles - species mixing, temperature cycles"
+      ],
+      "scientific_basis": {
+        "mechanism": "Implosion / Centripetal Vortex",
+        "key_principles": [
+          "Implosion creates centripetal energy (efficient)",
+          "Explosion creates centrifugal energy (wasteful)",
+          "Water is optimally vital at +4°C",
+          "Spiral motion is nature's primary form",
+          "Egg shape maintains vortex coherence"
+        ],
+        "predictions_validated": [
+          "Structured water research (Pollack, Emoto)",
+          "Biomimetic design field emergence",
+          "Vortex-based water treatment systems"
+        ],
+        "research_status": "documented but suppressed"
+      },
+      "quantitative_data": {
+        "optimal_water_temp": "+4°C (maximum density)",
+        "log_flume_capacity": "Transported logs heavier than water uphill (defied physics)",
+        "repulsine_diameter": "~50cm experimental models",
+        "claimed_levitation": "Prototype allegedly lifted off and hit ceiling",
+        "egg_geometry_ratio": "Golden ratio proportions"
+      },
+      "suppression_history": {
+        "nazi_seizure": "1943 - SS forced Schauberger to develop technologies at Mauthausen using concentration camp labor",
+        "post_war_seizure": "1945 - US Army confiscated all models and documents",
+        "texas_contract": "1958 - Brought to Texas, signed over all IP under duress",
+        "death": "1958 - Died five days after returning to Austria",
+        "quote_on_death": "'They took everything from me. Everything. I don't even own myself anymore.'",
+        "patent_suppression": "Many patents expired without commercial development"
+      },
+      "key_quotes": [
+        "Comprehend and copy nature.",
+        "The majority believes that everything hard to comprehend must be very profound. This is incorrect.",
+        "If we want to produce energy we have to cool and compress, not heat and expand.",
+        "Water is a living organism, and like all living things, it can be killed.",
+        "The upholder of the cycles which maintain the whole of Life is water."
+      ],
+      "primary_sources": {
+        "books": [
+          "Living Water (Olof Alexandersson biography, 1982)",
+          "The Water Wizard (Callum Coats translation, 1998)",
+          "Nature as Teacher (Callum Coats translation, 1998)",
+          "The Fertile Earth (Callum Coats translation, 2000)",
+          "The Energy Evolution (Callum Coats translation, 2000)"
+        ],
+        "patents": [
+          "Austrian Patent 117749 (1930) - Artificial channel construction",
+          "Austrian Patent 136214 (1934) - Water flow channeling"
+        ],
+        "key_researchers": [
+          "Callum Coats - Primary English translator and scholar",
+          "Olof Alexandersson - Swedish biographer",
+          "Jörg Schauberger - grandson, continues research"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Schauberger Repulsine",
+          "Implosion technology",
+          "Living water vortex",
+          "Schauberger log flumes",
+          "Schauberger Nazi SS",
+          "Schauberger Texas contract"
+        ],
+        "archives": [
+          "PKS (Pythagoras Kepler System) - Schauberger family foundation, Austria",
+          "Bad Ischl archives, Austria"
+        ],
+        "modern_applications": [
+          "Watreco vortex nozzles (Sweden)",
+          "Grander water technology",
+          "Flowform water sculptors",
+          "Vortex Wasserwirbler devices"
+        ]
+      },
+      "controversies": [
+        "Nazi collaboration (forced/voluntary)",
+        "Repulsine flight claims unverified",
+        "Log flume physics unexplained",
+        "US contract circumstances suspicious",
+        "Death timing (5 days post-return) suspicious"
+      ],
+      "implications": "Schauberger's work suggests modern technology is fundamentally inverted - using explosion (combustion) and centrifugal force when nature primarily uses implosion and centripetal force. His water research aligns with emerging structured water science and indicates we may be damaging our water systems through straight pipes and pressure treatment.",
+      "related_entries": [
+        "water_memory",
+        "vortex_energy",
+        "implosion",
+        "structured_water",
+        "biomimicry",
+        "suppressed_research"
+      ]
+    },
+    "wilhelm_reich": {
+      "id": "wilhelm_reich",
+      "name": "Wilhelm Reich",
+      "category": "visionary_science",
+      "type": "researcher_profile",
+      "dates": {
+        "birth": "1897-03-24",
+        "death": "1957-11-03",
+        "active_period": "1920-1957"
+      },
+      "description": "Austrian-American psychoanalyst and scientist who discovered 'Orgone' - a universal life energy he claimed permeates all living matter and the atmosphere. Reich developed the orgone accumulator, cloudbuster weather modification device, and conducted controversial cancer research. He died in a US federal prison after FDA ordered destruction of his books and equipment - one of the most extreme cases of scientific suppression in American history.",
+      "extended_description": "Reich began as a protégé of Freud, developing character analysis and body-oriented psychotherapy. His research evolved from psychology into biology when he discovered 'bions' - microscopic vesicles he claimed represented a transitional form between living and non-living matter. His orgone theory proposed a measurable cosmic energy that could be accumulated, observed as blue luminescence, and used therapeutically. The FDA's 1954 injunction and subsequent book burning represents a uniquely harsh government response to alternative science, raising questions about what Reich actually discovered.",
+      "key_contributions": [
+        "Orgone Energy - universal life force (measurable via temperature differential)",
+        "Orgone Accumulator - layered organic/metallic box concentrating orgone",
+        "Cloudbuster - atmospheric orgone manipulation for weather control",
+        "Bion research - microscopic energy vesicles",
+        "Character armor theory - muscular tension storing emotional trauma",
+        "Vegetotherapy - body-based psychotherapy (precursor to bioenergetics)",
+        "Oranur Experiment - orgone vs nuclear radiation interaction",
+        "DOR (Deadly Orgone Radiation) - stagnant/toxic orgone concept",
+        "Motor force from orgone - prototype orgone motor claims"
+      ],
+      "scientific_basis": {
+        "mechanism": "Orgone Energy (life force / cosmic energy)",
+        "key_principles": [
+          "Orgone attracted to organic material",
+          "Orgone reflected by metallic surfaces",
+          "Living organisms are orgone energy systems",
+          "Atmospheric orgone influences weather"
+        ],
+        "observable_phenomena": [
+          "Temperature increase inside accumulator (0.5-1.5°C)",
+          "Blue luminescence at night (naked eye visible)",
+          "Cloud dissolution via cloudbuster operation",
+          "Bion radiation affecting film and skin"
+        ],
+        "research_status": "suppressed - FDA ordered destruction"
+      },
+      "quantitative_data": {
+        "accumulator_temp_differential": "0.5-1.5°C above ambient",
+        "orgonotic_potential": "Measured in 'org' units",
+        "bion_size": "1-10 microns",
+        "cloudbuster_range": "Effective radius ~50 miles",
+        "prison_sentence": "2 years (died after 8 months)"
+      },
+      "suppression_history": {
+        "fda_complaint": "1947 - Article calling orgone 'fraud' triggers investigation",
+        "injunction": "1954 - Federal injunction prohibiting orgone devices and literature",
+        "book_burning": "1956 - FDA supervised burning of Reich's books and journals",
+        "imprisonment": "1957 - Jailed for contempt (transporting accumulator across state lines)",
+        "death": "1957 - Died in Lewisburg Federal Penitentiary",
+        "continued_suppression": "FBI files remain partially classified"
+      },
+      "key_quotes": [
+        "Love, work and knowledge are the well-springs of our life. They should also govern it.",
+        "The orgasm is the emotional discharge of excess energy.",
+        "I am well aware of the fact that the human race has known about the existence of a universal energy related to life for many ages.",
+        "Truth is found neither in the thesis nor the antithesis, but in an emergent synthesis which reconciles the two."
+      ],
+      "primary_sources": {
+        "books": [
+          "The Function of the Orgasm (1927/1942)",
+          "Character Analysis (1933)",
+          "The Cancer Biopathy (1948)",
+          "The Oranur Experiment (1951)",
+          "Contact with Space (1957 - posthumous)"
+        ],
+        "journals": [
+          "International Journal of Sex-Economy and Orgone Research",
+          "Orgone Energy Bulletin",
+          "CORE (Cosmic Orgone Engineering)"
+        ],
+        "key_researchers": [
+          "James DeMeo - Orgonomist, SAHARASIA research",
+          "Courtney Baker - Orgone research continuation",
+          "Eva Reich - daughter, continued infant research"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Reich FDA files FOIA",
+          "Orgone accumulator experiments",
+          "Cloudbuster weather modification",
+          "Reich bion experiments microscopy",
+          "Oranur experiment nuclear orgone",
+          "Reich prison letters"
+        ],
+        "archives": [
+          "Wilhelm Reich Museum, Rangeley, Maine (Orgonon)",
+          "Wilhelm Reich Infant Trust",
+          "Countway Library, Harvard (Reich papers from 2007)"
+        ],
+        "modern_continuation": [
+          "American College of Orgonomy",
+          "Journal of Orgonomy",
+          "James DeMeo's Orgone Biophysical Research Lab"
+        ]
+      },
+      "controversies": [
+        "Legitimacy of orgone energy existence",
+        "FDA book burning - unprecedented for science",
+        "Sexual politics and persecution",
+        "Efficacy of cancer treatment claims",
+        "Cloudbusting - documented or placebo?"
+      ],
+      "implications": "Reich's work suggests a bioenergetic dimension to physics absent from mainstream science. The extreme government response (book burning, imprisonment) is anomalous for mere 'fraud' - raising questions about what was actually being suppressed. Modern biofield research and subtle energy medicine echo many of Reich's concepts.",
+      "related_entries": [
+        "biofield",
+        "suppressed_research",
+        "weather_control",
+        "cancer_research",
+        "life_force",
+        "fda_suppression"
+      ]
+    },
+    "nikola_tesla": {
+      "id": "nikola_tesla",
+      "name": "Nikola Tesla",
+      "category": "visionary_science",
+      "type": "researcher_profile",
+      "dates": {
+        "birth": "1856-07-10",
+        "death": "1943-01-07",
+        "active_period": "1882-1943"
+      },
+      "description": "Serbian-American inventor, electrical engineer, and futurist who developed the alternating current (AC) electrical system that powers the modern world. Tesla held over 300 patents and envisioned wireless power transmission, free energy, and technologies that remain 'ahead of their time.' His later work on radiant energy, scalar waves, and resonance-based technologies was systematically suppressed after his death when the FBI seized his papers.",
+      "extended_description": "Tesla's genius lay in his ability to visualize complete working inventions in his mind before building them. He claimed to receive visions and work in a state of 'cosmic consciousness.' His conflict with Edison (DC vs AC) and later estrangement from J.P. Morgan (who withdrew funding when Tesla revealed his goal of free wireless energy) represent key moments where financial interests suppressed technological advancement. His Wardenclyffe Tower project, designed for global wireless power and communication, was demolished and his concepts labeled 'impractical' despite modern validation of many principles.",
+      "key_contributions": [
+        "Alternating Current (AC) induction motor and transformer",
+        "Tesla Coil - resonant transformer for high-voltage, low-current, high-frequency AC",
+        "Wireless energy transmission (demonstrated at Colorado Springs 1899)",
+        "Radio (patent priority over Marconi restored by US Supreme Court 1943)",
+        "Rotating magnetic field principle",
+        "X-ray imaging (predating Roentgen's announcement)",
+        "Remote control (demonstrated 1898 with radio-controlled boat)",
+        "Bladeless turbine (Tesla turbine)",
+        "Earthquake machine (mechanical oscillator)",
+        "Death ray / Teleforce particle beam weapon concept"
+      ],
+      "scientific_basis": {
+        "mechanism": "Electromagnetism, Resonance, Aetheric Physics",
+        "key_principles": [
+          "Resonant frequency amplification",
+          "Longitudinal wave propagation",
+          "Earth as conductor",
+          "Standing wave phenomena"
+        ],
+        "research_status": "foundational but partially suppressed"
+      },
+      "quantitative_data": {
+        "patents_held": "~300 (112 in US alone)",
+        "colorado_springs_voltage": "12 million volts",
+        "wardenclyffe_tower_height": "187 feet",
+        "claimed_transmission_distance": "Global (using Earth's resonance)",
+        "resonant_frequency_earth": "~7.83 Hz (Schumann, aligns with Tesla's calculations)"
+      },
+      "suppression_history": {
+        "funding_withdrawal": "J.P. Morgan ceased Wardenclyffe funding 1901 upon learning of free energy goal",
+        "tower_demolition": "1917 - demolished for 'war effort' scrap metal",
+        "fbi_seizure": "1943 - FBI confiscated all papers, notes, and equipment within hours of death",
+        "classification": "Many documents remain classified or 'lost'",
+        "patent_theft": "Multiple patents attributed to others (radio to Marconi until 1943 reversal)"
+      },
+      "key_quotes": [
+        "If you want to find the secrets of the universe, think in terms of energy, frequency and vibration.",
+        "The day science begins to study non-physical phenomena, it will make more progress in one decade than in all the previous centuries of its existence.",
+        "My brain is only a receiver, in the Universe there is a core from which we obtain knowledge, strength and inspiration.",
+        "The present is theirs; the future, for which I really worked, is mine."
+      ],
+      "primary_sources": {
+        "patents": [
+          "US Patent 381,968 - Electro-Magnetic Motor (1888)",
+          "US Patent 454,622 - System of Electric Lighting (1891)",
+          "US Patent 645,576 - System of Transmission of Electrical Energy (1900)",
+          "US Patent 1,119,732 - Apparatus for Transmitting Electrical Energy (1914)"
+        ],
+        "writings": [
+          "The Problem of Increasing Human Energy (Century Magazine, 1900)",
+          "My Inventions (Electrical Experimenter, 1919)",
+          "Colorado Springs Notes, 1899-1900"
+        ],
+        "key_researchers": [
+          "W. Bernard Carlson - 'Tesla: Inventor of the Electrical Age' (2013)",
+          "Marc Seifer - 'Wizard: The Life and Times of Nikola Tesla' (1996)",
+          "Thomas Valone - Tesla energy research continuation"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Tesla FBI files FOIA",
+          "Wardenclyffe Tower reconstruction",
+          "Tesla longitudinal waves",
+          "Tesla radiant energy",
+          "Tesla earthquake machine",
+          "Tesla death ray particle beam"
+        ],
+        "archives": [
+          "Nikola Tesla Museum, Belgrade, Serbia",
+          "Tesla Science Center at Wardenclyffe",
+          "FBI Vault - Nikola Tesla files"
+        ],
+        "modern_validation": [
+          "WiTricity Corp - commercial wireless power (MIT spinoff)",
+          "HAARP ionospheric heater - Tesla concepts",
+          "Schumann resonance research confirming Earth frequency calculations"
+        ]
+      },
+      "controversies": [
+        "Free energy suppression by financial interests",
+        "FBI classification of papers",
+        "Death ray reality vs propaganda",
+        "Relationship with extraterrestrial signals claim (1899)"
+      ],
+      "implications": "Tesla's work suggests a fundamental misunderstanding in mainstream physics regarding longitudinal waves, resonance amplification, and the nature of the aether/vacuum. His vision of wireless global power remains technically feasible but economically disruptive to metered energy systems.",
+      "related_entries": [
+        "scalar_waves",
+        "zero_point_energy",
+        "schumann_resonance",
+        "patents",
+        "electromagnetic_environment",
+        "suppressed_research"
+      ]
+    },
+    "john_keely": {
+      "id": "john_keely",
+      "name": "John Ernst Worrell Keely",
+      "category": "visionary_science",
+      "type": "researcher_profile",
+      "dates": {
+        "birth": "1837-09-03",
+        "death": "1898-11-18",
+        "active_period": "1872-1898"
+      },
+      "description": "American inventor who claimed to have discovered a new motive power based on 'sympathetic vibratory physics' - the manipulation of etheric energy through sound vibration. Keely's devices allegedly produced immense force from water disintegrated by harmonic frequencies, attracting millions in investment but remaining unreproduced after his death. Dismissed as fraud but never definitively debunked.",
+      "extended_description": "Keely began demonstrating his 'Keely Motor' in 1872, attracting wealthy investors with spectacular displays of force generation from a small device. He claimed to harness 'etheric vapor' liberated from water through specific vibrational frequencies (often generated by tuning forks or horns). His machines featured complex arrangements of tubes, spheres, and wires that he insisted were precisely tuned instruments. After his death, investigators found hidden tubes under his workshop floor, leading to fraud accusations - but supporters argued these were for unrelated purposes. His detailed writings on 'Sympathetic Vibratory Physics' anticipate aspects of quantum field theory and acoustic levitation.",
+      "key_contributions": [
+        "Keely Motor - claimed perpetual motion from etheric force",
+        "Sympathetic Vibratory Physics - theoretical framework",
+        "Liberator - device claiming to disintegrate water into etheric force",
+        "Globe Motor - spherical resonance device",
+        "Compound Disintegrator - alleged matter manipulation via sound",
+        "Chord of Mass - theory of objects' inherent vibrational signature",
+        "Theory of Polar Negative Attraction",
+        "Vibratory Disk - alleged levitation demonstrations",
+        "40 distinct frequency effects documented",
+        "Musical tones matched to elements and compounds"
+      ],
+      "scientific_basis": {
+        "mechanism": "Sympathetic Vibration / Etheric Physics",
+        "key_principles": [
+          "All matter is in constant vibration",
+          "Etheric vapor can be released from water by specific frequencies",
+          "Sympathetic resonance can generate motive force",
+          "Three orders of vibration: molecular, atomic, etheric",
+          "Sound frequencies can disintegrate or levitate matter"
+        ],
+        "modern_parallels": [
+          "Sonoluminescence - light from collapsing bubbles",
+          "Acoustic levitation - demonstrated in labs",
+          "Cymatics - sound organizing matter",
+          "Casimir effect - vacuum energy"
+        ],
+        "research_status": "legendary - unreproduced"
+      },
+      "quantitative_data": {
+        "demonstrated_force": "Allegedly 25,000 lbs/in² from small device",
+        "investment_raised": "$5+ million (1880s dollars)",
+        "frequency_categories": "40+ documented effects",
+        "key_frequency": "42,800 vibrations per second (claimed)",
+        "demonstration_witnesses": "Scientists, journalists, investors"
+      },
+      "suppression_history": {
+        "secrecy": "Refused to reveal full mechanism to investors",
+        "legal_battles": "Multiple lawsuits from frustrated investors",
+        "death_investigation": "Hidden tubes found, declared fraud",
+        "alternative_interpretation": "Tubes may have been for different purpose",
+        "post_mortem": "No working device ever reproduced",
+        "archives_lost": "Many detailed drawings and writings scattered or lost"
+      },
+      "key_quotes": [
+        "There is no dividing line between the physical and the spiritual.",
+        "Vibration is the key to all phenomena.",
+        "When the proper relationships are reached, sound will create.",
+        "All structure, whether in the animal or vegetable world, is pressure.",
+        "In my system, force and matter are one and the same."
+      ],
+      "primary_sources": {
+        "books": [
+          "Keely and His Discoveries (Clara Bloomfield-Moore, 1893)",
+          "Keely's Secrets (Dale Pond, 1995)",
+          "Universal Laws Never Before Revealed: Keely's Secrets (Dale Pond, 1990)"
+        ],
+        "archives": [
+          "Franklin Institute, Philadelphia (some apparatus)",
+          "SVPWiki.com - Dale Pond's digital archive"
+        ],
+        "key_researchers": [
+          "Dale Pond - Primary modern Keely researcher",
+          "Clara Bloomfield-Moore - 19th century patron and biographer",
+          "Theo Paijmans - Alternative history researcher"
+        ]
+      },
+      "research_leads": {
+        "search_terms": [
+          "Keely Motor Company",
+          "Sympathetic Vibratory Physics",
+          "Keely fraud investigation",
+          "Dale Pond Keely",
+          "Etheric force 1890s",
+          "Acoustic disintegration Keely"
+        ],
+        "experiments_to_replicate": [
+          "Sonoluminescence studies (link to Keely's claims)",
+          "Acoustic levitation (verified phenomenon)",
+          "Water resonance effects"
+        ],
+        "institutions": [
+          "SVPWiki.com - Sympathetic Vibratory Physics research",
+          "Franklin Institute Archives"
+        ]
+      },
+      "controversies": [
+        "Hidden tubes discovered posthumously",
+        "Never revealed full mechanism despite investor demands",
+        "Demonstrations always required his personal operation",
+        "No independent replication succeeded",
+        "Fraud vs misunderstood genius debate continues"
+      ],
+      "implications": "Keely's work, if legitimate, suggests that matter can be manipulated through precise sympathetic vibration - a concept now partially validated by sonoluminescence and acoustic levitation. His failure to achieve reproducibility remains the key objection, but his detailed theoretical writings continue to inspire alternative physics research.",
+      "related_entries": [
+        "cymatics",
+        "sound_levitation",
+        "suppressed_physics",
+        "acoustic_manipulation",
+        "etheric_physics"
+      ]
+    }
   }
-}
 }

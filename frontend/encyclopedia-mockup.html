@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Encyclopedia - Research Portal Mockup</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-elevated: #161616;
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #666666;
+            --accent-gold: #c9a962;
+            --accent-gold-dim: rgba(201, 169, 98, 0.3);
+            --border-primary: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(201, 169, 98, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Subtle animated background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(201, 169, 98, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(201, 169, 98, 0.03) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ========== HEADER ========== */
+        .portal-header {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .portal-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(201, 169, 98, 0.1);
+            border: 1px solid var(--accent-gold-dim);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .portal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 0%, #c9a962 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .portal-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .portal-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========== SEARCH ========== */
+        .search-section {
+            padding: 3rem 0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-gold-dim);
+            box-shadow: 0 0 0 4px rgba(201, 169, 98, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+
+        .search-hint {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        .search-hint span {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            margin: 0 0.25rem;
+            font-family: monospace;
+        }
+
+        /* ========== INTRO SECTION ========== */
+        .intro-section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .intro-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(201, 169, 98, 0.03) 100%);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold-dim), transparent);
+        }
+
+        .intro-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .intro-icon {
+            font-size: 1.5rem;
+        }
+
+        .intro-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .intro-text strong {
+            color: var(--text-primary);
+        }
+
+        .intro-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .intro-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .intro-feature-icon {
+            color: var(--accent-gold);
+        }
+
+        .intro-feature-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========== THEMES SECTION ========== */
+        .themes-section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .theme-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme-card:hover::before {
+            opacity: 1;
+        }
+
+        .theme-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(201, 169, 98, 0.1);
+            border-radius: 12px;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .theme-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .theme-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .theme-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .theme-count {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+
+        .theme-count strong {
+            color: var(--accent-gold);
+        }
+
+        .theme-arrow {
+            color: var(--accent-gold);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-card:hover .theme-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .theme-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .theme-topic {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ========== FEATURED SECTION ========== */
+        .featured-section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .featured-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .featured-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .featured-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .featured-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(201, 169, 98, 0.1);
+            border-radius: 100px;
+            font-size: 0.7rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .featured-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+        }
+
+        .featured-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .featured-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ========== LAYER INDICATOR ========== */
+        .layers-preview {
+            padding: 4rem 0;
+            background: var(--bg-secondary);
+            margin-top: 4rem;
+        }
+
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .layer-card {
+            padding: 2rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .layer-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(201, 169, 98, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .layer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .layer-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ========== FOOTER ========== */
+        .portal-footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .footer-text {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .portal-stats {
+                gap: 1.5rem;
+            }
+
+            .layers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-pattern"></div>
+
+    <!-- HEADER -->
+    <header class="portal-header">
+        <div class="container">
+            <div class="portal-badge">✦ Research Portal</div>
+            <h1 class="portal-title">THE CELESTIAL ENCYCLOPEDIA</h1>
+            <p class="portal-subtitle">A curated knowledge base connecting ancient wisdom, suppressed science, and the
+                frontiers of human potential</p>
+            <div class="portal-stats">
+                <div class="stat">
+                    <div class="stat-value">333</div>
+                    <div class="stat-label">Entries</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">33</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Themes</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" class="search-input"
+                    placeholder="Search consciousness, bioelectricity, ancient technology...">
+            </div>
+            <p class="search-hint">Try: <span>Schumann</span> <span>pineal</span> <span>Tesla</span>
+                <span>pyramid</span></p>
+        </div>
+    </section>
+
+    <!-- INTRO -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="intro-card">
+                <div class="intro-header">
+                    <span class="intro-icon">📚</span>
+                    <h2 class="intro-title">What is This?</h2>
+                </div>
+                <p class="intro-text">
+                    The Celestial Encyclopedia is a <strong>research-grade knowledge base</strong> documenting the
+                    intersection of
+                    consciousness studies, bioelectricity, ancient knowledge systems, and suppressed scientific
+                    research.
+                    Each entry provides accessible explanations, evidence quality indicators, primary source citations,
+                    and actionable research leads.
+                </p>
+                <div class="intro-features">
+                    <div class="intro-feature">
+                        <span class="intro-feature-icon">🔬</span>
+                        <span class="intro-feature-text">Evidence-rated entries</span>
+                    </div>
+                    <div class="intro-feature">
+                        <span class="intro-feature-icon">📖</span>
+                        <span class="intro-feature-text">Primary source citations</span>
+                    </div>
+                    <div class="intro-feature">
+                        <span class="intro-feature-icon">🔗</span>
+                        <span class="intro-feature-text">Interconnected concepts</span>
+                    </div>
+                    <div class="intro-feature">
+                        <span class="intro-feature-icon">🎯</span>
+                        <span class="intro-feature-text">Research leads & keywords</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THEMES -->
+    <section class="themes-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Explore by Theme</div>
+                <h2 class="section-title">Knowledge Domains</h2>
+            </div>
+            <div class="themes-grid">
+                <div class="theme-card">
+                    <div class="theme-icon">⚡</div>
+                    <h3 class="theme-name">The Body Electric</h3>
+                    <p class="theme-description">Bioelectricity, voltage-gated channels, cellular coherence, and the
+                        electromagnetic nature of life</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Voltage Gates</span>
+                        <span class="theme-topic">Ion Channels</span>
+                        <span class="theme-topic">Biofield</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>87</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-icon">🔒</div>
+                    <h3 class="theme-name">Suppressed Science</h3>
+                    <p class="theme-description">Research buried, patents confiscated, scientists silenced. What they
+                        didn't want you to know.</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Cold Fusion</span>
+                        <span class="theme-topic">Rife Frequencies</span>
+                        <span class="theme-topic">Free Energy</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>64</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-icon">🏛️</div>
+                    <h3 class="theme-name">Ancient Knowledge</h3>
+                    <p class="theme-description">Vedic science, mystery traditions, pyramid studies, and technologies
+                        from before recorded history</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Vedic</span>
+                        <span class="theme-topic">Pyramids</span>
+                        <span class="theme-topic">Archaeoastronomy</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>52</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-icon">🧠</div>
+                    <h3 class="theme-name">Consciousness Studies</h3>
+                    <p class="theme-description">The mind beyond the brain: quantum coherence, pineal mysteries, and
+                        altered states</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Pineal Gland</span>
+                        <span class="theme-topic">Brainwaves</span>
+                        <span class="theme-topic">Entheogens</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>48</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-icon">🌍</div>
+                    <h3 class="theme-name">Earth Resonance</h3>
+                    <p class="theme-description">Schumann frequencies, geomagnetic effects, cymatics, and planetary
+                        harmonics</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Schumann</span>
+                        <span class="theme-topic">Geomagnetism</span>
+                        <span class="theme-topic">Ley Lines</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>35</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-icon">🔬</div>
+                    <h3 class="theme-name">Frontier Physics</h3>
+                    <p class="theme-description">Beyond the Standard Model: torsion fields, scalar waves, zero-point
+                        energy</p>
+                    <div class="theme-topics">
+                        <span class="theme-topic">Scalar Waves</span>
+                        <span class="theme-topic">Torsion Fields</span>
+                        <span class="theme-topic">ZPE</span>
+                    </div>
+                    <div class="theme-meta">
+                        <span class="theme-count"><strong>47</strong> entries</span>
+                        <span class="theme-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Deep Research</div>
+                <h2 class="section-title">Featured Entries</h2>
+            </div>
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <span class="featured-badge">Resonant Technologies</span>
+                        <div class="featured-status">
+                            <span class="status-dot"></span>
+                            Research-Grade
+                        </div>
+                    </div>
+                    <h3 class="featured-title">Royal Rife Frequencies</h3>
+                    <p class="featured-excerpt">The complete story of frequency medicine, from Rife's microscope
+                        breakthroughs to documented suppression by the AMA. Includes original trial records and modern
+                        replication efforts.</p>
+                    <div class="featured-meta">
+                        <span>📚 12 sources</span>
+                        <span>🔗 8 related</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <span class="featured-badge">Visionary Science</span>
+                        <div class="featured-status">
+                            <span class="status-dot"></span>
+                            Research-Grade
+                        </div>
+                    </div>
+                    <h3 class="featured-title">Nikola Tesla's Lost Research</h3>
+                    <p class="featured-excerpt">Wireless energy transmission, scalar potentials, and atmospheric
+                        electricity. What the FBI confiscated and what's been reconstructed from surviving documents.
+                    </p>
+                    <div class="featured-meta">
+                        <span>📚 15 sources</span>
+                        <span>🔗 11 related</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <span class="featured-badge">Ancient Knowledge</span>
+                        <div class="featured-status">
+                            <span class="status-dot"></span>
+                            Research-Grade
+                        </div>
+                    </div>
+                    <h3 class="featured-title">Pyramid Power Phenomena</h3>
+                    <p class="featured-excerpt">From Bovis observations to Golod's Russian pyramid research. Documented
+                        effects, proposed mechanisms, and modern experimental replications.</p>
+                    <div class="featured-meta">
+                        <span>📚 9 sources</span>
+                        <span>🔗 6 related</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THREE LAYERS PREVIEW -->
+    <section class="layers-preview">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">Three Layers of Knowledge</h2>
+            </div>
+            <div class="layers-grid">
+                <div class="layer-card">
+                    <div class="layer-number">1</div>
+                    <h3 class="layer-title">Understand</h3>
+                    <p class="layer-desc">Clear explanations anyone can follow. What is it? Why does it matter?</p>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">2</div>
+                    <h3 class="layer-title">Explore</h3>
+                    <p class="layer-desc">Follow the connections. Every entry links to related concepts.</p>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">3</div>
+                    <h3 class="layer-title">Research</h3>
+                    <p class="layer-desc">Primary sources, citations, and leads for deeper investigation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="portal-footer">
+        <div class="container">
+            <p class="footer-text">✦ The Celestial Encyclopedia — Part of the ICEBURG Research Platform ✦</p>
+        </div>
+    </footer>
+</body>
+
+</html>

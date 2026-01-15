@@ -1077,9 +1077,7 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 from ..config import load_config_with_model
                                 from ..agents.secretary import run as secretary_run
                                 
-                                # Initialize config - force Ollama provider
-                                import os
-                                os.environ["ICEBURG_LLM_PROVIDER"] = "ollama"
+                                # Initialize config - use default provider (Gemini via .env)
                                 is_fast_mode = mode == "fast" or mode == "chat"
                                 secretary_cfg = await asyncio.to_thread(
                                     load_config_with_model,
@@ -2732,11 +2730,10 @@ async def websocket_endpoint(websocket: WebSocket):
                     
                         # Use custom config with frontend model selection
                         is_fast_mode = mode == "fast" or mode == "chat" or not degradation_mode
-                        # For chat mode, use Ollama with a small, fast model
+                        # For chat mode, use the configured provider (Gemini by default)
                         if mode == "chat":
-                            # Force Ollama provider for chat mode
-                            import os
-                            os.environ["ICEBURG_LLM_PROVIDER"] = "ollama"
+                            # Use the default provider (Gemini) - no longer forcing Ollama
+                            pass  # Provider is now set via .env (ICEBURG_LLM_PROVIDER=google)
                             # Use a small, fast model (llama3.1:8b or smaller)
                             if not primary_model or "gemini" in primary_model.lower() or "gpt" in primary_model.lower():
                                 primary_model = "llama3.1:8b"  # Fast, small model

@@ -14,6 +14,16 @@ export default defineConfig({
     },
     fs: {
       allow: ['..']
+    },
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        // If request has no extension and is not a directory, try adding .html
+        if (!req.url.includes('.') && !req.url.endsWith('/')) {
+          const url = req.url.split('?')[0];
+          req.url = url + '.html';
+        }
+        next();
+      });
     }
   },
   publicDir: 'public', // Include public directory with research data

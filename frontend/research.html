@@ -943,7 +943,7 @@
                         study.status === 'hypothesis' ? 'hypothesis' :
                             study.status === 'research' ? 'research' : '';
                     container.innerHTML += `
-                        <a href="/study.html?id=${study.id}" class="study-item">
+                        <a href="/study?id=${study.id}" class="study-item">
                             <div class="study-year">${study.date}</div>
                             <div class="study-content">
                                 <div class="study-title">${study.title}</div>
