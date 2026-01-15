@@ -190,26 +190,25 @@
         .iceburg-chat-bubble {
             position: fixed;
             bottom: 100px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
+            right: 20px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            border: 2px solid rgba(0, 212, 255, 0.4);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(135, 206, 250, 0.3);
             cursor: pointer;
             z-index: 1500;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.05);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(135, 206, 250, 0.1);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: chat-pulse 3s ease-in-out infinite;
         }
 
         .iceburg-chat-bubble:hover {
-            transform: scale(1.1);
-            border-color: rgba(0, 212, 255, 0.8);
-            box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
+            transform: scale(1.08);
+            border-color: rgba(135, 206, 250, 0.6);
+            box-shadow: 0 6px 32px rgba(0, 0, 0, 0.6), 0 0 30px rgba(135, 206, 250, 0.2);
         }
 
         .iceburg-chat-bubble.hidden {
@@ -219,9 +218,9 @@
         }
 
         .iceburg-chat-bubble svg {
-            width: 28px;
-            height: 28px;
-            color: rgba(0, 212, 255, 0.9);
+            width: 24px;
+            height: 24px;
+            color: rgba(135, 206, 250, 0.9);
         }
 
         @keyframes chat-pulse {
@@ -240,21 +239,22 @@
             position: fixed;
             bottom: 100px;
             right: 24px;
-            width: 380px;
-            height: 500px;
-            background: linear-gradient(145deg, rgba(10, 10, 15, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            width: 400px;
+            height: 520px;
+            background: rgba(0, 0, 0, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             z-index: 1500;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.1);
-            backdrop-filter: blur(20px);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(135, 206, 250, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             transform: scale(0.9) translateY(20px);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .iceburg-chat-panel.active {
@@ -267,46 +267,79 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 20px;
-            background: linear-gradient(90deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 150, 0.05) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 1.25rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .iceburg-chat-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
+            gap: 0.6rem;
+            font-size: 0.8rem;
             font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             color: var(--text-primary);
         }
 
+        .iceburg-chat-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(135, 206, 250, 0.8);
+            box-shadow: 0 0 8px rgba(135, 206, 250, 0.6), 0 0 16px rgba(135, 206, 250, 0.3);
+            animation: chatPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes chatPulse {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
         .iceburg-chat-title svg {
-            width: 22px;
-            height: 22px;
-            color: rgba(0, 212, 255, 0.9);
+            width: 18px;
+            height: 18px;
+            color: rgba(135, 206, 250, 0.9);
         }
 
         .iceburg-chat-context {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-tertiary);
-            padding: 8px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.5rem 1.25rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .iceburg-chat-close {
-            background: transparent;
-            border: none;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 4px;
-            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
         }
 
         .iceburg-chat-close:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
             color: var(--text-primary);
         }
 
@@ -527,6 +560,588 @@
             .graph-category-legend {
                 display: none;
             }
+        }
+
+        /* ===== RESEARCH TOOLS ===== */
+
+        /* Research Toolbar */
+        .research-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .research-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .research-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .research-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        .research-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .research-btn .count {
+            background: rgba(0, 212, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 4px;
+        }
+
+        /* Citation Modal */
+        .citation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .citation-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .citation-content {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(15, 15, 25, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .citation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .citation-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .citation-close {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .citation-close:hover {
+            color: var(--text-primary);
+        }
+
+        .citation-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .citation-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .citation-tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .citation-tab.active {
+            color: rgba(0, 212, 255, 0.9);
+            border-bottom-color: rgba(0, 212, 255, 0.9);
+        }
+
+        .citation-body {
+            padding: 20px;
+        }
+
+        .citation-text {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .citation-copy {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: rgba(0, 212, 255, 0.9);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .citation-copy:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .citation-copy.copied {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+            color: rgba(0, 255, 136, 0.9);
+        }
+
+        /* Comparison View */
+        .comparison-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .comparison-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: rgba(15, 15, 25, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comparison-body {
+            flex: 1;
+            display: grid;
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .comparison-column {
+            background: rgba(15, 15, 25, 0.98);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-column-header {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-column-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .comparison-column-header .category {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .comparison-row {
+            display: contents;
+        }
+
+        .comparison-field {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .comparison-field-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+
+        .comparison-field-value {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .comparison-highlight {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Entry Selection Checkbox */
+        .entry-select {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .entry-select:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .entry-select.selected {
+            background: rgba(0, 212, 255, 0.8);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .entry-select svg {
+            display: none;
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        .entry-select.selected svg {
+            display: block;
+        }
+
+        /* Session Timer */
+        .session-timer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 15, 25, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            min-width: 200px;
+            backdrop-filter: blur(20px);
+            z-index: 1500;
+            transition: all 0.3s;
+            transform: translateY(150%);
+        }
+
+        .session-timer.active {
+            transform: translateY(0);
+        }
+
+        .timer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .timer-header h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+        }
+
+        .timer-close {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            font-family: 'SF Mono', Monaco, monospace;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .timer-display.break {
+            color: rgba(0, 255, 136, 0.9);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .timer-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .timer-btn.primary {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.4);
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .timer-preset {
+            flex: 1;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .timer-preset:hover,
+        .timer-preset.active {
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--text-secondary);
+        }
+
+        /* Progress Dashboard */
+        .progress-dashboard {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 320px;
+            background: rgba(15, 15, 25, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(20px);
+            z-index: 1500;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            transform: translateX(150%);
+            transition: transform 0.3s;
+        }
+
+        .progress-dashboard.active {
+            transform: translateX(0);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-header h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .dashboard-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dashboard-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .dashboard-stat-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+        }
+
+        .progress-ring-circle {
+            stroke: rgba(0, 212, 255, 0.8);
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.3s;
+        }
+
+        .progress-ring-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .category-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .category-progress-info {
+            flex: 1;
+        }
+
+        .category-progress-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .category-progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .category-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.8), rgba(0, 150, 255, 0.8));
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Knowledge Gap Suggestions */
+        .knowledge-gap-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .knowledge-gap-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gap-suggestion {
+            padding: 10px;
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gap-suggestion:hover {
+            background: rgba(255, 170, 0, 0.15);
+            border-color: rgba(255, 170, 0, 0.4);
+        }
+
+        .gap-suggestion-title {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .gap-suggestion-reason {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
         }
 
         /* Enhanced Hero Section */
@@ -765,103 +1380,109 @@
             pointer-events: none;
         }
 
-        /* Introduction Section */
+        /* Introduction Section - Academic Style */
         .encyclopedia-intro {
-            max-width: 1200px;
-            margin: 0 auto 4rem;
-            padding: 3rem;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(10, 10, 10, 0.7) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            max-width: 900px;
+            margin: 0 auto 3rem;
             animation: fade-in-up 0.8s ease-out 0.2s both;
-            position: relative;
-            overflow: hidden;
         }
 
-        .encyclopedia-intro::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        .intro-article {
+            padding: 2.5rem 3rem;
+            background: rgba(8, 8, 12, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
         }
 
         .intro-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
             margin-bottom: 2rem;
-            position: relative;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
 
         .intro-title {
-            font-size: 1.75rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 500;
             color: var(--text-primary);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            font-family: 'Times New Roman', Georgia, serif;
         }
 
-        .intro-content {
+        .intro-subtitle {
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            line-height: 1.9;
+            line-height: 1.6;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .intro-body {
             margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .intro-content p {
-            margin-bottom: 1.25rem;
-        }
-
-        .intro-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .intro-sections {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2.5rem;
         }
 
         .intro-section {
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all var(--transition-base);
-            position: relative;
+            margin-bottom: 1.5rem;
         }
 
-        .intro-section:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+        .intro-section:last-child {
+            margin-bottom: 0;
         }
 
-        .intro-section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-
-        .intro-section-title {
-            font-size: 1rem;
+        .intro-section h3 {
+            font-size: 0.85rem;
             font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-section p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin: 0;
+            text-align: justify;
+        }
+
+        .intro-navigation {
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: flex-start;
+        }
+
+        .intro-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .intro-nav-link:hover {
+            border-color: rgba(255, 255, 255, 0.35);
             color: var(--text-primary);
         }
 
-        .intro-section-content {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.7;
+        .intro-nav-link.secondary {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .intro-nav-link svg {
+            opacity: 0.7;
         }
 
         /* Sidebar Navigation */
@@ -1805,6 +2426,7 @@
         }
 
         /* Right-side ICEBURG explain panel */
+        /* ICEBURG Explanation Panel - Matching Main App Design */
         .entry-explain-panel {
             position: fixed;
             top: 0;
@@ -1812,15 +2434,15 @@
             width: 400px;
             max-width: 85vw;
             height: 100vh;
-            background: rgba(6, 10, 20, 0.96);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-left: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: -16px 0 40px rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.7);
             z-index: 11000;
             display: flex;
             flex-direction: column;
-            transition: right 0.3s ease;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .entry-explain-panel.active {
@@ -1828,27 +2450,57 @@
         }
 
         .entry-explain-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .entry-explain-title {
-            font-size: 0.95rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--text-secondary);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .entry-explain-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(135, 206, 250, 0.8);
+            box-shadow: 0 0 8px rgba(135, 206, 250, 0.6), 0 0 16px rgba(135, 206, 250, 0.3);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
         }
 
         .entry-explain-close {
-            width: 30px;
-            height: 30px;
-            border-radius: 999px;
-            border: 1px solid var(--border-primary);
-            background: transparent;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
@@ -1858,46 +2510,73 @@
         }
 
         .entry-explain-close:hover {
-            border-color: var(--accent-primary);
-            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
         }
 
         .entry-explain-body {
-            padding: 1rem 1.25rem 1.5rem;
+            flex: 1;
+            padding: 1.5rem;
             overflow-y: auto;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .entry-explain-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .entry-explain-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .entry-explain-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
         }
 
         .explain-section-title {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-tertiary);
-            margin-top: 0.75rem;
-            margin-bottom: 0.25rem;
+            letter-spacing: 0.1em;
+            color: rgba(135, 206, 250, 0.8);
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .explain-section-body {
             color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
         }
 
         .explain-chip-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
-            margin-top: 0.25rem;
-            margin-bottom: 0.75rem;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .explain-chip {
-            padding: 0.15rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 0.75rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 0.7rem;
             color: var(--text-tertiary);
+            transition: all 0.2s ease;
+        }
+
+        .explain-chip:hover {
+            border-color: rgba(135, 206, 250, 0.3);
+            background: rgba(135, 206, 250, 0.05);
+            color: var(--text-secondary);
         }
 
         @media (max-width: 768px) {
@@ -2248,31 +2927,32 @@
         /* ========== FEATURE D: Knowledge Graph ========== */
         .knowledge-graph-toggle {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
+            bottom: 32px;
+            right: 20px;
             z-index: 100;
-            background: var(--bg-elevated);
-            border: 1px solid var(--accent-primary);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 50%;
-            width: 56px;
-            height: 56px;
+            width: 52px;
+            height: 52px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
         }
 
         .knowledge-graph-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
+            background: rgba(20, 20, 30, 0.95);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.08);
         }
 
         .knowledge-graph-toggle svg {
-            width: 24px;
-            height: 24px;
-            color: var(--text-primary);
+            width: 22px;
+            height: 22px;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .knowledge-graph-overlay {
@@ -2367,6 +3047,62 @@
             color: var(--text-primary);
         }
 
+        /* Node Hover Popup */
+        .graph-node-popup {
+            position: absolute;
+            pointer-events: none;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px 14px;
+            max-width: 320px;
+            min-width: 200px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .graph-node-popup.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .popup-category {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+        }
+
+        .popup-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 6px 0;
+            line-height: 1.3;
+        }
+
+        .popup-description {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0 0 8px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .popup-meta {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 6px;
+        }
+
         @media (max-width: 768px) {
             .knowledge-graph-toggle {
                 bottom: 1rem;
@@ -2442,6 +3178,117 @@
                         stroke-linejoin="round" />
                 </svg>
             </button>
+        </div>
+    </div>
+
+    <!-- Citation Modal -->
+    <div class="citation-modal" id="citationModal">
+        <div class="citation-content">
+            <div class="citation-header">
+                <h3>📚 Cite Entry</h3>
+                <button class="citation-close" id="citationClose">
+                    <svg width="20" height="20" viewBox="0 0 20 20">
+                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="citation-tabs">
+                <button class="citation-tab active" data-format="bibtex">BibTeX</button>
+                <button class="citation-tab" data-format="apa">APA</button>
+                <button class="citation-tab" data-format="mla">MLA</button>
+            </div>
+            <div class="citation-body">
+                <div class="citation-text" id="citationText"></div>
+                <button class="citation-copy" id="citationCopy">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copy to Clipboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div class="comparison-modal" id="comparisonModal">
+        <div class="comparison-header">
+            <h2>📊 Side-by-Side Comparison</h2>
+            <button class="citation-close" id="comparisonClose">
+                <svg width="20" height="20" viewBox="0 0 20 20">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="comparison-body" id="comparisonBody">
+            <!-- Comparison columns will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Session Timer Widget -->
+    <div class="session-timer" id="sessionTimer">
+        <div class="timer-header">
+            <h4>⏱ Study Timer</h4>
+            <button class="timer-close" id="timerClose">
+                <svg width="16" height="16" viewBox="0 0 20 20">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn primary" id="timerStart">Start</button>
+            <button class="timer-btn" id="timerReset">Reset</button>
+        </div>
+        <div class="timer-presets">
+            <button class="timer-preset active" data-work="25" data-break="5">25/5</button>
+            <button class="timer-preset" data-work="45" data-break="15">45/15</button>
+            <button class="timer-preset" data-work="60" data-break="10">60/10</button>
+        </div>
+        <div class="dashboard-stat"
+            style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+            <span class="dashboard-stat-label">Focus time today</span>
+            <span class="dashboard-stat-value" id="totalFocusTime">0m</span>
+        </div>
+    </div>
+
+    <!-- Progress Dashboard -->
+    <div class="progress-dashboard" id="progressDashboard">
+        <div class="dashboard-header">
+            <h3>📊 Learning Progress</h3>
+            <button class="citation-close" id="dashboardClose">
+                <svg width="16" height="16" viewBox="0 0 20 20">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="dashboard-stat">
+            <span class="dashboard-stat-label">Entries Viewed</span>
+            <span class="dashboard-stat-value" id="entriesViewed">0</span>
+        </div>
+        <div class="dashboard-stat">
+            <span class="dashboard-stat-label">Categories Explored</span>
+            <span class="dashboard-stat-value" id="categoriesExplored">0</span>
+        </div>
+        <div class="dashboard-stat">
+            <span class="dashboard-stat-label">Time Spent</span>
+            <span class="dashboard-stat-value" id="timeSpent">0m</span>
+        </div>
+        <div id="categoryProgressList" style="margin-top: 16px;">
+            <!-- Category progress bars will be generated -->
+        </div>
+        <div class="knowledge-gap-section">
+            <div class="knowledge-gap-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+                </svg>
+                Suggested Next
+            </div>
+            <div id="knowledgeGapList">
+                <!-- AI suggestions will be populated -->
+            </div>
         </div>
     </div>
 
@@ -2527,94 +3374,102 @@
 
         <!-- Introduction Section -->
         <div class="encyclopedia-intro" id="encyclopediaIntro">
-            <div class="intro-header">
-                <div class="intro-controls">
-                    <h2 class="intro-title">Understanding Celestial-Biological Correlations</h2>
-                    <button class="intro-toggle-btn" id="introToggleBtn" title="Collapse/Expand">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+            <article class="intro-article">
+                <header class="intro-header">
+                    <h2 class="intro-title">A Systematic Framework for Celestial-Biological Research</h2>
+                    <p class="intro-subtitle">Investigating the correlations between electromagnetic phenomena,
+                        planetary dynamics, and biological systems through rigorous methodology</p>
+                </header>
+
+                <div class="intro-body">
+                    <section class="intro-section">
+                        <h3>Research Foundation</h3>
+                        <p>This encyclopedia synthesizes peer-reviewed research, empirical observations, and
+                            evidence-based correlations to map relationships between celestial phenomena and biological
+                            processes. Each entry distinguishes between established findings, theoretical models, and
+                            speculative hypotheses—with explicit documentation of evidence levels, methodologies, and
+                            source publications.</p>
+                    </section>
+
+                    <section class="intro-section">
+                        <h3>Scope of Investigation</h3>
+                        <p>The knowledge base spans multiple domains: from fundamental biological systems
+                            (neurotransmitter pathways, hormonal regulation, cellular processes) to environmental
+                            phenomena (electromagnetic fields, Schumann resonance, geomagnetic activity) to emerging
+                            research areas (quantum biology, coherence systems). This structure enables both targeted
+                            inquiry and cross-domain pattern discovery.</p>
+                    </section>
+
+                    <section class="intro-section">
+                        <h3>Methodological Approach</h3>
+                        <p>Advanced pattern recognition methodologies identify recurring correlations across biological
+                            and celestial domains. Rather than isolated observations, entries reveal systemic
+                            relationships—demonstrating how environmental influences manifest across multiple biological
+                            scales, from molecular processes to organ function to systemic responses.</p>
+                    </section>
+                </div>
+
+                <nav class="intro-navigation">
+                    <a href="#categoriesContainer" class="intro-nav-link" id="skipToEntriesBtn"
+                        title="Jump to 32 research categories including neurotransmitters, hormones, celestial bodies, and quantum biology">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <path d="M4 6L8 10L12 6" stroke-linecap="round" stroke-linejoin="round" />
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="14" y="14" width="7" height="7" rx="1" />
                         </svg>
-                        <span id="introToggleText">Collapse</span>
+                        <span>Browse Categories</span>
+                    </a>
+                    <button class="intro-nav-link secondary"
+                        onclick="document.getElementById('knowledgeGraphToggle').click();"
+                        title="Interactive force-directed graph showing 325 entries and 189 connections between research topics">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                        </svg>
+                        <span>Connection Map</span>
                     </button>
-                </div>
-            </div>
-            <div class="intro-content">
-                <p>The Celestial Encyclopedia represents a systematic investigation into the fundamental patterns
-                    connecting celestial phenomena and biological systems. This knowledge base synthesizes rigorous
-                    scientific research, empirical observations, and evidence-based correlations to map the intricate
-                    relationships between electromagnetic fields, planetary dynamics, cosmic events, and biological
-                    processes.</p>
+                </nav>
+            </article>
+        </div>
 
-                <p><strong>Pattern Recognition and Holistic Understanding:</strong> The encyclopedia employs advanced
-                    pattern recognition methodologies to identify recurring correlations across multiple domains. Rather
-                    than isolated observations, entries are organized to reveal holistic applications—showing how
-                    celestial influences manifest across biological systems, from molecular processes to organ function,
-                    from cellular rhythms to systemic responses.</p>
-
-                <p><strong>Evidence-Based Framework:</strong> Every entry is grounded in scientific evidence, with clear
-                    distinctions between established findings, theoretical models, and speculative hypotheses. Evidence
-                    levels are explicitly marked, allowing users to understand the strength and reliability of each
-                    correlation. Research sources, study methodologies, and peer-reviewed publications are documented to
-                    enable verification and deeper investigation.</p>
-
-                <p><strong>Logical Structure and Accessibility:</strong> The knowledge base is organized into 18
-                    distinct domains, each representing a coherent area of investigation. Categories range from
-                    fundamental biological systems (neurotransmitters, hormones, cellular processes) to celestial
-                    phenomena (electromagnetic environment, Schumann resonance, geomagnetic activity) to advanced
-                    research domains (quantum biology, coherence systems, institutional research). This structure
-                    enables both targeted exploration and cross-domain pattern discovery.</p>
-
-                <p><strong>Practical Applications:</strong> Beyond theoretical understanding, the encyclopedia provides
-                    insights into practical applications. Entries include information on how celestial-biological
-                    correlations can inform health optimization, circadian rhythm alignment, stress management, and
-                    environmental adaptation. The holistic approach recognizes that biological systems operate as
-                    integrated networks, responding to multiple environmental factors simultaneously.</p>
-            </div>
-            <div class="intro-sections">
-                <div class="intro-section">
-                    <div class="intro-section-header">
-                        <div class="intro-section-title">Pattern Recognition</div>
-                    </div>
-                    <div class="intro-section-content">
-                        Advanced pattern recognition identifies recurring correlations across biological and celestial
-                        domains, revealing systemic relationships rather than isolated phenomena.
-                    </div>
-                </div>
-                <div class="intro-section">
-                    <div class="intro-section-header">
-                        <div class="intro-section-title">Evidence-Based</div>
-                    </div>
-                    <div class="intro-section-content">
-                        All entries include explicit evidence levels, research sources, and study methodologies,
-                        enabling users to assess the reliability and scientific foundation of each correlation.
-                    </div>
-                </div>
-                <div class="intro-section">
-                    <div class="intro-section-header">
-                        <div class="intro-section-title">Holistic Applications</div>
-                    </div>
-                    <div class="intro-section-content">
-                        Entries reveal how celestial influences manifest across multiple biological systems
-                        simultaneously, providing insights for health optimization and environmental adaptation.
-                    </div>
-                </div>
-                <div class="intro-section">
-                    <div class="intro-section-header">
-                        <div class="intro-section-title">Logical Structure</div>
-                    </div>
-                    <div class="intro-section-content">
-                        Organized into 18 coherent knowledge domains with clear categorization, enabling both targeted
-                        exploration and cross-domain pattern discovery.
-                    </div>
-                </div>
-            </div>
-            <button class="skip-to-entries-btn" id="skipToEntriesBtn">
-                Skip to entries
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
-                    style="margin-left: 0.5rem;">
-                    <path d="M8 3L8 13M8 13L13 8M8 13L3 8" stroke-linecap="round" stroke-linejoin="round" />
+        <!-- Research Tools Toolbar -->
+        <div class="research-toolbar" id="researchToolbar">
+            <button class="research-btn" id="compareBtn" disabled title="Select 2-3 entries to compare">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="18" rx="1" />
+                    <rect x="14" y="3" width="7" height="18" rx="1" />
                 </svg>
+                Compare <span class="count" id="compareCount">0</span>
+            </button>
+            <button class="research-btn" id="exportBtn" title="Export data to CSV or JSON">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export
+            </button>
+            <div class="toolbar-divider"></div>
+            <button class="research-btn" id="dashboardBtn" title="View learning progress">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 20V10" />
+                    <path d="M12 20V4" />
+                    <path d="M6 20v-6" />
+                </svg>
+                Dashboard
+            </button>
+            <button class="research-btn" id="timerBtn" title="Study session timer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Timer
             </button>
         </div>
 
@@ -2704,13 +3559,19 @@
 
     <!-- Knowledge Graph Toggle Button -->
     <button class="knowledge-graph-toggle" id="knowledgeGraphToggle" title="View Connections">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="6" cy="6" r="3" />
-            <circle cx="18" cy="6" r="3" />
-            <circle cx="6" cy="18" r="3" />
-            <circle cx="18" cy="18" r="3" />
-            <circle cx="12" cy="12" r="3" />
-            <path d="M8.5 8.5L9.5 9.5M14.5 9.5L15.5 8.5M8.5 15.5L9.5 14.5M14.5 14.5L15.5 15.5" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <!-- Hub node in center -->
+            <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+            <!-- Satellite nodes -->
+            <circle cx="5" cy="5" r="2" />
+            <circle cx="19" cy="5" r="2" />
+            <circle cx="5" cy="19" r="2" />
+            <circle cx="19" cy="19" r="2" />
+            <!-- Connection lines -->
+            <line x1="9.5" y1="9.5" x2="6.8" y2="6.8" />
+            <line x1="14.5" y1="9.5" x2="17.2" y2="6.8" />
+            <line x1="9.5" y1="14.5" x2="6.8" y2="17.2" />
+            <line x1="14.5" y1="14.5" x2="17.2" y2="17.2" />
         </svg>
     </button>
 
@@ -2722,7 +3583,7 @@
         </div>
         <div class="knowledge-graph-canvas-container">
             <canvas id="knowledgeGraphCanvas"></canvas>
-            <div class="graph-legend">Drag to pan · Scroll to zoom · Click nodes to view entries</div>
+            <div class="graph-legend">Drag to pan · Scroll to zoom · Hover for preview · Click to view full entry</div>
             <div class="graph-stats"><span>0</span> nodes · <span>0</span> connections</div>
             <div class="graph-controls">
                 <button class="graph-control-btn" id="graphZoomIn" title="Zoom In">
@@ -2740,6 +3601,13 @@
                         <path d="M4 4L16 16M16 4L4 16" />
                     </svg>
                 </button>
+            </div>
+            <!-- Node Hover Popup -->
+            <div class="graph-node-popup" id="graphNodePopup">
+                <div class="popup-category" id="popupCategory"></div>
+                <h4 class="popup-title" id="popupTitle"></h4>
+                <p class="popup-description" id="popupDescription"></p>
+                <div class="popup-meta" id="popupMeta"></div>
             </div>
         </div>
     </div>
@@ -4602,8 +5470,58 @@ Write in clear, professional language with no emojis and no headings. Use number
 
             graphCanvas.addEventListener('mousemove', (e) => {
                 const mouse = getMousePos(e);
+                const prevHovered = hoveredNode;
                 hoveredNode = findNodeAt(mouse.x, mouse.y);
                 graphCanvas.style.cursor = hoveredNode ? 'pointer' : (isDragging ? 'grabbing' : 'grab');
+
+                // Show/hide hover popup
+                const popup = document.getElementById('graphNodePopup');
+                if (hoveredNode && !selectedNode && !isDragging) {
+                    // Only update content if hovered node changed
+                    if (hoveredNode !== prevHovered) {
+                        // Find entry by searching through category objects
+                        let entry = null;
+                        if (window.encyclopediaData) {
+                            for (const cat in window.encyclopediaData) {
+                                if (cat === 'metadata' || typeof window.encyclopediaData[cat] !== 'object') continue;
+                                if (window.encyclopediaData[cat][hoveredNode.id]) {
+                                    entry = { id: hoveredNode.id, ...window.encyclopediaData[cat][hoveredNode.id], category: cat };
+                                    break;
+                                }
+                            }
+                        }
+                        if (entry) {
+                            document.getElementById('popupCategory').textContent = entry.category || 'Research Entry';
+                            document.getElementById('popupTitle').textContent = entry.name || hoveredNode.id;
+                            document.getElementById('popupDescription').textContent =
+                                entry.description || entry.research_notes || entry.mechanism || 'No description available';
+                            // Count actual connections from graph edges
+                            const connectionCount = graphEdges.filter(e =>
+                                graphNodes[e.source]?.id === hoveredNode.id ||
+                                graphNodes[e.target]?.id === hoveredNode.id
+                            ).length;
+                            // Count sources (array of source objects)
+                            const sourceCount = Array.isArray(entry.sources) ? entry.sources.length : 0;
+                            // Count studies if available
+                            const studyCount = Array.isArray(entry.studies) ? entry.studies.length : 0;
+                            const totalSources = sourceCount + studyCount;
+                            document.getElementById('popupMeta').textContent =
+                                `${connectionCount} connections · ${totalSources} sources`;
+                        }
+                    }
+                    // Position popup near cursor
+                    const rect = graphCanvas.getBoundingClientRect();
+                    let popupX = e.clientX - rect.left + 15;
+                    let popupY = e.clientY - rect.top + 15;
+                    // Keep popup in bounds
+                    if (popupX + 320 > rect.width) popupX = e.clientX - rect.left - 335;
+                    if (popupY + 150 > rect.height) popupY = e.clientY - rect.top - 165;
+                    popup.style.left = popupX + 'px';
+                    popup.style.top = popupY + 'px';
+                    popup.classList.add('visible');
+                } else {
+                    popup.classList.remove('visible');
+                }
 
                 if (selectedNode) {
                     selectedNode.x = mouse.x;
@@ -4633,6 +5551,7 @@ Write in clear, professional language with no emojis and no headings. Use number
                 selectedNode = null;
                 isDragging = false;
                 hoveredNode = null;
+                document.getElementById('graphNodePopup').classList.remove('visible');
             });
 
             graphCanvas.addEventListener('wheel', (e) => {
@@ -4866,6 +5785,434 @@ Write in clear, professional language with no emojis and no headings. Use number
                 );
             }
         };
+
+        // ========== RESEARCH TOOLS ==========
+
+        // Learning Progress State (persisted in LocalStorage)
+        const learningProgress = {
+            entriesViewed: new Set(JSON.parse(localStorage.getItem('iceburg_entriesViewed') || '[]')),
+            categoriesExplored: new Set(JSON.parse(localStorage.getItem('iceburg_categoriesExplored') || '[]')),
+            startTime: Date.now(),
+            totalFocusTime: parseInt(localStorage.getItem('iceburg_focusTime') || '0'),
+
+            recordView(entryId, categoryId) {
+                this.entriesViewed.add(entryId);
+                this.categoriesExplored.add(categoryId);
+                this.save();
+                updateProgressDashboard();
+            },
+
+            save() {
+                localStorage.setItem('iceburg_entriesViewed', JSON.stringify([...this.entriesViewed]));
+                localStorage.setItem('iceburg_categoriesExplored', JSON.stringify([...this.categoriesExplored]));
+                localStorage.setItem('iceburg_focusTime', this.totalFocusTime.toString());
+            }
+        };
+
+        // Selected entries for comparison
+        let selectedEntries = [];
+
+        // Comparison View
+        const compareBtn = document.getElementById('compareBtn');
+        const compareCount = document.getElementById('compareCount');
+        const comparisonModal = document.getElementById('comparisonModal');
+        const comparisonClose = document.getElementById('comparisonClose');
+        const comparisonBody = document.getElementById('comparisonBody');
+
+        function toggleEntrySelection(entryId, categoryId, element) {
+            const idx = selectedEntries.findIndex(e => e.id === entryId);
+            if (idx >= 0) {
+                selectedEntries.splice(idx, 1);
+                element.classList.remove('selected');
+            } else if (selectedEntries.length < 3) {
+                selectedEntries.push({ id: entryId, category: categoryId });
+                element.classList.add('selected');
+            }
+            updateCompareButton();
+        }
+
+        function updateCompareButton() {
+            compareCount.textContent = selectedEntries.length;
+            compareBtn.disabled = selectedEntries.length < 2;
+            compareBtn.classList.toggle('active', selectedEntries.length >= 2);
+        }
+
+        compareBtn?.addEventListener('click', () => {
+            if (selectedEntries.length < 2) return;
+            openComparisonView();
+        });
+
+        function openComparisonView() {
+            const data = window.encyclopediaData || encyclopediaData;
+            if (!data) return;
+
+            const numCols = selectedEntries.length;
+            comparisonBody.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
+            comparisonBody.innerHTML = '';
+
+            const fields = ['name', 'description', 'mechanism', 'effects', 'related_entries', 'sources'];
+
+            selectedEntries.forEach(({ id, category }) => {
+                const entry = data[category]?.[id];
+                if (!entry) return;
+
+                const col = document.createElement('div');
+                col.className = 'comparison-column';
+                col.innerHTML = `
+                    <div class="comparison-column-header">
+                        <h3>${entry.name || id}</h3>
+                        <div class="category">${category.replace(/_/g, ' ')}</div>
+                    </div>
+                    ${fields.map(field => `
+                        <div class="comparison-field">
+                            <div class="comparison-field-label">${field.replace(/_/g, ' ')}</div>
+                            <div class="comparison-field-value">${formatFieldValue(entry[field])}</div>
+                        </div>
+                    `).join('')}
+                `;
+                comparisonBody.appendChild(col);
+            });
+
+            comparisonModal.classList.add('active');
+        }
+
+        function formatFieldValue(value) {
+            if (value === undefined || value === null) return '<span style="opacity:0.4">—</span>';
+            if (Array.isArray(value)) return value.slice(0, 5).join(', ') + (value.length > 5 ? '...' : '');
+            if (typeof value === 'object') return JSON.stringify(value).slice(0, 100);
+            return String(value).slice(0, 200);
+        }
+
+        comparisonClose?.addEventListener('click', () => {
+            comparisonModal.classList.remove('active');
+        });
+
+        // Citation Generator
+        const citationModal = document.getElementById('citationModal');
+        const citationClose = document.getElementById('citationClose');
+        const citationTabs = document.querySelectorAll('.citation-tab');
+        const citationText = document.getElementById('citationText');
+        const citationCopy = document.getElementById('citationCopy');
+        let currentCitationEntry = null;
+        let currentCitationFormat = 'bibtex';
+
+        function openCitationModal(entry, categoryId) {
+            currentCitationEntry = { ...entry, category: categoryId };
+            updateCitation();
+            citationModal.classList.add('active');
+        }
+
+        function updateCitation() {
+            if (!currentCitationEntry) return;
+            const { name, id, category, sources } = currentCitationEntry;
+            const year = new Date().getFullYear();
+            const source = sources?.[0] || 'Celestial Encyclopedia';
+
+            if (currentCitationFormat === 'bibtex') {
+                citationText.textContent = `@misc{${id.toLowerCase().replace(/[^a-z0-9]/g, '_')},
+  title = {${name || id}},
+  author = {ICEBURG Research Database},
+  year = {${year}},
+  howpublished = {Celestial Encyclopedia},
+  note = {Category: ${category.replace(/_/g, ' ')}}
+}`;
+            } else if (currentCitationFormat === 'apa') {
+                citationText.textContent = `ICEBURG Research Database. (${year}). ${name || id}. In Celestial Encyclopedia. Retrieved from ${window.location.origin}/encyclopedia`;
+            } else if (currentCitationFormat === 'mla') {
+                citationText.textContent = `"${name || id}." Celestial Encyclopedia, ICEBURG Research Database, ${year}, ${window.location.origin}/encyclopedia.`;
+            }
+        }
+
+        citationTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                citationTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentCitationFormat = tab.dataset.format;
+                updateCitation();
+            });
+        });
+
+        citationCopy?.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(citationText.textContent);
+                citationCopy.classList.add('copied');
+                citationCopy.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+                setTimeout(() => {
+                    citationCopy.classList.remove('copied');
+                    citationCopy.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard`;
+                }, 2000);
+            } catch (e) {
+                console.error('Copy failed:', e);
+            }
+        });
+
+        citationClose?.addEventListener('click', () => citationModal.classList.remove('active'));
+
+        // Data Export
+        const exportBtn = document.getElementById('exportBtn');
+
+        exportBtn?.addEventListener('click', () => {
+            const data = window.encyclopediaData || encyclopediaData;
+            if (!data) return;
+
+            const format = confirm('Click OK for JSON, Cancel for CSV') ? 'json' : 'csv';
+
+            if (format === 'json') {
+                downloadFile('encyclopedia_export.json', JSON.stringify(data, null, 2), 'application/json');
+            } else {
+                const rows = [['ID', 'Name', 'Category', 'Description', 'Sources']];
+                Object.entries(data).forEach(([cat, entries]) => {
+                    if (cat === 'metadata') return;
+                    Object.entries(entries || {}).forEach(([id, entry]) => {
+                        rows.push([
+                            id,
+                            entry.name || '',
+                            cat,
+                            (entry.description || '').replace(/"/g, '""'),
+                            (entry.sources || []).join('; ')
+                        ]);
+                    });
+                });
+                const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+                downloadFile('encyclopedia_export.csv', csv, 'text/csv');
+            }
+        });
+
+        function downloadFile(filename, content, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Session Timer (Pomodoro)
+        const sessionTimer = document.getElementById('sessionTimer');
+        const timerBtn = document.getElementById('timerBtn');
+        const timerClose = document.getElementById('timerClose');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerStart = document.getElementById('timerStart');
+        const timerReset = document.getElementById('timerReset');
+        const timerPresets = document.querySelectorAll('.timer-preset');
+        const totalFocusTime = document.getElementById('totalFocusTime');
+
+        let timerInterval = null;
+        let timerSeconds = 25 * 60;
+        let timerRunning = false;
+        let isBreak = false;
+        let workMinutes = 25;
+        let breakMinutes = 5;
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timerSeconds);
+            timerDisplay.classList.toggle('break', isBreak);
+        }
+
+        timerBtn?.addEventListener('click', () => sessionTimer.classList.toggle('active'));
+        timerClose?.addEventListener('click', () => sessionTimer.classList.remove('active'));
+
+        timerStart?.addEventListener('click', () => {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerStart.textContent = 'Resume';
+                timerRunning = false;
+            } else {
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    if (!isBreak) learningProgress.totalFocusTime++;
+                    updateTimerDisplay();
+                    updateTotalFocusDisplay();
+
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        learningProgress.save();
+                        if (isBreak) {
+                            isBreak = false;
+                            timerSeconds = workMinutes * 60;
+                            alert('Break over! Time to focus.');
+                        } else {
+                            isBreak = true;
+                            timerSeconds = breakMinutes * 60;
+                            alert('Great work! Take a break.');
+                        }
+                        updateTimerDisplay();
+                        timerStart.textContent = 'Start';
+                        timerRunning = false;
+                    }
+                }, 1000);
+                timerStart.textContent = 'Pause';
+                timerRunning = true;
+            }
+        });
+
+        timerReset?.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            isBreak = false;
+            timerSeconds = workMinutes * 60;
+            timerStart.textContent = 'Start';
+            updateTimerDisplay();
+        });
+
+        timerPresets.forEach(preset => {
+            preset.addEventListener('click', () => {
+                timerPresets.forEach(p => p.classList.remove('active'));
+                preset.classList.add('active');
+                workMinutes = parseInt(preset.dataset.work);
+                breakMinutes = parseInt(preset.dataset.break);
+                timerSeconds = workMinutes * 60;
+                isBreak = false;
+                updateTimerDisplay();
+            });
+        });
+
+        function updateTotalFocusDisplay() {
+            const mins = Math.floor(learningProgress.totalFocusTime / 60);
+            totalFocusTime.textContent = mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`;
+        }
+        updateTotalFocusDisplay();
+
+        // Progress Dashboard
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const progressDashboard = document.getElementById('progressDashboard');
+        const dashboardClose = document.getElementById('dashboardClose');
+
+        dashboardBtn?.addEventListener('click', () => {
+            progressDashboard.classList.toggle('active');
+            updateProgressDashboard();
+        });
+        dashboardClose?.addEventListener('click', () => progressDashboard.classList.remove('active'));
+
+        function updateProgressDashboard() {
+            const entriesViewed = document.getElementById('entriesViewed');
+            const categoriesExplored = document.getElementById('categoriesExplored');
+            const timeSpent = document.getElementById('timeSpent');
+            const categoryProgressList = document.getElementById('categoryProgressList');
+
+            if (entriesViewed) entriesViewed.textContent = learningProgress.entriesViewed.size;
+            if (categoriesExplored) categoriesExplored.textContent = learningProgress.categoriesExplored.size;
+
+            const mins = Math.floor((Date.now() - learningProgress.startTime) / 60000);
+            if (timeSpent) timeSpent.textContent = mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`;
+
+            // Category progress bars
+            const data = window.encyclopediaData || encyclopediaData;
+            if (data && categoryProgressList) {
+                categoryProgressList.innerHTML = '';
+                const viewedByCategory = {};
+                learningProgress.entriesViewed.forEach(id => {
+                    Object.keys(data).forEach(cat => {
+                        if (cat !== 'metadata' && data[cat]?.[id]) {
+                            viewedByCategory[cat] = (viewedByCategory[cat] || 0) + 1;
+                        }
+                    });
+                });
+
+                Object.keys(data).slice(0, 6).forEach(cat => {
+                    if (cat === 'metadata') return;
+                    const total = Object.keys(data[cat] || {}).length;
+                    const viewed = viewedByCategory[cat] || 0;
+                    const pct = total > 0 ? Math.round((viewed / total) * 100) : 0;
+
+                    categoryProgressList.innerHTML += `
+                        <div class="category-progress">
+                            <div class="category-progress-info">
+                                <div class="category-progress-name">${cat.replace(/_/g, ' ')}</div>
+                                <div class="category-progress-bar">
+                                    <div class="category-progress-fill" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--text-tertiary);">${viewed}/${total}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Knowledge gap suggestions
+            updateKnowledgeGaps();
+        }
+
+        function updateKnowledgeGaps() {
+            const knowledgeGapList = document.getElementById('knowledgeGapList');
+            if (!knowledgeGapList) return;
+
+            const data = window.encyclopediaData || encyclopediaData;
+            if (!data) return;
+
+            const suggestions = [];
+            const viewed = learningProgress.entriesViewed;
+
+            // Find related entries that user hasn't viewed
+            viewed.forEach(viewedId => {
+                Object.keys(data).forEach(cat => {
+                    if (cat === 'metadata') return;
+                    const entry = data[cat]?.[viewedId];
+                    if (entry?.related_entries) {
+                        entry.related_entries.forEach(relatedId => {
+                            if (!viewed.has(relatedId) && suggestions.length < 3) {
+                                // Find the related entry
+                                Object.keys(data).forEach(c => {
+                                    if (data[c]?.[relatedId]) {
+                                        suggestions.push({
+                                            id: relatedId,
+                                            category: c,
+                                            name: data[c][relatedId].name || relatedId,
+                                            reason: `Related to ${entry.name || viewedId}`
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            knowledgeGapList.innerHTML = suggestions.slice(0, 3).map(s => `
+                <div class="gap-suggestion" onclick="openEntryModal('${s.id}', '${s.category}')">
+                    <div class="gap-suggestion-title">${s.name}</div>
+                    <div class="gap-suggestion-reason">${s.reason}</div>
+                </div>
+            `).join('') || '<div style="font-size: 0.8rem; color: var(--text-tertiary);">View some entries to get suggestions</div>';
+        }
+
+        // Hook into modal opening to track progress and add cite button
+        const openEntryModalWithTracking = window.openEntryModal;
+        window.openEntryModal = function (itemId, categoryId) {
+            if (openEntryModalWithTracking) {
+                openEntryModalWithTracking(itemId, categoryId);
+            }
+            learningProgress.recordView(itemId, categoryId);
+
+            // Add cite button to modal after render
+            setTimeout(() => {
+                const modalHeader = document.querySelector('.entry-modal-header');
+                if (modalHeader && !document.getElementById('modalCiteBtn')) {
+                    const data = window.encyclopediaData || encyclopediaData;
+                    const entry = data?.[categoryId]?.[itemId];
+                    if (entry) {
+                        const citeBtn = document.createElement('button');
+                        citeBtn.id = 'modalCiteBtn';
+                        citeBtn.className = 'research-btn';
+                        citeBtn.innerHTML = '📚 Cite';
+                        citeBtn.style.marginLeft = 'auto';
+                        citeBtn.onclick = () => openCitationModal({ ...entry, id: itemId }, categoryId);
+                        modalHeader.appendChild(citeBtn);
+                    }
+                }
+            }, 100);
+        };
+
+        // Initialize dashboard on load
+        updateProgressDashboard();
+        updateTimerDisplay();
 
     </script>
 </body>
