@@ -24,6 +24,7 @@ class EventType(Enum):
     AGENT_COMPLETE = "agent_complete"
     METACOG_RESULT = "metacog_result"
     WORKFLOW_COMPLETE = "workflow_complete"
+    STEP_COMPLETE = "step_complete"  # Interactive step card with findings and route options
 
 
 @dataclass
@@ -100,6 +101,32 @@ class WorkflowCompleteEvent:
         })
 
 
+@dataclass
+class StepCompleteEvent:
+    """
+    Emitted when a workflow step completes - triggers interactive step card UI.
+    Shows findings, time taken, and route options for user to choose next action.
+    """
+    step: str  # e.g. "surveyor", "deliberation", "synthesist"
+    findings: List[str]  # Bullet points of what was discovered
+    time_taken: float  # Seconds
+    suggested_next: List[str]  # Suggested next actions
+    options: List[Dict[str, str]]  # Route buttons: [{"action": "deep_dive", "label": "Deep Dive", "estimated_time": "30s"}]
+    
+    def to_sse(self) -> str:
+        return json.dumps({
+            "type": EventType.STEP_COMPLETE.value,
+            "step": self.step,
+            "report": {
+                "findings": self.findings,
+                "time_taken": self.time_taken,
+                "suggested_next": self.suggested_next
+            },
+            "options": self.options,
+            "timestamp": time.time()
+        })
+
+
 class WorkflowEventEmitter:
     """
     Manages workflow events for a single request.
@@ -163,6 +190,72 @@ class WorkflowEventEmitter:
             total_duration_ms=total_ms,
             agents_run=self.agents_run,
             mode=self.mode
+        )
+        return f"data: {event.to_sse()}\n\n"
+    
+    def step_complete(
+        self, 
+        step: str, 
+        findings: List[str], 
+        time_taken: float,
+        suggested_next: Optional[List[str]] = None,
+        options: Optional[List[Dict[str, str]]] = None
+    ) -> str:
+        """
+        Emit step_complete event for interactive step card UI.
+        
+        Args:
+            step: Agent/step name (e.g., "surveyor", "deliberation")
+            findings: List of bullet point findings
+            time_taken: Time in seconds
+            suggested_next: Suggested next actions
+            options: Route buttons [{"action": "...", "label": "...", "estimated_time": "..."}]
+        
+        Returns:
+            SSE-formatted string for the event
+        """
+        if suggested_next is None:
+            suggested_next = ["continue"]
+        
+        if options is None:
+            # Default options for each step type
+            default_options = {
+                "surveyor": [
+                    {"action": "deep_dive", "label": "Deep Research", "estimated_time": "30s"},
+                    {"action": "challenge", "label": "Challenge Findings", "estimated_time": "20s"},
+                    {"action": "skip", "label": "Continue", "estimated_time": ""}
+                ],
+                "deliberation": [
+                    {"action": "expand", "label": "Expand Analysis", "estimated_time": "25s"},
+                    {"action": "verify", "label": "Verify Sources", "estimated_time": "15s"},
+                    {"action": "skip", "label": "Continue", "estimated_time": ""}
+                ],
+                "dissident": [
+                    {"action": "counter", "label": "Counter Arguments", "estimated_time": "20s"},
+                    {"action": "accept", "label": "Accept Critique", "estimated_time": ""},
+                    {"action": "skip", "label": "Continue", "estimated_time": ""}
+                ],
+                "synthesist": [
+                    {"action": "refine", "label": "Refine Synthesis", "estimated_time": "20s"},
+                    {"action": "skip", "label": "Finalize", "estimated_time": ""}
+                ],
+                "oracle": [
+                    {"action": "principles", "label": "Extract Principles", "estimated_time": "15s"},
+                    {"action": "skip", "label": "Complete", "estimated_time": ""}
+                ]
+            }
+            options = default_options.get(step.lower(), [
+                {"action": "continue", "label": "Continue", "estimated_time": ""},
+                {"action": "skip", "label": "Skip", "estimated_time": ""}
+            ])
+        
+        self.agents_run.append(step)
+        event = StepCompleteEvent(
+            step=step,
+            findings=findings,
+            time_taken=time_taken,
+            suggested_next=suggested_next,
+            options=options
         )
         return f"data: {event.to_sse()}\n\n"
 

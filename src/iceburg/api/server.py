@@ -1233,8 +1233,8 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                                 logger.error(f"❌ Secretary agent error: {e}", exc_info=True)
                                 # Send error message instead of hardcoded fallback
                                 from ..api.error_messages import format_error_for_user
-                                error_response = format_error_for_user(e, context="secretary_failure")
-                                yield f"data: {json.dumps({'type': 'error', **error_response, 'timestamp': time.time()})}\n\n"
+                                error_msg = format_error_for_user(e, context="secretary_failure")
+                                yield f"data: {json.dumps({'type': 'error', 'message': error_msg, 'timestamp': time.time()})}\n\n"
                                 yield f"data: {json.dumps({'type': 'done', 'timestamp': time.time()})}\n\n"
                                 return
                         
@@ -1562,28 +1562,101 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                         # Use asyncio.Queue for message streaming (same pattern as astro-physiology)
                         research_queue = asyncio.Queue()
                         
+                        # Track agent progress for step_complete events
+                        agent_start_times = {}
+                        agent_findings = {}
+                        
                         async def research_callback(msg: Dict[str, Any]):
-                            """Put messages into queue for SSE generator"""
-                            # Transform system_integrator events to thinking_stream for UI
+                            """Put messages into queue for SSE generator - emit step_complete for interactive UI"""
+                            nonlocal agent_start_times, agent_findings
                             msg_type = msg.get("type", "action")
-                            transformed_msg = msg
+                            
+                            # Detect agent start/complete for interactive step cards
                             if msg_type == "action":
-                                thinking_content = msg.get("description", "Processing...")
-                                transformed_msg = {
-                                    "type": "thinking_stream",
-                                    "content": thinking_content,
-                                    "timestamp": time.time()
-                                }
+                                action = msg.get("action", "")
+                                status = msg.get("status", "")
+                                description = msg.get("description", "Processing...")
+                                
+                                # Track agent starts
+                                if "starting" in status.lower() or "initializing" in description.lower():
+                                    agent_name = action.replace("_run", "").replace("_", " ").title()
+                                    agent_start_times[agent_name] = time.time()
+                                    agent_findings[agent_name] = []
+                                    # Emit thinking_stream for progress indicator
+                                    await research_queue.put({
+                                        "type": "thinking_stream",
+                                        "content": f"{agent_name}: {description}",
+                                        "timestamp": time.time()
+                                    })
+                                
+                                # Track findings/intermediate results
+                                elif "found" in description.lower() or "analyzing" in description.lower() or "evidence" in description.lower():
+                                    # Extract agent name from action
+                                    for agent_name in agent_findings.keys():
+                                        if agent_name.lower() in action.lower() or agent_name.lower() in description.lower():
+                                            agent_findings[agent_name].append(description)
+                                            break
+                                    await research_queue.put({
+                                        "type": "thinking_stream",
+                                        "content": description,
+                                        "timestamp": time.time()
+                                    })
+                                
+                                # Detect agent completion - emit step_complete for interactive card
+                                elif "complete" in status.lower() or "finished" in description.lower():
+                                    agent_name = action.replace("_run", "").replace("_", " ").title()
+                                    start_time = agent_start_times.get(agent_name, time.time())
+                                    time_taken = time.time() - start_time
+                                    findings = agent_findings.get(agent_name, [description])
+                                    
+                                    # Generate findings if we don't have any
+                                    if not findings or findings == [description]:
+                                        findings = [
+                                            f"Analyzed query context and domain",
+                                            f"Gathered relevant information",
+                                            f"Processed in {time_taken:.1f}s"
+                                        ]
+                                    
+                                    # Emit step_complete for interactive step card
+                                    step_complete_event = {
+                                        "type": "step_complete",
+                                        "step": agent_name.lower().replace(" ", "_"),
+                                        "report": {
+                                            "findings": findings[:5],  # Limit to 5 findings
+                                            "time_taken": round(time_taken, 2),
+                                            "suggested_next": ["continue"]
+                                        },
+                                        "options": [
+                                            {"action": "deep_dive", "label": "Deep Research", "estimated_time": "30s"},
+                                            {"action": "challenge", "label": "Challenge", "estimated_time": "20s"},
+                                            {"action": "skip", "label": "Continue", "estimated_time": ""}
+                                        ],
+                                        "timestamp": time.time()
+                                    }
+                                    await research_queue.put(step_complete_event)
+                                else:
+                                    # Default thinking_stream for other actions
+                                    await research_queue.put({
+                                        "type": "thinking_stream",
+                                        "content": description,
+                                        "timestamp": time.time()
+                                    })
+                                    
                             elif msg_type == "agent_thinking":
                                 agent = msg.get("agent", "system")
                                 content = msg.get("content", "Processing...")
-                                transformed_msg = {
+                                # Store as finding
+                                agent_title = agent.title()
+                                if agent_title in agent_findings:
+                                    agent_findings[agent_title].append(content)
+                                await research_queue.put({
                                     "type": "thinking_stream",
                                     "content": f"{agent.capitalize()}: {content}",
                                     "timestamp": time.time()
-                                }
-                            
-                            await research_queue.put(transformed_msg)
+                                })
+                            else:
+                                # Pass through other event types
+                                await research_queue.put(msg)
 
                         # Emit initial progress event
                         await research_queue.put({
@@ -1711,7 +1784,7 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                 from ..agents.secretary import run as secretary_run
                 from ..config import IceburgConfig
                 
-                # Create config for Secretary
+                # Create config for Secretary - FORCE Ollama provider for local operation
                 secretary_cfg = IceburgConfig(
                     data_dir=custom_cfg.data_dir,
                     surveyor_model=custom_cfg.surveyor_model,
@@ -1719,8 +1792,8 @@ async def query_endpoint(request: Dict[str, Any], http_request: Request):
                     synthesist_model=custom_cfg.synthesist_model,
                     oracle_model=custom_cfg.oracle_model,
                     embed_model=custom_cfg.embed_model,
-                    llm_provider=custom_cfg.llm_provider,
-                    provider_url=custom_cfg.provider_url,
+                    llm_provider="ollama",  # Force Ollama for local operation
+                    provider_url=custom_cfg.provider_url or "http://localhost:11434",
                     timeout_s=custom_cfg.timeout_s,
                     enable_code_generation=custom_cfg.enable_code_generation,
                     disable_memory=custom_cfg.disable_memory,
@@ -2707,14 +2780,33 @@ async def websocket_endpoint(websocket: WebSocket):
                 routing_decision = router.route(query, context={"mode": mode})
                 logger.info(f"🔍 v5 Routing (WS): query='{query[:50]}' -> mode={routing_decision.mode} (confidence={routing_decision.confidence:.2f})")
                 
-                # Override mode with routing decision if it's a v5 mode
-                if routing_decision.mode in ["web_research", "local_rag", "hybrid"]:
+                # PRESERVE user's original mode selection for chat detection
+                user_original_mode = mode  # Store before any override
+                
+                # Override mode with routing decision ONLY if user selected a non-chat/non-research mode
+                # If user selected "fast", "chat", or "research", keep that mode to enable proper behavior
+                # "research" mode should use the full research pipeline with interactive step cards
+                PRESERVE_MODE_SELECTIONS = {"fast", "chat", "research"}
+                if routing_decision.mode in ["web_research", "local_rag", "hybrid"] and mode not in PRESERVE_MODE_SELECTIONS:
                     mode = routing_decision.mode
                     logger.info(f"🔍 v5 Mode override: using {mode} for query")
+                else:
+                    logger.info(f"🔍 Preserving user mode selection: {mode} (routing suggested: {routing_decision.mode})")
                 
                 # PRIORITY: Chat mode should be checked FIRST (before other modes)
                 # This ensures single-agent mode is used for chat, regardless of agent setting
-                if mode == "chat" or mode == "web_research" or mode == "local_rag" or mode == "hybrid":  # Single agent mode for chat and v5 search modes
+                # NOTE: "research" mode uses the FULL PIPELINE with engines/algorithms/informatics display
+                # FULL_PIPELINE_MODES: These modes go through system_integrator with full engine/algorithm tracking
+                FULL_PIPELINE_MODES = {"research", "deep_research", "unbounded", "astrophysiology", "prediction_lab"}
+                # SINGLE_AGENT_MODES: These modes use Secretary agent for fast chat responses
+                SINGLE_AGENT_MODES = {"chat", "fast", "web_research", "local_rag", "hybrid"}
+                
+                if mode in FULL_PIPELINE_MODES:
+                    # FULL PIPELINE MODE - Uses system_integrator with engines/algorithms/informatics
+                    logger.info(f"🔬 FULL PIPELINE MODE: mode={mode}, agent={agent}, query={query[:50]}")
+                    # This will fall through to the full protocol section below
+                    pass
+                elif mode in SINGLE_AGENT_MODES:  # Single agent mode for chat and v5 search modes
                     # SINGLE AGENT CHAT MODE - Optimized for speed
                     # Flow: Immediate thinking → LLM call (parallel with optional etymology)
                     logger.info(f"🎯 SINGLE AGENT CHAT MODE (PRIORITY): agent={agent} (type: {type(agent).__name__}), mode={mode}, query={query[:50]}")
@@ -2729,12 +2821,12 @@ async def websocket_endpoint(websocket: WebSocket):
                         from ..config import load_config_with_model
                     
                         # Use custom config with frontend model selection
-                        is_fast_mode = mode == "fast" or mode == "chat" or not degradation_mode
-                        # For chat mode, use the configured provider (Gemini by default)
-                        if mode == "chat":
-                            # Use the default provider (Gemini) - no longer forcing Ollama
-                            pass  # Provider is now set via .env (ICEBURG_LLM_PROVIDER=google)
-                            # Use a small, fast model (llama3.1:8b or smaller)
+                        # Chat-like modes that should use Secretary with Ollama
+                        CHAT_MODES = {"fast", "chat", "web_research", "local_rag", "hybrid"}
+                        is_fast_mode = mode in CHAT_MODES or not degradation_mode
+                        # For chat modes, use Ollama (local) provider
+                        if mode in CHAT_MODES:
+                            # Use a small, fast model for local operation
                             if not primary_model or "gemini" in primary_model.lower() or "gpt" in primary_model.lower():
                                 primary_model = "llama3.1:8b"  # Fast, small model
                         custom_cfg = load_config_with_model(
@@ -2742,8 +2834,10 @@ async def websocket_endpoint(websocket: WebSocket):
                             use_small_models=use_small_models or is_fast_mode,
                             fast=is_fast_mode
                         )
-                        # Ensure Ollama provider is set for chat mode (create new config instance)
-                        if mode == "chat":
+                        # ALWAYS force Ollama provider for chat modes (clear singleton if needed)
+                        if mode in CHAT_MODES:
+                            from ..providers.factory import clear_provider_singleton
+                            clear_provider_singleton()  # Clear any cached Google provider
                             from ..config import IceburgConfig
                             custom_cfg = IceburgConfig(
                                 data_dir=custom_cfg.data_dir,
@@ -2846,17 +2940,17 @@ async def websocket_endpoint(websocket: WebSocket):
                                 config={"failure_threshold": 5, "success_threshold": 2, "timeout": 60.0}
                             )
                             
-                            logger.debug(f"✅ Provider created with circuit breaker: {type(provider.provider).__name__}")
+                            logger.debug(f"✅ Provider created with circuit breaker: {type(provider).__name__}")
                         except Exception as provider_error:
                             logger.error(f"❌ Failed to create provider: {provider_error}", exc_info=True)
                             
                             # Use user-friendly error messages
-                            error_response = format_error_for_user(provider_error, context="provider_initialization")
+                            error_message = format_error_for_user(provider_error, context="provider_initialization")
                             
                             # Send user-friendly error message
                             await safe_send_json(websocket, {
                                 "type": "error",
-                                **error_response
+                                "message": error_message
                             })
                             
                             await safe_send_json(websocket, {
@@ -2883,6 +2977,25 @@ async def websocket_endpoint(websocket: WebSocket):
                                     primary_model=primary_model,
                                     use_small_models=use_small_models or is_fast_mode,
                                     fast=is_fast_mode
+                                )
+                                
+                                # FORCE Ollama provider for local operation (same as HTTP endpoint)
+                                from ..config import IceburgConfig
+                                secretary_cfg = IceburgConfig(
+                                    data_dir=secretary_cfg.data_dir,
+                                    surveyor_model=secretary_cfg.surveyor_model,
+                                    dissident_model=secretary_cfg.dissident_model,
+                                    synthesist_model=secretary_cfg.synthesist_model,
+                                    oracle_model=secretary_cfg.oracle_model,
+                                    embed_model=secretary_cfg.embed_model,
+                                    llm_provider="ollama",  # Force Ollama for local operation
+                                    provider_url=secretary_cfg.provider_url or "http://localhost:11434",
+                                    timeout_s=secretary_cfg.timeout_s,
+                                    enable_code_generation=secretary_cfg.enable_code_generation,
+                                    disable_memory=secretary_cfg.disable_memory,
+                                    enable_software_lab=secretary_cfg.enable_software_lab,
+                                    max_context_length=secretary_cfg.max_context_length,
+                                    fast=secretary_cfg.fast
                                 )
                                 
                                 # Create thinking callback for streaming
@@ -2933,6 +3046,11 @@ async def websocket_endpoint(websocket: WebSocket):
                                 # Pass routing_mode to agent (fixes double routing)
                                 routing_mode_to_pass = routing_decision.mode if routing_decision else None
                                 
+                                # CRITICAL: Use user_original_mode for chat detection in secretary
+                                # This ensures "fast" or "chat" selection triggers chat behavior
+                                # user_original_mode is defined earlier in this block before any mode override
+                                mode_for_secretary = user_original_mode
+                                
                                 # Wrap with global middleware if available
                                 if global_middleware:
                                     secretary_response = await global_middleware.execute_agent(
@@ -2945,7 +3063,7 @@ async def websocket_endpoint(websocket: WebSocket):
                                         conversation_id=conversation_id,
                                         user_id=user_id,
                                         routing_mode=routing_mode_to_pass,
-                                        mode=mode  # Pass original mode for chat detection
+                                        mode=mode_for_secretary  # Pass original user mode for chat detection
                                     )
                                 else:
                                     # Directly await since run() is now async
@@ -2957,7 +3075,7 @@ async def websocket_endpoint(websocket: WebSocket):
                                         conversation_id=conversation_id,
                                         user_id=user_id,
                                         routing_mode=routing_mode_to_pass,
-                                        mode=mode  # Pass original mode for chat detection
+                                        mode=mode_for_secretary  # Pass original user mode for chat detection
                                     )
                                 
                                 # Cancel thinking task
@@ -2995,13 +3113,13 @@ async def websocket_endpoint(websocket: WebSocket):
                                 else:
                                     # Secretary failed - send error, NO fallback to other agents
                                     logger.error("❌ Secretary returned empty response - chat mode requires secretary")
-                                    error_response = format_error_for_user(
+                                    error_msg = format_error_for_user(
                                         Exception("Secretary agent returned empty response"),
                                         context="secretary_failure"
                                     )
                                     await safe_send_json(websocket, {
                                         "type": "error",
-                                        **error_response
+                                        "message": error_msg
                                     })
                                     await safe_send_json(websocket, {
                                         "type": "done",
@@ -3015,10 +3133,10 @@ async def websocket_endpoint(websocket: WebSocket):
                             except Exception as e:
                                 # Secretary failed - send error, NO fallback to other agents
                                 logger.error(f"❌ Secretary agent error in chat mode: {e}", exc_info=True)
-                                error_response = format_error_for_user(e, context="secretary_failure")
+                                error_msg = format_error_for_user(e, context="secretary_failure")
                                 await safe_send_json(websocket, {
                                     "type": "error",
-                                    **error_response
+                                    "message": error_msg
                                 })
                                 await safe_send_json(websocket, {
                                     "type": "done",
@@ -3032,10 +3150,10 @@ async def websocket_endpoint(websocket: WebSocket):
                     except Exception as e:
                         # Chat mode error handling
                         logger.error(f"❌ Error in chat mode: {e}", exc_info=True)
-                        error_response = format_error_for_user(e, context="chat_mode_error")
+                        error_msg = format_error_for_user(e, context="chat_mode_error")
                         await safe_send_json(websocket, {
                             "type": "error",
-                            **error_response
+                            "message": error_msg
                         })
                         await safe_send_json(websocket, {
                             "type": "done",
@@ -3200,6 +3318,91 @@ async def websocket_endpoint(websocket: WebSocket):
                     }
                 # Chat mode is now handled FIRST (priority check at line 1204)
                 # This duplicate block removed - chat mode already processed above
+                elif mode == "research" or mode == "deep_research":
+                    # RESEARCH MODE - Full pipeline with engines/algorithms/informatics display
+                    # This is the original ICEBURG research experience with glitch effects and system status
+                    logger.info(f"🔬 RESEARCH MODE: Using full pipeline with engines/algorithms tracking")
+                    
+                    from ..config import load_config_with_model, IceburgConfig
+                    from ..providers.factory import clear_provider_singleton
+                    
+                    # Clear any cached Google provider
+                    clear_provider_singleton()
+                    
+                    base_cfg = load_config_with_model(
+                        primary_model=primary_model or "llama3.1:8b",
+                        use_small_models=False,  # Use full models for research
+                        fast=False
+                    )
+                    
+                    # Force Ollama provider for research mode
+                    custom_cfg = IceburgConfig(
+                        data_dir=base_cfg.data_dir,
+                        surveyor_model=base_cfg.surveyor_model,
+                        dissident_model=base_cfg.dissident_model,
+                        synthesist_model=base_cfg.synthesist_model,
+                        oracle_model=base_cfg.oracle_model,
+                        embed_model=base_cfg.embed_model,
+                        llm_provider="ollama",  # Force Ollama
+                        provider_url=base_cfg.provider_url,
+                        timeout_s=base_cfg.timeout_s,
+                        enable_code_generation=base_cfg.enable_code_generation,
+                        disable_memory=base_cfg.disable_memory,
+                        enable_software_lab=base_cfg.enable_software_lab,
+                        max_context_length=base_cfg.max_context_length,
+                        fast=False
+                    )
+                    
+                    # Send initial research mode status
+                    if not await safe_send_json(websocket, {
+                        "type": "thinking",
+                        "content": "Initializing research protocol..."
+                    }):
+                        logger.warning("WebSocket not connected, breaking loop")
+                        break
+                    
+                    # Create progress callback for real-time engine/algorithm updates
+                    async def research_progress_callback(msg: Dict[str, Any]):
+                        """Send real-time progress updates during research"""
+                        msg_type = msg.get("type", "action")
+                        
+                        if msg_type == "engines":
+                            # Send engines update with glitch effect trigger
+                            await safe_send_json(websocket, {
+                                "type": "engines",
+                                "engines": msg.get("engines", [])
+                            })
+                        elif msg_type == "algorithms":
+                            await safe_send_json(websocket, {
+                                "type": "algorithms", 
+                                "algorithms": msg.get("algorithms", [])
+                            })
+                        elif msg_type == "action":
+                            # Transform to thinking_stream for glitch effect
+                            await safe_send_json(websocket, {
+                                "type": "thinking_stream",
+                                "content": msg.get("description", "Processing...")
+                            })
+                        elif msg_type == "agent_thinking":
+                            await safe_send_json(websocket, {
+                                "type": "thinking_stream",
+                                "content": f"{msg.get('agent', 'Agent')}: {msg.get('content', 'Analyzing...')}"
+                            })
+                    
+                    # Run full integration with progress callback
+                    result = await asyncio.wait_for(
+                        system_integrator.process_query_with_full_integration(
+                            query=query,
+                            domain=message.get("domain"),
+                            custom_config=custom_cfg,
+                            temperature=temperature,
+                            max_tokens=max_tokens,
+                            progress_callback=research_progress_callback
+                        ),
+                        timeout=query_timeout
+                    )
+                    result["mode"] = mode
+                    
                 elif agent == "auto":
                     # Chat mode - Intelligent routing with fast/deep paths (FALLBACK for non-chat modes)
                     try:

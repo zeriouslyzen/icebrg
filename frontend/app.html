@@ -376,13 +376,13 @@
       height: 100%;
       pointer-events: none;
       z-index: 2;
-      opacity: 0.3;
+      opacity: 0.7;
     }
 
     .ice-cracks-overlay svg {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0 0 2px rgba(200, 220, 255, 0.4));
+      filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.8));
     }
 
     /* Base group - no animation, individual paths animate */
@@ -468,18 +468,18 @@
 
       0%,
       100% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px transparent);
+        opacity: 0.6;
+        filter: drop-shadow(0 0 2px rgba(200, 220, 255, 0.5));
       }
 
       40% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 3px rgba(200, 220, 255, 0.6));
+        opacity: 1.0;
+        filter: drop-shadow(0 0 6px rgba(200, 220, 255, 0.9));
       }
 
       60% {
-        opacity: 0.5;
-        filter: drop-shadow(0 0 1px rgba(200, 220, 255, 0.3));
+        opacity: 0.8;
+        filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.7));
       }
     }
 
@@ -487,18 +487,18 @@
 
       0%,
       100% {
-        opacity: 0.25;
-        filter: drop-shadow(0 0 0px transparent);
-      }
-
-      30% {
-        opacity: 0.6;
+        opacity: 0.5;
         filter: drop-shadow(0 0 2px rgba(180, 200, 255, 0.5));
       }
 
+      30% {
+        opacity: 0.85;
+        filter: drop-shadow(0 0 5px rgba(200, 220, 255, 0.8));
+      }
+
       70% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.7));
+        opacity: 1.0;
+        filter: drop-shadow(0 0 8px rgba(220, 240, 255, 1.0));
       }
     }
 
@@ -506,13 +506,13 @@
 
       0%,
       100% {
-        opacity: 0.35;
-        filter: drop-shadow(0 0 1px rgba(200, 220, 255, 0.2));
+        opacity: 0.6;
+        filter: drop-shadow(0 0 3px rgba(200, 220, 255, 0.6));
       }
 
       50% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 3px rgba(220, 240, 255, 0.6));
+        opacity: 0.95;
+        filter: drop-shadow(0 0 6px rgba(220, 240, 255, 0.9));
       }
     }
 
@@ -520,32 +520,32 @@
     @keyframes crackForm {
       0% {
         stroke-dasharray: 0 1000;
-        opacity: 0;
+        opacity: 0.3;
       }
 
       10% {
         stroke-dasharray: 50 1000;
-        opacity: 0.4;
+        opacity: 0.7;
       }
 
       30% {
         stroke-dasharray: 200 1000;
-        opacity: 0.6;
+        opacity: 0.9;
       }
 
       50% {
         stroke-dasharray: 500 1000;
-        opacity: 0.5;
+        opacity: 0.8;
       }
 
       70% {
         stroke-dasharray: 800 1000;
-        opacity: 0.4;
+        opacity: 0.7;
       }
 
       100% {
         stroke-dasharray: 1000 1000;
-        opacity: 0.3;
+        opacity: 0.6;
       }
     }
 
@@ -1072,43 +1072,43 @@
       <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="iceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:rgba(200,220,255,0.5);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgba(255,255,255,0.25);stop-opacity:1" />
+            <stop offset="0%" style="stop-color:rgba(200,220,255,0.9);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0.6);stop-opacity:1" />
           </linearGradient>
         </defs>
         <!-- Main crack lines - visible but not distracting -->
         <g class="ice-crack-group" stroke="url(#iceGradient)" stroke-width="0.8" fill="none">
           <!-- Central crack system -->
           <path d="M600,0 L580,120 L620,180 L590,280 L640,350 L610,450 L650,520 L600,600 L640,700 L610,800"
-            opacity="0.6" />
-          <path d="M590,280 L520,320 L480,380 L420,400" opacity="0.5" />
-          <path d="M590,280 L660,300 L720,340 L780,360" opacity="0.5" />
-          <path d="M610,450 L540,480 L490,530 L420,560" opacity="0.4" />
-          <path d="M610,450 L680,470 L740,510 L820,540" opacity="0.4" />
+            opacity="0.85" />
+          <path d="M590,280 L520,320 L480,380 L420,400" opacity="0.75" />
+          <path d="M590,280 L660,300 L720,340 L780,360" opacity="0.75" />
+          <path d="M610,450 L540,480 L490,530 L420,560" opacity="0.7" />
+          <path d="M610,450 L680,470 L740,510 L820,540" opacity="0.7" />
 
           <!-- Left fracture system -->
-          <path d="M200,100 L220,200 L180,280 L240,360 L200,450 L250,540 L210,620 L260,720" opacity="0.5" />
-          <path d="M180,280 L100,320 L60,400" opacity="0.4" />
-          <path d="M240,360 L310,400 L380,420" opacity="0.4" />
-          <path d="M200,450 L130,500 L80,580" opacity="0.3" />
+          <path d="M200,100 L220,200 L180,280 L240,360 L200,450 L250,540 L210,620 L260,720" opacity="0.75" />
+          <path d="M180,280 L100,320 L60,400" opacity="0.7" />
+          <path d="M240,360 L310,400 L380,420" opacity="0.7" />
+          <path d="M200,450 L130,500 L80,580" opacity="0.6" />
 
           <!-- Right fracture system -->
-          <path d="M1000,50 L980,150 L1020,230 L970,320 L1010,410 L960,500 L1000,590 L950,700" opacity="0.5" />
-          <path d="M1020,230 L1080,280 L1140,300" opacity="0.4" />
-          <path d="M970,320 L900,370 L840,400" opacity="0.4" />
-          <path d="M960,500 L1040,550 L1120,580" opacity="0.3" />
+          <path d="M1000,50 L980,150 L1020,230 L970,320 L1010,410 L960,500 L1000,590 L950,700" opacity="0.75" />
+          <path d="M1020,230 L1080,280 L1140,300" opacity="0.7" />
+          <path d="M970,320 L900,370 L840,400" opacity="0.7" />
+          <path d="M960,500 L1040,550 L1120,580" opacity="0.6" />
 
           <!-- Connecting hairline fractures -->
-          <path d="M380,420 L500,460 L540,480" opacity="0.3" stroke-width="1" />
-          <path d="M780,360 L740,510" opacity="0.25" stroke-width="1" />
-          <path d="M420,560 L490,530" opacity="0.25" stroke-width="1" />
-          <path d="M820,540 L740,510" opacity="0.25" stroke-width="1" />
+          <path d="M380,420 L500,460 L540,480" opacity="0.6" stroke-width="1" />
+          <path d="M780,360 L740,510" opacity="0.55" stroke-width="1" />
+          <path d="M420,560 L490,530" opacity="0.55" stroke-width="1" />
+          <path d="M820,540 L740,510" opacity="0.55" stroke-width="1" />
 
           <!-- Micro fractures for texture -->
-          <path d="M300,200 L340,240 L320,290" opacity="0.2" stroke-width="0.75" />
-          <path d="M850,180 L880,230 L860,280" opacity="0.2" stroke-width="0.75" />
-          <path d="M150,500 L190,540 L170,600" opacity="0.2" stroke-width="0.75" />
-          <path d="M1050,450 L1080,490 L1060,550" opacity="0.2" stroke-width="0.75" />
+          <path d="M300,200 L340,240 L320,290" opacity="0.5" stroke-width="0.75" />
+          <path d="M850,180 L880,230 L860,280" opacity="0.5" stroke-width="0.75" />
+          <path d="M150,500 L190,540 L170,600" opacity="0.5" stroke-width="0.75" />
+          <path d="M1050,450 L1080,490 L1060,550" opacity="0.5" stroke-width="0.75" />
         </g>
       </svg>
     </div>

@@ -46,3 +46,5 @@ def get_rag_gateway(cfg=None) -> RAGGateway:
     return _gateway
 
 
+
+

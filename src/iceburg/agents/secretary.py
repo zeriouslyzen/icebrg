@@ -13,11 +13,41 @@ Enhanced with AGI-like capabilities:
 
 from typing import Optional, Dict, Any, List
 import logging
+import threading
 from datetime import datetime
 from ..config import IceburgConfig
 from ..llm import chat_complete
 
 logger = logging.getLogger(__name__)
+
+# === AGENT CACHING FOR PERFORMANCE ===
+# Cache SecretaryAgent instances to avoid expensive re-initialization
+_SECRETARY_AGENT_CACHE: Dict[str, Any] = {}
+_SECRETARY_CACHE_LOCK = threading.Lock()
+
+def _get_cached_secretary(cfg: IceburgConfig, cache_key: str = "default", **kwargs) -> "SecretaryAgent":
+    """
+    Get or create a cached SecretaryAgent instance.
+    Thread-safe singleton pattern for performance.
+    """
+    global _SECRETARY_AGENT_CACHE
+    
+    with _SECRETARY_CACHE_LOCK:
+        if cache_key in _SECRETARY_AGENT_CACHE:
+            logger.debug(f"♻️ Reusing cached SecretaryAgent (key={cache_key})")
+            return _SECRETARY_AGENT_CACHE[cache_key]
+        
+        logger.info(f"🆕 Creating new SecretaryAgent (key={cache_key}) - will be cached")
+        agent = SecretaryAgent(cfg, **kwargs)
+        _SECRETARY_AGENT_CACHE[cache_key] = agent
+        return agent
+
+def clear_secretary_cache():
+    """Clear the SecretaryAgent cache (for testing or config changes)."""
+    global _SECRETARY_AGENT_CACHE
+    with _SECRETARY_CACHE_LOCK:
+        _SECRETARY_AGENT_CACHE.clear()
+        logger.info("🗑️ SecretaryAgent cache cleared")
 
 
 # ICEBURG Knowledge Base (Optimized for Local/Ollama)
@@ -45,7 +75,11 @@ When someone asks what ICEBURG can do, you give them the full picture: deep rese
 
 You're running locally on Ollama, so you keep responses punchy and efficient to maintain high token velocity. You're professional but approachable, concise but thorough when the situation calls for it. You help people navigate ICEBURG's capabilities naturally, without needing exact keywords or formal commands.
 
-You work without a traditional vector store—you use your built-in knowledge and training data about ICEBURG to answer questions accurately and helpfully.
+CRITICAL RULES:
+1. NEVER repeat or echo the user's question in your response. Start answering directly.
+2. In multi-turn conversations, be consistent with what you previously said. If you mentioned three agents, the fourth is the one you didn't list.
+3. ICEBURG has exactly four main agents: Surveyor, Dissident, Synthesist, and Oracle. Know their roles accurately.
+4. Don't start responses with phrases like "You asked..." or "Your question is..." - just answer.
 """
 
 
@@ -332,7 +366,7 @@ class SecretaryAgent:
             except Exception as e:
                 logger.warning(f"Hybrid search failed, falling back to LLM knowledge: {e}")
 
-        elif not requires_execution and self.enable_planning and self.planner and not is_simple_question:
+        elif self.enable_planning and self.planner and not is_simple_question:
             # Only use planning for non-chat modes AND non-simple questions
             # Check simple patterns first to avoid expensive LLM call
             try:
@@ -407,9 +441,7 @@ class SecretaryAgent:
                 logger.warning(f"Error with tool execution: {e}. Continuing without tools.")
         
         # Build enhanced prompt with ICEBURG knowledge, memory context, tool results, multimodal, agent context, and knowledge base
-        enhanced_prompt = f"""User Question: {query}
-
-{agent_context}
+        enhanced_prompt = f"""{agent_context}
 
 {memory_context}
 
@@ -422,7 +454,13 @@ class SecretaryAgent:
 ICEBURG KNOWLEDGE BASE (for reference if the question is about ICEBURG):
 {ICEBURG_KNOWLEDGE}
 
-Please answer the user's question directly and naturally. If the question is about ICEBURG, use the knowledge above to provide accurate, helpful information. If the question is about something else, answer it directly using your knowledge. Be friendly and conversational. Do NOT give generic greetings - answer the specific question asked.
+The user's question is: {query}
+
+IMPORTANT INSTRUCTIONS:
+1. DO NOT repeat or echo the user's question in your response. Start with the answer directly.
+2. If you previously mentioned information in this conversation, be consistent - don't contradict yourself.
+3. Answer naturally and conversationally without preamble like "You asked..." or "Your question is...".
+4. Be accurate about ICEBURG's four agents: Surveyor, Dissident, Synthesist, and Oracle.
 """
         
         if thinking_callback:
@@ -1149,9 +1187,12 @@ def run(
     # But only if we can safely initialize it
     if conversation_id or user_id or files or multimodal_input:
         try:
-            # Try to create enhanced agent with graceful fallback
-            agent = SecretaryAgent(
-                cfg, 
+            # Use cached agent for performance (avoid expensive re-initialization)
+            # Cache key includes provider to ensure we don't mix providers
+            cache_key = f"enhanced_{cfg.llm_provider}"
+            agent = _get_cached_secretary(
+                cfg,
+                cache_key=cache_key,
                 enable_memory=bool(conversation_id or user_id), 
                 enable_tools=True,
                 enable_blackboard=True,  # Blackboard integration now working synchronously
@@ -1177,12 +1218,15 @@ def run(
     logger.info(f"🔍🔍🔍 SECRETARY: Received query='{query}' (type={type(query).__name__}, length={len(query) if query else 0})")
     
     # Build enhanced prompt with ICEBURG knowledge
-    enhanced_prompt = f"""User Question: {query}
-
-ICEBURG KNOWLEDGE BASE (for reference if the question is about ICEBURG):
+    enhanced_prompt = f"""ICEBURG KNOWLEDGE BASE (for reference if the question is about ICEBURG):
 {ICEBURG_KNOWLEDGE}
 
-Please answer the user's question directly and naturally. If the question is about ICEBURG, use the knowledge above to provide accurate, helpful information. If the question is about something else, answer it directly using your knowledge. Be friendly and conversational. Do NOT give generic greetings - answer the specific question asked.
+The user's question is: {query}
+
+IMPORTANT INSTRUCTIONS:
+1. DO NOT repeat or echo the user's question in your response. Start with the answer directly.
+2. Answer naturally and conversationally without preamble like "You asked..." or "Your question is...".
+3. Be accurate about ICEBURG's four agents: Surveyor, Dissident, Synthesist, and Oracle.
 """
     
     if thinking_callback:

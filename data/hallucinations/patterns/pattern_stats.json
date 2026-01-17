@@ -1,11 +1,11 @@
 {
-  "total_patterns": 10,
+  "total_patterns": 34,
   "patterns_by_agent": {
-    "secretary": 10
+    "secretary": 34
   },
   "patterns_by_type": {
-    "hallucination_risk": 10,
-    "No sources provided": 10
+    "hallucination_risk": 34,
+    "No sources provided": 34
   },
-  "last_updated": "2025-12-30T17:47:46.098480"
+  "last_updated": "2026-01-15T18:02:17.155539"
 }

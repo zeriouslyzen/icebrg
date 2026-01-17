@@ -65,41 +65,41 @@
     "ICEBURG": {
       "created": "2025-12-30T05:02:46.178899",
       "file": "topics/ICEBURG.md",
-      "last_updated": "2025-12-30T05:03:31.326981",
+      "last_updated": "2026-01-15T18:00:49.514517",
       "metadata": {
-        "conversation_id": "b86adc51-4148-4178-92ec-1939a3c5b164",
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
         "user_id": null,
-        "extracted_at": "2025-12-30T05:03:31.325060"
+        "extracted_at": "2026-01-15T18:00:49.513130"
       }
     },
     "AI research system": {
       "created": "2025-12-30T05:02:46.242310",
       "file": "topics/AI-research-system.md",
-      "last_updated": "2025-12-30T05:03:12.519462",
+      "last_updated": "2026-01-15T14:18:06.704649",
       "metadata": {
-        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
         "user_id": null,
-        "extracted_at": "2025-12-30T05:03:12.518396"
+        "extracted_at": "2026-01-15T14:18:06.702502"
       }
     },
     "truth-finding": {
       "created": "2025-12-30T05:02:46.242614",
       "file": "topics/truth-finding.md",
-      "last_updated": "2025-12-30T05:03:12.520658",
+      "last_updated": "2026-01-15T18:00:49.517059",
       "metadata": {
-        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
         "user_id": null,
-        "extracted_at": "2025-12-30T05:03:12.518396"
+        "extracted_at": "2026-01-15T18:00:49.513130"
       }
     },
     "deep knowledge discovery": {
       "created": "2025-12-30T05:02:46.242864",
       "file": "topics/deep-knowledge-discovery.md",
-      "last_updated": "2025-12-30T05:03:12.521429",
+      "last_updated": "2026-01-15T14:43:25.073852",
       "metadata": {
-        "conversation_id": "ecd3f079-3933-42b8-a8d1-3e93d1f4373a",
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
         "user_id": null,
-        "extracted_at": "2025-12-30T05:03:12.518396"
+        "extracted_at": "2026-01-15T14:43:25.070172"
       }
     },
     "starting a research task": {
@@ -115,11 +115,11 @@
     "Research mode": {
       "created": "2025-12-30T05:03:31.327683",
       "file": "topics/Research-mode.md",
-      "last_updated": "2025-12-30T05:03:31.327707",
+      "last_updated": "2026-01-15T13:07:45.068867",
       "metadata": {
-        "conversation_id": "b86adc51-4148-4178-92ec-1939a3c5b164",
+        "conversation_id": "test_conv_1768511063",
         "user_id": null,
-        "extracted_at": "2025-12-30T05:03:31.325060"
+        "extracted_at": "2026-01-15T13:07:45.060481"
       }
     },
     "Surveyor and Dissident agents": {
@@ -225,11 +225,11 @@
     "research": {
       "created": "2025-12-30T19:19:53.651889",
       "file": "topics/research.md",
-      "last_updated": "2025-12-30T19:19:53.651917",
+      "last_updated": "2026-01-15T13:43:41.223839",
       "metadata": {
-        "conversation_id": "test_semantic_2",
-        "user_id": "test_user",
-        "extracted_at": "2025-12-30T19:19:53.649969"
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:43:41.218738"
       }
     },
     "Capabilities of ICEBURG": {
@@ -275,21 +275,21 @@
     "deep domain research": {
       "created": "2025-12-30T19:21:12.325436",
       "file": "topics/deep-domain-research.md",
-      "last_updated": "2025-12-30T19:21:12.325514",
+      "last_updated": "2026-01-15T17:46:57.693922",
       "metadata": {
-        "conversation_id": "test_semantic_3",
-        "user_id": "test_user",
-        "extracted_at": "2025-12-30T19:21:12.324258"
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
       }
     },
     "multi-agent coordination": {
       "created": "2025-12-30T19:21:12.326833",
       "file": "topics/multi-agent-coordination.md",
-      "last_updated": "2025-12-30T19:21:12.326852",
+      "last_updated": "2026-01-15T17:46:57.695024",
       "metadata": {
-        "conversation_id": "test_semantic_3",
-        "user_id": "test_user",
-        "extracted_at": "2025-12-30T19:21:12.324258"
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
       }
     },
     "research mode": {
@@ -321,6 +321,596 @@
         "user_id": "test_user",
         "extracted_at": "2025-12-30T19:21:12.324258"
       }
+    },
+    "ICEBURG system": {
+      "created": "2026-01-15T13:04:14.206002",
+      "file": "topics/ICEBURG-system.md",
+      "last_updated": "2026-01-15T13:04:14.206018",
+      "metadata": {
+        "conversation_id": "839c32f9-11fa-47bf-a065-8a8cb87439eb",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:04:14.205506"
+      }
+    },
+    "questions": {
+      "created": "2026-01-15T13:04:14.208922",
+      "file": "topics/questions.md",
+      "last_updated": "2026-01-15T13:04:14.208942",
+      "metadata": {
+        "conversation_id": "839c32f9-11fa-47bf-a065-8a8cb87439eb",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:04:14.205506"
+      }
+    },
+    "information": {
+      "created": "2026-01-15T13:04:14.209622",
+      "file": "topics/information.md",
+      "last_updated": "2026-01-15T13:04:14.209637",
+      "metadata": {
+        "conversation_id": "839c32f9-11fa-47bf-a065-8a8cb87439eb",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:04:14.205506"
+      }
+    },
+    "ICEBURG's main capabilities": {
+      "created": "2026-01-15T13:05:19.123566",
+      "file": "topics/ICEBURGs-main-capabilities.md",
+      "last_updated": "2026-01-15T13:05:19.123581",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:05:19.123046"
+      }
+    },
+    "deep research and truth-finding": {
+      "created": "2026-01-15T13:05:19.124402",
+      "file": "topics/deep-research-and-truth-finding.md",
+      "last_updated": "2026-01-15T13:05:19.124413",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:05:19.123046"
+      }
+    },
+    "multi-agent coordination system": {
+      "created": "2026-01-15T13:05:19.124902",
+      "file": "topics/multi-agent-coordination-system.md",
+      "last_updated": "2026-01-15T14:09:18.147408",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:09:18.146079"
+      }
+    },
+    "agents in ICEBURG": {
+      "created": "2026-01-15T13:05:57.455445",
+      "file": "topics/agents-in-ICEBURG.md",
+      "last_updated": "2026-01-15T17:52:12.517754",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:52:12.514145"
+      }
+    },
+    "ICEBURG's architecture": {
+      "created": "2026-01-15T13:06:36.643127",
+      "file": "topics/ICEBURGs-architecture.md",
+      "last_updated": "2026-01-15T13:11:00.205191",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:00.204861"
+      }
+    },
+    "research capabilities": {
+      "created": "2026-01-15T13:06:36.644869",
+      "file": "topics/research-capabilities.md",
+      "last_updated": "2026-01-15T13:06:36.644900",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:06:36.642345"
+      }
+    },
+    "tools and abilities": {
+      "created": "2026-01-15T13:07:11.941380",
+      "file": "topics/tools-and-abilities.md",
+      "last_updated": "2026-01-15T13:11:31.340932",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:31.340631"
+      }
+    },
+    "ICEBURG's research capabilities": {
+      "created": "2026-01-15T13:07:45.062024",
+      "file": "topics/ICEBURGs-research-capabilities.md",
+      "last_updated": "2026-01-15T13:12:05.725898",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:05.725559"
+      }
+    },
+    "Surveyor agent": {
+      "created": "2026-01-15T13:07:45.064461",
+      "file": "topics/Surveyor-agent.md",
+      "last_updated": "2026-01-15T14:01:18.205753",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:01:18.201988"
+      }
+    },
+    "Dissident agent": {
+      "created": "2026-01-15T13:07:45.065554",
+      "file": "topics/Dissident-agent.md",
+      "last_updated": "2026-01-15T14:19:00.219401",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:19:00.218285"
+      }
+    },
+    "Synthesist agent": {
+      "created": "2026-01-15T13:07:45.066633",
+      "file": "topics/Synthesist-agent.md",
+      "last_updated": "2026-01-15T13:12:05.730805",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:05.725559"
+      }
+    },
+    "Oracle agent": {
+      "created": "2026-01-15T13:07:45.067716",
+      "file": "topics/Oracle-agent.md",
+      "last_updated": "2026-01-15T13:12:05.732375",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:05.725559"
+      }
+    },
+    "AI systems": {
+      "created": "2026-01-15T13:08:17.212221",
+      "file": "topics/AI-systems.md",
+      "last_updated": "2026-01-15T13:12:31.284585",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:31.284277"
+      }
+    },
+    "agents and capabilities": {
+      "created": "2026-01-15T13:08:17.213106",
+      "file": "topics/agents-and-capabilities.md",
+      "last_updated": "2026-01-15T13:08:17.213124",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:08:17.211102"
+      }
+    },
+    "real-time streaming system": {
+      "created": "2026-01-15T13:08:17.214238",
+      "file": "topics/real-time-streaming-system.md",
+      "last_updated": "2026-01-15T13:08:17.214252",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:08:17.211102"
+      }
+    },
+    "persistent memory": {
+      "created": "2026-01-15T13:08:17.215424",
+      "file": "topics/persistent-memory.md",
+      "last_updated": "2026-01-15T17:46:57.696490",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
+      }
+    },
+    "modes": {
+      "created": "2026-01-15T13:08:17.217337",
+      "file": "topics/modes.md",
+      "last_updated": "2026-01-15T13:08:17.217363",
+      "metadata": {
+        "conversation_id": "test_conv_1768511063",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:08:17.211102"
+      }
+    },
+    "ICEBURG research platform": {
+      "created": "2026-01-15T13:09:29.844468",
+      "file": "topics/ICEBURG-research-platform.md",
+      "last_updated": "2026-01-15T13:09:29.844507",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:09:29.843747"
+      }
+    },
+    "advanced AI system": {
+      "created": "2026-01-15T13:09:29.846138",
+      "file": "topics/advanced-AI-system.md",
+      "last_updated": "2026-01-15T13:09:29.846166",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:09:29.843747"
+      }
+    },
+    "truth discovery and new knowledge": {
+      "created": "2026-01-15T13:09:29.847210",
+      "file": "topics/truth-discovery-and-new-knowledge.md",
+      "last_updated": "2026-01-15T13:09:29.847231",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:09:29.843747"
+      }
+    },
+    "capabilities": {
+      "created": "2026-01-15T13:09:50.939492",
+      "file": "topics/capabilities.md",
+      "last_updated": "2026-01-15T13:09:50.939516",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:09:50.938106"
+      }
+    },
+    "modular design": {
+      "created": "2026-01-15T13:11:00.206332",
+      "file": "topics/modular-design.md",
+      "last_updated": "2026-01-15T13:11:00.206360",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:00.204861"
+      }
+    },
+    "Secretary agent": {
+      "created": "2026-01-15T13:11:00.211519",
+      "file": "topics/Secretary-agent.md",
+      "last_updated": "2026-01-15T13:12:05.733884",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:05.725559"
+      }
+    },
+    "software development": {
+      "created": "2026-01-15T13:11:31.343388",
+      "file": "topics/software-development.md",
+      "last_updated": "2026-01-15T13:11:31.343410",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:31.340631"
+      }
+    },
+    "science exploration": {
+      "created": "2026-01-15T13:11:31.345009",
+      "file": "topics/science-exploration.md",
+      "last_updated": "2026-01-15T13:11:31.345069",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:31.340631"
+      }
+    },
+    "civilization-scale thinking": {
+      "created": "2026-01-15T13:11:31.346872",
+      "file": "topics/civilization-scale-thinking.md",
+      "last_updated": "2026-01-15T13:11:31.346900",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:11:31.340631"
+      }
+    },
+    "multi-agent approach": {
+      "created": "2026-01-15T13:12:31.285775",
+      "file": "topics/multi-agent-approach.md",
+      "last_updated": "2026-01-15T13:12:31.285801",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:31.284277"
+      }
+    },
+    "comprehensive understanding": {
+      "created": "2026-01-15T13:12:31.287074",
+      "file": "topics/comprehensive-understanding.md",
+      "last_updated": "2026-01-15T13:12:31.287091",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:31.284277"
+      }
+    },
+    "complex topics": {
+      "created": "2026-01-15T13:12:31.288048",
+      "file": "topics/complex-topics.md",
+      "last_updated": "2026-01-15T13:12:31.288065",
+      "metadata": {
+        "conversation_id": "test_conv_1768511344",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:12:31.284277"
+      }
+    },
+    "computing factorial": {
+      "created": "2026-01-15T13:33:32.870624",
+      "file": "topics/computing-factorial.md",
+      "last_updated": "2026-01-15T13:33:32.870637",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:33:32.870299"
+      }
+    },
+    "new topic to research": {
+      "created": "2026-01-15T13:33:32.873394",
+      "file": "topics/new-topic-to-research.md",
+      "last_updated": "2026-01-15T13:33:32.873413",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:33:32.870299"
+      }
+    },
+    "black holes": {
+      "created": "2026-01-15T13:39:54.035872",
+      "file": "topics/black-holes.md",
+      "last_updated": "2026-01-15T13:39:54.035884",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:39:54.035476"
+      }
+    },
+    "space": {
+      "created": "2026-01-15T13:39:54.037722",
+      "file": "topics/space.md",
+      "last_updated": "2026-01-15T13:39:54.037739",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:39:54.035476"
+      }
+    },
+    "Black Holes": {
+      "created": "2026-01-15T13:40:47.357442",
+      "file": "topics/Black-Holes.md",
+      "last_updated": "2026-01-15T13:40:47.357454",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:40:47.357155"
+      }
+    },
+    "Gravitational Waves": {
+      "created": "2026-01-15T13:40:47.358266",
+      "file": "topics/Gravitational-Waves.md",
+      "last_updated": "2026-01-15T13:40:47.358275",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:40:47.357155"
+      }
+    },
+    "Space-Time Distortions": {
+      "created": "2026-01-15T13:40:47.358927",
+      "file": "topics/Space-Time-Distortions.md",
+      "last_updated": "2026-01-15T13:40:47.358939",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:40:47.357155"
+      }
+    },
+    "Advanced AI research system": {
+      "created": "2026-01-15T13:42:52.469888",
+      "file": "topics/Advanced-AI-research-system.md",
+      "last_updated": "2026-01-15T14:04:53.353984",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:04:53.350938"
+      }
+    },
+    "Truth-finding and deep knowledge discovery": {
+      "created": "2026-01-15T13:42:52.471108",
+      "file": "topics/Truth-finding-and-deep-knowledge-discovery.md",
+      "last_updated": "2026-01-15T14:04:53.355024",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:04:53.350938"
+      }
+    },
+    "truth-finding mission": {
+      "created": "2026-01-15T13:47:15.699444",
+      "file": "topics/truth-finding-mission.md",
+      "last_updated": "2026-01-15T13:47:15.699465",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:47:15.693883"
+      }
+    },
+    "Surveyor and Dissident collaboration": {
+      "created": "2026-01-15T13:50:01.679854",
+      "file": "topics/Surveyor-and-Dissident-collaboration.md",
+      "last_updated": "2026-01-15T13:50:01.679905",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:50:01.678626"
+      }
+    },
+    "Research question refinement": {
+      "created": "2026-01-15T13:50:01.681018",
+      "file": "topics/Research-question-refinement.md",
+      "last_updated": "2026-01-15T13:50:01.681031",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:50:01.678626"
+      }
+    },
+    "Validity and reliability of data": {
+      "created": "2026-01-15T13:50:01.681631",
+      "file": "topics/Validity-and-reliability-of-data.md",
+      "last_updated": "2026-01-15T13:50:01.681639",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:50:01.678626"
+      }
+    },
+    "Climate change effects on global food production": {
+      "created": "2026-01-15T13:50:01.682294",
+      "file": "topics/Climate-change-effects-on-global-food-production.md",
+      "last_updated": "2026-01-15T13:50:01.682302",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T13:50:01.678626"
+      }
+    },
+    "Critical thinking": {
+      "created": "2026-01-15T14:01:18.206962",
+      "file": "topics/Critical-thinking.md",
+      "last_updated": "2026-01-15T14:01:18.206982",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:01:18.201988"
+      }
+    },
+    "Peer review": {
+      "created": "2026-01-15T14:01:18.207957",
+      "file": "topics/Peer-review.md",
+      "last_updated": "2026-01-15T14:01:18.207971",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:01:18.201988"
+      }
+    },
+    "four agents (Surveyor, Dissident, Oracle, Synthesist)": {
+      "created": "2026-01-15T14:09:18.148888",
+      "file": "topics/four-agents-Surveyor-Dissident-Oracle-Synthesist.md",
+      "last_updated": "2026-01-15T14:09:18.148913",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:09:18.146079"
+      }
+    },
+    "integration of diverse perspectives": {
+      "created": "2026-01-15T14:09:18.149570",
+      "file": "topics/integration-of-diverse-perspectives.md",
+      "last_updated": "2026-01-15T14:09:18.149582",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:09:18.146079"
+      }
+    },
+    "collaborative research process": {
+      "created": "2026-01-15T14:19:00.220457",
+      "file": "topics/collaborative-research-process.md",
+      "last_updated": "2026-01-15T14:19:00.220479",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:19:00.218285"
+      }
+    },
+    "critical thinking": {
+      "created": "2026-01-15T14:19:00.223050",
+      "file": "topics/critical-thinking.md",
+      "last_updated": "2026-01-15T14:19:00.223063",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:19:00.218285"
+      }
+    },
+    "agents": {
+      "created": "2026-01-15T14:39:36.780020",
+      "file": "topics/agents.md",
+      "last_updated": "2026-01-15T18:00:49.516372",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T18:00:49.513130"
+      }
+    },
+    "assumptions": {
+      "created": "2026-01-15T14:39:36.781243",
+      "file": "topics/assumptions.md",
+      "last_updated": "2026-01-15T14:39:36.781260",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:39:36.778584"
+      }
+    },
+    "ICEBURG capabilities": {
+      "created": "2026-01-15T14:43:25.072374",
+      "file": "topics/ICEBURG-capabilities.md",
+      "last_updated": "2026-01-15T14:43:25.072409",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T14:43:25.070172"
+      }
+    },
+    "ICEBERG platform": {
+      "created": "2026-01-15T17:46:57.690024",
+      "file": "topics/ICEBERG-platform.md",
+      "last_updated": "2026-01-15T17:46:57.690076",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
+      }
+    },
+    "AI research tool": {
+      "created": "2026-01-15T17:46:57.692035",
+      "file": "topics/AI-research-tool.md",
+      "last_updated": "2026-01-15T17:46:57.692046",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
+      }
+    },
+    "collaborative truth-finding": {
+      "created": "2026-01-15T17:46:57.692819",
+      "file": "topics/collaborative-truth-finding.md",
+      "last_updated": "2026-01-15T17:46:57.692826",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
+      }
+    },
+    "real-time streaming": {
+      "created": "2026-01-15T17:46:57.695789",
+      "file": "topics/real-time-streaming.md",
+      "last_updated": "2026-01-15T17:46:57.695796",
+      "metadata": {
+        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "user_id": null,
+        "extracted_at": "2026-01-15T17:46:57.688871"
+      }
     }
   },
   "personas": {
@@ -329,5 +919,5 @@
       "last_updated": "2025-12-30T19:21:12.331292"
     }
   },
-  "last_updated": "2025-12-30T19:21:12.331298"
+  "last_updated": "2026-01-15T18:00:49.517061"
 }

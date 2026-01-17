@@ -139,7 +139,7 @@ class ComputerCapabilityDiscovery:
                     processes.append({
                         "pid": proc_info.get('pid'),
                         "name": proc_info.get('name'),
-                        "cmdline": ' '.join(proc_info.get('cmdline', [])),
+                        "cmdline": ' '.join(proc_info.get('cmdline') or []),
                         "cpu_percent": proc_info.get('cpu_percent', 0.0),
                         "memory_mb": proc_info.get('memory_info', {}).get('rss', 0) / (1024 * 1024) if proc_info.get('memory_info') else 0.0
                     })
@@ -215,12 +215,15 @@ class ComputerCapabilityDiscovery:
         }
         
         try:
+            root_depth = len(root.parts)
             for path in root.rglob("*"):
+                # Calculate depth relative to root
+                path_depth = len(path.parts) - root_depth
                 if path.is_dir():
-                    if path.depth <= max_depth:
+                    if path_depth <= max_depth:
                         structure["directories"].append({
                             "path": str(path),
-                            "depth": path.depth,
+                            "depth": path_depth,
                             "name": path.name
                         })
                 elif path.is_file():

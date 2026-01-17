@@ -18,3 +18,9 @@
 ## Update: 2025-12-30 19:21:12
 
 Information about research mode from conversation.
+
+---
+
+## Update: 2026-01-15 13:07:45
+
+- The Research mode in ICEBURG's documentation explains how the agents work together for deep research.

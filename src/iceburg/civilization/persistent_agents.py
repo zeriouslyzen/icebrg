@@ -325,8 +325,8 @@ class AgentMemory:
         if enable_persistence:
             try:
                 from ..database.unified_database import UnifiedDatabase
-                from ..config import IceburgConfig
-                cfg = IceburgConfig()
+                from ..config import load_config
+                cfg = load_config()  # Use load_config() which provides all required args
                 self.unified_db = UnifiedDatabase(cfg)
                 # Load existing memories from database
                 self._load_from_database()

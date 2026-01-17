@@ -33,22 +33,372 @@
     "ICEBURG": {
       "file": "topics/ICEBURG.md",
       "created": "2025-12-30T05:02:46.178899",
-      "last_updated": "2025-12-30T05:02:46.178973"
+      "last_updated": "2026-01-15T14:04:53.352238"
     },
     "AI research system": {
       "file": "topics/AI-research-system.md",
       "created": "2025-12-30T05:02:46.242310",
-      "last_updated": "2025-12-30T05:03:12.519462"
+      "last_updated": "2026-01-15T14:00:16.214072"
     },
     "truth-finding": {
       "file": "topics/truth-finding.md",
       "created": "2025-12-30T05:02:46.242614",
-      "last_updated": "2025-12-30T05:03:12.520658"
+      "last_updated": "2026-01-15T14:00:16.214899"
     },
     "deep knowledge discovery": {
       "file": "topics/deep-knowledge-discovery.md",
       "created": "2025-12-30T05:02:46.242864",
-      "last_updated": "2025-12-30T05:03:12.521429"
+      "last_updated": "2026-01-15T14:00:16.216080"
+    },
+    "starting a research task": {
+      "file": "topics/starting-a-research-task.md",
+      "created": "2025-12-30T05:03:31.325731",
+      "last_updated": "2025-12-30T05:03:31.325770"
+    },
+    "Research mode": {
+      "file": "topics/Research-mode.md",
+      "created": "2025-12-30T05:03:31.327683",
+      "last_updated": "2026-01-15T13:07:45.068867"
+    },
+    "Surveyor and Dissident agents": {
+      "file": "topics/Surveyor-and-Dissident-agents.md",
+      "created": "2025-12-30T05:03:53.567635",
+      "last_updated": "2025-12-30T05:03:53.567711"
+    },
+    "ICEBURG's multi-agent coordination system": {
+      "file": "topics/ICEBURGs-multi-agent-coordination-system.md",
+      "created": "2025-12-30T05:03:53.569127",
+      "last_updated": "2025-12-30T05:03:53.569156"
+    },
+    "software application design": {
+      "file": "topics/software-application-design.md",
+      "created": "2025-12-30T05:04:06.332395",
+      "last_updated": "2025-12-30T05:04:06.332509"
+    },
+    "app purpose": {
+      "file": "topics/app-purpose.md",
+      "created": "2025-12-30T05:04:06.333109",
+      "last_updated": "2025-12-30T05:04:06.333125"
+    },
+    "target audience": {
+      "file": "topics/target-audience.md",
+      "created": "2025-12-30T05:04:06.333667",
+      "last_updated": "2025-12-30T05:04:06.333678"
+    },
+    "features": {
+      "file": "topics/features.md",
+      "created": "2025-12-30T05:04:06.334485",
+      "last_updated": "2025-12-30T05:04:06.334535"
+    },
+    "AGI civilization simulation": {
+      "file": "topics/AGI-civilization-simulation.md",
+      "created": "2025-12-30T05:04:31.463767",
+      "last_updated": "2025-12-30T05:04:31.463809"
+    },
+    "ICEBURG's Science framework": {
+      "file": "topics/ICEBURGs-Science-framework.md",
+      "created": "2025-12-30T05:04:31.465937",
+      "last_updated": "2025-12-30T05:04:31.465977"
+    },
+    "Artificial General Intelligence": {
+      "file": "topics/Artificial-General-Intelligence.md",
+      "created": "2025-12-30T05:04:31.467709",
+      "last_updated": "2025-12-30T05:04:31.467740"
+    },
+    "conversation": {
+      "file": "topics/conversation.md",
+      "created": "2025-12-30T19:19:53.650695",
+      "last_updated": "2025-12-30T19:19:53.650741"
+    },
+    "research": {
+      "file": "topics/research.md",
+      "created": "2025-12-30T19:19:53.651889",
+      "last_updated": "2026-01-15T13:43:41.223839"
+    },
+    "Capabilities of ICEBURG": {
+      "file": "topics/Capabilities-of-ICEBURG.md",
+      "created": "2025-12-30T19:20:19.402073",
+      "last_updated": "2025-12-30T19:20:19.402119"
+    },
+    "Modes of ICEBURG": {
+      "file": "topics/Modes-of-ICEBURG.md",
+      "created": "2025-12-30T19:20:19.403270",
+      "last_updated": "2025-12-30T19:20:19.403284"
+    },
+    "Agents of ICEBURG": {
+      "file": "topics/Agents-of-ICEBURG.md",
+      "created": "2025-12-30T19:20:19.403729",
+      "last_updated": "2025-12-30T19:20:19.403741"
+    },
+    "Real-time streaming and persistent memory systems": {
+      "file": "topics/Real-time-streaming-and-persistent-memory-systems.md",
+      "created": "2025-12-30T19:20:19.404076",
+      "last_updated": "2025-12-30T19:20:19.404088"
+    },
+    "deep domain research": {
+      "file": "topics/deep-domain-research.md",
+      "created": "2025-12-30T19:21:12.325436",
+      "last_updated": "2025-12-30T19:21:12.325514"
+    },
+    "multi-agent coordination": {
+      "file": "topics/multi-agent-coordination.md",
+      "created": "2025-12-30T19:21:12.326833",
+      "last_updated": "2026-01-15T13:12:05.727390"
+    },
+    "research mode": {
+      "file": "topics/research-mode.md",
+      "created": "2025-12-30T19:21:12.328144",
+      "last_updated": "2025-12-30T19:21:12.328164"
+    },
+    "software development mode": {
+      "file": "topics/software-development-mode.md",
+      "created": "2025-12-30T19:21:12.329123",
+      "last_updated": "2025-12-30T19:21:12.329144"
+    },
+    "science mode": {
+      "file": "topics/science-mode.md",
+      "created": "2025-12-30T19:21:12.330084",
+      "last_updated": "2025-12-30T19:21:12.330103"
+    },
+    "ICEBURG system": {
+      "file": "topics/ICEBURG-system.md",
+      "created": "2026-01-15T13:04:14.206002",
+      "last_updated": "2026-01-15T13:04:14.206018"
+    },
+    "questions": {
+      "file": "topics/questions.md",
+      "created": "2026-01-15T13:04:14.208922",
+      "last_updated": "2026-01-15T13:04:14.208942"
+    },
+    "information": {
+      "file": "topics/information.md",
+      "created": "2026-01-15T13:04:14.209622",
+      "last_updated": "2026-01-15T13:04:14.209637"
+    },
+    "ICEBURG's main capabilities": {
+      "file": "topics/ICEBURGs-main-capabilities.md",
+      "created": "2026-01-15T13:05:19.123566",
+      "last_updated": "2026-01-15T13:05:19.123581"
+    },
+    "deep research and truth-finding": {
+      "file": "topics/deep-research-and-truth-finding.md",
+      "created": "2026-01-15T13:05:19.124402",
+      "last_updated": "2026-01-15T13:05:19.124413"
+    },
+    "multi-agent coordination system": {
+      "file": "topics/multi-agent-coordination-system.md",
+      "created": "2026-01-15T13:05:19.124902",
+      "last_updated": "2026-01-15T13:47:15.697087"
+    },
+    "agents in ICEBURG": {
+      "file": "topics/agents-in-ICEBURG.md",
+      "created": "2026-01-15T13:05:57.455445",
+      "last_updated": "2026-01-15T13:10:23.610762"
+    },
+    "ICEBURG's architecture": {
+      "file": "topics/ICEBURGs-architecture.md",
+      "created": "2026-01-15T13:06:36.643127",
+      "last_updated": "2026-01-15T13:11:00.205191"
+    },
+    "research capabilities": {
+      "file": "topics/research-capabilities.md",
+      "created": "2026-01-15T13:06:36.644869",
+      "last_updated": "2026-01-15T13:06:36.644900"
+    },
+    "tools and abilities": {
+      "file": "topics/tools-and-abilities.md",
+      "created": "2026-01-15T13:07:11.941380",
+      "last_updated": "2026-01-15T13:11:31.340932"
+    },
+    "ICEBURG's research capabilities": {
+      "file": "topics/ICEBURGs-research-capabilities.md",
+      "created": "2026-01-15T13:07:45.062024",
+      "last_updated": "2026-01-15T13:12:05.725898"
+    },
+    "Surveyor agent": {
+      "file": "topics/Surveyor-agent.md",
+      "created": "2026-01-15T13:07:45.064461",
+      "last_updated": "2026-01-15T14:01:18.205753"
+    },
+    "Dissident agent": {
+      "file": "topics/Dissident-agent.md",
+      "created": "2026-01-15T13:07:45.065554",
+      "last_updated": "2026-01-15T14:01:18.203918"
+    },
+    "Synthesist agent": {
+      "file": "topics/Synthesist-agent.md",
+      "created": "2026-01-15T13:07:45.066633",
+      "last_updated": "2026-01-15T13:12:05.730805"
+    },
+    "Oracle agent": {
+      "file": "topics/Oracle-agent.md",
+      "created": "2026-01-15T13:07:45.067716",
+      "last_updated": "2026-01-15T13:12:05.732375"
+    },
+    "AI systems": {
+      "file": "topics/AI-systems.md",
+      "created": "2026-01-15T13:08:17.212221",
+      "last_updated": "2026-01-15T13:12:31.284585"
+    },
+    "agents and capabilities": {
+      "file": "topics/agents-and-capabilities.md",
+      "created": "2026-01-15T13:08:17.213106",
+      "last_updated": "2026-01-15T13:08:17.213124"
+    },
+    "real-time streaming system": {
+      "file": "topics/real-time-streaming-system.md",
+      "created": "2026-01-15T13:08:17.214238",
+      "last_updated": "2026-01-15T13:08:17.214252"
+    },
+    "persistent memory": {
+      "file": "topics/persistent-memory.md",
+      "created": "2026-01-15T13:08:17.215424",
+      "last_updated": "2026-01-15T13:08:17.215527"
+    },
+    "modes": {
+      "file": "topics/modes.md",
+      "created": "2026-01-15T13:08:17.217337",
+      "last_updated": "2026-01-15T13:08:17.217363"
+    },
+    "ICEBURG research platform": {
+      "file": "topics/ICEBURG-research-platform.md",
+      "created": "2026-01-15T13:09:29.844468",
+      "last_updated": "2026-01-15T13:09:29.844507"
+    },
+    "advanced AI system": {
+      "file": "topics/advanced-AI-system.md",
+      "created": "2026-01-15T13:09:29.846138",
+      "last_updated": "2026-01-15T13:09:29.846166"
+    },
+    "truth discovery and new knowledge": {
+      "file": "topics/truth-discovery-and-new-knowledge.md",
+      "created": "2026-01-15T13:09:29.847210",
+      "last_updated": "2026-01-15T13:09:29.847231"
+    },
+    "capabilities": {
+      "file": "topics/capabilities.md",
+      "created": "2026-01-15T13:09:50.939492",
+      "last_updated": "2026-01-15T13:09:50.939516"
+    },
+    "modular design": {
+      "file": "topics/modular-design.md",
+      "created": "2026-01-15T13:11:00.206332",
+      "last_updated": "2026-01-15T13:11:00.206360"
+    },
+    "Secretary agent": {
+      "file": "topics/Secretary-agent.md",
+      "created": "2026-01-15T13:11:00.211519",
+      "last_updated": "2026-01-15T13:12:05.733884"
+    },
+    "software development": {
+      "file": "topics/software-development.md",
+      "created": "2026-01-15T13:11:31.343388",
+      "last_updated": "2026-01-15T13:11:31.343410"
+    },
+    "science exploration": {
+      "file": "topics/science-exploration.md",
+      "created": "2026-01-15T13:11:31.345009",
+      "last_updated": "2026-01-15T13:11:31.345069"
+    },
+    "civilization-scale thinking": {
+      "file": "topics/civilization-scale-thinking.md",
+      "created": "2026-01-15T13:11:31.346872",
+      "last_updated": "2026-01-15T13:11:31.346900"
+    },
+    "multi-agent approach": {
+      "file": "topics/multi-agent-approach.md",
+      "created": "2026-01-15T13:12:31.285775",
+      "last_updated": "2026-01-15T13:12:31.285801"
+    },
+    "comprehensive understanding": {
+      "file": "topics/comprehensive-understanding.md",
+      "created": "2026-01-15T13:12:31.287074",
+      "last_updated": "2026-01-15T13:12:31.287091"
+    },
+    "complex topics": {
+      "file": "topics/complex-topics.md",
+      "created": "2026-01-15T13:12:31.288048",
+      "last_updated": "2026-01-15T13:12:31.288065"
+    },
+    "computing factorial": {
+      "file": "topics/computing-factorial.md",
+      "created": "2026-01-15T13:33:32.870624",
+      "last_updated": "2026-01-15T13:33:32.870637"
+    },
+    "new topic to research": {
+      "file": "topics/new-topic-to-research.md",
+      "created": "2026-01-15T13:33:32.873394",
+      "last_updated": "2026-01-15T13:33:32.873413"
+    },
+    "black holes": {
+      "file": "topics/black-holes.md",
+      "created": "2026-01-15T13:39:54.035872",
+      "last_updated": "2026-01-15T13:39:54.035884"
+    },
+    "space": {
+      "file": "topics/space.md",
+      "created": "2026-01-15T13:39:54.037722",
+      "last_updated": "2026-01-15T13:39:54.037739"
+    },
+    "Black Holes": {
+      "file": "topics/Black-Holes.md",
+      "created": "2026-01-15T13:40:47.357442",
+      "last_updated": "2026-01-15T13:40:47.357454"
+    },
+    "Gravitational Waves": {
+      "file": "topics/Gravitational-Waves.md",
+      "created": "2026-01-15T13:40:47.358266",
+      "last_updated": "2026-01-15T13:40:47.358275"
+    },
+    "Space-Time Distortions": {
+      "file": "topics/Space-Time-Distortions.md",
+      "created": "2026-01-15T13:40:47.358927",
+      "last_updated": "2026-01-15T13:40:47.358939"
+    },
+    "Advanced AI research system": {
+      "file": "topics/Advanced-AI-research-system.md",
+      "created": "2026-01-15T13:42:52.469888",
+      "last_updated": "2026-01-15T14:04:53.353984"
+    },
+    "Truth-finding and deep knowledge discovery": {
+      "file": "topics/Truth-finding-and-deep-knowledge-discovery.md",
+      "created": "2026-01-15T13:42:52.471108",
+      "last_updated": "2026-01-15T14:04:53.355024"
+    },
+    "truth-finding mission": {
+      "file": "topics/truth-finding-mission.md",
+      "created": "2026-01-15T13:47:15.699444",
+      "last_updated": "2026-01-15T13:47:15.699465"
+    },
+    "Surveyor and Dissident collaboration": {
+      "file": "topics/Surveyor-and-Dissident-collaboration.md",
+      "created": "2026-01-15T13:50:01.679854",
+      "last_updated": "2026-01-15T13:50:01.679905"
+    },
+    "Research question refinement": {
+      "file": "topics/Research-question-refinement.md",
+      "created": "2026-01-15T13:50:01.681018",
+      "last_updated": "2026-01-15T13:50:01.681031"
+    },
+    "Validity and reliability of data": {
+      "file": "topics/Validity-and-reliability-of-data.md",
+      "created": "2026-01-15T13:50:01.681631",
+      "last_updated": "2026-01-15T13:50:01.681639"
+    },
+    "Climate change effects on global food production": {
+      "file": "topics/Climate-change-effects-on-global-food-production.md",
+      "created": "2026-01-15T13:50:01.682294",
+      "last_updated": "2026-01-15T13:50:01.682302"
+    },
+    "Critical thinking": {
+      "file": "topics/Critical-thinking.md",
+      "created": "2026-01-15T14:01:18.206962",
+      "last_updated": "2026-01-15T14:01:18.206982"
+    },
+    "Peer review": {
+      "file": "topics/Peer-review.md",
+      "created": "2026-01-15T14:01:18.207957",
+      "last_updated": "2026-01-15T14:01:18.207971"
     }
   },
   "cross_references": {
@@ -95,7 +445,3017 @@
           "french"
         ]
       }
+    ],
+    "ICEBURG": [
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      }
+    ],
+    "AI research system": [
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "ai",
+          "system"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "ai",
+          "system",
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "truth-finding": [
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "truth-finding mission",
+        "common_words": [
+          "truth-finding"
+        ]
+      }
+    ],
+    "deep knowledge discovery": [
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "knowledge",
+          "discovery"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "knowledge",
+          "deep",
+          "discovery"
+        ]
+      }
+    ],
+    "starting a research task": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Research mode": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research",
+          "mode"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Surveyor and Dissident agents": [
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and",
+          "agents"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and",
+          "surveyor",
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "ICEBURG's multi-agent coordination system": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination",
+        "common_words": [
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system",
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "ICEBURG's architecture",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "multi-agent approach",
+        "common_words": [
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "system"
+        ]
+      }
+    ],
+    "software application design": [
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "software"
+        ]
+      },
+      {
+        "topic": "modular design",
+        "common_words": [
+          "design"
+        ]
+      },
+      {
+        "topic": "software development",
+        "common_words": [
+          "software"
+        ]
+      }
+    ],
+    "ICEBURG's Science framework": [
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's architecture",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "science exploration",
+        "common_words": [
+          "science"
+        ]
+      }
+    ],
+    "research": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Capabilities of ICEBURG": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      }
+    ],
+    "Modes of ICEBURG": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "modes",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      }
+    ],
+    "Agents of ICEBURG": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "of",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "agents",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      }
+    ],
+    "Real-time streaming and persistent memory systems": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "systems"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "streaming",
+          "real-time"
+        ]
+      },
+      {
+        "topic": "persistent memory",
+        "common_words": [
+          "persistent",
+          "memory"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "deep domain research": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep knowledge discovery",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research",
+          "deep"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "multi-agent coordination": [
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "multi-agent approach",
+        "common_words": [
+          "multi-agent"
+        ]
+      }
+    ],
+    "research mode": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research",
+          "mode"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "software development mode": [
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "software application design",
+        "common_words": [
+          "software"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "software development",
+        "common_words": [
+          "development",
+          "software"
+        ]
+      }
+    ],
+    "science mode": [
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "science exploration",
+        "common_words": [
+          "science"
+        ]
+      }
+    ],
+    "ICEBURG system": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "system"
+        ]
+      }
+    ],
+    "ICEBURG's main capabilities": [
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's architecture",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "iceburg's",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      }
+    ],
+    "deep research and truth-finding": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "deep knowledge discovery",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research",
+          "deep"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and",
+          "truth-finding",
+          "deep"
+        ]
+      },
+      {
+        "topic": "truth-finding mission",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "multi-agent coordination system": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system",
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination",
+        "common_words": [
+          "coordination",
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "multi-agent approach",
+        "common_words": [
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "system"
+        ]
+      }
+    ],
+    "agents in ICEBURG": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "agents",
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      }
+    ],
+    "ICEBURG's architecture": [
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "iceburg's"
+        ]
+      }
+    ],
+    "research capabilities": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities",
+          "research"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "tools and abilities": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "ICEBURG's research capabilities": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "iceburg's",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's architecture",
+        "common_words": [
+          "iceburg's"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities",
+          "research"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Surveyor agent": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Oracle agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Secretary agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "surveyor"
+        ]
+      }
+    ],
+    "Dissident agent": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Oracle agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Secretary agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "dissident"
+        ]
+      }
+    ],
+    "Synthesist agent": [
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Oracle agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Secretary agent",
+        "common_words": [
+          "agent"
+        ]
+      }
+    ],
+    "Oracle agent": [
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Secretary agent",
+        "common_words": [
+          "agent"
+        ]
+      }
+    ],
+    "AI systems": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "systems"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "ai"
+        ]
+      }
+    ],
+    "agents and capabilities": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and",
+          "agents"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "real-time streaming system": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "streaming",
+          "real-time"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "system"
+        ]
+      }
+    ],
+    "persistent memory": [
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "persistent",
+          "memory"
+        ]
+      }
+    ],
+    "modes": [
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "modes"
+        ]
+      }
+    ],
+    "ICEBURG research platform": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "advanced AI system": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "ai",
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "ai",
+          "advanced",
+          "system"
+        ]
+      }
+    ],
+    "truth discovery and new knowledge": [
+      {
+        "topic": "deep knowledge discovery",
+        "common_words": [
+          "knowledge",
+          "discovery"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "new"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and",
+          "knowledge",
+          "discovery"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "capabilities": [
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      }
+    ],
+    "modular design": [
+      {
+        "topic": "software application design",
+        "common_words": [
+          "design"
+        ]
+      }
+    ],
+    "Secretary agent": [
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "agent"
+        ]
+      },
+      {
+        "topic": "Oracle agent",
+        "common_words": [
+          "agent"
+        ]
+      }
+    ],
+    "software development": [
+      {
+        "topic": "software application design",
+        "common_words": [
+          "software"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "development",
+          "software"
+        ]
+      }
+    ],
+    "science exploration": [
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "science"
+        ]
+      }
+    ],
+    "civilization-scale thinking": [
+      {
+        "topic": "Critical thinking",
+        "common_words": [
+          "thinking"
+        ]
+      }
+    ],
+    "multi-agent approach": [
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination",
+        "common_words": [
+          "multi-agent"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "multi-agent"
+        ]
+      }
+    ],
+    "new topic to research": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "new"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "black holes": [
+      {
+        "topic": "Black Holes",
+        "common_words": [
+          "black",
+          "holes"
+        ]
+      }
+    ],
+    "Black Holes": [
+      {
+        "topic": "black holes",
+        "common_words": [
+          "black",
+          "holes"
+        ]
+      }
+    ],
+    "Advanced AI research system": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "ai",
+          "system",
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "multi-agent coordination system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "system"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "ai",
+          "advanced",
+          "system"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Truth-finding and deep knowledge discovery": [
+      {
+        "topic": "truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "deep knowledge discovery",
+        "common_words": [
+          "knowledge",
+          "deep",
+          "discovery"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "deep"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and",
+          "truth-finding",
+          "deep"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and",
+          "knowledge",
+          "discovery"
+        ]
+      },
+      {
+        "topic": "truth-finding mission",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "truth-finding mission": [
+      {
+        "topic": "truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "truth-finding"
+        ]
+      }
+    ],
+    "Surveyor and Dissident collaboration": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and",
+          "surveyor",
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "Research question refinement": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "Validity and reliability of data": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "Critical thinking": [
+      {
+        "topic": "civilization-scale thinking",
+        "common_words": [
+          "thinking"
+        ]
+      }
     ]
   },
-  "last_built": "2025-12-30T05:03:12.522489"
+  "last_built": "2026-01-15T14:04:53.355861"
 }

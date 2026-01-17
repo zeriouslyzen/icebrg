@@ -20,7 +20,7 @@ def _generate_fallback_response(prompt: str, messages: list) -> str:
             break
     
     # Provide a helpful response indicating the system is in fallback mode
-    provider = os.getenv("ICEBURG_LLM_PROVIDER", "google").upper()
+    provider = os.getenv("ICEBURG_LLM_PROVIDER", "ollama").upper()
     if "research" in user_query.lower():
         return f"ICEBURG is currently running in fallback mode. For research queries, please ensure {provider} is properly configured. The system can still process structured data and perform basic analysis."
     elif "analysis" in user_query.lower():
@@ -244,7 +244,7 @@ def chat_complete(
         )
     except Exception as e:
         # No fallback - raise the error directly
-        primary_provider = getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER", "google")
+        primary_provider = getattr(cfg, "llm_provider", None) or os.getenv("ICEBURG_LLM_PROVIDER", "ollama")
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Primary provider ({primary_provider}) failed: {e}. No fallback available.")

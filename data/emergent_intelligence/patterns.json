@@ -1,20 +1,20 @@
 {
   "word_frequency": {
-    "applied": 4,
-    "40": 4,
-    "70": 4,
-    "second": 4,
-    "pause": 4,
-    "points": 4,
-    "between": 4,
-    "agent": 4,
-    "layers": 4,
-    "of": 8,
-    "systematic": 4,
-    "pursuit": 4,
-    "truth": 4,
-    "regardless": 4,
-    "barriers": 4
+    "applied": 15,
+    "40": 15,
+    "70": 15,
+    "second": 15,
+    "pause": 15,
+    "points": 15,
+    "between": 15,
+    "agent": 15,
+    "layers": 15,
+    "of": 30,
+    "systematic": 15,
+    "pursuit": 15,
+    "truth": 15,
+    "regardless": 15,
+    "barriers": 15
   },
   "complexity_distribution": {}
 }
