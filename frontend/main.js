@@ -3719,7 +3719,7 @@ async function sendQuery() {
                 }, 5000);
             } catch (sendError) {
                 console.error('❌ Error sending via WebSocket:', sendError);
-                showToast('Error sending query. Trying HTTP fallback...', 'warning');
+                // showToast('Error sending query. Trying HTTP fallback...', 'warning'); // Disabled - too noisy
                 // Fall through to HTTP fallback
             }
         } else if (ws && ws.readyState === WebSocket.OPEN && !isConnected) {
@@ -3748,14 +3748,14 @@ async function sendQuery() {
                         console.log('✅ Query sent via WebSocket after confirmation');
                     } catch (sendError) {
                         console.error('❌ Error sending after confirmation:', sendError);
-                        showToast('Error sending query. Trying HTTP fallback...', 'warning');
+                        // showToast('Error sending query. Trying HTTP fallback...', 'warning'); // Disabled - too noisy
                         clearInterval(waitForConnection);
                         // Fall through to HTTP fallback
                     }
                 } else if (waitCount >= 20) { // 2 seconds max wait
                     clearInterval(waitForConnection);
                     console.warn('⚠️ Connection not confirmed after 2 seconds, using HTTP fallback');
-                    showToast('Connection timeout. Using HTTP fallback...', 'warning');
+                    // showToast('Connection timeout. Using HTTP fallback...', 'warning'); // Disabled - too noisy
                     // Fall through to HTTP fallback
                 }
             }, 100);
@@ -3951,7 +3951,7 @@ async function sendQuery() {
             }
 
             // Fallback to regular HTTP (non-streaming)
-            showToast('Using HTTP fallback (non-streaming)', 'warning');
+            // showToast('Using HTTP fallback (non-streaming)', 'warning'); // Disabled - too noisy
 
             // Include conversation_id for context continuity
             const conversationId = localStorage.getItem('iceburg_conversation_id') || 'current';
