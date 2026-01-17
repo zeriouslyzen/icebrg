@@ -54,6 +54,30 @@
       "destination": "/app.html"
     },
     {
+      "source": "/research",
+      "destination": "/research.html"
+    },
+    {
+      "source": "/wiki",
+      "destination": "/wiki.html"
+    },
+    {
+      "source": "/study",
+      "destination": "/study.html"
+    },
+    {
+      "source": "/features",
+      "destination": "/features.html"
+    },
+    {
+      "source": "/protocols",
+      "destination": "/protocols.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -290,7 +290,7 @@ function initWebSocket() {
             // The "connected" message from server will confirm full readiness
             isConnected = true; // Set immediately on open
             updateConnectionStatus(true);
-            showToast('Connecting to ICEBURG...', 'info');
+            // showToast('Connecting to ICEBURG...', 'info'); // Disabled - too noisy
 
             // Attach neural network to WebSocket
             if (neuralNetwork) {
@@ -434,7 +434,7 @@ function initWebSocket() {
             updateConnectionStatus(false);
 
             // Show more detailed error message with URL
-            showToast(`WebSocket connection error to ${FINAL_WS_URL}. Check console for details.`, 'error');
+            // showToast(`WebSocket connection error to ${FINAL_WS_URL}. Check console for details.`, 'error'); // Disabled - too noisy
 
             // Don't immediately switch to fallback - try reconnecting first
             // Only switch to fallback after MAX_RECONNECT_ATTEMPTS failures
@@ -492,7 +492,7 @@ function initWebSocket() {
             const baseDelay = isNetworkAccess ? 1000 : 2000;
             const delay = Math.min(baseDelay * reconnectAttempts, isNetworkAccess ? 5000 : 10000); // Faster reconnection for network
             console.log(`🔄 Reconnecting in ${delay}ms (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
-            showToast(`Disconnected. Reconnecting... (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`, 'warning');
+            // showToast(`Disconnected. Reconnecting... (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`, 'warning'); // Disabled - too noisy
             reconnectTimeout = setTimeout(() => {
                 if (!useFallback && !isConnecting) {
                     console.log('🔄 Attempting reconnection...');
@@ -528,7 +528,7 @@ function enableFallback() {
     useFallback = true;
     isConnected = false;
     updateConnectionStatus(false);
-    showToast('Using HTTP fallback mode', 'info');
+    // showToast('Using HTTP fallback mode', 'info'); // Disabled - too noisy
 
     // Close WebSocket if open
     if (ws) {
@@ -6234,6 +6234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Only retry if not already connecting and not connected
     let retryTimeout = setTimeout(() => {
         if (!isConnected && !isConnecting && (!ws || ws.readyState !== WebSocket.OPEN)) {
+            // Silently retry without notification popup
             console.log('🔄 WebSocket not connected after 3s, retrying...');
             initWebSocket();
         }
