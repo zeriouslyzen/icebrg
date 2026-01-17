@@ -281,7 +281,7 @@
         <div class="celestial-glow"></div>
     </div>
     <div class="wiki-container">
-        <div class="back-nav"><a href="/" class="back-link">Return to Interface</a></div>
+        <div class="back-nav"><a href="/app" class="back-link">Return to Interface</a></div>
         <header class="wiki-hero">
             <h1 class="wiki-title">ICEBURG Intelligence Wiki</h1>
             <p class="wiki-subtitle">Complete technical index of the ICEBURG autonomous architecture. Documenting 230+
@@ -319,7 +319,8 @@
                     <div class="wiki-nav-title">Infrastructure</div><a href="#monitoring"
                         class="wiki-nav-item">Monitoring (21)</a><a href="#security" class="wiki-nav-item">Security
                         (12)</a><a href="#core" class="wiki-nav-item">Core (10)</a><a href="#memory"
-                        class="wiki-nav-item">Memory (6)</a><a href="#protocol" class="wiki-nav-item">Protocol (38+)</a><a href="#frameworks" class="wiki-nav-item">Frameworks</a>
+                        class="wiki-nav-item">Memory (6)</a><a href="#protocol" class="wiki-nav-item">Protocol
+                        (38+)</a><a href="#frameworks" class="wiki-nav-item">Frameworks</a>
                 </div>
                 <div class="wiki-nav-section">
                     <div class="wiki-nav-title">Multimodal</div><a href="#voice" class="wiki-nav-item">Voice (13)</a><a
@@ -943,400 +944,563 @@
 
                 <section id="frameworks" class="domain-section">
                     <div class="domain-header">
-                        <h2 class="domain-title">Frameworks & Technology Stack</h2><span class="domain-count">Local & Internal</span>
+                        <h2 class="domain-title">Frameworks & Technology Stack</h2><span class="domain-count">Local &
+                            Internal</span>
                     </div>
-                    <p class="domain-desc">ICEBURG uses both external local frameworks and custom-built internal tech stacks. This section documents all frameworks used for AI/ML operations, fine-tuning, model management, and custom systems.</p>
-                    
+                    <p class="domain-desc">ICEBURG uses both external local frameworks and custom-built internal tech
+                        stacks. This section documents all frameworks used for AI/ML operations, fine-tuning, model
+                        management, and custom systems.</p>
+
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Core AI/ML Frameworks</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Primary frameworks for AI/ML operations, fine-tuning, and model management.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Core AI/ML Frameworks</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Primary frameworks for AI/ML operations,
+                            fine-tuning, and model management.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">Ollama</span>
-                                <span class="module-desc">Primary LLM framework for local model inference. Runs dolphin-mistral, llama3.1:8b, qwen2.5, and other local models. Version: &gt;=0.2.1</span>
+                                <span class="module-desc">Primary LLM framework for local model inference. Runs
+                                    dolphin-mistral, llama3.1:8b, qwen2.5, and other local models. Version:
+                                    &gt;=0.2.1</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Transformers (Hugging Face)</span>
-                                <span class="module-desc">Model loading, tokenization, and training. Used in fine-tuning pipeline with AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer.</span>
+                                <span class="module-desc">Model loading, tokenization, and training. Used in fine-tuning
+                                    pipeline with AutoModelForCausalLM, AutoTokenizer, TrainingArguments,
+                                    Trainer.</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">PEFT</span>
-                                <span class="module-desc">Parameter-Efficient Fine-Tuning. LoRA/QLoRA fine-tuning with LoraConfig and get_peft_model for efficient model adaptation.</span>
+                                <span class="module-desc">Parameter-Efficient Fine-Tuning. LoRA/QLoRA fine-tuning with
+                                    LoraConfig and get_peft_model for efficient model adaptation.</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">PyTorch</span>
-                                <span class="module-desc">Deep learning backend. Used in quantum ML, reinforcement learning, computer vision, and voice processing. Version: &gt;=2.0.0, &lt;3.0.0</span>
+                                <span class="module-desc">Deep learning backend. Used in quantum ML, reinforcement
+                                    learning, computer vision, and voice processing. Version: &gt;=2.0.0,
+                                    &lt;3.0.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">ChromaDB</span>
-                                <span class="module-desc">Local vector database for semantic search and knowledge base retrieval. Version: &gt;=0.5.5</span>
+                                <span class="module-desc">Local vector database for semantic search and knowledge base
+                                    retrieval. Version: &gt;=0.5.5</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Sentence Transformers</span>
-                                <span class="module-desc">Semantic embeddings for search and RAG. Used in hybrid search pipeline. Version: &gt;=2.2.0</span>
+                                <span class="module-desc">Semantic embeddings for search and RAG. Used in hybrid search
+                                    pipeline. Version: &gt;=2.2.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Rank-BM25</span>
-                                <span class="module-desc">Lexical search (BM25 algorithm) for hybrid search combining BM25 + semantic search. Version: &gt;=0.2.2</span>
+                                <span class="module-desc">Lexical search (BM25 algorithm) for hybrid search combining
+                                    BM25 + semantic search. Version: &gt;=0.2.2</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">MLX</span>
-                                <span class="module-desc">Apple Silicon native acceleration for training. NOT INSTALLED - ICEBURG does not include MLX. Mentioned in documentation as recommended option. Status: External framework (not included, install separately if needed)</span>
+                                <span class="module-desc">Apple Silicon native acceleration for training. NOT INSTALLED
+                                    - ICEBURG does not include MLX. Mentioned in documentation as recommended option.
+                                    Status: External framework (not included, install separately if needed)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Unsloth</span>
-                                <span class="module-desc">Fast QLoRA training optimized for Apple Silicon. NOT INSTALLED - ICEBURG does not include Unsloth. Has export_for_unsloth() function to export data in Unsloth-compatible format for external use. Status: External framework (not included, install separately if needed)</span>
+                                <span class="module-desc">Fast QLoRA training optimized for Apple Silicon. NOT INSTALLED
+                                    - ICEBURG does not include Unsloth. Has export_for_unsloth() function to export data
+                                    in Unsloth-compatible format for external use. Status: External framework (not
+                                    included, install separately if needed)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Llama-Factory</span>
-                                <span class="module-desc">Comprehensive fine-tuning framework with multiple quantization options. NOT INSTALLED - ICEBURG does not include Llama-Factory. Has export_for_llama_factory() function to export data in Llama-Factory-compatible format for external use. Status: External framework (not included, install separately if needed)</span>
+                                <span class="module-desc">Comprehensive fine-tuning framework with multiple quantization
+                                    options. NOT INSTALLED - ICEBURG does not include Llama-Factory. Has
+                                    export_for_llama_factory() function to export data in Llama-Factory-compatible
+                                    format for external use. Status: External framework (not included, install
+                                    separately if needed)</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Backend Web & API Frameworks</h3>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Backend Web & API Frameworks</h3>
                         <p class="domain-desc" style="margin-bottom: 1.5rem;">Web frameworks and API infrastructure.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">FastAPI</span>
-                                <span class="module-desc">Modern async web framework for building APIs. Used for REST endpoints, WebSocket connections, and request routing. Version: &gt;=0.104.0</span>
+                                <span class="module-desc">Modern async web framework for building APIs. Used for REST
+                                    endpoints, WebSocket connections, and request routing. Version: &gt;=0.104.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Uvicorn</span>
-                                <span class="module-desc">ASGI server for FastAPI. Handles async request processing and WebSocket connections. Version: &gt;=0.24.0</span>
+                                <span class="module-desc">ASGI server for FastAPI. Handles async request processing and
+                                    WebSocket connections. Version: &gt;=0.24.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">AioHTTP</span>
-                                <span class="module-desc">Async HTTP client/server framework. Used for external API calls and health checks. Version: &gt;=3.9.0</span>
+                                <span class="module-desc">Async HTTP client/server framework. Used for external API
+                                    calls and health checks. Version: &gt;=3.9.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Requests</span>
-                                <span class="module-desc">Synchronous HTTP library. Used for web search, market data, and external API integration. Version: &gt;=2.31.0 (optional)</span>
+                                <span class="module-desc">Synchronous HTTP library. Used for web search, market data,
+                                    and external API integration. Version: &gt;=2.31.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Pydantic</span>
-                                <span class="module-desc">Data validation using Python type annotations. Used for API request/response models and configuration. Version: &gt;=2.8.0</span>
+                                <span class="module-desc">Data validation using Python type annotations. Used for API
+                                    request/response models and configuration. Version: &gt;=2.8.0</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Data Processing & Analysis</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Libraries for data manipulation, analysis, and processing.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Data Processing & Analysis</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Libraries for data manipulation, analysis,
+                            and processing.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">NumPy</span>
-                                <span class="module-desc">Fundamental package for numerical computing. Used across all ML modules for array operations. Version: &gt;=1.26.0</span>
+                                <span class="module-desc">Fundamental package for numerical computing. Used across all
+                                    ML modules for array operations. Version: &gt;=1.26.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Pandas</span>
-                                <span class="module-desc">Data manipulation and analysis. Used in trading, backtesting, market data processing, and performance tracking.</span>
+                                <span class="module-desc">Data manipulation and analysis. Used in trading, backtesting,
+                                    market data processing, and performance tracking.</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Pandas-TA</span>
-                                <span class="module-desc">Technical analysis library built on pandas. Used for trading indicators, market analysis, and signal generation.</span>
+                                <span class="module-desc">Technical analysis library built on pandas. Used for trading
+                                    indicators, market analysis, and signal generation.</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">NetworkX</span>
-                                <span class="module-desc">Graph and network analysis. Used for knowledge graphs, influence analysis, and network intelligence. Version: &gt;=3.2.1</span>
+                                <span class="module-desc">Graph and network analysis. Used for knowledge graphs,
+                                    influence analysis, and network intelligence. Version: &gt;=3.2.1</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">OrJSON</span>
-                                <span class="module-desc">Fast JSON serialization/deserialization. Used for high-performance JSON processing. Version: &gt;=3.10.0</span>
+                                <span class="module-desc">Fast JSON serialization/deserialization. Used for
+                                    high-performance JSON processing. Version: &gt;=3.10.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Python-dotenv</span>
-                                <span class="module-desc">Environment variable management. Loads configuration from .env files. Version: &gt;=1.0.1</span>
+                                <span class="module-desc">Environment variable management. Loads configuration from .env
+                                    files. Version: &gt;=1.0.1</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Click</span>
-                                <span class="module-desc">Command-line interface creation. Used for CLI tools and scripts. Version: &gt;=8.1.7</span>
+                                <span class="module-desc">Command-line interface creation. Used for CLI tools and
+                                    scripts. Version: &gt;=8.1.7</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Computer Vision</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for image processing, computer vision, and screen interaction.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Computer Vision</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for image processing, computer
+                            vision, and screen interaction.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">OpenCV (cv2)</span>
-                                <span class="module-desc">Computer vision library. Used for image processing, object detection, and camera operations. Version: &gt;=4.8.0 (optional)</span>
+                                <span class="module-desc">Computer vision library. Used for image processing, object
+                                    detection, and camera operations. Version: &gt;=4.8.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Pillow (PIL)</span>
-                                <span class="module-desc">Python Imaging Library. Used for image manipulation, format conversion, and processing. Version: &gt;=10.0.0 (optional)</span>
+                                <span class="module-desc">Python Imaging Library. Used for image manipulation, format
+                                    conversion, and processing. Version: &gt;=10.0.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">PyTesseract</span>
-                                <span class="module-desc">OCR (Optical Character Recognition) wrapper. Used for text extraction from images. Version: &gt;=0.3.10 (optional)</span>
+                                <span class="module-desc">OCR (Optical Character Recognition) wrapper. Used for text
+                                    extraction from images. Version: &gt;=0.3.10 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">MediaPipe</span>
-                                <span class="module-desc">Google's framework for building perception pipelines. Used for face detection and hand tracking (optional).</span>
+                                <span class="module-desc">Google's framework for building perception pipelines. Used for
+                                    face detection and hand tracking (optional).</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">PyAutoGUI</span>
-                                <span class="module-desc">Cross-platform GUI automation. Used for screen interaction and automation in computer vision engine.</span>
+                                <span class="module-desc">Cross-platform GUI automation. Used for screen interaction and
+                                    automation in computer vision engine.</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">MSS</span>
-                                <span class="module-desc">Multiple Screen Shot library. Fast screen capture for computer vision operations.</span>
+                                <span class="module-desc">Multiple Screen Shot library. Fast screen capture for computer
+                                    vision operations.</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Quantum Computing</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for quantum machine learning and quantum computing.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Quantum Computing</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for quantum machine learning
+                            and quantum computing.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">PennyLane</span>
-                                <span class="module-desc">Quantum machine learning framework. Used for quantum circuits, quantum-classical hybrid models, and quantum optimization. Version: &gt;=0.43.0</span>
+                                <span class="module-desc">Quantum machine learning framework. Used for quantum circuits,
+                                    quantum-classical hybrid models, and quantum optimization. Version:
+                                    &gt;=0.43.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Qiskit</span>
-                                <span class="module-desc">IBM's quantum computing framework. Used for quantum circuit design and execution. Version: &gt;=1.0.0 (optional)</span>
+                                <span class="module-desc">IBM's quantum computing framework. Used for quantum circuit
+                                    design and execution. Version: &gt;=1.0.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Cirq</span>
-                                <span class="module-desc">Google's quantum computing framework. Used for quantum circuit simulation. Version: &gt;=1.3.0 (optional)</span>
+                                <span class="module-desc">Google's quantum computing framework. Used for quantum circuit
+                                    simulation. Version: &gt;=1.3.0 (optional)</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Reinforcement Learning</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for RL agent training and environments.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Reinforcement Learning</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Frameworks for RL agent training and
+                            environments.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">Stable-Baselines3</span>
-                                <span class="module-desc">Reinforcement learning algorithms (PPO, SAC) for trading agent training. Version: &gt;=2.0.0</span>
+                                <span class="module-desc">Reinforcement learning algorithms (PPO, SAC) for trading agent
+                                    training. Version: &gt;=2.0.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Gymnasium</span>
-                                <span class="module-desc">RL environments for trading and agent training. Fork of OpenAI Gym with improved API. Version: &gt;=1.0.0</span>
+                                <span class="module-desc">RL environments for trading and agent training. Fork of OpenAI
+                                    Gym with improved API. Version: &gt;=1.0.0</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Visualization</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Libraries for data visualization and plotting.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Visualization</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Libraries for data visualization and
+                            plotting.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">Matplotlib</span>
-                                <span class="module-desc">Comprehensive plotting library. Used for scientific visualizations and charts. Version: &gt;=3.8.0 (optional)</span>
+                                <span class="module-desc">Comprehensive plotting library. Used for scientific
+                                    visualizations and charts. Version: &gt;=3.8.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Plotly</span>
-                                <span class="module-desc">Interactive graphing library. Used for interactive charts and dashboards. Version: &gt;=5.18.0 (optional)</span>
+                                <span class="module-desc">Interactive graphing library. Used for interactive charts and
+                                    dashboards. Version: &gt;=5.18.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Seaborn</span>
-                                <span class="module-desc">Statistical data visualization. High-level interface for matplotlib. Used for data analysis visualizations.</span>
+                                <span class="module-desc">Statistical data visualization. High-level interface for
+                                    matplotlib. Used for data analysis visualizations.</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Frontend Frameworks & Libraries</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">JavaScript libraries and frameworks used in the web frontend.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Frontend Frameworks & Libraries</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">JavaScript libraries and frameworks used
+                            in the web frontend.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">Vite</span>
-                                <span class="module-desc">Build tool and dev server. Fast HMR, optimized production builds. Version: ^5.0.0</span>
+                                <span class="module-desc">Build tool and dev server. Fast HMR, optimized production
+                                    builds. Version: ^5.0.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Marked</span>
-                                <span class="module-desc">Markdown parser and compiler. Used for rendering markdown content in chat. Version: 17.0.0 (CDN)</span>
+                                <span class="module-desc">Markdown parser and compiler. Used for rendering markdown
+                                    content in chat. Version: 17.0.0 (CDN)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Highlight.js</span>
-                                <span class="module-desc">Syntax highlighting for code blocks. Supports 190+ languages. Version: 11.11.1 (CDN)</span>
+                                <span class="module-desc">Syntax highlighting for code blocks. Supports 190+ languages.
+                                    Version: 11.11.1 (CDN)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">KaTeX</span>
-                                <span class="module-desc">Fast math typesetting library. Renders LaTeX equations in markdown. Version: 0.16.25 (CDN)</span>
+                                <span class="module-desc">Fast math typesetting library. Renders LaTeX equations in
+                                    markdown. Version: 0.16.25 (CDN)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Chart.js</span>
-                                <span class="module-desc">Simple yet flexible charting library. Used in admin dashboard for metrics visualization. Version: ^4.4.0</span>
+                                <span class="module-desc">Simple yet flexible charting library. Used in admin dashboard
+                                    for metrics visualization. Version: ^4.4.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">D3.js</span>
-                                <span class="module-desc">Data-driven documents. Powerful visualization library for complex charts. Version: ^7.8.5</span>
+                                <span class="module-desc">Data-driven documents. Powerful visualization library for
+                                    complex charts. Version: ^7.8.5</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Three.js</span>
-                                <span class="module-desc">3D graphics library. Used for 3D visualizations and interactive graphics. Version: ^0.158.0</span>
+                                <span class="module-desc">3D graphics library. Used for 3D visualizations and
+                                    interactive graphics. Version: ^0.158.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Plotly.js</span>
-                                <span class="module-desc">Interactive charting library for JavaScript. Used for advanced data visualizations. Version: ^2.27.0</span>
+                                <span class="module-desc">Interactive charting library for JavaScript. Used for advanced
+                                    data visualizations. Version: ^2.27.0</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Cytoscape.js</span>
-                                <span class="module-desc">Graph theory library for visualization. Used for network graphs and knowledge visualization. Version: ^3.28.1</span>
+                                <span class="module-desc">Graph theory library for visualization. Used for network
+                                    graphs and knowledge visualization. Version: ^3.28.1</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Vis-Network</span>
-                                <span class="module-desc">Network visualization library. Used for interactive network diagrams. Version: ^9.1.9</span>
+                                <span class="module-desc">Network visualization library. Used for interactive network
+                                    diagrams. Version: ^9.1.9</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Mermaid.js</span>
-                                <span class="module-desc">Diagramming and charting tool. Used for generating diagrams from text. Version: 10.6.1 (CDN, admin page)</span>
+                                <span class="module-desc">Diagramming and charting tool. Used for generating diagrams
+                                    from text. Version: 10.6.1 (CDN, admin page)</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">External AI Providers (Optional)</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Cloud AI providers for frontier models (optional dependencies).</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            External AI Providers (Optional)</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Cloud AI providers for frontier models
+                            (optional dependencies).</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">OpenAI</span>
-                                <span class="module-desc">OpenAI API client. Used for GPT-4, GPT-3.5, and other OpenAI models. Version: &gt;=1.12.0 (optional)</span>
+                                <span class="module-desc">OpenAI API client. Used for GPT-4, GPT-3.5, and other OpenAI
+                                    models. Version: &gt;=1.12.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Anthropic</span>
-                                <span class="module-desc">Anthropic API client. Used for Claude models. Version: &gt;=0.18.0 (optional)</span>
+                                <span class="module-desc">Anthropic API client. Used for Claude models. Version:
+                                    &gt;=0.18.0 (optional)</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Google Generative AI</span>
-                                <span class="module-desc">Google AI API client. Used for Gemini models. Version: &gt;=0.3.0 (optional)</span>
+                                <span class="module-desc">Google AI API client. Used for Gemini models. Version:
+                                    &gt;=0.3.0 (optional)</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Caching & Storage</h3>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Caching & Storage</h3>
                         <p class="domain-desc" style="margin-bottom: 1.5rem;">Caching and storage solutions.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">Redis</span>
-                                <span class="module-desc">In-memory data structure store. Used for intelligent semantic caching and fast data access (optional).</span>
+                                <span class="module-desc">In-memory data structure store. Used for intelligent semantic
+                                    caching and fast data access (optional).</span>
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 3rem;">
-                        <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">Internal Custom Frameworks</h3>
-                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Custom-built internal tech stacks and frameworks created specifically for ICEBURG. 23+ unique systems.</p>
+                        <h3
+                            style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-primary);">
+                            Internal Custom Frameworks</h3>
+                        <p class="domain-desc" style="margin-bottom: 1.5rem;">Custom-built internal tech stacks and
+                            frameworks created specifically for ICEBURG. 23+ unique systems.</p>
                         <div class="module-list">
                             <div class="module-item">
                                 <span class="module-name">IIR System</span>
-                                <span class="module-desc">ICEBURG Intermediate Representation - Complete compilation framework with multi-backend support (C, CUDA, WASM, LLVM, OpenCL). Includes optimizer, contract language, property testing, visual backends (HTML5, React, SwiftUI), and TSL. Location: src/iceburg/iir/</span>
+                                <span class="module-desc">ICEBURG Intermediate Representation - Complete compilation
+                                    framework with multi-backend support (C, CUDA, WASM, LLVM, OpenCL). Includes
+                                    optimizer, contract language, property testing, visual backends (HTML5, React,
+                                    SwiftUI), and TSL. Location: src/iceburg/iir/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Enhanced Protocol</span>
-                                <span class="module-desc">Custom multi-agent orchestration with 23 specialized execution agents, self-redesign engine, and deliberation system with 40-70 second reflection pauses. Location: src/iceburg/protocol/</span>
+                                <span class="module-desc">Custom multi-agent orchestration with 23 specialized execution
+                                    agents, self-redesign engine, and deliberation system with 40-70 second reflection
+                                    pauses. Location: src/iceburg/protocol/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Physiological Interface</span>
-                                <span class="module-desc">Human-AI-Earth consciousness integration system. Includes Earth Connection Interface (Schumann resonance 7.83 Hz), consciousness amplification, frequency synthesizer (432 Hz A4 tuning), and MacBook sensor integration. Location: src/iceburg/physiological_interface/</span>
+                                <span class="module-desc">Human-AI-Earth consciousness integration system. Includes
+                                    Earth Connection Interface (Schumann resonance 7.83 Hz), consciousness
+                                    amplification, frequency synthesizer (432 Hz A4 tuning), and MacBook sensor
+                                    integration. Location: src/iceburg/physiological_interface/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Suppression-Resistant Storage</span>
-                                <span class="module-desc">Custom storage framework with steganographic embedding, blockchain integration, and peer review verification for protecting suppressed research. Location: src/iceburg/suppression_resistant_storage.py</span>
+                                <span class="module-desc">Custom storage framework with steganographic embedding,
+                                    blockchain integration, and peer review verification for protecting suppressed
+                                    research. Location: src/iceburg/suppression_resistant_storage.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Enhanced Swarm Architecture</span>
-                                <span class="module-desc">Custom multi-agent orchestration with 6 swarm types (research, verification, synthesis, archaeology, contradiction, truth-finding). Semantic routing and dual-audit mechanism. Location: src/iceburg/agents/enhanced_swarm_architect.py</span>
+                                <span class="module-desc">Custom multi-agent orchestration with 6 swarm types (research,
+                                    verification, synthesis, archaeology, contradiction, truth-finding). Semantic
+                                    routing and dual-audit mechanism. Location:
+                                    src/iceburg/agents/enhanced_swarm_architect.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Instant Truth System</span>
-                                <span class="module-desc">Custom optimization framework with pattern recognition cache, verified insight recognition, suppression detection, breakthrough discovery, and smart routing. Location: src/iceburg/optimization/instant_truth_system.py</span>
+                                <span class="module-desc">Custom optimization framework with pattern recognition cache,
+                                    verified insight recognition, suppression detection, breakthrough discovery, and
+                                    smart routing. Location: src/iceburg/optimization/instant_truth_system.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Emergence Detection</span>
-                                <span class="module-desc">Custom emergence detection framework that detects novel patterns and behaviors, scores emergence (0.0-1.0), and spawns new agents when emergence &gt; 0.8. Location: src/iceburg/emergence/</span>
+                                <span class="module-desc">Custom emergence detection framework that detects novel
+                                    patterns and behaviors, scores emergence (0.0-1.0), and spawns new agents when
+                                    emergence &gt; 0.8. Location: src/iceburg/emergence/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Curiosity Engine</span>
-                                <span class="module-desc">Custom curiosity-driven research system with autonomous experimentation, red team testing, research direction, swarming, and truth-finding exploration. Location: src/iceburg/curiosity/</span>
+                                <span class="module-desc">Custom curiosity-driven research system with autonomous
+                                    experimentation, red team testing, research direction, swarming, and truth-finding
+                                    exploration. Location: src/iceburg/curiosity/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Global Workspace System</span>
-                                <span class="module-desc">Custom consciousness integration framework with unified awareness, shared knowledge across agents, and field-aware routing. Location: src/iceburg/global_workspace.py</span>
+                                <span class="module-desc">Custom consciousness integration framework with unified
+                                    awareness, shared knowledge across agents, and field-aware routing. Location:
+                                    src/iceburg/global_workspace.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Micro Agent Swarm</span>
-                                <span class="module-desc">Custom distributed processing system with ThreadPoolExecutor management, load balancing, result aggregation, and multiple agent types (Ultra-Fast, Balanced, Meta-Optimized, Custom). Location: src/iceburg/micro_agent_swarm.py</span>
+                                <span class="module-desc">Custom distributed processing system with ThreadPoolExecutor
+                                    management, load balancing, result aggregation, and multiple agent types
+                                    (Ultra-Fast, Balanced, Meta-Optimized, Custom). Location:
+                                    src/iceburg/micro_agent_swarm.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Dynamic Agent Factory</span>
-                                <span class="module-desc">Runtime agent creation system with LLM-based code generation, emergence-based spawning, and agent evolution. Location: src/iceburg/agents/dynamic_agent_factory.py</span>
+                                <span class="module-desc">Runtime agent creation system with LLM-based code generation,
+                                    emergence-based spawning, and agent evolution. Location:
+                                    src/iceburg/agents/dynamic_agent_factory.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Elite Agent Factory</span>
-                                <span class="module-desc">High-performance agent creation system optimized for speed and accuracy. Specialized agent types with fast execution paths. Location: src/iceburg/agents/elite_agent_factory.py</span>
+                                <span class="module-desc">High-performance agent creation system optimized for speed and
+                                    accuracy. Specialized agent types with fast execution paths. Location:
+                                    src/iceburg/agents/elite_agent_factory.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Evolutionary Factory</span>
-                                <span class="module-desc">Agent evolution system using genetic algorithms. Includes fitness evaluation, mutation, crossover, and performance-based selection. Location: src/iceburg/agents/evolutionary_factory.py</span>
+                                <span class="module-desc">Agent evolution system using genetic algorithms. Includes
+                                    fitness evaluation, mutation, crossover, and performance-based selection. Location:
+                                    src/iceburg/agents/evolutionary_factory.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Self-Redesign Engine</span>
-                                <span class="module-desc">System that analyzes and redesigns ICEBURG's own architecture using a 7-step framework for autonomous improvement. Includes architecture analysis, capability assessment, redesign proposals, and implementation planning. Location: src/iceburg/protocol/execution/agents/self_redesign_engine.py</span>
+                                <span class="module-desc">System that analyzes and redesigns ICEBURG's own architecture
+                                    using a 7-step framework for autonomous improvement. Includes architecture analysis,
+                                    capability assessment, redesign proposals, and implementation planning. Location:
+                                    src/iceburg/protocol/execution/agents/self_redesign_engine.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Enhanced Deliberation Protocol</span>
-                                <span class="module-desc">Custom truth-seeking methodology with deep reflection pauses (40-70 seconds), contradiction hunting, meta-pattern detection, cross-domain synthesis, and 7-step suppression detection. Location: src/iceburg/research/methodology_analyzer.py</span>
+                                <span class="module-desc">Custom truth-seeking methodology with deep reflection pauses
+                                    (40-70 seconds), contradiction hunting, meta-pattern detection, cross-domain
+                                    synthesis, and 7-step suppression detection. Location:
+                                    src/iceburg/research/methodology_analyzer.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Hybrid Search Pipeline</span>
-                                <span class="module-desc">Custom search framework combining BM25 + semantic search with neural reranking, real-time web integration (Brave Search, DuckDuckGo, arXiv), and citation system. Location: src/iceburg/search/search_answer_pipeline.py</span>
+                                <span class="module-desc">Custom search framework combining BM25 + semantic search with
+                                    neural reranking, real-time web integration (Brave Search, DuckDuckGo, arXiv), and
+                                    citation system. Location: src/iceburg/search/search_answer_pipeline.py</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">10-Layer Memory Architecture</span>
-                                <span class="module-desc">Custom unified memory system with emotional memory, RAG integration, persistent API, continuum memory, elite memory integration, hierarchical organization, and Redis-backed fast cache. Location: src/iceburg/memory/</span>
+                                <span class="module-desc">Custom unified memory system with emotional memory, RAG
+                                    integration, persistent API, continuum memory, elite memory integration,
+                                    hierarchical organization, and Redis-backed fast cache. Location:
+                                    src/iceburg/memory/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Validation & Quality Systems</span>
-                                <span class="module-desc">Custom validation frameworks including hallucination detector, multi-stage validation pipeline, and automated quality assurance. Location: src/iceburg/validation/</span>
+                                <span class="module-desc">Custom validation frameworks including hallucination detector,
+                                    multi-stage validation pipeline, and automated quality assurance. Location:
+                                    src/iceburg/validation/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Governance & Compliance Systems</span>
-                                <span class="module-desc">Custom governance framework with data policy, constitution system, automated compliance checking, privacy by design, and GDPR compliance. Location: src/iceburg/governance/, src/iceburg/compliance/</span>
+                                <span class="module-desc">Custom governance framework with data policy, constitution
+                                    system, automated compliance checking, privacy by design, and GDPR compliance.
+                                    Location: src/iceburg/governance/, src/iceburg/compliance/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Business & Financial Systems</span>
-                                <span class="module-desc">Custom business framework with agent wallets, payment processor, revenue tracker, and comprehensive trading system. Location: src/iceburg/business/, src/iceburg/trading/</span>
+                                <span class="module-desc">Custom business framework with agent wallets, payment
+                                    processor, revenue tracker, and comprehensive trading system. Location:
+                                    src/iceburg/business/, src/iceburg/trading/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Civilization Simulation System</span>
-                                <span class="module-desc">Custom AGI civilization framework with world model, agent society, persistent agents, and reputation system. Location: src/iceburg/civilization/</span>
+                                <span class="module-desc">Custom AGI civilization framework with world model, agent
+                                    society, persistent agents, and reputation system. Location:
+                                    src/iceburg/civilization/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Quantum-Classical Hybrid Framework</span>
-                                <span class="module-desc">Custom quantum ML framework with Variational Quantum Circuits, quantum kernels, hybrid training, and quantum GAN. Location: src/iceburg/quantum/</span>
+                                <span class="module-desc">Custom quantum ML framework with Variational Quantum Circuits,
+                                    quantum kernels, hybrid training, and quantum GAN. Location:
+                                    src/iceburg/quantum/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Custom RL Framework</span>
-                                <span class="module-desc">Custom reinforcement learning system with PPO/SAC traders, optimized training, vectorized environments, experience replay, and custom trading environments. Location: src/iceburg/rl/</span>
+                                <span class="module-desc">Custom reinforcement learning system with PPO/SAC traders,
+                                    optimized training, vectorized environments, experience replay, and custom trading
+                                    environments. Location: src/iceburg/rl/</span>
                             </div>
                             <div class="module-item">
                                 <span class="module-name">Visual Contracts System</span>
-                                <span class="module-desc">25+ validators for WCAG AA compliance, CSP enforcement, and automated accessibility checking. Location: src/iceburg/iir/visual_contracts.py</span>
+                                <span class="module-desc">25+ validators for WCAG AA compliance, CSP enforcement, and
+                                    automated accessibility checking. Location:
+                                    src/iceburg/iir/visual_contracts.py</span>
                             </div>
                         </div>
                     </div>
 
-                    <div style="margin-top: 3rem; padding: 1.5rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem;">Documentation</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem;">
-                            <strong>Local Frameworks:</strong> See <code style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/LOCAL_FRAMEWORKS.md</code> for complete list of external frameworks.
+                    <div
+                        style="margin-top: 3rem; padding: 1.5rem; background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: 8px;">
+                        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem;">Documentation
+                        </h3>
+                        <p
+                            style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem;">
+                            <strong>Local Frameworks:</strong> See <code
+                                style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/LOCAL_FRAMEWORKS.md</code>
+                            for complete list of external frameworks.
                         </p>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-                            <strong>Internal Frameworks:</strong> See <code style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/INTERNAL_TECH_STACKS.md</code> for detailed documentation of custom-built systems.
+                        <p
+                            style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
+                            <strong>Internal Frameworks:</strong> See <code
+                                style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/INTERNAL_TECH_STACKS.md</code>
+                            for detailed documentation of custom-built systems.
                         </p>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem;">
-                            <strong>Fine-Tuning Roadmap:</strong> See <code style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/planning/DOLPHIN_MISTRAL_FINETUNING_ROADMAP.md</code> for details on using MLX, Unsloth, and Llama-Factory externally for training on ICEBURG data.
+                        <p
+                            style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem;">
+                            <strong>Fine-Tuning Roadmap:</strong> See <code
+                                style="background: var(--bg-primary); padding: 0.2rem 0.4rem; border-radius: 4px;">docs/planning/DOLPHIN_MISTRAL_FINETUNING_ROADMAP.md</code>
+                            for details on using MLX, Unsloth, and Llama-Factory externally for training on ICEBURG
+                            data.
                         </p>
                         <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.6; margin-bottom: 0;">
-                            <em>Note: MLX, Unsloth, and Llama-Factory are external frameworks - ICEBURG exports data for use with these frameworks but does not include them as dependencies.</em>
+                            <em>Note: MLX, Unsloth, and Llama-Factory are external frameworks - ICEBURG exports data for
+                                use with these frameworks but does not include them as dependencies.</em>
                         </p>
                     </div>
                 </section>
