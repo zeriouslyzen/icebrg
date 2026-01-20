@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLOSSUS | Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #000000;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --bg-elevated: #222222;
+            --border-subtle: #2a2a2a;
+            --border-medium: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #707070;
+            --text-muted: #505050;
+            --critical: #ff3b30;
+            --warning: #ff9500;
+            --success: #34c759;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-void);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app {
+            display: grid;
+            grid-template-rows: 48px 1fr 32px;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-mark {
+            width: 24px;
+            height: 24px;
+            background: var(--text-primary);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .logo-text {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 3px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2px;
+        }
+
+        .nav-item {
+            padding: 6px 16px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .search-input {
+            width: 400px;
+            padding: 10px 14px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            padding: 10px 16px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--text-primary);
+            color: var(--bg-void);
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* Main Content */
+        .main {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            overflow: hidden;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-subtle);
+            overflow-y: auto;
+        }
+
+        .panel:last-child {
+            border-right: none;
+            border-left: 1px solid var(--border-subtle);
+        }
+
+        .panel-section {
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+        }
+
+        .panel-title {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .panel-value {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .panel-body {
+            padding: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 16px;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            margin-top: 6px;
+        }
+
+        .stat-change.up {
+            color: var(--success);
+        }
+
+        .stat-change.down {
+            color: var(--critical);
+        }
+
+        /* Entity List */
+        .entity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .entity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .entity-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-medium);
+        }
+
+        .entity-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .entity-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .entity-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .entity-meta {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .entity-badge {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .entity-badge.critical {
+            background: rgba(255, 59, 48, 0.15);
+            border-color: var(--critical);
+            color: var(--critical);
+        }
+
+        /* Center Area */
+        .center-area {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+        }
+
+        .center-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .center-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .center-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .btn.primary {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            color: var(--bg-void);
+        }
+
+        .btn.primary:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Data Table */
+        .data-table-container {
+            flex: 1;
+            overflow: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+        }
+
+        .data-table th:hover {
+            color: var(--text-secondary);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-tertiary);
+        }
+
+        .data-table .mono {
+            font-family: var(--font-mono);
+        }
+
+        .data-table .name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .risk-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .risk-tag.critical {
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--critical);
+        }
+
+        .risk-tag.high {
+            background: rgba(255, 149, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .risk-tag.medium {
+            background: rgba(90, 200, 250, 0.15);
+            color: #5ac8fa;
+        }
+
+        .risk-tag.low {
+            background: rgba(52, 199, 89, 0.15);
+            color: var(--success);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .action-card {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-medium);
+        }
+
+        .action-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .action-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Activity Feed */
+        .activity-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .activity-time {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .activity-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .activity-text strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-subtle);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .footer-group {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-subtle);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-mark"></div>
+                    <span class="logo-text">COLOSSUS</span>
+                </div>
+                <nav class="nav">
+                    <a href="/colossus/index.html" class="nav-item active">OVERVIEW</a>
+                    <a href="/colossus/graph.html" class="nav-item">GRAPH</a>
+                    <a href="/entity.html" class="nav-item">ENTITIES</a>
+                    <a href="/matrix.html" class="nav-item">MATRIX</a>
+                </nav>
+            </div>
+            <div class="header-center">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="ENTITY SEARCH">
+                    <button class="search-btn" onclick="executeSearch()">QUERY</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main -->
+        <main class="main">
+            <!-- Left Panel -->
+            <aside class="panel">
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">SYSTEM METRICS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-label">TOTAL ENTITIES</div>
+                                <div class="stat-value" id="totalEntities">--</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">RELATIONSHIPS</div>
+                                <div class="stat-value" id="totalRelations">--</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">PERSONS</div>
+                                <div class="stat-value" id="personCount">--</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">COMPANIES</div>
+                                <div class="stat-value" id="companyCount">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">QUICK ACTIONS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="quick-actions">
+                            <a href="/colossus/graph.html" class="action-card">
+                                <div class="action-title">GRAPH VIEW</div>
+                                <div class="action-desc">Network visualization</div>
+                            </a>
+                            <a href="/entity.html" class="action-card">
+                                <div class="action-title">SEARCH</div>
+                                <div class="action-desc">Entity lookup</div>
+                            </a>
+                            <a href="/matrix.html" class="action-card">
+                                <div class="action-title">MATRIX</div>
+                                <div class="action-desc">Data crawler</div>
+                            </a>
+                            <a href="#" class="action-card">
+                                <div class="action-title">REPORTS</div>
+                                <div class="action-desc">Generate dossier</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">HIGH RISK ENTITIES</span>
+                        <span class="panel-value" id="highRiskCount">--</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="entity-list" id="highRiskList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center -->
+            <div class="center-area">
+                <div class="center-header">
+                    <span class="center-title">RECENT ENTITY ACTIVITY</span>
+                    <div class="center-actions">
+                        <button class="btn" onclick="refreshData()">REFRESH</button>
+                        <a href="/colossus/graph.html" class="btn primary">OPEN GRAPH</a>
+                    </div>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ENTITY</th>
+                                <th>TYPE</th>
+                                <th>COUNTRY</th>
+                                <th>SANCTIONS</th>
+                                <th>RISK</th>
+                                <th>CONNECTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="entityTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <aside class="panel">
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">CENTRAL NODES</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="entity-list" id="centralNodes">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">SYSTEM ACTIVITY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="activityFeed">
+                            <div class="activity-item">
+                                <div class="activity-time">--:--:--</div>
+                                <div class="activity-text">System initialized</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-header">
+                        <span class="panel-title">DATA SOURCES</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="entity-list">
+                            <div class="entity-item">
+                                <div class="entity-icon">OS</div>
+                                <div class="entity-info">
+                                    <div class="entity-name">OPENSANCTIONS</div>
+                                    <div class="entity-meta">1.5M ENTITIES</div>
+                                </div>
+                                <div class="entity-badge">ACTIVE</div>
+                            </div>
+                            <div class="entity-item">
+                                <div class="entity-icon">FE</div>
+                                <div class="entity-info">
+                                    <div class="entity-name">FEC CAMPAIGN</div>
+                                    <div class="entity-meta">PENDING</div>
+                                </div>
+                                <div class="entity-badge">QUEUE</div>
+                            </div>
+                            <div class="entity-item">
+                                <div class="entity-icon">IC</div>
+                                <div class="entity-info">
+                                    <div class="entity-name">ICIJ OFFSHORE</div>
+                                    <div class="entity-meta">PENDING</div>
+                                </div>
+                                <div class="entity-badge">QUEUE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-group">
+                <span>COLOSSUS INTELLIGENCE PLATFORM v2.0</span>
+                <span>CLASSIFICATION: INTERNAL</span>
+            </div>
+            <div class="footer-group">
+                <span id="timestamp">--</span>
+                <span>BACKEND: <span id="backendStatus">--</span></span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE = '/api/colossus';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadCentralNodes();
+            loadHighRiskEntities();
+            updateTimestamp();
+            setInterval(updateTimestamp, 1000);
+
+            document.getElementById('searchInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') executeSearch();
+            });
+        });
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const data = await response.json();
+
+                document.getElementById('totalEntities').textContent = formatNumber(data.entities?.total || 0);
+                document.getElementById('totalRelations').textContent = formatNumber(data.relationships?.total || 0);
+                document.getElementById('personCount').textContent = formatNumber(data.entities?.by_type?.person || 0);
+                document.getElementById('companyCount').textContent = formatNumber(data.entities?.by_type?.company || 0);
+                document.getElementById('backendStatus').textContent = (data.backend || 'UNKNOWN').toUpperCase();
+
+                addActivity('Statistics loaded: ' + formatNumber(data.entities?.total || 0) + ' entities');
+            } catch (error) {
+                console.error('Stats load failed:', error);
+                document.getElementById('backendStatus').textContent = 'OFFLINE';
+            }
+        }
+
+        async function loadCentralNodes() {
+            try {
+                const response = await fetch(`${API_BASE}/central?measure=degree&limit=8`);
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    document.getElementById('centralNodes').innerHTML = data.results.map(entity => `
+                        <a href="/colossus/graph.html?id=${entity.id}" class="entity-item">
+                            <div class="entity-icon">${entity.type.charAt(0).toUpperCase()}</div>
+                            <div class="entity-info">
+                                <div class="entity-name">${truncate(entity.name, 22)}</div>
+                                <div class="entity-meta">${entity.type.toUpperCase()}</div>
+                            </div>
+                            <div class="entity-badge">${entity.score.toFixed(0)}</div>
+                        </a>
+                    `).join('');
+
+                    // Also populate table
+                    document.getElementById('entityTableBody').innerHTML = data.results.map(entity => {
+                        const risk = entity.sanctions_count > 5 ? 'critical' :
+                            entity.sanctions_count > 2 ? 'high' :
+                                entity.sanctions_count > 0 ? 'medium' : 'low';
+                        return `
+                            <tr onclick="window.location='/colossus/graph.html?id=${entity.id}'" style="cursor: pointer;">
+                                <td class="name">${truncate(entity.name, 28)}</td>
+                                <td class="mono">${entity.type.toUpperCase()}</td>
+                                <td class="mono">--</td>
+                                <td class="mono">${entity.sanctions_count || 0}</td>
+                                <td><span class="risk-tag ${risk}">${risk.toUpperCase()}</span></td>
+                                <td class="mono">${entity.score.toFixed(0)}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    document.getElementById('centralNodes').innerHTML = '<div style="color: var(--text-muted); padding: 8px 0;">NO DATA</div>';
+                }
+            } catch (error) {
+                console.error('Central nodes load failed:', error);
+            }
+        }
+
+        async function loadHighRiskEntities() {
+            try {
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: 'sanction', limit: 5 })
+                });
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    document.getElementById('highRiskCount').textContent = data.count;
+                    document.getElementById('highRiskList').innerHTML = data.results.map(entity => `
+                        <a href="/colossus/graph.html?id=${entity.id}" class="entity-item">
+                            <div class="entity-icon" style="border-color: var(--critical);">${entity.sanctions_count || 0}</div>
+                            <div class="entity-info">
+                                <div class="entity-name">${truncate(entity.name, 20)}</div>
+                                <div class="entity-meta">${entity.type.toUpperCase()}</div>
+                            </div>
+                            <div class="entity-badge critical">HIGH</div>
+                        </a>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('High risk load failed:', error);
+            }
+        }
+
+        function executeSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = `/colossus/graph.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function refreshData() {
+            loadStats();
+            loadCentralNodes();
+            loadHighRiskEntities();
+            addActivity('Data refresh triggered');
+        }
+
+        function addActivity(text) {
+            const feed = document.getElementById('activityFeed');
+            const now = new Date();
+            const time = now.toTimeString().substring(0, 8);
+
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            item.innerHTML = `
+                <div class="activity-time">${time}</div>
+                <div class="activity-text">${text}</div>
+            `;
+
+            feed.insertBefore(item, feed.firstChild);
+
+            // Keep only 10 items
+            while (feed.children.length > 10) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent =
+                now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function truncate(str, len) {
+            if (!str) return '';
+            return str.length > len ? str.substring(0, len) + '...' : str;
+        }
+    </script>
+</body>
+
+</html>

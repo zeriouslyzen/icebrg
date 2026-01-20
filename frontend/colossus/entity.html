@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLOSSUS | Entity Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #000000;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --bg-elevated: #222222;
+            --border-subtle: #2a2a2a;
+            --border-medium: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #707070;
+            --text-muted: #505050;
+            --critical: #ff3b30;
+            --warning: #ff9500;
+            --success: #34c759;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 56px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-mark {
+            width: 24px;
+            height: 24px;
+            background: var(--text-primary);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .logo-text {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 3px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .nav-item:hover {
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 48px 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-title {
+            font-size: 28px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: 4px;
+        }
+
+        .search-box {
+            display: flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            padding: 16px 28px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: var(--text-primary);
+            color: var(--bg-void);
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .search-btn:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Results */
+        .results-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 48px;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 24px;
+        }
+
+        .results-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .results-count {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .result-card:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-medium);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .result-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .result-id {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .result-type {
+            padding: 4px 10px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+        }
+
+        .result-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 16px;
+        }
+
+        .result-metric {
+            background: var(--bg-primary);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .metric-val {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-lbl {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .result-tag {
+            padding: 4px 8px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-tertiary);
+        }
+
+        .result-tag.sanction {
+            background: rgba(255, 59, 48, 0.1);
+            border-color: var(--critical);
+            color: var(--critical);
+        }
+
+        /* Entity Detail */
+        .entity-detail {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: none;
+        }
+
+        .entity-detail.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .detail-title {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .detail-type {
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .detail-id {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .detail-btn {
+            padding: 10px 18px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .detail-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .detail-btn.primary {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            color: var(--bg-void);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .detail-main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .detail-side {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .detail-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .section-body {
+            padding: 18px;
+        }
+
+        /* Properties List */
+        .prop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .prop-item {
+            display: flex;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .prop-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .prop-label {
+            width: 140px;
+            flex-shrink: 0;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .prop-value {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .prop-value.mono {
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        /* Sanctions List */
+        .sanction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sanction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-left: 3px solid var(--critical);
+        }
+
+        .sanction-name {
+            flex: 1;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .sanction-status {
+            font-size: 9px;
+            padding: 4px 8px;
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--critical);
+            text-transform: uppercase;
+        }
+
+        /* Risk Gauge */
+        .risk-gauge {
+            padding: 20px;
+            background: var(--bg-primary);
+            text-align: center;
+        }
+
+        .risk-score {
+            font-family: var(--font-mono);
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .risk-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+        }
+
+        .risk-critical {
+            color: var(--critical);
+        }
+
+        .risk-high {
+            color: var(--warning);
+        }
+
+        .risk-medium {
+            color: var(--text-secondary);
+        }
+
+        .risk-low {
+            color: var(--success);
+        }
+
+        .risk-bar-container {
+            margin-top: 16px;
+            height: 4px;
+            background: var(--bg-tertiary);
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 48px;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-medium);
+            border-top-color: var(--text-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .empty-desc {
+            font-size: 13px;
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 32px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-subtle);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .footer-group {
+            display: flex;
+            gap: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/colossus/index.html" class="logo">
+                <div class="logo-mark"></div>
+                <span class="logo-text">COLOSSUS</span>
+            </a>
+            <nav class="nav">
+                <a href="/colossus/index.html" class="nav-item">OVERVIEW</a>
+                <a href="/colossus/graph.html" class="nav-item">GRAPH</a>
+                <a href="/colossus/entity.html" class="nav-item active">ENTITIES</a>
+                <a href="/matrix.html" class="nav-item">MATRIX</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section" id="searchSection">
+        <h1 class="search-title">ENTITY INTELLIGENCE</h1>
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="SEARCH BY NAME, ID, OR ATTRIBUTE">
+            <button class="search-btn" onclick="executeSearch()">SEARCH</button>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+            <span class="results-title">SEARCH RESULTS</span>
+            <span class="results-count" id="resultsCount">0 MATCHES</span>
+        </div>
+        <div class="results-grid" id="resultsGrid">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- Entity Detail -->
+    <section class="entity-detail" id="entityDetail">
+        <!-- Populated by JS -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-group">
+            <span>COLOSSUS INTELLIGENCE PLATFORM</span>
+            <span>CLASSIFICATION: INTERNAL</span>
+        </div>
+        <div class="footer-group">
+            <span id="timestamp"></span>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = '/api/colossus';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTimestamp();
+            setInterval(updateTimestamp, 1000);
+
+            document.getElementById('searchInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') executeSearch();
+            });
+
+            // Check for entity ID in URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('id')) {
+                loadEntity(params.get('id'));
+            }
+        });
+
+        async function executeSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('entityDetail').classList.remove('active');
+            document.getElementById('resultsGrid').innerHTML = '<div class="loading"><div class="spinner"></div><span>SEARCHING</span></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, limit: 24 })
+                });
+                const data = await response.json();
+
+                document.getElementById('resultsCount').textContent = `${data.count || 0} MATCHES`;
+
+                if (data.results && data.results.length > 0) {
+                    renderResults(data.results);
+                } else {
+                    document.getElementById('resultsGrid').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-title">NO RESULTS</div>
+                            <div class="empty-desc">No entities match your search criteria</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                document.getElementById('resultsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-title">SEARCH FAILED</div>
+                        <div class="empty-desc">Unable to connect to database</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderResults(results) {
+            document.getElementById('resultsGrid').innerHTML = results.map(entity => {
+                const sanctionsCount = entity.sanctions_count || 0;
+                const countries = entity.countries || [];
+
+                return `
+                    <div class="result-card" onclick="loadEntity('${entity.id}')">
+                        <div class="result-header">
+                            <div>
+                                <div class="result-name">${entity.name}</div>
+                                <div class="result-id">${entity.id}</div>
+                            </div>
+                            <span class="result-type">${entity.type}</span>
+                        </div>
+                        <div class="result-metrics">
+                            <div class="result-metric">
+                                <div class="metric-val">${sanctionsCount}</div>
+                                <div class="metric-lbl">SANCTIONS</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="metric-val">${countries.length}</div>
+                                <div class="metric-lbl">COUNTRIES</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="metric-val">${entity.score?.toFixed(1) || '--'}</div>
+                                <div class="metric-lbl">RELEVANCE</div>
+                            </div>
+                        </div>
+                        <div class="result-tags">
+                            ${countries.slice(0, 3).map(c => `<span class="result-tag">${c}</span>`).join('')}
+                            ${sanctionsCount > 0 ? `<span class="result-tag sanction">SANCTIONED</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadEntity(entityId) {
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('entityDetail').classList.add('active');
+            document.getElementById('entityDetail').innerHTML = '<div class="loading"><div class="spinner"></div><span>LOADING ENTITY</span></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/entities/${entityId}`);
+                const entity = await response.json();
+
+                renderEntityDetail(entity);
+                window.history.pushState({}, '', `?id=${entityId}`);
+            } catch (error) {
+                console.error('Entity load failed:', error);
+                document.getElementById('entityDetail').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-title">ENTITY NOT FOUND</div>
+                        <div class="empty-desc">Unable to load entity data</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderEntityDetail(entity) {
+            const sanctionsCount = entity.sanctions?.length || 0;
+            const riskScore = Math.min(100, sanctionsCount * 12 + 15);
+            const riskLevel = sanctionsCount > 5 ? 'CRITICAL' : sanctionsCount > 2 ? 'HIGH' : sanctionsCount > 0 ? 'MEDIUM' : 'LOW';
+            const riskClass = riskLevel.toLowerCase();
+
+            document.getElementById('entityDetail').innerHTML = `
+                <div class="detail-header">
+                    <div>
+                        <h1 class="detail-title">${entity.name}</h1>
+                        <div class="detail-meta">
+                            <span class="detail-type">${entity.type}</span>
+                            <span class="detail-id">${entity.id}</span>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <a href="/colossus/graph.html?id=${entity.id}" class="detail-btn primary">VIEW IN GRAPH</a>
+                        <button class="detail-btn" onclick="goBack()">BACK TO SEARCH</button>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <div class="detail-main">
+                        <div class="detail-section">
+                            <div class="section-header">
+                                <span class="section-title">ENTITY PROPERTIES</span>
+                            </div>
+                            <div class="section-body">
+                                <div class="prop-list">
+                                    <div class="prop-item">
+                                        <span class="prop-label">NAME</span>
+                                        <span class="prop-value">${entity.name}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">TYPE</span>
+                                        <span class="prop-value mono">${entity.type?.toUpperCase()}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">COUNTRIES</span>
+                                        <span class="prop-value mono">${entity.countries?.join(', ') || '--'}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">SOURCES</span>
+                                        <span class="prop-value mono">${entity.sources?.join(', ') || '--'}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">RELATIONSHIPS</span>
+                                        <span class="prop-value mono">${entity.relationships?.length || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${entity.sanctions && entity.sanctions.length > 0 ? `
+                        <div class="detail-section">
+                            <div class="section-header">
+                                <span class="section-title">SANCTIONS LISTINGS</span>
+                            </div>
+                            <div class="section-body">
+                                <div class="sanction-list">
+                                    ${entity.sanctions.map(s => `
+                                        <div class="sanction-item">
+                                            <span class="sanction-name">${s}</span>
+                                            <span class="sanction-status">ACTIVE</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        ${entity.relationships && entity.relationships.length > 0 ? `
+                        <div class="detail-section">
+                            <div class="section-header">
+                                <span class="section-title">NETWORK CONNECTIONS</span>
+                            </div>
+                            <div class="section-body">
+                                <div class="prop-list">
+                                    ${entity.relationships.slice(0, 10).map(r => `
+                                        <div class="prop-item" style="cursor: pointer;" onclick="loadEntity('${r.target}')">
+                                            <span class="prop-label">${r.type}</span>
+                                            <span class="prop-value">${r.target}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="detail-side">
+                        <div class="detail-section">
+                            <div class="section-header">
+                                <span class="section-title">RISK ASSESSMENT</span>
+                            </div>
+                            <div class="section-body">
+                                <div class="risk-gauge">
+                                    <div class="risk-score">${riskScore}</div>
+                                    <div class="risk-label risk-${riskClass}">${riskLevel} RISK</div>
+                                    <div class="risk-bar-container">
+                                        <div class="risk-bar-fill" style="width: ${riskScore}%; background: ${riskScore > 70 ? 'var(--critical)' : riskScore > 40 ? 'var(--warning)' : 'var(--success)'};"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="section-header">
+                                <span class="section-title">ENTITY METRICS</span>
+                            </div>
+                            <div class="section-body">
+                                <div class="prop-list">
+                                    <div class="prop-item">
+                                        <span class="prop-label">SANCTIONS</span>
+                                        <span class="prop-value mono">${sanctionsCount}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">COUNTRIES</span>
+                                        <span class="prop-value mono">${entity.countries?.length || 0}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">CONNECTIONS</span>
+                                        <span class="prop-value mono">${entity.relationships?.length || 0}</span>
+                                    </div>
+                                    <div class="prop-item">
+                                        <span class="prop-label">DATA SOURCES</span>
+                                        <span class="prop-value mono">${entity.sources?.length || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function goBack() {
+            document.getElementById('searchSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('entityDetail').classList.remove('active');
+            window.history.pushState({}, '', window.location.pathname);
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent =
+                now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+        }
+    </script>
+</body>
+
+</html>
