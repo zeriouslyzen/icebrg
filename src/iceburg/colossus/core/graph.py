@@ -1,0 +1,636 @@
+"""
+COLOSSUS Graph Database Layer
+
+Neo4j integration for entity relationship storage and traversal.
+Supports:
+- Multi-hop relationship queries
+- Path finding between entities
+- Network centrality analysis
+- Temporal relationship tracking
+"""
+
+import logging
+from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+import json
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class GraphEntity:
+    """Entity node in the graph."""
+    id: str
+    name: str
+    entity_type: str  # person, company, organization, address
+    properties: Dict[str, Any] = field(default_factory=dict)
+    countries: List[str] = field(default_factory=list)
+    sanctions: List[str] = field(default_factory=list)
+    sources: List[str] = field(default_factory=list)
+    created_at: datetime = field(default_factory=datetime.now)
+    updated_at: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class GraphRelationship:
+    """Relationship edge in the graph."""
+    id: str
+    source_id: str
+    target_id: str
+    relationship_type: str  # OWNS, DIRECTOR_OF, FAMILY_OF, SANCTIONED_BY, etc.
+    properties: Dict[str, Any] = field(default_factory=dict)
+    confidence: float = 1.0
+    from_date: Optional[datetime] = None
+    to_date: Optional[datetime] = None
+    sources: List[str] = field(default_factory=list)
+
+
+class ColossusGraph:
+    """
+    Knowledge graph for COLOSSUS intelligence platform.
+    
+    Uses Neo4j for production, falls back to NetworkX for development.
+    Optimized for M4 Mac unified memory architecture.
+    """
+    
+    def __init__(
+        self,
+        neo4j_uri: Optional[str] = None,
+        neo4j_user: Optional[str] = None,
+        neo4j_password: Optional[str] = None,
+        use_memory: bool = True,
+    ):
+        """
+        Initialize graph database connection.
+        
+        Args:
+            neo4j_uri: Neo4j connection URI (bolt://localhost:7687)
+            neo4j_user: Neo4j username
+            neo4j_password: Neo4j password
+            use_memory: Use in-memory graph (NetworkX) if Neo4j unavailable
+        """
+        self.neo4j_uri = neo4j_uri
+        self.neo4j_user = neo4j_user
+        self.neo4j_password = neo4j_password
+        self.use_memory = use_memory
+        
+        self._driver = None
+        self._memory_graph = None
+        
+        self._initialize()
+    
+    def _initialize(self):
+        """Initialize graph backend."""
+        # Try Neo4j first
+        if self.neo4j_uri:
+            try:
+                from neo4j import GraphDatabase
+                self._driver = GraphDatabase.driver(
+                    self.neo4j_uri,
+                    auth=(self.neo4j_user, self.neo4j_password)
+                )
+                self._driver.verify_connectivity()
+                logger.info(f"✅ Connected to Neo4j: {self.neo4j_uri}")
+                return
+            except Exception as e:
+                logger.warning(f"⚠️ Neo4j unavailable: {e}")
+        
+        # Fall back to in-memory NetworkX graph
+        if self.use_memory:
+            try:
+                import networkx as nx
+                self._memory_graph = nx.MultiDiGraph()
+                logger.info("📊 Using in-memory NetworkX graph")
+            except ImportError:
+                logger.error("❌ NetworkX not installed")
+                raise
+    
+    @property
+    def is_neo4j(self) -> bool:
+        """Check if using Neo4j backend."""
+        return self._driver is not None
+    
+    # ==================== Entity Operations ====================
+    
+    def add_entity(self, entity: GraphEntity) -> str:
+        """Add or update an entity in the graph."""
+        if self.is_neo4j:
+            return self._neo4j_add_entity(entity)
+        else:
+            return self._memory_add_entity(entity)
+    
+    def get_entity(self, entity_id: str) -> Optional[GraphEntity]:
+        """Get entity by ID."""
+        if self.is_neo4j:
+            return self._neo4j_get_entity(entity_id)
+        else:
+            return self._memory_get_entity(entity_id)
+    
+    def search_entities(
+        self,
+        query: str,
+        entity_type: Optional[str] = None,
+        limit: int = 50
+    ) -> List[GraphEntity]:
+        """Search entities by name."""
+        if self.is_neo4j:
+            return self._neo4j_search_entities(query, entity_type, limit)
+        else:
+            return self._memory_search_entities(query, entity_type, limit)
+    
+    # ==================== Relationship Operations ====================
+    
+    def add_relationship(self, relationship: GraphRelationship) -> str:
+        """Add a relationship between entities."""
+        if self.is_neo4j:
+            return self._neo4j_add_relationship(relationship)
+        else:
+            return self._memory_add_relationship(relationship)
+    
+    def get_relationships(
+        self,
+        entity_id: str,
+        relationship_type: Optional[str] = None,
+        direction: str = "both"  # "outgoing", "incoming", "both"
+    ) -> List[GraphRelationship]:
+        """Get relationships for an entity."""
+        if self.is_neo4j:
+            return self._neo4j_get_relationships(entity_id, relationship_type, direction)
+        else:
+            return self._memory_get_relationships(entity_id, relationship_type, direction)
+    
+    # ==================== Graph Traversal ====================
+    
+    def find_path(
+        self,
+        source_id: str,
+        target_id: str,
+        max_hops: int = 6
+    ) -> Optional[List[Tuple[GraphEntity, GraphRelationship]]]:
+        """Find shortest path between two entities."""
+        if self.is_neo4j:
+            return self._neo4j_find_path(source_id, target_id, max_hops)
+        else:
+            return self._memory_find_path(source_id, target_id, max_hops)
+    
+    def get_network(
+        self,
+        entity_id: str,
+        depth: int = 2,
+        limit: int = 100
+    ) -> Dict[str, Any]:
+        """Get network around an entity up to N hops."""
+        if self.is_neo4j:
+            return self._neo4j_get_network(entity_id, depth, limit)
+        else:
+            return self._memory_get_network(entity_id, depth, limit)
+    
+    def find_connections(
+        self,
+        entity_ids: List[str],
+        max_hops: int = 3
+    ) -> Dict[str, Any]:
+        """Find connections between multiple entities."""
+        if self.is_neo4j:
+            return self._neo4j_find_connections(entity_ids, max_hops)
+        else:
+            return self._memory_find_connections(entity_ids, max_hops)
+    
+    # ==================== Analytics ====================
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Get graph statistics."""
+        if self.is_neo4j:
+            return self._neo4j_get_stats()
+        else:
+            return self._memory_get_stats()
+    
+    def get_central_entities(
+        self,
+        entity_type: Optional[str] = None,
+        centrality_measure: str = "degree",  # "degree", "betweenness", "pagerank"
+        limit: int = 20
+    ) -> List[Tuple[GraphEntity, float]]:
+        """Get most central entities by network position."""
+        if self.is_neo4j:
+            return self._neo4j_get_central_entities(entity_type, centrality_measure, limit)
+        else:
+            return self._memory_get_central_entities(entity_type, centrality_measure, limit)
+    
+    # ==================== Bulk Operations ====================
+    
+    def bulk_import(
+        self,
+        entities: List[GraphEntity],
+        relationships: List[GraphRelationship],
+        batch_size: int = 1000
+    ) -> Dict[str, int]:
+        """Bulk import entities and relationships."""
+        if self.is_neo4j:
+            return self._neo4j_bulk_import(entities, relationships, batch_size)
+        else:
+            return self._memory_bulk_import(entities, relationships, batch_size)
+    
+    def migrate_from_matrix(self, matrix_db_path: Path) -> Dict[str, int]:
+        """Migrate data from Matrix SQLite to graph."""
+        from ..matrix.batch_importer import BatchImporter
+        
+        logger.info(f"🔄 Migrating from Matrix: {matrix_db_path}")
+        
+        importer = BatchImporter(matrix_db_path.parent)
+        stats = importer.get_stats()
+        
+        total_entities = stats.get("total_entities", 0)
+        logger.info(f"📊 Found {total_entities:,} entities to migrate")
+        
+        # TODO: Implement actual migration with relationship extraction
+        # This requires parsing raw OpenSanctions data for relationships
+        
+        return {
+            "entities_migrated": 0,
+            "relationships_created": 0,
+            "status": "pending_implementation"
+        }
+    
+    # ==================== In-Memory Implementations ====================
+    
+    def _memory_add_entity(self, entity: GraphEntity) -> str:
+        """Add entity to in-memory graph."""
+        self._memory_graph.add_node(
+            entity.id,
+            name=entity.name,
+            entity_type=entity.entity_type,
+            properties=entity.properties,
+            countries=entity.countries,
+            sanctions=entity.sanctions,
+            sources=entity.sources,
+            created_at=entity.created_at.isoformat(),
+            updated_at=entity.updated_at.isoformat(),
+        )
+        return entity.id
+    
+    def _memory_get_entity(self, entity_id: str) -> Optional[GraphEntity]:
+        """Get entity from in-memory graph."""
+        if entity_id not in self._memory_graph:
+            return None
+        
+        data = self._memory_graph.nodes[entity_id]
+        return GraphEntity(
+            id=entity_id,
+            name=data.get("name", ""),
+            entity_type=data.get("entity_type", "unknown"),
+            properties=data.get("properties", {}),
+            countries=data.get("countries", []),
+            sanctions=data.get("sanctions", []),
+            sources=data.get("sources", []),
+        )
+    
+    def _memory_search_entities(
+        self,
+        query: str,
+        entity_type: Optional[str],
+        limit: int
+    ) -> List[GraphEntity]:
+        """Search entities in in-memory graph."""
+        results = []
+        query_lower = query.lower()
+        
+        for node_id, data in self._memory_graph.nodes(data=True):
+            name = data.get("name", "").lower()
+            if query_lower in name:
+                if entity_type and data.get("entity_type") != entity_type:
+                    continue
+                results.append(GraphEntity(
+                    id=node_id,
+                    name=data.get("name", ""),
+                    entity_type=data.get("entity_type", "unknown"),
+                    properties=data.get("properties", {}),
+                    countries=data.get("countries", []),
+                    sanctions=data.get("sanctions", []),
+                    sources=data.get("sources", []),
+                ))
+                if len(results) >= limit:
+                    break
+        
+        return results
+    
+    def _memory_add_relationship(self, rel: GraphRelationship) -> str:
+        """Add relationship to in-memory graph."""
+        self._memory_graph.add_edge(
+            rel.source_id,
+            rel.target_id,
+            key=rel.id,
+            relationship_type=rel.relationship_type,
+            properties=rel.properties,
+            confidence=rel.confidence,
+            from_date=rel.from_date.isoformat() if rel.from_date else None,
+            to_date=rel.to_date.isoformat() if rel.to_date else None,
+            sources=rel.sources,
+        )
+        return rel.id
+    
+    def _memory_get_relationships(
+        self,
+        entity_id: str,
+        relationship_type: Optional[str],
+        direction: str
+    ) -> List[GraphRelationship]:
+        """Get relationships from in-memory graph."""
+        results = []
+        
+        if direction in ["outgoing", "both"]:
+            for _, target, key, data in self._memory_graph.out_edges(entity_id, keys=True, data=True):
+                if relationship_type and data.get("relationship_type") != relationship_type:
+                    continue
+                results.append(self._edge_to_relationship(entity_id, target, key, data))
+        
+        if direction in ["incoming", "both"]:
+            for source, _, key, data in self._memory_graph.in_edges(entity_id, keys=True, data=True):
+                if relationship_type and data.get("relationship_type") != relationship_type:
+                    continue
+                results.append(self._edge_to_relationship(source, entity_id, key, data))
+        
+        return results
+    
+    def _edge_to_relationship(
+        self,
+        source: str,
+        target: str,
+        key: str,
+        data: Dict
+    ) -> GraphRelationship:
+        """Convert edge data to GraphRelationship."""
+        return GraphRelationship(
+            id=key,
+            source_id=source,
+            target_id=target,
+            relationship_type=data.get("relationship_type", "RELATED_TO"),
+            properties=data.get("properties", {}),
+            confidence=data.get("confidence", 1.0),
+            sources=data.get("sources", []),
+        )
+    
+    def _memory_find_path(
+        self,
+        source_id: str,
+        target_id: str,
+        max_hops: int
+    ) -> Optional[List[Tuple[GraphEntity, GraphRelationship]]]:
+        """Find path in in-memory graph."""
+        import networkx as nx
+        
+        try:
+            path = nx.shortest_path(
+                self._memory_graph.to_undirected(),
+                source_id,
+                target_id,
+            )
+            
+            if len(path) - 1 > max_hops:
+                return None
+            
+            result = []
+            for i, node_id in enumerate(path):
+                entity = self._memory_get_entity(node_id)
+                rel = None
+                if i > 0:
+                    # Get relationship between previous and current
+                    prev_id = path[i - 1]
+                    if self._memory_graph.has_edge(prev_id, node_id):
+                        for key, data in self._memory_graph[prev_id][node_id].items():
+                            rel = self._edge_to_relationship(prev_id, node_id, key, data)
+                            break
+                result.append((entity, rel))
+            
+            return result
+            
+        except nx.NetworkXNoPath:
+            return None
+    
+    def _memory_get_network(
+        self,
+        entity_id: str,
+        depth: int,
+        limit: int
+    ) -> Dict[str, Any]:
+        """Get network around entity in in-memory graph."""
+        import networkx as nx
+        
+        if entity_id not in self._memory_graph:
+            return {"nodes": [], "edges": [], "center": entity_id}
+        
+        # BFS to get neighbors up to depth
+        visited = set([entity_id])
+        current_level = [entity_id]
+        
+        for d in range(depth):
+            next_level = []
+            for node in current_level:
+                for neighbor in self._memory_graph.neighbors(node):
+                    if neighbor not in visited and len(visited) < limit:
+                        visited.add(neighbor)
+                        next_level.append(neighbor)
+            current_level = next_level
+        
+        # Build response
+        nodes = []
+        for node_id in visited:
+            entity = self._memory_get_entity(node_id)
+            if entity:
+                nodes.append({
+                    "id": entity.id,
+                    "name": entity.name,
+                    "type": entity.entity_type,
+                    "countries": entity.countries,
+                    "sanctions_count": len(entity.sanctions),
+                })
+        
+        edges = []
+        for source in visited:
+            for target in self._memory_graph.neighbors(source):
+                if target in visited:
+                    for key, data in self._memory_graph[source][target].items():
+                        edges.append({
+                            "source": source,
+                            "target": target,
+                            "type": data.get("relationship_type", "RELATED_TO"),
+                            "confidence": data.get("confidence", 1.0),
+                        })
+        
+        return {
+            "nodes": nodes,
+            "edges": edges,
+            "center": entity_id,
+            "depth": depth,
+        }
+    
+    def _memory_get_stats(self) -> Dict[str, Any]:
+        """Get stats from in-memory graph."""
+        return {
+            "total_entities": self._memory_graph.number_of_nodes(),
+            "total_relationships": self._memory_graph.number_of_edges(),
+            "backend": "networkx",
+        }
+    
+    def _memory_bulk_import(
+        self,
+        entities: List[GraphEntity],
+        relationships: List[GraphRelationship],
+        batch_size: int
+    ) -> Dict[str, int]:
+        """Bulk import to in-memory graph."""
+        for entity in entities:
+            self._memory_add_entity(entity)
+        
+        for rel in relationships:
+            self._memory_add_relationship(rel)
+        
+        return {
+            "entities_imported": len(entities),
+            "relationships_imported": len(relationships),
+        }
+    
+    def _memory_find_connections(
+        self,
+        entity_ids: List[str],
+        max_hops: int
+    ) -> Dict[str, Any]:
+        """Find connections between entities in memory."""
+        # Find all pairwise paths
+        connections = []
+        for i, source in enumerate(entity_ids):
+            for target in entity_ids[i + 1:]:
+                path = self._memory_find_path(source, target, max_hops)
+                if path:
+                    connections.append({
+                        "source": source,
+                        "target": target,
+                        "path_length": len(path) - 1,
+                        "path": [
+                            {"entity": e.id, "name": e.name}
+                            for e, _ in path
+                        ],
+                    })
+        
+        return {
+            "entity_ids": entity_ids,
+            "connections": connections,
+            "connected_count": len(connections),
+        }
+    
+    def _memory_get_central_entities(
+        self,
+        entity_type: Optional[str],
+        centrality_measure: str,
+        limit: int
+    ) -> List[Tuple[GraphEntity, float]]:
+        """Get central entities from memory graph."""
+        import networkx as nx
+        
+        # Calculate centrality
+        if centrality_measure == "degree":
+            centrality = nx.degree_centrality(self._memory_graph)
+        elif centrality_measure == "betweenness":
+            centrality = nx.betweenness_centrality(self._memory_graph)
+        elif centrality_measure == "pagerank":
+            centrality = nx.pagerank(self._memory_graph)
+        else:
+            centrality = nx.degree_centrality(self._memory_graph)
+        
+        # Sort and filter
+        sorted_nodes = sorted(centrality.items(), key=lambda x: x[1], reverse=True)
+        
+        results = []
+        for node_id, score in sorted_nodes:
+            entity = self._memory_get_entity(node_id)
+            if entity:
+                if entity_type and entity.entity_type != entity_type:
+                    continue
+                results.append((entity, score))
+                if len(results) >= limit:
+                    break
+        
+        return results
+    
+    # ==================== Neo4j Implementations (TODO) ====================
+    
+    def _neo4j_add_entity(self, entity: GraphEntity) -> str:
+        """Add entity to Neo4j."""
+        # TODO: Implement Neo4j entity creation
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_get_entity(self, entity_id: str) -> Optional[GraphEntity]:
+        """Get entity from Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_search_entities(
+        self,
+        query: str,
+        entity_type: Optional[str],
+        limit: int
+    ) -> List[GraphEntity]:
+        """Search entities in Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_add_relationship(self, rel: GraphRelationship) -> str:
+        """Add relationship to Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_get_relationships(
+        self,
+        entity_id: str,
+        relationship_type: Optional[str],
+        direction: str
+    ) -> List[GraphRelationship]:
+        """Get relationships from Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_find_path(
+        self,
+        source_id: str,
+        target_id: str,
+        max_hops: int
+    ) -> Optional[List[Tuple[GraphEntity, GraphRelationship]]]:
+        """Find path in Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_get_network(
+        self,
+        entity_id: str,
+        depth: int,
+        limit: int
+    ) -> Dict[str, Any]:
+        """Get network from Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_find_connections(
+        self,
+        entity_ids: List[str],
+        max_hops: int
+    ) -> Dict[str, Any]:
+        """Find connections in Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_get_stats(self) -> Dict[str, Any]:
+        """Get stats from Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_get_central_entities(
+        self,
+        entity_type: Optional[str],
+        centrality_measure: str,
+        limit: int
+    ) -> List[Tuple[GraphEntity, float]]:
+        """Get central entities from Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
+    
+    def _neo4j_bulk_import(
+        self,
+        entities: List[GraphEntity],
+        relationships: List[GraphRelationship],
+        batch_size: int
+    ) -> Dict[str, int]:
+        """Bulk import to Neo4j."""
+        raise NotImplementedError("Neo4j integration pending")
