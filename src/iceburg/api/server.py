@@ -370,6 +370,14 @@ try:
 except Exception as e:
     logger.warning(f"Could not register Matrix Crawler API routes: {e}")
 
+# COLOSSUS Intelligence Platform routes (Enterprise graph intelligence)
+try:
+    from ..colossus.api import router as colossus_router
+    app.include_router(colossus_router)
+    logger.info("COLOSSUS Intelligence Platform API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register COLOSSUS API routes: {e}")
+
 # WebSocket connections
 active_connections: List[WebSocket] = []
 # Track connection metadata for debugging

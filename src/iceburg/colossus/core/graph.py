@@ -554,16 +554,60 @@ class ColossusGraph:
         
         return results
     
-    # ==================== Neo4j Implementations (TODO) ====================
+    # ==================== Neo4j Implementations ====================
     
     def _neo4j_add_entity(self, entity: GraphEntity) -> str:
         """Add entity to Neo4j."""
-        # TODO: Implement Neo4j entity creation
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            # Use MERGE to upsert
+            query = """
+            MERGE (e:Entity {id: $id})
+            SET e.name = $name,
+                e.entity_type = $entity_type,
+                e.countries = $countries,
+                e.sanctions = $sanctions,
+                e.sources = $sources,
+                e.properties = $properties,
+                e.updated_at = datetime()
+            ON CREATE SET e.created_at = datetime()
+            RETURN e.id
+            """
+            result = session.run(
+                query,
+                id=entity.id,
+                name=entity.name,
+                entity_type=entity.entity_type,
+                countries=entity.countries,
+                sanctions=entity.sanctions,
+                sources=entity.sources,
+                properties=json.dumps(entity.properties),
+            )
+            record = result.single()
+            return record["e.id"] if record else entity.id
     
     def _neo4j_get_entity(self, entity_id: str) -> Optional[GraphEntity]:
         """Get entity from Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            query = """
+            MATCH (e:Entity {id: $id})
+            RETURN e
+            """
+            result = session.run(query, id=entity_id)
+            record = result.single()
+            
+            if not record:
+                return None
+            
+            node = record["e"]
+            return GraphEntity(
+                id=node["id"],
+                name=node.get("name", ""),
+                entity_type=node.get("entity_type", "unknown"),
+                countries=list(node.get("countries", [])),
+                sanctions=list(node.get("sanctions", [])),
+                sources=list(node.get("sources", [])),
+                properties=json.loads(node.get("properties", "{}")),
+            )
     
     def _neo4j_search_entities(
         self,
@@ -572,11 +616,68 @@ class ColossusGraph:
         limit: int
     ) -> List[GraphEntity]:
         """Search entities in Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            if entity_type:
+                cypher = """
+                MATCH (e:Entity)
+                WHERE toLower(e.name) CONTAINS toLower($query)
+                AND e.entity_type = $entity_type
+                RETURN e
+                LIMIT $limit
+                """
+                result = session.run(cypher, query=query, entity_type=entity_type, limit=limit)
+            else:
+                cypher = """
+                MATCH (e:Entity)
+                WHERE toLower(e.name) CONTAINS toLower($query)
+                RETURN e
+                LIMIT $limit
+                """
+                result = session.run(cypher, query=query, limit=limit)
+            
+            entities = []
+            for record in result:
+                node = record["e"]
+                entities.append(GraphEntity(
+                    id=node["id"],
+                    name=node.get("name", ""),
+                    entity_type=node.get("entity_type", "unknown"),
+                    countries=list(node.get("countries", [])),
+                    sanctions=list(node.get("sanctions", [])),
+                    sources=list(node.get("sources", [])),
+                    properties=json.loads(node.get("properties", "{}")),
+                ))
+            return entities
     
     def _neo4j_add_relationship(self, rel: GraphRelationship) -> str:
         """Add relationship to Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            # Dynamic relationship type using APOC or string interpolation
+            # For safety, we use parameterized properties
+            query = f"""
+            MATCH (source:Entity {{id: $source_id}})
+            MATCH (target:Entity {{id: $target_id}})
+            MERGE (source)-[r:{rel.relationship_type} {{id: $rel_id}}]->(target)
+            SET r.confidence = $confidence,
+                r.properties = $properties,
+                r.sources = $sources,
+                r.from_date = $from_date,
+                r.to_date = $to_date
+            RETURN r.id
+            """
+            result = session.run(
+                query,
+                source_id=rel.source_id,
+                target_id=rel.target_id,
+                rel_id=rel.id,
+                confidence=rel.confidence,
+                properties=json.dumps(rel.properties),
+                sources=rel.sources,
+                from_date=rel.from_date.isoformat() if rel.from_date else None,
+                to_date=rel.to_date.isoformat() if rel.to_date else None,
+            )
+            record = result.single()
+            return record["r.id"] if record else rel.id
     
     def _neo4j_get_relationships(
         self,
@@ -585,7 +686,62 @@ class ColossusGraph:
         direction: str
     ) -> List[GraphRelationship]:
         """Get relationships from Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            if direction == "outgoing":
+                if relationship_type:
+                    query = f"""
+                    MATCH (e:Entity {{id: $id}})-[r:{relationship_type}]->(t:Entity)
+                    RETURN r, e.id as source, t.id as target, type(r) as rel_type
+                    """
+                else:
+                    query = """
+                    MATCH (e:Entity {id: $id})-[r]->(t:Entity)
+                    RETURN r, e.id as source, t.id as target, type(r) as rel_type
+                    """
+            elif direction == "incoming":
+                if relationship_type:
+                    query = f"""
+                    MATCH (s:Entity)-[r:{relationship_type}]->(e:Entity {{id: $id}})
+                    RETURN r, s.id as source, e.id as target, type(r) as rel_type
+                    """
+                else:
+                    query = """
+                    MATCH (s:Entity)-[r]->(e:Entity {id: $id})
+                    RETURN r, s.id as source, e.id as target, type(r) as rel_type
+                    """
+            else:  # both
+                if relationship_type:
+                    query = f"""
+                    MATCH (e:Entity {{id: $id}})-[r:{relationship_type}]-(t:Entity)
+                    RETURN r, 
+                           CASE WHEN startNode(r).id = $id THEN startNode(r).id ELSE endNode(r).id END as source,
+                           CASE WHEN startNode(r).id = $id THEN endNode(r).id ELSE startNode(r).id END as target,
+                           type(r) as rel_type
+                    """
+                else:
+                    query = """
+                    MATCH (e:Entity {id: $id})-[r]-(t:Entity)
+                    RETURN r,
+                           startNode(r).id as source,
+                           endNode(r).id as target,
+                           type(r) as rel_type
+                    """
+            
+            result = session.run(query, id=entity_id)
+            
+            relationships = []
+            for record in result:
+                r = record["r"]
+                relationships.append(GraphRelationship(
+                    id=r.get("id", ""),
+                    source_id=record["source"],
+                    target_id=record["target"],
+                    relationship_type=record["rel_type"],
+                    confidence=r.get("confidence", 1.0),
+                    properties=json.loads(r.get("properties", "{}")),
+                    sources=list(r.get("sources", [])),
+                ))
+            return relationships
     
     def _neo4j_find_path(
         self,
@@ -594,7 +750,46 @@ class ColossusGraph:
         max_hops: int
     ) -> Optional[List[Tuple[GraphEntity, GraphRelationship]]]:
         """Find path in Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            query = f"""
+            MATCH path = shortestPath(
+                (source:Entity {{id: $source_id}})-[*1..{max_hops}]-(target:Entity {{id: $target_id}})
+            )
+            RETURN nodes(path) as nodes, relationships(path) as rels
+            """
+            result = session.run(query, source_id=source_id, target_id=target_id)
+            record = result.single()
+            
+            if not record:
+                return None
+            
+            nodes = record["nodes"]
+            rels = record["rels"]
+            
+            path_result = []
+            for i, node in enumerate(nodes):
+                entity = GraphEntity(
+                    id=node["id"],
+                    name=node.get("name", ""),
+                    entity_type=node.get("entity_type", "unknown"),
+                    countries=list(node.get("countries", [])),
+                    sanctions=list(node.get("sanctions", [])),
+                )
+                
+                rel = None
+                if i > 0 and i - 1 < len(rels):
+                    r = rels[i - 1]
+                    rel = GraphRelationship(
+                        id=r.get("id", ""),
+                        source_id=nodes[i-1]["id"],
+                        target_id=node["id"],
+                        relationship_type=r.type,
+                        confidence=r.get("confidence", 1.0),
+                    )
+                
+                path_result.append((entity, rel))
+            
+            return path_result
     
     def _neo4j_get_network(
         self,
@@ -603,7 +798,56 @@ class ColossusGraph:
         limit: int
     ) -> Dict[str, Any]:
         """Get network from Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            query = f"""
+            MATCH path = (center:Entity {{id: $id}})-[*1..{depth}]-(connected:Entity)
+            WITH center, connected, relationships(path) as rels
+            LIMIT $limit
+            RETURN DISTINCT connected, rels
+            """
+            result = session.run(query, id=entity_id, limit=limit)
+            
+            nodes_map = {}
+            edges = []
+            
+            # Add center node
+            center = self._neo4j_get_entity(entity_id)
+            if center:
+                nodes_map[center.id] = {
+                    "id": center.id,
+                    "name": center.name,
+                    "type": center.entity_type,
+                    "countries": center.countries,
+                    "sanctions_count": len(center.sanctions),
+                }
+            
+            for record in result:
+                node = record["connected"]
+                node_id = node["id"]
+                
+                if node_id not in nodes_map:
+                    nodes_map[node_id] = {
+                        "id": node_id,
+                        "name": node.get("name", ""),
+                        "type": node.get("entity_type", "unknown"),
+                        "countries": list(node.get("countries", [])),
+                        "sanctions_count": len(node.get("sanctions", [])),
+                    }
+                
+                for r in record["rels"]:
+                    edges.append({
+                        "source": r.start_node["id"],
+                        "target": r.end_node["id"],
+                        "type": r.type,
+                        "confidence": r.get("confidence", 1.0),
+                    })
+            
+            return {
+                "nodes": list(nodes_map.values()),
+                "edges": edges,
+                "center": entity_id,
+                "depth": depth,
+            }
     
     def _neo4j_find_connections(
         self,
@@ -611,11 +855,52 @@ class ColossusGraph:
         max_hops: int
     ) -> Dict[str, Any]:
         """Find connections in Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        connections = []
+        
+        for i, source_id in enumerate(entity_ids):
+            for target_id in entity_ids[i + 1:]:
+                path = self._neo4j_find_path(source_id, target_id, max_hops)
+                if path:
+                    connections.append({
+                        "source": source_id,
+                        "target": target_id,
+                        "path_length": len(path) - 1,
+                        "path": [
+                            {"entity": e.id, "name": e.name}
+                            for e, _ in path
+                        ],
+                    })
+        
+        return {
+            "entity_ids": entity_ids,
+            "connections": connections,
+            "connected_count": len(connections),
+        }
     
     def _neo4j_get_stats(self) -> Dict[str, Any]:
         """Get stats from Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        with self._driver.session() as session:
+            # Count entities
+            entity_result = session.run("MATCH (e:Entity) RETURN count(e) as count")
+            entity_count = entity_result.single()["count"]
+            
+            # Count relationships
+            rel_result = session.run("MATCH ()-[r]->() RETURN count(r) as count")
+            rel_count = rel_result.single()["count"]
+            
+            # Count by type
+            type_result = session.run("""
+                MATCH (e:Entity)
+                RETURN e.entity_type as type, count(e) as count
+            """)
+            by_type = {r["type"]: r["count"] for r in type_result}
+            
+            return {
+                "total_entities": entity_count,
+                "total_relationships": rel_count,
+                "by_type": by_type,
+                "backend": "neo4j",
+            }
     
     def _neo4j_get_central_entities(
         self,
@@ -623,8 +908,42 @@ class ColossusGraph:
         centrality_measure: str,
         limit: int
     ) -> List[Tuple[GraphEntity, float]]:
-        """Get central entities from Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        """Get central entities from Neo4j using GDS."""
+        with self._driver.session() as session:
+            # Use degree centrality (GDS would need graph projection)
+            if entity_type:
+                query = """
+                MATCH (e:Entity)
+                WHERE e.entity_type = $entity_type
+                WITH e, size((e)--()) as degree
+                ORDER BY degree DESC
+                LIMIT $limit
+                RETURN e, degree
+                """
+                result = session.run(query, entity_type=entity_type, limit=limit)
+            else:
+                query = """
+                MATCH (e:Entity)
+                WITH e, size((e)--()) as degree
+                ORDER BY degree DESC
+                LIMIT $limit
+                RETURN e, degree
+                """
+                result = session.run(query, limit=limit)
+            
+            entities = []
+            for record in result:
+                node = record["e"]
+                entity = GraphEntity(
+                    id=node["id"],
+                    name=node.get("name", ""),
+                    entity_type=node.get("entity_type", "unknown"),
+                    countries=list(node.get("countries", [])),
+                    sanctions=list(node.get("sanctions", [])),
+                )
+                entities.append((entity, float(record["degree"])))
+            
+            return entities
     
     def _neo4j_bulk_import(
         self,
@@ -633,4 +952,91 @@ class ColossusGraph:
         batch_size: int
     ) -> Dict[str, int]:
         """Bulk import to Neo4j."""
-        raise NotImplementedError("Neo4j integration pending")
+        entity_count = 0
+        rel_count = 0
+        
+        with self._driver.session() as session:
+            # Bulk import entities
+            for i in range(0, len(entities), batch_size):
+                batch = entities[i:i + batch_size]
+                entity_data = [
+                    {
+                        "id": e.id,
+                        "name": e.name,
+                        "entity_type": e.entity_type,
+                        "countries": e.countries,
+                        "sanctions": e.sanctions,
+                        "sources": e.sources,
+                        "properties": json.dumps(e.properties),
+                    }
+                    for e in batch
+                ]
+                
+                query = """
+                UNWIND $entities as entity
+                MERGE (e:Entity {id: entity.id})
+                SET e.name = entity.name,
+                    e.entity_type = entity.entity_type,
+                    e.countries = entity.countries,
+                    e.sanctions = entity.sanctions,
+                    e.sources = entity.sources,
+                    e.properties = entity.properties,
+                    e.updated_at = datetime()
+                ON CREATE SET e.created_at = datetime()
+                """
+                session.run(query, entities=entity_data)
+                entity_count += len(batch)
+                
+                if i % (batch_size * 10) == 0:
+                    logger.info(f"📊 Imported {entity_count:,} entities...")
+            
+            # Bulk import relationships (grouped by type)
+            rel_by_type = {}
+            for rel in relationships:
+                if rel.relationship_type not in rel_by_type:
+                    rel_by_type[rel.relationship_type] = []
+                rel_by_type[rel.relationship_type].append(rel)
+            
+            for rel_type, rels in rel_by_type.items():
+                for i in range(0, len(rels), batch_size):
+                    batch = rels[i:i + batch_size]
+                    rel_data = [
+                        {
+                            "id": r.id,
+                            "source_id": r.source_id,
+                            "target_id": r.target_id,
+                            "confidence": r.confidence,
+                            "properties": json.dumps(r.properties),
+                            "sources": r.sources,
+                        }
+                        for r in batch
+                    ]
+                    
+                    query = f"""
+                    UNWIND $rels as rel
+                    MATCH (source:Entity {{id: rel.source_id}})
+                    MATCH (target:Entity {{id: rel.target_id}})
+                    MERGE (source)-[r:{rel_type} {{id: rel.id}}]->(target)
+                    SET r.confidence = rel.confidence,
+                        r.properties = rel.properties,
+                        r.sources = rel.sources
+                    """
+                    session.run(query, rels=rel_data)
+                    rel_count += len(batch)
+        
+        # Create indexes
+        self._create_neo4j_indexes()
+        
+        return {
+            "entities_imported": entity_count,
+            "relationships_imported": rel_count,
+        }
+    
+    def _create_neo4j_indexes(self):
+        """Create Neo4j indexes for performance."""
+        with self._driver.session() as session:
+            # Entity indexes
+            session.run("CREATE INDEX entity_id IF NOT EXISTS FOR (e:Entity) ON (e.id)")
+            session.run("CREATE INDEX entity_name IF NOT EXISTS FOR (e:Entity) ON (e.name)")
+            session.run("CREATE INDEX entity_type IF NOT EXISTS FOR (e:Entity) ON (e.entity_type)")
+            logger.info("✅ Neo4j indexes created")

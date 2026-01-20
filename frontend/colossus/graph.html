@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLOSSUS | Graph Explorer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --gold: #d4af37;
+            --gold-dim: rgba(212, 175, 55, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--gold-dim);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold), #b8860b);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* Search */
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 400px;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .search-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--gold), #b8860b);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--gold-dim);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Entity Card */
+        .entity-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--gold-dim);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .entity-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--gold-dim);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .entity-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .risk-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        .risk-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--orange);
+        }
+
+        .risk-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue);
+        }
+
+        .risk-low {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+
+        /* Connections */
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .connection-item:hover {
+            background: var(--gold-dim);
+        }
+
+        .connection-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .icon-person {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--purple);
+        }
+
+        .icon-company {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue);
+        }
+
+        .icon-org {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+
+        .connection-info {
+            flex: 1;
+        }
+
+        .connection-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .connection-type {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Graph Canvas */
+        .graph-container {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+        }
+
+        #graph {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Graph Controls */
+        .graph-controls {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--gold-dim);
+            border-color: var(--gold);
+        }
+
+        /* Graph Legend */
+        .graph-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(18, 18, 26, 0.9);
+            border: 1px solid var(--gold-dim);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .legend-title {
+            font-size: 0.75rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Path Finder */
+        .pathfinder {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--gold-dim);
+            border-radius: 12px;
+            padding: 1rem;
+            width: 300px;
+        }
+
+        .pathfinder-title {
+            font-size: 0.875rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pathfinder-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--gold-dim);
+            border-radius: 6px;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pathfinder-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--gold);
+            border: none;
+            border-radius: 6px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Node styling */
+        .node {
+            cursor: pointer;
+        }
+
+        .node circle {
+            stroke-width: 2px;
+            transition: all 0.2s;
+        }
+
+        .node:hover circle {
+            stroke-width: 4px;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .node text {
+            font-size: 10px;
+            fill: var(--text-primary);
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .link {
+            fill: none;
+            stroke-opacity: 0.6;
+        }
+
+        .link-label {
+            font-size: 8px;
+            fill: var(--text-secondary);
+        }
+
+        /* Selected entity */
+        .node.selected circle {
+            stroke: var(--gold);
+            stroke-width: 4px;
+            filter: drop-shadow(0 0 15px var(--gold));
+        }
+
+        /* Depth controls */
+        .depth-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .depth-control label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .depth-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+        }
+
+        .depth-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🏛️</div>
+            <div>
+                <div class="logo-text">COLOSSUS</div>
+                <div class="logo-subtitle">GRAPH EXPLORER</div>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput"
+                placeholder="Search entities... (e.g., Abramovich, Huawei)">
+            <button class="search-btn" onclick="searchEntity()">🔍 Search</button>
+        </div>
+        <div>
+            <a href="/matrix.html" style="color: var(--text-secondary); text-decoration: none;">Matrix Dashboard</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section" id="entityDetails" style="display: none;">
+                <div class="sidebar-title">📋 Selected Entity</div>
+                <div class="entity-card" id="entityCard">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="sidebar-section" id="connectionsSection" style="display: none;">
+                <div class="sidebar-title">🔗 Connections</div>
+                <div id="connectionsList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">📊 Graph Stats</div>
+                <div class="entity-card" id="graphStats">
+                    <div class="entity-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="nodeCount">0</div>
+                            <div class="stat-label">Nodes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="edgeCount">0</div>
+                            <div class="stat-label">Edges</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="depthLevel">2</div>
+                            <div class="stat-label">Depth</div>
+                        </div>
+                    </div>
+                    <div class="depth-control">
+                        <label>Network Depth:</label>
+                        <input type="range" class="depth-slider" id="depthSlider" min="1" max="4" value="2"
+                            onchange="updateDepth(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">🏆 Central Entities</div>
+                <div id="centralEntities">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Graph Canvas -->
+        <div class="graph-container">
+            <svg id="graph"></svg>
+
+            <!-- Controls -->
+            <div class="graph-controls">
+                <button class="control-btn" onclick="zoomIn()" title="Zoom In">+</button>
+                <button class="control-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+                <button class="control-btn" onclick="resetZoom()" title="Reset">⟳</button>
+            </div>
+
+            <!-- Path Finder -->
+            <div class="pathfinder">
+                <div class="pathfinder-title">🛤️ Path Finder</div>
+                <input type="text" class="pathfinder-input" id="pathSource" placeholder="Source entity...">
+                <input type="text" class="pathfinder-input" id="pathTarget" placeholder="Target entity...">
+                <button class="pathfinder-btn" onclick="findPath()">Find Connection</button>
+            </div>
+
+            <!-- Legend -->
+            <div class="graph-legend">
+                <div class="legend-title">Entity Types</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #8b5cf6;"></div>
+                        <span>Person</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #3b82f6;"></div>
+                        <span>Company</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #22c55e;"></div>
+                        <span>Organization</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #f59e0b;"></div>
+                        <span>Sanctioned</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_BASE = '/api/colossus';
+        let currentNetwork = null;
+        let selectedEntity = null;
+        let networkDepth = 2;
+
+        // D3 graph variables
+        let svg, g, simulation, link, node, zoom;
+
+        // Color scheme
+        const typeColors = {
+            'person': '#8b5cf6',
+            'company': '#3b82f6',
+            'organization': '#22c55e',
+            'legal_entity': '#f59e0b',
+            'unknown': '#6b7280'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initGraph();
+            loadCentralEntities();
+            loadStatus();
+
+            // Handle search on enter
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchEntity();
+            });
+
+            // Check URL params
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('id')) {
+                loadEntityNetwork(params.get('id'));
+            }
+        });
+
+        function initGraph() {
+            const container = document.querySelector('.graph-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            svg = d3.select('#graph')
+                .attr('width', width)
+                .attr('height', height);
+
+            // Zoom behavior
+            zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+
+            svg.call(zoom);
+
+            g = svg.append('g');
+
+            // Arrow markers for directed edges
+            svg.append('defs').selectAll('marker')
+                .data(['arrow'])
+                .join('marker')
+                .attr('id', d => d)
+                .attr('viewBox', '0 -5 10 10')
+                .attr('refX', 25)
+                .attr('refY', 0)
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .attr('orient', 'auto')
+                .append('path')
+                .attr('d', 'M0,-5L10,0L0,5')
+                .attr('fill', '#666');
+
+            simulation = d3.forceSimulation()
+                .force('link', d3.forceLink().id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(40));
+        }
+
+        async function searchEntity() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, limit: 10 })
+                });
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    // Load first result's network
+                    loadEntityNetwork(data.results[0].id);
+                } else {
+                    showToast('No entities found');
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                showToast('Search failed');
+            }
+        }
+
+        async function loadEntityNetwork(entityId) {
+            try {
+                const response = await fetch(`${API_BASE}/network`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        entity_id: entityId,
+                        depth: networkDepth,
+                        limit: 100
+                    })
+                });
+                const data = await response.json();
+
+                currentNetwork = data;
+                renderNetwork(data, entityId);
+                loadEntityDetails(entityId);
+
+                // Update URL
+                window.history.pushState({}, '', `?id=${entityId}`);
+
+            } catch (error) {
+                console.error('Failed to load network:', error);
+                showToast('Failed to load network');
+            }
+        }
+
+        function renderNetwork(network, centerId) {
+            // Clear previous
+            g.selectAll('*').remove();
+
+            const nodes = network.nodes || [];
+            const edges = network.edges || [];
+
+            // Update stats
+            document.getElementById('nodeCount').textContent = nodes.length;
+            document.getElementById('edgeCount').textContent = edges.length;
+
+            // Create links
+            link = g.append('g')
+                .selectAll('line')
+                .data(edges)
+                .join('line')
+                .attr('class', 'link')
+                .attr('stroke', '#555')
+                .attr('stroke-width', d => d.confidence ? d.confidence * 2 : 1)
+                .attr('marker-end', 'url(#arrow)');
+
+            // Create nodes
+            node = g.append('g')
+                .selectAll('.node')
+                .data(nodes)
+                .join('g')
+                .attr('class', d => `node ${d.id === centerId ? 'selected' : ''}`)
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended))
+                .on('click', (event, d) => {
+                    selectNode(d);
+                })
+                .on('dblclick', (event, d) => {
+                    loadEntityNetwork(d.id);
+                });
+
+            // Node circles
+            node.append('circle')
+                .attr('r', d => d.id === centerId ? 25 : (d.sanctions_count > 0 ? 18 : 15))
+                .attr('fill', d => d.sanctions_count > 0 ? '#f59e0b' : (typeColors[d.type] || typeColors.unknown))
+                .attr('stroke', d => d.sanctions_count > 0 ? '#ef4444' : '#333')
+                .attr('stroke-width', d => d.sanctions_count > 0 ? 3 : 2);
+
+            // Node labels
+            node.append('text')
+                .attr('dy', 30)
+                .text(d => truncate(d.name, 20))
+                .attr('fill', '#fff')
+                .attr('font-size', '9px')
+                .attr('text-anchor', 'middle');
+
+            // Node type icon
+            node.append('text')
+                .attr('dy', 5)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .text(d => {
+                    switch (d.type) {
+                        case 'person': return '👤';
+                        case 'company': return '🏢';
+                        case 'organization': return '🏛️';
+                        default: return '📋';
+                    }
+                });
+
+            // Start simulation
+            simulation.nodes(nodes).on('tick', ticked);
+            simulation.force('link').links(edges);
+            simulation.alpha(1).restart();
+
+            function ticked() {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            }
+        }
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        async function loadEntityDetails(entityId) {
+            try {
+                const response = await fetch(`${API_BASE}/entities/${entityId}`);
+                const entity = await response.json();
+
+                selectedEntity = entity;
+
+                // Show details section
+                document.getElementById('entityDetails').style.display = 'block';
+
+                // Render entity card
+                const riskLevel = entity.sanctions?.length > 5 ? 'critical' :
+                    entity.sanctions?.length > 2 ? 'high' :
+                        entity.sanctions?.length > 0 ? 'medium' : 'low';
+
+                document.getElementById('entityCard').innerHTML = `
+                    <div class="entity-name">${entity.name}</div>
+                    <span class="entity-type">${entity.type}</span>
+                    <div class="entity-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${entity.sanctions?.length || 0}</div>
+                            <div class="stat-label">Sanctions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${entity.relationships?.length || 0}</div>
+                            <div class="stat-label">Relations</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${entity.countries?.length || 0}</div>
+                            <div class="stat-label">Countries</div>
+                        </div>
+                    </div>
+                    <div class="risk-badge risk-${riskLevel}">
+                        ${riskLevel === 'critical' ? '🔴' : riskLevel === 'high' ? '🟠' : riskLevel === 'medium' ? '🟡' : '🟢'}
+                        RISK: ${riskLevel.toUpperCase()}
+                    </div>
+                `;
+
+                // Render connections
+                if (entity.relationships && entity.relationships.length > 0) {
+                    document.getElementById('connectionsSection').style.display = 'block';
+                    document.getElementById('connectionsList').innerHTML = entity.relationships
+                        .slice(0, 10)
+                        .map(rel => `
+                            <div class="connection-item" onclick="loadEntityNetwork('${rel.target}')">
+                                <div class="connection-icon icon-person">🔗</div>
+                                <div class="connection-info">
+                                    <div class="connection-name">${rel.target}</div>
+                                    <div class="connection-type">${rel.type}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                }
+
+                // Update path finder source
+                document.getElementById('pathSource').value = entity.name;
+
+            } catch (error) {
+                console.error('Failed to load entity:', error);
+            }
+        }
+
+        function selectNode(d) {
+            // Deselect all
+            node.classed('selected', false);
+            // Select this
+            node.filter(n => n.id === d.id).classed('selected', true);
+            // Load details
+            loadEntityDetails(d.id);
+        }
+
+        async function loadCentralEntities() {
+            try {
+                const response = await fetch(`${API_BASE}/central?measure=degree&limit=10`);
+                const data = await response.json();
+
+                document.getElementById('centralEntities').innerHTML = data.results
+                    .map(entity => `
+                        <div class="connection-item" onclick="loadEntityNetwork('${entity.id}')">
+                            <div class="connection-icon ${entity.type === 'person' ? 'icon-person' : 'icon-company'}">
+                                ${entity.type === 'person' ? '👤' : '🏢'}
+                            </div>
+                            <div class="connection-info">
+                                <div class="connection-name">${entity.name}</div>
+                                <div class="connection-type">${entity.score.toFixed(1)} connections</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+            } catch (error) {
+                console.error('Failed to load central entities:', error);
+            }
+        }
+
+        async function loadStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const data = await response.json();
+
+                // Could update UI with status
+                console.log('COLOSSUS status:', data);
+            } catch (error) {
+                console.error('Status check failed:', error);
+            }
+        }
+
+        async function findPath() {
+            const source = document.getElementById('pathSource').value.trim();
+            const target = document.getElementById('pathTarget').value.trim();
+
+            if (!source || !target) {
+                showToast('Enter both source and target');
+                return;
+            }
+
+            try {
+                // Search for entities first
+                const sourceRes = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: source, limit: 1 })
+                });
+                const sourceData = await sourceRes.json();
+
+                const targetRes = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: target, limit: 1 })
+                });
+                const targetData = await targetRes.json();
+
+                if (!sourceData.results?.length || !targetData.results?.length) {
+                    showToast('Could not find one or both entities');
+                    return;
+                }
+
+                // Find path
+                const pathRes = await fetch(`${API_BASE}/path`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        source_id: sourceData.results[0].id,
+                        target_id: targetData.results[0].id,
+                        max_hops: 6
+                    })
+                });
+                const pathData = await pathRes.json();
+
+                if (pathData.found) {
+                    showToast(`Found path: ${pathData.hops} hops`);
+                    // Highlight path on graph
+                    highlightPath(pathData.path);
+                } else {
+                    showToast('No connection found within 6 hops');
+                }
+
+            } catch (error) {
+                console.error('Path finding failed:', error);
+                showToast('Path finding failed');
+            }
+        }
+
+        function highlightPath(path) {
+            // Reset all
+            node.select('circle').attr('stroke', '#333').attr('stroke-width', 2);
+            link.attr('stroke', '#555').attr('stroke-width', 1);
+
+            // Highlight path nodes
+            const pathIds = path.map(p => p.entity.id);
+            node.filter(d => pathIds.includes(d.id))
+                .select('circle')
+                .attr('stroke', '#d4af37')
+                .attr('stroke-width', 4);
+        }
+
+        function updateDepth(value) {
+            networkDepth = parseInt(value);
+            document.getElementById('depthLevel').textContent = value;
+
+            // Reload if we have a selected entity
+            if (selectedEntity) {
+                loadEntityNetwork(selectedEntity.id);
+            }
+        }
+
+        function zoomIn() {
+            svg.transition().call(zoom.scaleBy, 1.3);
+        }
+
+        function zoomOut() {
+            svg.transition().call(zoom.scaleBy, 0.7);
+        }
+
+        function resetZoom() {
+            svg.transition().call(zoom.transform, d3.zoomIdentity);
+        }
+
+        function truncate(str, len) {
+            return str.length > len ? str.substring(0, len) + '...' : str;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+
+</html>
