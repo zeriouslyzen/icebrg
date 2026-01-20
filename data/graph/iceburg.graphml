@@ -257,6 +257,33 @@
 <node id="agents (English: Meaning of agents)">
   <data key="d0">evidence</data>
 </node>
+<node id="investigate">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: investigate | Etymology: investigate (English: Meaning of investigate)">
+  <data key="d0">principle</data>
+</node>
+<node id="investigate (English: Meaning of investigate)">
+  <data key="d0">evidence</data>
+</node>
+<node id="backgrounds">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: backgrounds | Etymology: backgrounds (English: Meaning of backgrounds)">
+  <data key="d0">principle</data>
+</node>
+<node id="backgrounds (English: Meaning of backgrounds)">
+  <data key="d0">evidence</data>
+</node>
+<node id="altman,">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: altman, | Etymology: altman, (English: Meaning of altman,)">
+  <data key="d0">principle</data>
+</node>
+<node id="altman, (English: Meaning of altman,)">
+  <data key="d0">evidence</data>
+</node>
 <edge source="Collective Consciousness Drives Evolution" target="Ecological succession">
   <data key="d1">touches</data>
   <data key="d2">0</data>
@@ -607,6 +634,51 @@
   <data key="d1">implies</data>
 </edge>
 <edge source="agents" target="agents (English: Meaning of agents)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="investigate" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="investigate" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="investigate" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="investigate" target="Term: investigate | Etymology: investigate (English: Meaning of investigate)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="investigate" target="investigate (English: Meaning of investigate)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="backgrounds" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="backgrounds" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="backgrounds" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="backgrounds" target="Term: backgrounds | Etymology: backgrounds (English: Meaning of backgrounds)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="backgrounds" target="backgrounds (English: Meaning of backgrounds)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="altman," target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="altman," target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="altman," target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="altman," target="Term: altman, | Etymology: altman, (English: Meaning of altman,)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="altman," target="altman, (English: Meaning of altman,)">
   <data key="d1">supports</data>
 </edge>
 </graph></graphml>

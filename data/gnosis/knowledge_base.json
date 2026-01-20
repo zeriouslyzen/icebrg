@@ -1223,6 +1223,57 @@
       "confidence": 0.9,
       "metadata": {},
       "timestamp": "2026-01-16T02:10:23.186698"
+    },
+    "knowledge_72": {
+      "knowledge_id": "knowledge_72",
+      "content": "Term: investigate | Etymology: investigate (English: Meaning of investigate)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_investigate"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.149632"
+    },
+    "knowledge_73": {
+      "knowledge_id": "knowledge_73",
+      "content": "Term: backgrounds | Etymology: backgrounds (English: Meaning of backgrounds)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_backgrounds"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.173652"
+    },
+    "knowledge_74": {
+      "knowledge_id": "knowledge_74",
+      "content": "Term: altman, | Etymology: altman, (English: Meaning of altman,)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_altman,"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.186322"
     }
   },
   "insights": [
@@ -2593,9 +2644,66 @@
       ],
       "metadata": {},
       "timestamp": "2026-01-16T02:10:23.186698"
+    },
+    {
+      "insight_id": "insight_0_1768736980.149622",
+      "source_conversation_id": "total_knowledge_total_investigate",
+      "insight_type": "fact",
+      "content": "Term: investigate | Etymology: investigate (English: Meaning of investigate)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is investigate?",
+        "Term: investigate | Etymology: investigate (English: Meaning of investigate)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.149632"
+    },
+    {
+      "insight_id": "insight_0_1768736980.173627",
+      "source_conversation_id": "total_knowledge_total_backgrounds",
+      "insight_type": "fact",
+      "content": "Term: backgrounds | Etymology: backgrounds (English: Meaning of backgrounds)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is backgrounds?",
+        "Term: backgrounds | Etymology: backgrounds (English: Meaning of backgrounds)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.173652"
+    },
+    {
+      "insight_id": "insight_0_1768736980.186318",
+      "source_conversation_id": "total_knowledge_total_altman,",
+      "insight_type": "fact",
+      "content": "Term: altman, | Etymology: altman, (English: Meaning of altman,)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is altman,?",
+        "Term: altman, | Etymology: altman, (English: Meaning of altman,)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-18T03:49:40.186322"
     }
   ],
-  "total_conversations": 72,
-  "total_insights": 72,
-  "last_updated": "2026-01-16T02:10:23.193837"
+  "total_conversations": 75,
+  "total_insights": 75,
+  "last_updated": "2026-01-18T03:49:40.193741"
 }

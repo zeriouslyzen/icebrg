@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entity Explorer | ICEBURG Matrix</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --border-color: #2a2a3a;
+            --text-primary: #fff;
+            --text-secondary: #888;
+            --accent: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Search Header */
+        .search-header {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .search-header input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-header input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .search-header button {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Stats Overview */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stats-bar .stat .label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Entity Page Layout */
+        .entity-page {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .entity-page {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Main Content */
+        .entity-main {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .entity-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .entity-header .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .entity-header .flags {
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Content Sections */
+        .entity-section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .entity-section:last-child {
+            border-bottom: none;
+        }
+
+        .entity-section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .entity-section h2 .icon {
+            opacity: 0.7;
+        }
+
+        /* Properties Table */
+        .properties-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .properties-table tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .properties-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .properties-table th {
+            text-align: left;
+            padding: 0.75rem 1rem 0.75rem 0;
+            color: var(--text-secondary);
+            font-weight: 500;
+            width: 35%;
+            vertical-align: top;
+        }
+
+        .properties-table td {
+            padding: 0.75rem 0;
+            color: var(--text-primary);
+        }
+
+        /* Sanctions Tags */
+        .sanctions-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .sanction-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--danger)22;
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .sanction-tag.warning {
+            background: var(--warning)22;
+            border-color: var(--warning);
+        }
+
+        /* Sidebar */
+        .entity-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .metric-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .metric-item .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Risk Indicator */
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--danger)11;
+            border: 1px solid var(--danger)44;
+            border-radius: 8px;
+        }
+
+        .risk-indicator .level {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .risk-indicator .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Related Entities */
+        .related-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .related-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .related-item:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .related-item .icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent)22;
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+
+        .related-item .name {
+            flex: 1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .related-item .type {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Search Results */
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 8px 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-result-item .name {
+            font-weight: 500;
+        }
+
+        .search-result-item .type {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--accent)22;
+            color: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 0.75rem 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translateX(-4px);
+        }
+
+        .timeline-item .date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .timeline-item .event {
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Source Badge */
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0.25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Search Header -->
+        <div class="search-header" style="position: relative;">
+            <a href="matrix.html" class="logo">🕸️ Matrix</a>
+            <input type="text" id="searchInput" placeholder="Search 1.5M+ entities..." onkeyup="handleSearch(event)"
+                autocomplete="off">
+            <button onclick="performSearch()">Search</button>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat">
+                <div class="value" id="totalEntities">-</div>
+                <div class="label">Total Entities</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="totalPersons">-</div>
+                <div class="label">Persons</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="totalCompanies">-</div>
+                <div class="label">Companies</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="totalOrgs">-</div>
+                <div class="label">Organizations</div>
+            </div>
+        </div>
+
+        <!-- Entity Page -->
+        <div class="entity-page" id="entityPage" style="display: none;">
+            <!-- Main Content -->
+            <div class="entity-main">
+                <div class="entity-header">
+                    <span class="type-badge" id="entityType">PERSON</span>
+                    <h1 id="entityName">Loading...</h1>
+                    <div class="subtitle" id="entitySubtitle"></div>
+                    <div class="flags" id="entityFlags"></div>
+                </div>
+
+                <!-- Sanctions Section -->
+                <div class="entity-section" id="sanctionsSection">
+                    <h2><span class="icon">⚠️</span> Sanctions & Watchlists</h2>
+                    <div class="sanctions-list" id="sanctionsList"></div>
+                </div>
+
+                <!-- Properties Section -->
+                <div class="entity-section">
+                    <h2><span class="icon">📋</span> Details</h2>
+                    <table class="properties-table" id="propertiesTable">
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Timeline Section -->
+                <div class="entity-section" id="timelineSection" style="display: none;">
+                    <h2><span class="icon">📅</span> Timeline</h2>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+
+                <!-- Data Sources -->
+                <div class="entity-section">
+                    <h2><span class="icon">🔗</span> Data Sources</h2>
+                    <div id="dataSources"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="entity-sidebar">
+                <!-- Risk Card -->
+                <div class="sidebar-card" id="riskCard">
+                    <h3>Risk Assessment</h3>
+                    <div class="risk-indicator">
+                        <div class="level" id="riskLevel">-</div>
+                        <div class="desc" id="riskDesc">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Metrics Card -->
+                <div class="sidebar-card">
+                    <h3>Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="value" id="metricSanctions">-</div>
+                            <div class="label">Sanctions Lists</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="value" id="metricCountries">-</div>
+                            <div class="label">Countries</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="value" id="metricAliases">-</div>
+                            <div class="label">Known Aliases</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="value" id="metricSources">-</div>
+                            <div class="label">Data Sources</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Entities -->
+                <div class="sidebar-card">
+                    <h3>Related Entities</h3>
+                    <div class="related-list" id="relatedList">
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Search for an entity to see details
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome State -->
+        <div id="welcomeState" style="text-align: center; padding: 4rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">🔍 Entity Explorer</h2>
+            <p
+                style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Search for sanctioned individuals, companies, and organizations from global watchlists including OFAC,
+                EU, UN, and more.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button onclick="searchAndShow('Putin')" class="quick-search">Vladimir Putin</button>
+                <button onclick="searchAndShow('Abramovich')" class="quick-search">Roman Abramovich</button>
+                <button onclick="searchAndShow('Huawei')" class="quick-search">Huawei</button>
+                <button onclick="searchAndShow('Iran')" class="quick-search">Iran Companies</button>
+            </div>
+            <style>
+                .quick-search {
+                    padding: 0.75rem 1.5rem;
+                    background: var(--bg-card);
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    color: var(--text-primary);
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+
+                .quick-search:hover {
+                    border-color: var(--accent);
+                    background: var(--accent)11;
+                }
+            </style>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <div>Loading entity details...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/matrix';
+        let currentEntity = null;
+        let entityCache = {};  // Cache for selected entities from search results
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+
+            // Check URL for entity ID
+            const params = new URLSearchParams(window.location.search);
+            const entityId = params.get('id');
+            const query = params.get('q');
+
+            if (entityId) {
+                loadEntity(entityId);
+            } else if (query) {
+                searchAndShow(query);
+            }
+        });
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const data = await response.json();
+
+                document.getElementById('totalEntities').textContent = formatNumber(data.total_entities || 0);
+
+                const byType = data.by_type || {};
+                document.getElementById('totalPersons').textContent = formatNumber(byType.person || 0);
+                document.getElementById('totalCompanies').textContent = formatNumber(byType.company || 0);
+                document.getElementById('totalOrgs').textContent = formatNumber(byType.organization || 0);
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        // Search handling
+        async function handleSearch(event) {
+            const query = event.target.value;
+            if (query.length < 2) {
+                document.getElementById('searchResults').classList.remove('active');
+                return;
+            }
+
+            if (event.key === 'Enter') {
+                performSearch();
+                return;
+            }
+
+            // Live search
+            try {
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, limit: 10 })
+                });
+                const data = await response.json();
+
+                const container = document.getElementById('searchResults');
+                if (data.results && data.results.length > 0) {
+                    // Cache all results and create click handlers
+                    data.results.forEach(entity => {
+                        entityCache[entity.entity_id] = entity;
+                    });
+
+                    container.innerHTML = data.results.map(entity => `
+                        <div class="search-result-item" onclick="selectEntity('${entity.entity_id}')">
+                            <span class="name">${entity.name}</span>
+                            <span class="type">${entity.entity_type}</span>
+                        </div>
+                    `).join('');
+                    container.classList.add('active');
+                } else {
+                    container.classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                searchAndShow(query);
+            }
+        }
+
+        async function searchAndShow(query) {
+            document.getElementById('searchInput').value = query;
+            document.getElementById('searchResults').classList.remove('active');
+
+            try {
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, limit: 1 })
+                });
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    selectEntity(data.results[0].entity_id);
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+            }
+        }
+
+
+        function selectEntity(entityId, entityData = null) {
+            document.getElementById('searchResults').classList.remove('active');
+
+            // Cache entity data if provided
+            if (entityData) {
+                entityCache[entityId] = entityData;
+            }
+
+            loadEntity(entityId);
+            // Update URL
+            window.history.pushState({}, '', `?id=${entityId}`);
+        }
+
+        // Load entity details
+        async function loadEntity(entityId) {
+            document.getElementById('welcomeState').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('entityPage').style.display = 'none';
+
+            try {
+                // Check cache first
+                if (entityCache[entityId]) {
+                    currentEntity = entityCache[entityId];
+                    renderEntity(currentEntity);
+                    return;
+                }
+
+                // Search for entity by name extracted from ID (for URL params)
+                // Try the entity name from the ID format osanc_Q123456
+                const wikidataId = entityId.replace('osanc_', '');
+
+                // Search using the wikidata ID as query
+                const response = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: wikidataId, limit: 10 })
+                });
+                const searchData = await response.json();
+
+                // Find exact match by entity_id
+                let found = null;
+                if (searchData.results) {
+                    found = searchData.results.find(e => e.entity_id === entityId);
+                }
+
+                if (!found && searchData.results && searchData.results.length > 0) {
+                    // Just use first result if no exact match
+                    found = searchData.results[0];
+                }
+
+                if (!found) {
+                    document.getElementById('loadingState').innerHTML =
+                        '<div style="color: var(--danger);">Entity not found. Try searching by name.</div>';
+                    return;
+                }
+
+                currentEntity = found;
+                entityCache[entityId] = found;
+                renderEntity(currentEntity);
+
+            } catch (error) {
+                console.error('Failed to load entity:', error);
+                document.getElementById('loadingState').innerHTML =
+                    `<div style="color: var(--danger);">Error: ${error.message}</div>`;
+            }
+        }
+
+        function renderEntity(entity) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('entityPage').style.display = 'grid';
+
+            // Header
+            document.getElementById('entityType').textContent = entity.entity_type.toUpperCase();
+            document.getElementById('entityName').textContent = entity.name;
+            document.getElementById('entitySubtitle').textContent = entity.source || 'OpenSanctions';
+
+            // Flags
+            const countries = entity.countries || [];
+            document.getElementById('entityFlags').textContent =
+                countries.map(c => getFlagEmoji(c)).join(' ');
+
+            // Datasets/Sanctions
+            const datasets = entity.datasets || [];
+            const sanctions = datasets.filter(d =>
+                d.includes('sanction') || d.includes('ofac') || d.includes('sdn') ||
+                d.includes('fsf') || d.includes('hmt') || d.includes('nsdc')
+            );
+            const watchlists = datasets.filter(d =>
+                !sanctions.includes(d) && (d.includes('pep') || d.includes('interpol') || d.includes('wanted'))
+            );
+
+            const sanctionsList = document.getElementById('sanctionsList');
+            sanctionsList.innerHTML = [
+                ...sanctions.map(s => `<span class="sanction-tag">${formatDatasetName(s)}</span>`),
+                ...watchlists.map(s => `<span class="sanction-tag warning">${formatDatasetName(s)}</span>`)
+            ].join('') || '<span style="color: var(--text-secondary)">No active sanctions</span>';
+
+            // Properties
+            const props = entity.properties || {};
+            const propsTable = document.getElementById('propertiesTable').querySelector('tbody');
+            propsTable.innerHTML = `
+                <tr><th>Entity ID</th><td>${entity.entity_id}</td></tr>
+                <tr><th>Type</th><td>${entity.entity_type}</td></tr>
+                <tr><th>Countries</th><td>${countries.map(c => getFlagEmoji(c) + ' ' + c.toUpperCase()).join(', ') || 'Unknown'}</td></tr>
+                ${Object.entries(props).slice(0, 10).map(([key, value]) =>
+                `<tr><th>${formatPropertyName(key)}</th><td>${Array.isArray(value) ? value.join(', ') : value}</td></tr>`
+            ).join('')}
+            `;
+
+            // Data Sources
+            const sourcesEl = document.getElementById('dataSources');
+            sourcesEl.innerHTML = datasets.map(d =>
+                `<span class="source-badge">${formatDatasetName(d)}</span>`
+            ).join('');
+
+            // Metrics
+            document.getElementById('metricSanctions').textContent = sanctions.length;
+            document.getElementById('metricCountries').textContent = countries.length;
+            document.getElementById('metricAliases').textContent = props.alias ? props.alias.length : 0;
+            document.getElementById('metricSources').textContent = datasets.length;
+
+            // Risk Level
+            const riskLevel = sanctions.length >= 3 ? 'HIGH' :
+                sanctions.length >= 1 ? 'MED' : 'LOW';
+            const riskColors = { HIGH: 'var(--danger)', MED: 'var(--warning)', LOW: 'var(--success)' };
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskLevel').style.color = riskColors[riskLevel];
+            document.getElementById('riskDesc').textContent =
+                `${sanctions.length} sanction list${sanctions.length !== 1 ? 's' : ''}, ` +
+                `${watchlists.length} watchlist${watchlists.length !== 1 ? 's' : ''}`;
+
+            // Load related entities
+            loadRelatedEntities(entity);
+        }
+
+        async function loadRelatedEntities(entity) {
+            const container = document.getElementById('relatedList');
+
+            // Search for potentially related entities (same country or name parts)
+            try {
+                const nameParts = entity.name.split(' ').filter(p => p.length > 3);
+                if (nameParts.length > 0) {
+                    const response = await fetch(`${API_BASE}/entities/search`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query: nameParts[nameParts.length - 1], limit: 5 })
+                    });
+                    const data = await response.json();
+
+                    const related = data.results.filter(e => e.entity_id !== entity.entity_id);
+
+                    if (related.length > 0) {
+                        container.innerHTML = related.map(e => `
+                            <div class="related-item" onclick="selectEntity('${e.entity_id}')">
+                                <div class="icon">${getTypeIcon(e.entity_type)}</div>
+                                <div class="name">${e.name}</div>
+                                <div class="type">${e.entity_type}</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<div style="color: var(--text-secondary); font-size: 0.9rem;">No related entities found</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load related:', error);
+            }
+        }
+
+        // Helpers
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function getFlagEmoji(countryCode) {
+            if (!countryCode || countryCode.length !== 2) return '';
+            const codePoints = countryCode.toUpperCase().split('')
+                .map(char => 127397 + char.charCodeAt(0));
+            return String.fromCodePoint(...codePoints);
+        }
+
+        function formatDatasetName(dataset) {
+            const names = {
+                'us_ofac_sdn': '🇺🇸 OFAC SDN',
+                'eu_fsf': '🇪🇺 EU Sanctions',
+                'gb_hmt_sanctions': '🇬🇧 UK HMT',
+                'ua_nsdc_sanctions': '🇺🇦 Ukraine NSDC',
+                'ch_seco_sanctions': '🇨🇭 Swiss SECO',
+                'au_dfat_sanctions': '🇦🇺 Australia DFAT',
+                'ca_dfatd_sema_sanctions': '🇨🇦 Canada SEMA',
+                'interpol_red_notices': '🔴 Interpol Red',
+                'us_trade_csl': '🇺🇸 Trade CSL',
+                'wikidata': '📚 Wikidata',
+                'wd_peps': '👔 PEPs',
+                'wd_oligarchs': '💰 Oligarchs',
+            };
+            return names[dataset] || dataset.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatPropertyName(key) {
+            return key.replace(/([A-Z])/g, ' $1')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                person: '👤',
+                company: '🏢',
+                organization: '🏛️',
+                legalentity: '⚖️'
+            };
+            return icons[type] || '📄';
+        }
+    </script>
+</body>
+
+</html>

@@ -65,11 +65,11 @@
     "ICEBURG": {
       "created": "2025-12-30T05:02:46.178899",
       "file": "topics/ICEBURG.md",
-      "last_updated": "2026-01-15T18:00:49.514517",
+      "last_updated": "2026-01-17T00:46:36.129663",
       "metadata": {
-        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
         "user_id": null,
-        "extracted_at": "2026-01-15T18:00:49.513130"
+        "extracted_at": "2026-01-17T00:46:36.128086"
       }
     },
     "AI research system": {
@@ -435,11 +435,11 @@
     "Surveyor agent": {
       "created": "2026-01-15T13:07:45.064461",
       "file": "topics/Surveyor-agent.md",
-      "last_updated": "2026-01-15T14:01:18.205753",
+      "last_updated": "2026-01-17T00:15:19.202107",
       "metadata": {
-        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
         "user_id": null,
-        "extracted_at": "2026-01-15T14:01:18.201988"
+        "extracted_at": "2026-01-17T00:15:19.194668"
       }
     },
     "Dissident agent": {
@@ -525,11 +525,11 @@
     "ICEBURG research platform": {
       "created": "2026-01-15T13:09:29.844468",
       "file": "topics/ICEBURG-research-platform.md",
-      "last_updated": "2026-01-15T13:09:29.844507",
+      "last_updated": "2026-01-17T00:15:19.196857",
       "metadata": {
-        "conversation_id": "test_conv_1768511344",
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
         "user_id": null,
-        "extracted_at": "2026-01-15T13:09:29.843747"
+        "extracted_at": "2026-01-17T00:15:19.194668"
       }
     },
     "advanced AI system": {
@@ -911,6 +911,166 @@
         "user_id": null,
         "extracted_at": "2026-01-15T17:46:57.688871"
       }
+    },
+    "modes for user needs": {
+      "created": "2026-01-17T00:01:26.930618",
+      "file": "topics/modes-for-user-needs.md",
+      "last_updated": "2026-01-17T00:01:26.930663",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:01:26.924930"
+      }
+    },
+    "Surveyor": {
+      "created": "2026-01-17T00:07:21.782494",
+      "file": "topics/Surveyor.md",
+      "last_updated": "2026-01-17T00:46:36.133300",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:46:36.128086"
+      }
+    },
+    "Dissident": {
+      "created": "2026-01-17T00:07:21.783853",
+      "file": "topics/Dissident.md",
+      "last_updated": "2026-01-17T00:46:36.135607",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:46:36.128086"
+      }
+    },
+    "Synthesist": {
+      "created": "2026-01-17T00:07:21.786774",
+      "file": "topics/Synthesist.md",
+      "last_updated": "2026-01-17T00:46:36.137723",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:46:36.128086"
+      }
+    },
+    "Oracle": {
+      "created": "2026-01-17T00:07:21.787771",
+      "file": "topics/Oracle.md",
+      "last_updated": "2026-01-17T00:46:36.139808",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:46:36.128086"
+      }
+    },
+    "modes for exploration": {
+      "created": "2026-01-17T00:15:19.199804",
+      "file": "topics/modes-for-exploration.md",
+      "last_updated": "2026-01-17T00:15:19.199847",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:15:19.194668"
+      }
+    },
+    "capabilities of ICEBURG": {
+      "created": "2026-01-17T00:19:25.581320",
+      "file": "topics/capabilities-of-ICEBURG.md",
+      "last_updated": "2026-01-17T00:19:25.581368",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:19:25.579465"
+      }
+    },
+    "in-depth analysis": {
+      "created": "2026-01-17T00:19:25.583287",
+      "file": "topics/in-depth-analysis.md",
+      "last_updated": "2026-01-17T00:19:25.583298",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:19:25.579465"
+      }
+    },
+    "critique and challenging assumptions": {
+      "created": "2026-01-17T00:19:25.584316",
+      "file": "topics/critique-and-challenging-assumptions.md",
+      "last_updated": "2026-01-17T00:19:25.584325",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:19:25.579465"
+      }
+    },
+    "integrating findings": {
+      "created": "2026-01-17T00:19:25.585688",
+      "file": "topics/integrating-findings.md",
+      "last_updated": "2026-01-17T00:19:25.585696",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:19:25.579465"
+      }
+    },
+    "verifying evidence": {
+      "created": "2026-01-17T00:19:25.586465",
+      "file": "topics/verifying-evidence.md",
+      "last_updated": "2026-01-17T00:19:25.586473",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:19:25.579465"
+      }
+    },
+    "Astrology and Organs": {
+      "created": "2026-01-17T00:55:47.067322",
+      "file": "topics/Astrology-and-Organs.md",
+      "last_updated": "2026-01-17T00:55:47.067376",
+      "metadata": {
+        "conversation_id": "conv_1768640020514_463sgmepk",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:55:47.065410"
+      }
+    },
+    "Sigilistic Astrology": {
+      "created": "2026-01-17T00:55:47.070709",
+      "file": "topics/Sigilistic-Astrology.md",
+      "last_updated": "2026-01-17T00:55:47.070748",
+      "metadata": {
+        "conversation_id": "conv_1768640020514_463sgmepk",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:55:47.065410"
+      }
+    },
+    "Symbolic Connections between Astrology and Organs": {
+      "created": "2026-01-17T00:55:47.073346",
+      "file": "topics/Symbolic-Connections-between-Astrology-and-Organs.md",
+      "last_updated": "2026-01-17T00:55:47.073379",
+      "metadata": {
+        "conversation_id": "conv_1768640020514_463sgmepk",
+        "user_id": null,
+        "extracted_at": "2026-01-17T00:55:47.065410"
+      }
+    },
+    "pharmaceutical companies": {
+      "created": "2026-01-19T15:26:39.142012",
+      "file": "topics/pharmaceutical-companies.md",
+      "last_updated": "2026-01-19T15:26:39.142115",
+      "metadata": {
+        "conversation_id": "conv_1768698129825_c0rhszaml",
+        "user_id": null,
+        "extracted_at": "2026-01-19T15:26:39.141000"
+      }
+    },
+    "political lobbying": {
+      "created": "2026-01-19T15:26:39.145674",
+      "file": "topics/political-lobbying.md",
+      "last_updated": "2026-01-19T15:26:39.145706",
+      "metadata": {
+        "conversation_id": "conv_1768698129825_c0rhszaml",
+        "user_id": null,
+        "extracted_at": "2026-01-19T15:26:39.141000"
+      }
     }
   },
   "personas": {
@@ -919,5 +1079,5 @@
       "last_updated": "2025-12-30T19:21:12.331292"
     }
   },
-  "last_updated": "2026-01-15T18:00:49.517061"
+  "last_updated": "2026-01-19T15:26:39.145709"
 }

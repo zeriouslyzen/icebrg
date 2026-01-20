@@ -84,6 +84,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host if request.client else "unknown"
         now = datetime.now()
         
+        # Exempt certain paths from rate limiting
+        exempt_paths = ["/api/matrix/", "/ws", "/api/health"]
+        path = request.url.path
+        if any(path.startswith(p) for p in exempt_paths):
+            return await call_next(request)
+        
         # Periodic cleanup of old entries
         if now - self.last_cleanup > self.cleanup_interval:
             self._cleanup_old_entries(now)
@@ -118,12 +124,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                 security_logger.warning(f"RATE_LIMIT_EXCEEDED: IP={client_ip}, Requests={len(minute_requests)}, Limit={self.requests_per_minute}")
             except:
                 pass
-                return Response(
-                    content='{"error": "Rate limit exceeded"}',
-                    status_code=429,
-                    media_type="application/json",
-                    headers={"Retry-After": "60"}
-                )
+            return Response(
+                content='{"error": "Rate limit exceeded"}',
+                status_code=429,
+                media_type="application/json",
+                headers={"Retry-After": "60"}
+            )
         
         # Add current request
         recent_requests.append(now)

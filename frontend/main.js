@@ -3692,6 +3692,8 @@ async function sendQuery() {
                     degradation_mode: false,
                     files: filesData,
                     settings: settings,
+                    // Inject active investigation ID if present (for resuming context)
+                    investigation_id: window.activeInvestigationId || null,
                     data: birthData,  // Include birth data and/or algorithmic_data for astro-physiology mode
                     // Also include algorithmic_data at top level for backend compatibility
                     algorithmic_data: birthData?.algorithmic_data,
@@ -4165,6 +4167,10 @@ function loadConversation(conversationId) {
 
 function newConversation() {
     currentConversationId = 'conv_' + Date.now();
+    window.activeInvestigationId = null; // Clear investigation context
+    // Clear URL params without reloading
+    window.history.pushState({}, document.title, window.location.pathname);
+
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.innerHTML = `
         <div class="welcome-message">
@@ -4401,87 +4407,73 @@ function handleThinkingStream(data, messageElement) {
         return;
     }
 
+    // Find existing container
     let thoughtsContainer = messageElement.querySelector('.thoughts-stream-container');
+
+    // Remove any duplicate containers if they exist (cleanup/recovery)
+    const allContainers = messageElement.querySelectorAll('.thoughts-stream-container');
+    if (allContainers.length > 1) {
+        console.warn('⚠️ Found duplicate thinking containers, cleaning up...');
+        allContainers.forEach((container, index) => {
+            if (index > 0) container.remove();
+        });
+        thoughtsContainer = allContainers[0];
+    }
 
     if (!thoughtsContainer) {
         thoughtsContainer = document.createElement('div');
         thoughtsContainer.className = 'thoughts-stream-container';
+        // Simple single-line structure
         thoughtsContainer.innerHTML = `
             <div class="thoughts-stream-header">
-                <span class="thoughts-stream-current">${data.content || 'Initializing...'}</span>
-                <button class="thoughts-stream-toggle" aria-label="Toggle thinking details">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <span class="thoughts-stream-current"></span>
             </div>
-            <div class="thoughts-stream-items" style="display: none;"></div>
         `;
-
-        // Toggle dropdown
-        const toggleBtn = thoughtsContainer.querySelector('.thoughts-stream-toggle');
-        const itemsContainer = thoughtsContainer.querySelector('.thoughts-stream-items');
-        toggleBtn.addEventListener('click', () => {
-            const isHidden = itemsContainer.style.display === 'none';
-            itemsContainer.style.display = isHidden ? 'block' : 'none';
-            toggleBtn.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-        });
 
         const messageContent = messageElement.querySelector('.message-content');
         if (messageContent) {
-            // Insert at the VERY BEGINNING - before everything (status carousel, answer text, etc.)
-            const firstChild = messageContent.firstChild;
-            if (firstChild) {
-                messageContent.insertBefore(thoughtsContainer, firstChild);
-            } else {
-                messageContent.appendChild(thoughtsContainer);
-            }
-            // Force visibility
-            thoughtsContainer.style.display = 'block';
-            thoughtsContainer.style.visibility = 'visible';
-            thoughtsContainer.style.opacity = '1';
+            // ALWAYS insert at the start
+            messageContent.insertAdjacentElement('afterbegin', thoughtsContainer);
         } else {
             messageElement.appendChild(thoughtsContainer);
-            // Force visibility
-            thoughtsContainer.style.display = 'block';
-            thoughtsContainer.style.visibility = 'visible';
-            thoughtsContainer.style.opacity = '1';
         }
+
+        // Ensure visibility
+        thoughtsContainer.style.display = 'block';
+        thoughtsContainer.style.visibility = 'visible';
+        thoughtsContainer.style.opacity = '1';
     }
 
     const currentDisplay = thoughtsContainer.querySelector('.thoughts-stream-current');
-    const itemsContainer = thoughtsContainer.querySelector('.thoughts-stream-items');
 
-    // Update current line (single line display) with glitch effect
-    if (currentDisplay) {
-        const text = data.content + ' ○';
-        currentDisplay.textContent = text;
-        currentDisplay.dataset.text = text; // For glitch animation
-
-        // Keep glitch animation active continuously while loading
-        // Only toggle if not already active to avoid flicker
-        if (!currentDisplay.classList.contains('glitch-active')) {
-            currentDisplay.classList.add('glitch-active');
-        }
+    // Safety check - if internal structure is broken, fix it
+    if (!currentDisplay) {
+        thoughtsContainer.innerHTML = `
+            <div class="thoughts-stream-header">
+                <span class="thoughts-stream-current"></span>
+            </div>
+        `;
     }
 
-    // Add to dropdown list (no glitchy switching - just append)
-    const thoughtItem = document.createElement('div');
-    thoughtItem.className = 'thoughts-stream-item';
-    thoughtItem.textContent = data.content + ' ○';
-    itemsContainer.appendChild(thoughtItem);
+    // Skip "Initializing..." messages ONLY if we already have content
+    // Otherwise show it so the user knows something is happening
+    const content = data.content || '';
+    const shouldShow = content.trim().length > 0;
 
-    // Mark previous items as complete (but don't remove them - prevents glitchy switching)
-    const allItems = itemsContainer.querySelectorAll('.thoughts-stream-item');
-    allItems.forEach((item, index) => {
-        if (index === allItems.length - 1) {
-            item.classList.add('active');
-            item.classList.remove('complete');
-        } else {
-            item.classList.remove('active');
-            item.classList.add('complete');
+    if (shouldShow) {
+        // Update the single line
+        if (currentDisplay) {
+            // Use ○ as the indicator
+            const text = content + ' ○';
+            currentDisplay.textContent = text;
+            currentDisplay.dataset.text = text; // For glitch animation
+
+            // Ensure glitch effect is active
+            if (!currentDisplay.classList.contains('glitch-active')) {
+                currentDisplay.classList.add('glitch-active');
+            }
         }
-    });
+    }
 }
 
 // Handle step completion for interactive workflow
@@ -5821,8 +5813,53 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.addEventListener('change', handleFileSelect);
     }
 
+
     // Mode selection handler for visualization panels and agent dropdown
     const modeSelect = document.getElementById('modeSelect');
+
+    // Check for investigation URL parameter (Resume Context)
+    const urlParams = new URLSearchParams(window.location.search);
+    const investigationId = urlParams.get('investigation');
+
+    if (investigationId) {
+        console.log('📂 Resuming investigation:', investigationId);
+
+        // Auto-switch to dossier mode
+        if (modeSelect) {
+            modeSelect.value = 'dossier';
+            // Update UI manually since change event won't fire yet
+            if (typeof updateAgentOptionsForMode === 'function') {
+                updateAgentOptionsForMode('dossier');
+            }
+        }
+
+        // Add system message to chat
+        setTimeout(() => {
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer) {
+                const sysMsg = document.createElement('div');
+                sysMsg.className = 'message system-message'; // You might need to add this class to CSS
+                sysMsg.innerHTML = `
+                    <div class="message-content">
+                        <strong>📂 Resuming Investigation Context</strong><br>
+                        Loading investigation ID: <code>${investigationId}</code><br>
+                        <em>You can now ask follow-up questions about this dossier.</em>
+                    </div>
+                `;
+                chatContainer.appendChild(sysMsg);
+                // Also add to conversation history if needed
+            }
+
+            // Set a global flag or config to send with the first message/connection
+            window.activeInvestigationId = investigationId;
+
+            // We need to tell the server about this context. 
+            // We can do this by sending a hidden 'context_update' message once WS connects
+            // OR simply piggyback on the first user message. 
+            // Better: Send a "handshake" message when WS opens if we have this ID.
+        }, 1000); // Wait for UI to settle
+    }
+
     const agentSelect = document.getElementById('agentSelect');
     const agentSelectGroup = agentSelect ? agentSelect.closest('.control-group') : null;
     const visualizationPanels = document.getElementById('visualizationPanels');

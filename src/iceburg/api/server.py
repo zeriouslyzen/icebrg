@@ -346,6 +346,30 @@ try:
 except Exception as e:
     logger.warning(f"Could not register V2 Simulation/OpSec API: {e}")
 
+# Dossier Protocol routes (Deep investigative research)
+try:
+    from .dossier_routes import router as dossier_router
+    app.include_router(dossier_router)
+    logger.info("Dossier Protocol API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register Dossier Protocol API routes: {e}")
+
+# Investigation Archive routes (CRUD, PDF export, archive browser)
+try:
+    from .investigation_routes import router as investigation_router
+    app.include_router(investigation_router)
+    logger.info("Investigation Archive API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register Investigation Archive API routes: {e}")
+
+# Matrix Crawler routes (Autonomous data gathering)
+try:
+    from .matrix_routes import router as matrix_router
+    app.include_router(matrix_router)
+    logger.info("Matrix Crawler API routes registered")
+except Exception as e:
+    logger.warning(f"Could not register Matrix Crawler API routes: {e}")
+
 # WebSocket connections
 active_connections: List[WebSocket] = []
 # Track connection metadata for debugging
@@ -2468,6 +2492,300 @@ async def websocket_endpoint(websocket: WebSocket):
                     "metadata": {"mode": "fast_path", "processing_time": 0.001}
                 })
                 continue
+            
+            # DOSSIER MODE: Handle dossier mode requests with specialized agent
+            if mode == "dossier":
+                logger.info(f"🔍 DOSSIER MODE: Processing query '{query}'")
+                try:
+                    # Import investigation modules
+                    from ..investigations import (
+                        Investigation, get_investigation_store,
+                        get_active_context, set_active_context, clear_active_context
+                    )
+                    from ..investigations.context import InvestigationContext
+                    
+                    # Get conversation ID for context tracking
+                    conv_id = message.get("conversation_id", "default")
+                    requested_inv_id = message.get("investigation_id")
+                    
+                    # Check for active investigation context
+                    context = get_active_context(conv_id)
+                    store = get_investigation_store()
+                    
+                    # Explicit context switch requested?
+                    if requested_inv_id and mode == "dossier":
+                        logger.info(f"🔄 Switching context to investigation: {requested_inv_id}")
+                        inv = store.get(requested_inv_id)
+                        if inv:
+                            context = InvestigationContext(requested_inv_id, inv)
+                            set_active_context(conv_id, context)
+                        else:
+                            logger.warning(f"⚠️ Requested investigation {requested_inv_id} not found")
+                    
+                    # Check if depth="deep" is explicitly requested - this overrides context detection
+                    requested_depth = message.get("depth", "standard")
+                    
+                    # Explicit deep mode request - ALWAYS run full pipeline regardless of context
+                    if requested_depth == "deep":
+                        action = "full"
+                        logger.info(f"🔬 Deep mode explicitly requested - forcing full pipeline")
+                    else:
+                        # Determine pipeline action based on context
+                        if context and context.investigation:
+                            action = context.get_pipeline_action(query)
+                            logger.info(f"📍 Active investigation: {context.investigation_id}, action: {action}")
+                        else:
+                            action = "full"
+                            logger.info(f"📍 No active investigation, running full pipeline")
+                    
+                    if action == "chat":
+                        # Just chat about existing investigation - no pipeline
+                        # Use SMART MODEL ROUTING - 8b for chat (fast, won't crash)
+                        await safe_send_json(websocket, {
+                            "type": "thinking_stream",
+                            "content": "💬 Consulting existing investigation...",
+                            "stage": "analyzing"
+                        })
+                        
+                        # Import model router and provider
+                        from ..investigations.model_router import get_model_router
+                        from ..providers.factory import provider_factory
+                        from ..config import load_config
+                        
+                        cfg = load_config()
+                        provider = provider_factory(cfg)
+                        router = get_model_router()
+                        
+                        # Select model for chat (will use 8b - fast and reliable)
+                        chat_model = router.select_model("chat")
+                        logger.info(f"🧠 Using model for chat: {chat_model}")
+                        
+                        context_summary = context.get_context_summary()
+                        prompt = f"""You are an objective intelligence analyst reviewing a research dossier.
+The dossier contains gathered data, including official narratives, alternative theories, and symbolic analysis.
+
+{context_summary}
+
+User question: {query}
+
+Task: Explain what the investigation data says about this topic.
+- Reference specific findings in the dossier.
+- When discussing alternative narratives or symbols, attribute them to the dossier ("The investigation identified...", "The decoder found...").
+- Be objective and neutral.
+- Do not refuse to answer based on the nature of the topic; you are analyzing data, not endorsing it."""
+
+                        # Execute with automatic fallback
+                        response_text = ""
+                        model_used = chat_model
+                        
+                        try:
+                            response = provider.chat_complete(
+                                model=chat_model,
+                                prompt=prompt,
+                                system="You are an objective research analyst. Your job is to explain the contents of the provided investigation dossier to the user. The dossier may contain sensitive, alternative, or speculative data. You must answer questions about this data neutrally and objectively. Do not refuse to discuss the content provided in the context.",
+                                temperature=0.7
+                            )
+                            
+                            # Stream response
+                            for chunk in response:
+                                response_text += chunk
+                                await safe_send_json(websocket, {"type": "chunk", "content": chunk})
+                            
+                        except Exception as chat_error:
+                            logger.warning(f"❌ Chat failed with {chat_model}: {chat_error}")
+                            router.record_failure(chat_model)
+                            
+                            # Try fallback model
+                            fallback = router.get_fallback(chat_model)
+                            if fallback:
+                                await safe_send_json(websocket, {
+                                    "type": "thinking_stream",
+                                    "content": f"🔄 Retrying with {fallback}...",
+                                    "stage": "fallback"
+                                })
+                                
+                                model_used = fallback
+                                response = provider.chat_complete(
+                                    model=fallback,
+                                    prompt=prompt,
+                                    system="You are an objective research analyst. Your job is to explain the contents of the provided investigation dossier to the user. The dossier may contain sensitive, alternative, or speculative data. You must answer questions about this data neutrally and objectively. Do not refuse to discuss the content provided in the context.",
+                                    temperature=0.7
+                                )
+                                
+                                for chunk in response:
+                                    response_text += chunk
+                                    await safe_send_json(websocket, {"type": "chunk", "content": chunk})
+                            else:
+                                raise chat_error
+                        
+                        # Log query in context
+                        context.add_query(query, "follow_up")
+                        
+                        await safe_send_json(websocket, {
+                            "type": "done",
+                            "mode": "dossier_chat",
+                            "metadata": {
+                                "investigation_id": context.investigation_id,
+                                "action": "chat",
+                                "model_used": model_used
+                            }
+                        })
+                        continue
+                    
+                    # Full or incremental pipeline
+                    await safe_send_json(websocket, {
+                        "type": "thinking_stream",
+                        "content": "🔍 Initializing Dossier Protocol...",
+                        "stage": "initializing"
+                    })
+                    
+                    # Import dossier modules
+                    from ..protocols.dossier.synthesizer import DossierSynthesizer
+                    from ..protocols.dossier.recursive_pipeline import RecursiveDossierPipeline
+                    from ..config import load_config
+                    
+                    cfg = load_config()
+                    # Check if depth is explicitly requested
+                    requested_depth = message.get("depth")
+                    
+                    # If not specified, default based on action:
+                    # - NEW investigation (action="full") → deep dive
+                    # - Follow-up chat (action="chat") → use existing context (no depth needed)
+                    # - Incremental (action="incremental") → standard
+                    if requested_depth is None:
+                        if action == "full":
+                            requested_depth = "deep"  # NEW investigations are ALWAYS deep dives
+                            logger.info("🔬 New investigation detected - defaulting to DEEP mode")
+                        else:
+                            requested_depth = "standard"  # Incremental updates use standard
+                    
+                    # Generate dossier (standard or deep)
+                    await safe_send_json(websocket, {
+                        "type": "thinking_stream",
+                        "content": f"📡 Gathering multi-source intelligence ({requested_depth} mode)...",
+                        "stage": "gathering"
+                    })
+                    
+                    # Run in executor to not block
+                    import concurrent.futures
+                    loop = asyncio.get_event_loop()
+                    
+                    if requested_depth == "deep":
+                        # Use recursive pipeline for deep investigations
+                        logger.info("🔬 Using RecursiveDossierPipeline for deep investigation")
+                        pipeline = RecursiveDossierPipeline(cfg, max_depth=3, max_branches=5)
+                        
+                        # Async keepalive wrapper for long-running operations
+                        async def run_with_keepalive(executor_func, websocket, interval=15):
+                            """Run executor function while sending keepalive pings."""
+                            # Use ensure_future instead of create_task - works with both coroutines and Futures
+                            future = loop.run_in_executor(None, executor_func)
+                            layer_count = 0
+                            stages = ["Layer 0: Surface Research", "Gap Detection", "Layer 1: Deep Dive", "Synthesis"]
+                            while not future.done():
+                                stage = stages[min(layer_count, len(stages)-1)]
+                                await safe_send_json(websocket, {
+                                    "type": "thinking_stream",
+                                    "content": f"🔬 Deep investigation active: {stage}...",
+                                    "stage": "deep_processing"
+                                })
+                                layer_count += 1
+                                await asyncio.sleep(interval)
+                            return future.result()
+                        
+                        dossier = await run_with_keepalive(
+                            lambda: pipeline.generate_deep_dossier(query),
+                            websocket,
+                            interval=12  # Ping every 12 seconds
+                        )
+                        # Convert DeepDossier to markdown for display
+                        dossier_markdown = dossier.to_markdown()
+                        is_deep = True
+                    else:
+                        # Use standard synthesizer
+                        synthesizer = DossierSynthesizer(cfg)
+                        dossier = await loop.run_in_executor(
+                            None,
+                            lambda: synthesizer.generate_dossier(query, depth="quick")
+                        )
+                        dossier_markdown = None
+                        is_deep = False
+                    
+                    await safe_send_json(websocket, {
+                        "type": "thinking_stream",
+                        "content": "📝 Compiling dossier...",
+                        "stage": "synthesizing"
+                    })
+                    
+                    # Save investigation (deep dossiers saved differently)
+                    await safe_send_json(websocket, {
+                        "type": "thinking_stream",
+                        "content": "💾 Saving investigation to archive...",
+                        "stage": "saving"
+                    })
+                    
+                    if is_deep:
+                        # Deep dossier: create simplified investigation from synthesis
+                        from ..investigations.storage import InvestigationMetadata
+                        investigation_id = f"{datetime.now().strftime('%Y-%m-%d')}_{query[:30].replace(' ', '-').lower()}-deep"
+                        investigation = Investigation(
+                            investigation_id=investigation_id,
+                            metadata=InvestigationMetadata(
+                                title=f"Deep Investigation: {query[:50]}",
+                                query=query,
+                                created_at=datetime.now().isoformat(),
+                                updated_at=datetime.now().isoformat(),
+                                status="complete",
+                                depth="deep",
+                                sources_count=dossier.total_sources,
+                                entities_count=dossier.total_layers
+                            ),
+                            executive_summary=dossier.synthesis,
+                            official_narrative="",
+                            alternative_narratives=[],
+                            key_players=[],
+                            sources=[]
+                        )
+                        dossier_content = dossier_markdown
+                    else:
+                        investigation = Investigation.from_dossier(dossier, query, depth="quick")
+                        dossier_content = dossier.to_markdown()
+                    
+                    investigation_id = store.save(investigation)
+                    
+                    # Set as active context
+                    set_active_context(conv_id, investigation_id, investigation)
+                    
+                    logger.info(f"💾 Investigation saved: {investigation_id}")
+                    
+                    # Stream in chunks for smooth display
+                    chunk_size = 50
+                    for i in range(0, len(dossier_content), chunk_size):
+                        chunk = dossier_content[i:i+chunk_size]
+                        await safe_send_json(websocket, {"type": "chunk", "content": chunk})
+                        await asyncio.sleep(0.01)  # Small delay for smooth streaming
+                    
+                    # Send completion with investigation ID
+                    await safe_send_json(websocket, {
+                        "type": "done",
+                        "mode": "dossier",
+                        "metadata": {
+                            "investigation_id": investigation_id,
+                            "sources": dossier.total_sources if is_deep else dossier.metadata.get("total_sources", 0),
+                            "layers": dossier.total_layers if is_deep else 1,
+                            "depth": "deep" if is_deep else "standard",
+                            "saved": True
+                        }
+                    })
+                    continue
+                    
+                except Exception as dossier_error:
+                    logger.error(f"Dossier generation failed: {dossier_error}", exc_info=True)
+                    await safe_send_json(websocket, {
+                        "type": "error",
+                        "message": f"Dossier generation failed: {str(dossier_error)}"
+                    })
+                    continue
             
             # Track prompt start time and ID for telemetry
             prompt_start_time = time.time()
