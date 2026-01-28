@@ -78,6 +78,46 @@
       "destination": "/admin.html"
     },
     {
+      "source": "/pegasus",
+      "destination": "/pegasus.html"
+    },
+    {
+      "source": "/pegasus.html",
+      "destination": "/pegasus.html"
+    },
+    {
+      "source": "/dossier",
+      "destination": "/dossier.html"
+    },
+    {
+      "source": "/civilization",
+      "destination": "/civilization.html"
+    },
+    {
+      "source": "/matrix",
+      "destination": "/matrix.html"
+    },
+    {
+      "source": "/entity",
+      "destination": "/entity.html"
+    },
+    {
+      "source": "/investigations",
+      "destination": "/investigations.html"
+    },
+    {
+      "source": "/colossus",
+      "destination": "/colossus/index.html"
+    },
+    {
+      "source": "/colossus/graph",
+      "destination": "/colossus/graph.html"
+    },
+    {
+      "source": "/colossus/entity",
+      "destination": "/colossus/entity.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

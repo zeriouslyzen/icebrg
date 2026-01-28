@@ -42,7 +42,16 @@ export default defineConfig({
         research: fileURLToPath(new URL('./research.html', import.meta.url)),
         study: fileURLToPath(new URL('./study.html', import.meta.url)),
         protocols: fileURLToPath(new URL('./protocols.html', import.meta.url)),
-        admin: fileURLToPath(new URL('./admin.html', import.meta.url))
+        admin: fileURLToPath(new URL('./admin.html', import.meta.url)),
+        pegasus: fileURLToPath(new URL('./pegasus.html', import.meta.url)),
+        dossier: fileURLToPath(new URL('./dossier.html', import.meta.url)),
+        civilization: fileURLToPath(new URL('./civilization.html', import.meta.url)),
+        matrix: fileURLToPath(new URL('./matrix.html', import.meta.url)),
+        entity: fileURLToPath(new URL('./entity.html', import.meta.url)),
+        investigations: fileURLToPath(new URL('./investigations.html', import.meta.url)),
+        colossus_index: fileURLToPath(new URL('./colossus/index.html', import.meta.url)),
+        colossus_graph: fileURLToPath(new URL('./colossus/graph.html', import.meta.url)),
+        colossus_entity: fileURLToPath(new URL('./colossus/entity.html', import.meta.url))
       }
     }
   },
