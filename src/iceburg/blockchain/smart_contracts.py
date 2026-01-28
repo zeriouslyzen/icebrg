@@ -35,7 +35,7 @@ class BlockchainVerificationSystem:
     Blockchain verification system for ICEBURG
     """
 
-    def __init__(self, cfg, verifier: Verifier | None = None):
+    def __init__(self, cfg, verifier: Optional[Verifier] = None):
         self.cfg = cfg
         self.verifier: Verifier = verifier or SimulatedVerifier()
 

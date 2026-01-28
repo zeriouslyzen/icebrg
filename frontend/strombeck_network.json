@@ -1,0 +1,815 @@
+{
+  "nodes": [
+    {
+      "id": "company_strombeck_properties",
+      "name": "Strombeck Properties",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_960_s_g_st_arcata",
+      "name": "960 S G St Arcata",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_eureka",
+      "name": "Eureka",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_list_affordable",
+      "name": "List Affordable",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_lost_coast",
+      "name": "Lost Coast",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_union_st",
+      "name": "Union St",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "address_vista_realty",
+      "name": "Vista Realty",
+      "type": "address",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_action_agency",
+      "name": "Action Agency",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_affordable_housing",
+      "name": "Affordable Housing",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_arrowhead_housing",
+      "name": "Arrowhead Housing",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_discover_company",
+      "name": "Discover Company",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_rental_housing",
+      "name": "Rental Housing",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "company_vista_realty",
+      "name": "Vista Realty",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_affordable_housing",
+      "name": "Affordable Housing",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_alumni_owned",
+      "name": "Alumni Owned",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_arcata_apartments",
+      "name": "Arcata Apartments",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_arrowhead_housing",
+      "name": "Arrowhead Housing",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_arts_degree",
+      "name": "Arts Degree",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_bizapedia_discover",
+      "name": "Bizapedia Discover",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_contact_info",
+      "name": "Contact Info",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_contractors_license",
+      "name": "Contractors License",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_corporation_license",
+      "name": "Corporation License",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_county_property",
+      "name": "County Property",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_decorating_ownership",
+      "name": "Decorating Ownership",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_hailee_lopez",
+      "name": "Hailee Lopez",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_housing_authority",
+      "name": "Housing Authority",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_housing_contact",
+      "name": "Housing Contact",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_humboldt_county",
+      "name": "Humboldt County",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_myrtletown_eureka",
+      "name": "Myrtletown Eureka",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_official_website",
+      "name": "Official Website",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_our_staff",
+      "name": "Our Staff",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_parkway_apartments",
+      "name": "Parkway Apartments",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_phone_number",
+      "name": "Phone Number",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_phone_numbers",
+      "name": "Phone Numbers",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_property_management",
+      "name": "Property Management",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_property_managers",
+      "name": "Property Managers",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_real_estate",
+      "name": "Real Estate",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_recently_sold",
+      "name": "Recently Sold",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_redwood_community",
+      "name": "Redwood Community",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_registered_agent",
+      "name": "Registered Agent",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_rental_housing",
+      "name": "Rental Housing",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_sacramento_state",
+      "name": "Sacramento State",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_salvation_army",
+      "name": "Salvation Army",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_steve_caserza",
+      "name": "Steve Caserza",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_steven_mark_strombeck",
+      "name": "Steven Mark Strombeck",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_transfer_records",
+      "name": "Transfer Records",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_waltina_martha_strombeck",
+      "name": "Waltina Martha Strombeck",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "person_zillow_browse",
+      "name": "Zillow Browse",
+      "type": "person",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "phone_7078224557",
+      "name": "707-822-4557",
+      "type": "phone",
+      "countries": [],
+      "sanctions_count": 0
+    },
+    {
+      "id": "strombeck_properties_company",
+      "name": "Strombeck Properties",
+      "type": "company",
+      "countries": [],
+      "sanctions_count": 0
+    }
+  ],
+  "edges": [
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_waltina_martha_strombeck",
+      "type": "FAMILY_OF"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_waltina_martha_strombeck",
+      "type": "FAMILY_OF"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "address_eureka",
+      "type": "LOCATED_AT"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_salvation_army",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "address_eureka",
+      "type": "LOCATED_AT"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_bizapedia_discover",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_registered_agent",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_discover_company",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_sacramento_state",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_arts_degree",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_contractors_license",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_alumni_owned",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_our_staff",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "address_eureka",
+      "type": "LOCATED_AT"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_real_estate",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_transfer_records",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_phone_number",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_contact_info",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_phone_numbers",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_hailee_lopez",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_steve_caserza",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_myrtletown_eureka",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_recently_sold",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_zillow_browse",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_myrtletown_eureka",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "address_eureka",
+      "type": "LOCATED_AT"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "address_eureka",
+      "type": "LOCATED_AT"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "company_strombeck_properties",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "person_waltina_martha_strombeck",
+      "type": "FAMILY_OF"
+    },
+    {
+      "id": null,
+      "source": "person_steven_mark_strombeck",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_property_management",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_housing_authority",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_corporation_license",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "address_list_affordable",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "address_union_st",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_rental_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_property_managers",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_affordable_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "address_lost_coast",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_county_property",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_arrowhead_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "address_vista_realty",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_humboldt_county",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_arcata_apartments",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_official_website",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_housing_contact",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_redwood_community",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_decorating_ownership",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_parkway_apartments",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "company_rental_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "company_vista_realty",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "company_arrowhead_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "person_redwood_community",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "company_affordable_housing",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "phone_7078224557",
+      "target": "company_action_agency",
+      "type": "ASSOCIATED_WITH"
+    },
+    {
+      "id": null,
+      "source": "strombeck_properties_company",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "address_960_s_g_st_arcata",
+      "type": "OWNS"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    },
+    {
+      "id": null,
+      "source": "company_strombeck_properties",
+      "target": "phone_7078224557",
+      "type": "HAS_PHONE"
+    }
+  ],
+  "center": "company_strombeck_properties",
+  "depth": 2,
+  "query_stats": {
+    "relationships_found": 94,
+    "nodes_found": 50,
+    "nodes_missing": 0,
+    "edges_filtered": 19,
+    "center_entity_exists": true
+  }
+}

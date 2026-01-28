@@ -83,16 +83,12 @@ class UnifiedMemory:
         except NameError:
             _UNIFIED_MEMORY_CHROMA_CLIENT = None  # type: ignore
         if _UNIFIED_MEMORY_CHROMA_CLIENT is None:
-            try:
-                _UNIFIED_MEMORY_CHROMA_CLIENT = chromadb.PersistentClient(
-                    path=str(self._cfg.data_dir / "chroma"),
-                    settings=Settings(anonymized_telemetry=False),
-                )
-            except Exception as e:
-                import logging
-                logger = logging.getLogger(__name__)
-                logger.warning(f"ChromaDB initialization failed for UnifiedMemory: {e}. Continuing without persistent memory.")
-                _UNIFIED_MEMORY_CHROMA_CLIENT = None
+            # TEMPORARILY DISABLED: ChromaDB Rust bindings are panicking
+            # TODO: Upgrade chromadb package or investigate root cause
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning("ChromaDB initialization SKIPPED (Rust binding issue). Using mock mode.")
+            _UNIFIED_MEMORY_CHROMA_CLIENT = None
         self._client = _UNIFIED_MEMORY_CHROMA_CLIENT
         self._embed_fn = SafeEmbeddingFunction(self._cfg)
         self._collections: Dict[str, Any] = {}
@@ -116,6 +112,8 @@ class UnifiedMemory:
 
     # ---------- Vector indexing & search ----------
     def _get_collection(self, namespace: str):
+        if self._client is None:
+            return None
         if namespace not in self._collections:
             self._collections[namespace] = self._client.get_or_create_collection(
                 name=f"iceburg_{namespace}",
@@ -132,6 +130,8 @@ class UnifiedMemory:
         ids: Optional[Sequence[str]] = None,
     ) -> List[str]:
         col = self._get_collection(namespace)
+        if col is None:
+            return []  # Graceful degradation when ChromaDB is unavailable
         if metadatas is None:
             metadatas = [{} for _ in texts]
         if ids is None:
@@ -143,6 +143,8 @@ class UnifiedMemory:
 
     def search(self, namespace: str, query: str, k: int = 8) -> List[Dict[str, Any]]:
         col = self._get_collection(namespace)
+        if col is None:
+            return []  # Graceful degradation when ChromaDB is unavailable
         try:
             res = col.query(query_texts=[query], n_results=k)
         except Exception:

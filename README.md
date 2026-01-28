@@ -1,6 +1,6 @@
 # ICEBURG: Multi-Agent Research Platform
 
-**Local-first AI research system powered by Ollama with multi-agent deliberation.**
+**Local-first AI research system powered by Ollama with multi-agent deliberation and high-fidelity intelligence mapping.**
 
 Built for [katanx.com](https://www.katanx.com) - a self-development platform for practitioners of "The Nine Arts."
 
@@ -8,35 +8,23 @@ Built for [katanx.com](https://www.katanx.com) - a self-development platform for
 
 ICEBURG currently provides:
 
-- **Secretary Chat Agent**: Fast conversational AI using local Ollama models (llama3.1:8b, qwen2.5, etc.)
-- **Multi-Agent Research Protocol**: Surveyor → Dissident → Synthesist → Oracle for deep analysis
-- **Web Frontend**: Mobile-first UI with real-time SSE streaming (http://localhost:3000)
-- **Conversation Memory**: Context-aware follow-up questions
-- **Conversation Memory**: Context-aware follow-up questions
-- **Knowledge Base**: 302-entry Celestial Encyclopedia on bioelectricity & consciousness
-- **Metacognition**: Self-correction and contradiction detection (v3.4)
-- **Quarantine System**: Safe storage for novel/contradictory ideas
+- **Secretary Agent**: Fast conversational AI using local Ollama models (llama3.1:8b, qwen2.5, etc.)
+- **Multi-Agent Research Protocol**: Surveyor → Dissident → Synthesist → Oracle for deep analysis.
+- **Web Frontend**: Mobile-first UI with real-time SSE streaming (http://localhost:3000).
+- **Conversation Memory**: Context-aware retrieval and hallucination detection.
+- **Knowledge Base**: 302-entry Celestial Encyclopedia on bioelectricity & consciousness.
+- **Metacognition**: Self-correction and contradiction detection (v3.4).
+
+### 🚀 Advanced Intelligence (Pegasus/Colossus)
+- **Pegasus Information Architecture**: High-fidelity network visualization extension for exploring complex entity relationships.
+- **Colossus Intelligence Platform**: Specialized backend tier providing unified graph/SQLite search for deep investigative research.
 
 ## Quick Start
 
 ### Prerequisites
 - **Ollama** installed ([ollama.com](https://ollama.com))
 - **Python 3.9+**
-- **Node.js 18+** (for frontend)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-org/iceburg.git
-cd iceburg
-
-# Install Python dependencies
-pip install -r requirements/requirements_elite_financial.txt
-
-# Install frontend dependencies
-cd frontend && npm install && cd ..
-```
+- **Node.js 18+**
 
 ### Running ICEBURG
 
@@ -44,17 +32,7 @@ cd frontend && npm install && cd ..
 # Start the system (backend + frontend)
 ./scripts/start_iceburg.sh
 
-# Or start components separately:
-# Backend: uvicorn src.iceburg.api.server:app --host 0.0.0.0 --port 8000 --reload
-# Frontend: cd frontend && npm run dev
-```
-
-**Access the UI**: http://localhost:3000
-
-### Stop ICEBURG
-
-```bash
-./scripts/stop_iceburg.sh
+# Access the system: http://localhost:3000
 ```
 
 ## Usage Examples
@@ -75,61 +53,57 @@ ICEBURG: [Generates comprehensive multi-perspective report with Surveyor/Disside
 
 Example research outputs: [`data/research_outputs/`](data/research_outputs/)
 
-## Architecture
+## Architecture & Search Strategy
 
-```
-┌─────────────────────────────────────┐
-│      Frontend (Vite + Vanilla JS)   │  ← http://localhost:3000
-│      SSE Streaming, Mobile-First    │
-└─────────────────┬───────────────────┘
-                  │ HTTP/SSE
-┌─────────────────▼───────────────────┐
-│    FastAPI Server (Port 8000)       │
-│    - /api/query (SSE streaming)     │
-│    - Conversation memory            │
-└─────────────────┬───────────────────┘
-                  │
-┌─────────────────▼───────────────────┐
-│      Secretary Agent                │
-│      - Simple Q&A (fast path)       │
-│      - Multi-agent research         │
-│      - Memory retrieval             │
-└─────────────────┬───────────────────┘
-                  │
-┌─────────────────▼───────────────────┐
-│      Ollama (Local LLMs)            │
-│      - llama3.1:8b (default)        │
-│      - qwen2.5, mistral, etc.       │
-└─────────────────────────────────────┘
+ICEBURG uses a multi-layered search strategy to ensure maximum grounding:
+
+- **Semantic Search**: Vector indexing (ChromaDB) for conceptually related retrieval.
+- **Lexical Search (Matrix Store)**: Direct SQLite search over 1.5M+ entities (Sanctions, PEP, etc.).
+- **Relationship Analysis (Colossus)**: High-performance graph traversal for mapping global networks.
+- **Web Extraction**: Real-time integration with Brave Search, DuckDuckGo, and arXiv.
+
+```mermaid
+graph TD
+    UI[Frontend: Vite + Vanilla JS]
+    API[FastAPI Server]
+    Agent[Secretary Agent Swarm]
+    O[Ollama: Local LLMs]
+    
+    subgraph Intelligence_Modules
+        M[Matrix Store: SQLite]
+        C[Colossus: Network Graph]
+        W[Web Search: Brave/ArXiv]
+    end
+
+    UI <-->|SSE/HTTP| API
+    API <--> Agent
+    Agent <--> O
+    Agent <--> M
+    Agent <--> C
+    Agent <--> W
 ```
 
 ## Project Structure
 
-```
+```text
 iceburg/
 ├── src/iceburg/           # Core Python package
-│   ├── agents/            # Secretary and research agents
-│   ├── api/               # FastAPI server
-│   ├── providers/         # Ollama integration
-│   └── config.py          # Configuration
-├── frontend/              # Vite web application
-│   ├── main.js            # Frontend logic
-│   ├── index.html         # UI
-│   └── styles.css         # Styling
-├── data/                  # Knowledge base & conversation logs
-│   ├── celestial_encyclopedia.json
-│   ├── conversation_logs/
-│   └── research_outputs/
-├── scripts/               # Utility scripts
-│   ├── start_iceburg.sh
-│   └── stop_iceburg.sh
-├── docs/                  # Documentation (organized)
-│   ├── INDEX.md           # Master documentation index
-│   ├── guides/            # User/dev guides
-│   ├── architecture/      # System design
-│   ├── status/            # Status reports
-│   └── testing/           # Test documentation
-└── tests/                 # Test suites
+│   ├── agents/            # Specialized reasoning agents (Secretary, Swarm)
+│   ├── api/               # FastAPI endpoints & management
+│   ├── colossus/          # Graph & Matrix intelligence layer (Extension)
+│   ├── matrix/            # Data ingestion, scraping & resolution
+│   ├── memory/            # Unified memory & ChromaDB indexing
+│   └── tools/             # OSINT, Web Search, PDF toolsets
+├── frontend/              # Web application
+│   ├── app.html           # Main research console
+│   └── pegasus.html       # Network discovery visualization
+├── docs/                  # System documentation
+│   ├── architecture/      # System design & diagrams
+│   ├── reports/           # Strategic analysis & audit reports
+│   └── guides/            # Developer & onboarding guides
+├── data/                  # Local datasets & vector stores
+├── scripts/               # Automation & deployment scripts
+└── tests/                 # Comprehensive test suites
 ```
 
 ## Documentation

@@ -36,6 +36,12 @@ class RelationType(str, Enum):
     LOCATED_AT = "LOCATED_AT"
     TRANSFERRED_TO = "TRANSFERRED_TO"
     SANCTIONED_BY = "SANCTIONED_BY"
+    # Property transaction relationships
+    SOLD_TO = "SOLD_TO"
+    PURCHASED_FROM = "PURCHASED_FROM"
+    MANAGES = "MANAGES"
+    LEASED_TO = "LEASED_TO"
+    LEASED_FROM = "LEASED_FROM"
 
 
 @dataclass

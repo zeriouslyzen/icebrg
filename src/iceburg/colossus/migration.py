@@ -41,6 +41,7 @@ class MatrixMigrator:
         neo4j_uri: str = "bolt://localhost:7687",
         neo4j_user: str = "neo4j",
         neo4j_password: str = "colossus2024",
+        **kwargs
     ):
         """Initialize migrator."""
         self.matrix_db_path = matrix_db_path
@@ -49,7 +50,8 @@ class MatrixMigrator:
         self.neo4j_password = neo4j_password
         
         self._matrix_conn: Optional[sqlite3.Connection] = None
-        self._graph = None
+        # Accept optional pre-initialized graph (e.g. from running server)
+        self._graph = kwargs.get('graph')
     
     def connect(self):
         """Connect to both databases."""
@@ -61,14 +63,15 @@ class MatrixMigrator:
         self._matrix_conn.row_factory = sqlite3.Row
         logger.info(f"📊 Connected to Matrix: {self.matrix_db_path}")
         
-        # Connect to Neo4j
-        from .core.graph import ColossusGraph
-        self._graph = ColossusGraph(
-            neo4j_uri=self.neo4j_uri,
-            neo4j_user=self.neo4j_user,
-            neo4j_password=self.neo4j_password,
-            use_memory=False,
-        )
+        # Connect to Graph (if not already provided)
+        if self._graph is None:
+            from .core.graph import ColossusGraph
+            self._graph = ColossusGraph(
+                neo4j_uri=self.neo4j_uri,
+                neo4j_user=self.neo4j_user,
+                neo4j_password=self.neo4j_password,
+                use_memory=False,
+            )
         
         if not self._graph.is_neo4j:
             logger.warning("⚠️ Neo4j not available, using in-memory graph")
@@ -168,9 +171,16 @@ class MatrixMigrator:
         
         # Import relationships in a second pass
         if all_relationships:
-            logger.info(f"🔗 Importing {len(all_relationships):,} relationships...")
+            logger.info(f"🔗 Importing {len(all_relationships):,} relationships from properties...")
             result = self._graph.bulk_import([], all_relationships, batch_size)
             stats.relationships_extracted = result.get("relationships_imported", 0)
+        
+        # Load relationships directly from relationships table (if exists)
+        table_relationships = self._load_relationships_from_table(batch_size, limit)
+        if table_relationships:
+            logger.info(f"🔗 Importing {len(table_relationships):,} relationships from relationships table...")
+            result = self._graph.bulk_import([], table_relationships, batch_size)
+            stats.relationships_extracted += result.get("relationships_imported", 0)
         
         stats.duration_seconds = time.time() - start_time
         
@@ -225,10 +235,238 @@ class MatrixMigrator:
         
         return relationships
     
+    def _load_relationships_from_table(
+        self,
+        batch_size: int,
+        limit: Optional[int] = None
+    ) -> List:
+        """Load relationships directly from relationships table."""
+        from .core.graph import GraphRelationship
+        
+        if not self._matrix_conn:
+            return []
+        
+        relationships = []
+        
+        try:
+            # Check if relationships table exists
+            cursor = self._matrix_conn.cursor()
+            cursor.execute("""
+                SELECT name FROM sqlite_master 
+                WHERE type='table' AND name='relationships'
+            """)
+            if not cursor.fetchone():
+                logger.debug("Relationships table not found, skipping direct relationship loading")
+                return []
+            
+            # Get total count
+            cursor.execute("SELECT COUNT(*) FROM relationships")
+            total = cursor.fetchone()[0]
+            
+            if limit:
+                total = min(total, limit)
+            
+            logger.info(f"📊 Found {total:,} relationships in relationships table")
+            
+            offset = 0
+            while offset < total:
+                cursor.execute("""
+                    SELECT relationship_id, source_id, target_id, relationship_type, properties
+                    FROM relationships
+                    LIMIT ? OFFSET ?
+                """, (batch_size, offset))
+                
+                rows = cursor.fetchall()
+                if not rows:
+                    break
+                
+                for row in rows:
+                    try:
+                        rel = GraphRelationship(
+                            id=row["relationship_id"],
+                            source_id=row["source_id"],
+                            target_id=row["target_id"],
+                            relationship_type=row["relationship_type"] or "RELATED_TO",
+                            properties=json.loads(row["properties"]) if row["properties"] else {},
+                            confidence=1.0,
+                            sources=["matrix_db"]
+                        )
+                        relationships.append(rel)
+                    except Exception as e:
+                        logger.warning(f"Error processing relationship: {e}")
+                
+                offset += len(rows)
+                if offset % (batch_size * 10) == 0:
+                    logger.info(f"📈 Loaded {len(relationships):,} relationships from table...")
+            
+        except Exception as e:
+            logger.warning(f"Error loading relationships from table: {e}")
+        
+        return relationships
+    
     def close(self):
         """Close connections."""
         if self._matrix_conn:
             self._matrix_conn.close()
+
+
+class JsonMigrator:
+    """
+    Migrate entities directly from OpenSanctions JSON stream.
+    Recovers relationships that are missing from the Matrix SQLite.
+    """
+    
+    def __init__(
+        self,
+        json_path: Path,
+        **kwargs
+    ):
+        self.json_path = json_path
+        self._graph = kwargs.get('graph')
+        
+        # Connect to Graph (if not already provided)
+        if self._graph is None:
+            from .core.graph import ColossusGraph
+            # Default to in-memory if no URI provided
+            self._graph = ColossusGraph(
+                neo4j_uri="bolt://localhost:7687",
+                neo4j_user="neo4j",
+                neo4j_password="colossus2024",
+                use_memory=False,
+            )
+
+    def migrate(
+        self,
+        limit: Optional[int] = None,
+        priority_topics: Optional[List[str]] = None,
+        target_names: Optional[List[str]] = None
+    ) -> MigrationStats:
+        import time
+        from .core.graph import GraphEntity, GraphRelationship
+        
+        start_time = time.time()
+        stats = MigrationStats()
+        
+        if not self.json_path.exists():
+            raise FileNotFoundError(f"Source JSON not found: {self.json_path}")
+            
+        logger.info(f"🚀 Streaming from JSON: {self.json_path}")
+        logger.info(f"🎯 Targets: {target_names} | Topics: {priority_topics}")
+        
+        entities_batch = []
+        relationships_batch = []
+        batch_size = 5000
+        
+        # Normalize targets for case-insensitive matching
+        target_names_lower = [t.lower() for t in target_names] if target_names else []
+        
+        with open(self.json_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                # Stop if we have MIGRATED enough entities (not just read lines)
+                if limit and stats.entities_migrated >= limit:
+                    break
+                    
+                stats.entities_read += 1
+                try:
+                    data = json.loads(line)
+                    schema = data.get('schema')
+                    props = data.get('properties', {})
+                    entity_id = data.get('id')
+                    name = props.get('name', [entity_id])[0]
+                    topics = data.get('properties', {}).get('topics', [])
+                    
+                    # --- SMART FILTERING ---
+                    is_target = name.lower() in target_names_lower if target_names_lower else False
+                    is_priority = False
+                    
+                    if priority_topics:
+                        # Check if entity has any priority topic (e.g. "role.pep", "sanction")
+                        is_priority = any(t in priority_topics for t in topics)
+                    
+                    # If we have filters, skip if not relevant
+                    # ALWAYS include targets regardless of topics
+                    if (priority_topics or target_names) and not is_target and not is_priority:
+                        continue
+                    # -----------------------
+                    
+                    # 1. Handle Link Entities (Relationships)
+                    if schema in ['Occupancy', 'Directorship', 'Ownership', 'Family', 'Association', 'Membership']:
+                        # Map generic link properties to source/target
+                        # e.g. Occupancy: holder -> post/organization
+                        rels = self._extract_link_edges(entity_id, schema, props)
+                        relationships_batch.extend(rels)
+                        stats.relationships_extracted += len(rels)
+                        
+                    # 2. Handle Node Entities
+                    elif schema in ['Person', 'Company', 'Organization', 'LegalEntity', 'Vessel', 'Aircraft']:
+                        entity = GraphEntity(
+                            id=entity_id,
+                            name=name,
+                            entity_type=schema,
+                            countries=props.get('country', []),
+                            sanctions=data.get('datasets', []),
+                            sources=['opensanctions'],
+                            properties=props
+                        )
+                        entities_batch.append(entity)
+                        stats.entities_migrated += 1
+                        
+                    # Flush batches
+                    if len(entities_batch) >= batch_size:
+                        self._graph.bulk_import(entities_batch, [], batch_size)
+                        entities_batch = []
+                        logger.info(f"📈 Stored: {stats.entities_migrated:,} | Scanned: {stats.entities_read:,}")
+                        
+                    if len(relationships_batch) >= batch_size:
+                        self._graph.bulk_import([], relationships_batch, batch_size)
+                        relationships_batch = []
+                        
+                except Exception as e:
+                    logger.debug(f"JSON Parse Error: {e}")
+                    stats.errors += 1
+
+        # Final flush
+        if entities_batch or relationships_batch:
+            self._graph.bulk_import(entities_batch, relationships_batch, batch_size)
+            
+        stats.duration_seconds = time.time() - start_time
+        logger.info(f"✅ Smart Migration Complete: {stats.entities_migrated}/{stats.entities_read} scanned")
+        return stats
+
+    def _extract_link_edges(self, link_id, schema, props):
+        from .core.graph import GraphRelationship
+        edges = []
+        
+        # Define schemas mapping
+        # schema: (source_prop, target_prop, rel_type)
+        mappings = {
+            'Occupancy': ('holder', 'post', 'OCCUPIES'),
+            'Directorship': ('director', 'organization', 'DIRECTOR_OF'),
+            'Ownership': ('owner', 'asset', 'OWNS'),
+            'Family': ('person', 'relative', 'FAMILY_OF'),
+            'Association': ('person', 'associate', 'ASSOCIATED_WITH'),
+            'Membership': ('member', 'organization', 'MEMBER_OF'),
+        }
+        
+        if schema in mappings:
+            try:
+                src_prop, tgt_prop, rel_type = mappings[schema]
+                sources = props.get(src_prop, [])
+                targets = props.get(tgt_prop, [])
+                
+                for s in sources:
+                    for t in targets:
+                        edges.append(GraphRelationship(
+                            id=f"{link_id}_{s}_{t}",
+                            source_id=s,
+                            target_id=t,
+                            relationship_type=rel_type,
+                            confidence=1.0,
+                            sources=['opensanctions']
+                        ))
+            except Exception:
+                pass # Skip malformed links
+        return edges
 
 
 def run_migration():

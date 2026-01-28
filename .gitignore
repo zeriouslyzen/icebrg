@@ -123,3 +123,6 @@ backup_*.tar.gz
 **/.build/
 .swiftpm/
 xcuserdata/
+
+# Investigations vault - private client data
+investigations_vault/

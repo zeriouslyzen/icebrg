@@ -1,0 +1,24 @@
+{
+    "enabled": true,
+    "interval_seconds": 3600,
+    "sources": {
+        "web_intelligence": true,
+        "wayback_machine": true,
+        "county_portals": true,
+        "business_records": true
+    },
+    "targets": [
+        "Strombeck Properties",
+        "Steven Mark Strombeck",
+        "Waltina Martha Strombeck",
+        "Erik Strombeck",
+        "STEATA LLC"
+    ],
+    "addresses": [
+        "960 S G St Arcata",
+        "Todd Court Arcata",
+        "Western Avenue Arcata",
+        "7th + P St Eureka",
+        "965 W Harris Eureka"
+    ]
+}

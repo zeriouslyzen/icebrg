@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEGASUS | Intelligence Network</title>
+    <!-- Editorial Fonts: Playfair Display for headers, Merriweather for reading -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Palette: Black, White, Yellow (Somatic/Editorial) */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f4f4;
+            /* Very light subtle grey for distinction */
+            --bg-hover: #f0f0f0;
+
+            --text-primary: #111111;
+            --text-secondary: #444444;
+            --text-muted: #888888;
+
+            /* The Yellow Accent */
+            --accent-primary: #FFD700;
+            /* Gold/Yellow */
+            --accent-hover: #FDB931;
+            --accent-text: #000000;
+            /* Text on yellow should be black */
+
+            /* Structural */
+            --border-light: #e5e5e5;
+            --border-bold: #111111;
+
+            /* Functional Colors */
+            --success: #1a1a1a;
+            /* Styled as black with marker */
+            --warning: #FFD700;
+            --danger: #111111;
+            /* Styled distinctively */
+
+            /* Typography */
+            --font-head: 'Playfair Display', serif;
+            --font-body: 'Merriweather', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Shadows & Depth */
+            --shadow-sm: 0 2px 0 rgba(0, 0, 0, 0.05);
+            /* Harder, crisper shadows */
+            --shadow-float: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Utility */
+        .mono {
+            font-family: var(--font-mono);
+        }
+
+        .serif-head {
+            font-family: var(--font-head);
+        }
+
+        /* Header - Editorial Style */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 3px solid var(--border-bold);
+            /* Bold separator */
+            padding: 0 2rem;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .logo-mark {
+            width: 42px;
+            height: 42px;
+            background: var(--text-primary);
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-radius: 2px;
+            /* Slight softening, almost sharp */
+        }
+
+        .logo-text {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.75rem;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 4px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-primary);
+            /* Black dot */
+            border-radius: 50%;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 340px 1fr 380px;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* Left Panel - Control & Browse */
+        .panel-left {
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-light);
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 8px;
+        }
+
+        /* Search Input - Big, Editorial */
+        .search-group {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 16px 16px 0;
+            border: none;
+            border-bottom: 2px solid var(--border-light);
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            /* Large text */
+            background: transparent;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-bottom-color: var(--text-primary);
+        }
+
+        .search-input::placeholder {
+            color: var(--border-light);
+            /* Very subtle placeholder */
+            font-style: italic;
+        }
+
+        /* Navigation Menu - Clean List */
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid var(--border-light);
+            font-family: var(--font-head);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            padding-left: 8px;
+            /* Subtle movement */
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .nav-item::after {
+            content: '→';
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .nav-item:hover::after,
+        .nav-item.active::after {
+            opacity: 1;
+        }
+
+        /* Stats - Minimalist */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            cursor: pointer;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Center Panel - The "Somatic" Graph */
+        .panel-center {
+            background: var(--bg-secondary);
+            /* Slight contrast */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #graph-canvas {
+            width: 100%;
+            height: 100%;
+            /* Subtle grid pattern */
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Graph Controls */
+        .graph-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 20;
+        }
+
+        .control-button {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-bold);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-button:hover {
+            background: var(--accent-primary);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--text-primary);
+        }
+
+        /* Welcome Overlay */
+        .welcome-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            background: var(--bg-primary);
+            border: 3px solid var(--text-primary);
+            /* Bold border */
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 12px 12px 0 var(--accent-primary);
+            /* Hard yellow shadow */
+            z-index: 10;
+        }
+
+        .welcome-title {
+            font-family: var(--font-head);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-primary);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            padding: 16px 32px;
+            border: 2px solid var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--text-primary);
+        }
+
+        /* Right Panel - Details as "Cards" */
+        .panel-right {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-light);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .detail-card {
+            background: #fff;
+            border: 1px solid var(--border-light);
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .detail-header {
+            background: var(--accent-primary);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--text-primary);
+            position: relative;
+        }
+
+        .detail-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            background: #fff;
+            padding: 4px 8px;
+            border: 1px solid #000;
+        }
+
+        .detail-title {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .detail-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-body {
+            padding: 1.5rem;
+        }
+
+        .prop-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .prop-item {
+            border-bottom: 1px dotted var(--border-light);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .prop-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .prop-val {
+            font-family: var(--font-body);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Interactive Graph Elements */
+        .node circle {
+            stroke: var(--text-primary);
+            stroke-width: 2px;
+            transition: all 0.3s;
+        }
+
+        .node:hover circle {
+            stroke-width: 4px;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+            /* Yellow glow */
+        }
+
+        .node text {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            fill: var(--text-primary);
+            font-weight: 500;
+            text-transform: uppercase;
+            pointer-events: none;
+            text-shadow:
+                -1px -1px 0 #fff,
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
+        }
+
+        /* Search Results Overlay */
+        .search-results-panel {
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            display: none;
+            /* Hidden by default */
+        }
+
+        .search-results-panel.active {
+            display: block;
+        }
+
+        .result-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .result-item:hover {
+            background: var(--accent-primary);
+        }
+
+        .result-name {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .result-meta {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-top: 4px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" onclick="window.location.reload()">
+            <div class="logo-mark">P</div>
+            <div>
+                <div class="logo-text">PEGASUS</div>
+                <div class="logo-sub">Information Architecture</div>
+            </div>
+        </div>
+
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            System Active
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <!-- Left Panel: Navigation & Search -->
+        <aside class="panel-left">
+
+            <!-- Search -->
+            <div>
+                <div class="section-title">Query Index</div>
+                <div class="search-group">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Type to search..."
+                        onkeyup="handleSearch(event)">
+                </div>
+                <!-- Inline Results Panel -->
+                <div id="searchResults" class="search-results-panel"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div>
+                <div class="section-title">Views</div>
+                <nav class="nav-menu">
+                    <div class="nav-item active" onclick="switchView('network')">Network Graph</div>
+                    <div class="nav-item" onclick="switchView('analytics')">High Value Targets</div>
+                    <div class="nav-item" onclick="switchView('matrix')">Source Matrix</div>
+                </nav>
+            </div>
+
+            <!-- Stats -->
+            <div>
+                <div class="section-title">Database Metrics</div>
+                <div class="stats-grid">
+                    <div class="stat-item" title="Total processed entities">
+                        <div class="stat-value" id="statEntities">--</div>
+                        <div class="stat-label">Entities</div>
+                    </div>
+                    <div class="stat-item" title="Confirmed relationships">
+                        <div class="stat-value" id="statLinks">--</div>
+                        <div class="stat-label">Connections</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+                    <div class="prop-item">
+                        <span class="prop-label">Rel/Entity Ratio</span>
+                        <span class="prop-val" id="statRatio">--</span>
+                    </div>
+                    <div class="prop-item">
+                        <span class="prop-label">Data Quality</span>
+                        <span class="prop-val" id="dataQuality">--</span>
+                    </div>
+                    <button class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px;" 
+                            onclick="loadDiagnostics()" title="View detailed diagnostics">
+                        Diagnostics
+                    </button>
+                    <button id="cleanupButton" class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px; display: none; background: var(--warning);" 
+                            onclick="runCleanup()" title="Remove invalid relationships">
+                        Clean Data
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- Center Panel: Visualization -->
+        <main class="panel-center">
+
+            <!-- Welcome / Zero State -->
+            <div class="welcome-overlay" id="welcomeOverlay">
+                <h1 class="welcome-title">The Archive</h1>
+                <p class="welcome-text">
+                    Access the complete network graph. Visualize connections between individuals, organizations, and
+                    offshore entities.
+                </p>
+                <button class="cta-button" onclick="initializeExploration()">
+                    Launch Visualization
+                </button>
+            </div>
+
+            <div class="viz-container">
+                <svg id="graph-canvas"></svg>
+                <div class="graph-controls">
+                    <button class="control-button" onclick="zoomIn()" title="Zoom In">+</button>
+                    <button class="control-button" onclick="zoomOut()" title="Zoom Out">−</button>
+                    <button class="control-button" onclick="resetView()" title="Reset View">⌂</button>
+                    <button class="control-button" onclick="toggleLabels()" title="Toggle Labels">Aa</button>
+                </div>
+            </div>
+
+        </main>
+
+
+        <!-- Right Panel: Details -->
+        <aside class="panel-right" id="detailPanel">
+            <!-- Empty state defaults to hidden via JS logic, but let's have a placeholder -->
+            <div id="emptyDetailState" style="text-align: center; color: var(--text-muted); margin-top: 50%;">
+                <p class="serif-head" style="font-size: 1.5rem; opacity: 0.3;">No Selection</p>
+                <p class="mono" style="font-size: 0.8rem; opacity: 0.5;">Select a node to inspect</p>
+            </div>
+
+            <div id="activeDetailContent" style="display: none;">
+
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <div class="detail-status" id="detailType">Entity</div>
+                        <div class="detail-title" id="detailName">Name</div>
+                        <div class="detail-subtitle" id="detailId">ID: ---</div>
+                    </div>
+                    <div class="detail-body">
+                        <div class="prop-list" id="detailProps">
+                            <!-- Injected Properties -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Connections</div>
+                <div class="prop-list" id="detailConnections" style="margin-top: 1rem;">
+                    <!-- Injected Connections -->
+                </div>
+
+                <button class="cta-button" style="width: 100%; margin-top: 2rem;" onclick="expandCurrentNode()">
+                    Expand Network
+                </button>
+
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // API Configuration
+        const API_BASE = '/api/colossus'; // Prefer Colossus, fallback to Matrix if needed
+
+        // App State
+        let currentGraph = { nodes: [], links: [] };
+        let simulation = null;
+        let selectedNode = null;
+        let zoom = d3.zoom();
+        let svg = null;
+        let g = null;
+        let labelsVisible = true;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSystemStats();
+            setupGraph();
+        });
+
+        /* --- API INTERACTION --- */
+
+        async function loadSystemStats() {
+            try {
+                const res = await fetch(`${API_BASE}/status`);
+                const data = await res.json();
+
+                const count = data.count || data.total_entities || 0;
+                const relCount = data.relationships || data.total_relationships || 0;
+                
+                document.getElementById('statEntities').innerText = formatNumber(count);
+                document.getElementById('statLinks').innerText = formatNumber(relCount);
+
+                // Calculate and display relationship ratio
+                const ratio = count > 0 ? (relCount / count).toFixed(3) : 0;
+                const ratioElement = document.getElementById('statRatio');
+                if (ratioElement) {
+                    ratioElement.innerText = ratio;
+                    // Add warning if ratio is suspiciously low
+                    if (count > 100 && ratio < 0.1) {
+                        ratioElement.style.color = "var(--warning)";
+                        ratioElement.title = "Low relationship ratio - relationships may be missing";
+                    } else {
+                        ratioElement.style.color = "var(--text-primary)";
+                    }
+                }
+
+                // Load data quality metrics
+                loadDataQuality();
+
+                // Auto-ingest if empty and using networkx (in-memory)
+                if (count === 0 && data.backend === 'networkx') {
+                    triggerIngestion();
+                }
+            } catch (e) {
+                console.warn("Stats API failed, trying fallback...", e);
+                // Fallback display
+                document.getElementById('statEntities').innerText = "Offline";
+            }
+        }
+
+        async function loadDataQuality() {
+            try {
+                const res = await fetch(`${API_BASE}/data-quality`);
+                if (!res.ok) {
+                    // Endpoint might not exist if server not restarted
+                    if (res.status === 404) {
+                        console.debug("Data quality endpoint not available (server may need restart)");
+                    }
+                    return;
+                }
+                
+                const data = await res.json();
+                const qualityElement = document.getElementById('dataQuality');
+                const cleanupButton = document.getElementById('cleanupButton');
+                
+                if (qualityElement) {
+                    const pct = data.quality_percentage || 0;
+                    qualityElement.innerText = `${pct.toFixed(1)}%`;
+                    
+                    // Color code based on quality
+                    if (pct < 10) {
+                        qualityElement.style.color = "var(--warning)";
+                        qualityElement.title = `Poor data quality: ${data.invalid_relationships?.toLocaleString() || 0} invalid relationships`;
+                        if (cleanupButton) cleanupButton.style.display = 'block';
+                    } else if (pct < 50) {
+                        qualityElement.style.color = "#FFA500";
+                        qualityElement.title = `Fair data quality: ${data.invalid_relationships?.toLocaleString() || 0} invalid relationships`;
+                        if (cleanupButton) cleanupButton.style.display = 'block';
+                    } else {
+                        qualityElement.style.color = "#50C878";
+                        qualityElement.title = `Good data quality`;
+                        if (cleanupButton) cleanupButton.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                // Silently fail - endpoint may not be available
+                console.debug("Data quality check failed (endpoint may not be available):", e.message);
+            }
+        }
+
+        async function runCleanup() {
+            if (!confirm('This will remove invalid relationships from the database. A backup will be created first. Continue?')) {
+                return;
+            }
+            
+            const button = document.getElementById('cleanupButton');
+            if (button) {
+                button.disabled = true;
+                button.innerText = 'Cleaning...';
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/cleanup`, { method: 'POST' });
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    alert(`Cleanup complete!\n\nDeleted: ${data.deleted?.toLocaleString() || 0} invalid relationships\nRemaining: ${data.after?.total?.toLocaleString() || 0} valid relationships\n\nBackup saved to: ${data.backup_path}`);
+                    // Reload stats
+                    loadSystemStats();
+                    loadDataQuality();
+                } else {
+                    alert(`Cleanup failed: ${data.error || 'Unknown error'}`);
+                }
+            } catch (e) {
+                alert(`Cleanup error: ${e.message}`);
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.innerText = 'Clean Data';
+                }
+            }
+        }
+
+        async function triggerIngestion() {
+            const statusBadge = document.querySelector('.status-badge');
+            // Show scanning state
+            statusBadge.innerHTML = '<span class="status-dot" style="background: var(--warning); box-shadow: 0 0 8px var(--warning); animation: pulse 1s infinite;"></span> Scanning Matrix...';
+
+            try {
+                console.log("Triggering ingestion...");
+                // Limit to 2000 for faster initial load
+                const res = await fetch(`${API_BASE}/ingest?limit=2000`, { method: 'POST' });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    console.log("Ingestion complete", data);
+
+                    statusBadge.innerHTML = '<span class="status-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span> System Active';
+
+                    // Reload everything
+                    loadSystemStats();
+                    // Small delay to ensure graph is ready
+                    setTimeout(initializeExploration, 1000);
+                } else {
+                    statusBadge.innerHTML = '<span class="status-dot" style="background: var(--danger);"></span> Scan Failed';
+                }
+            } catch (e) {
+                console.error("Ingestion error", e);
+                statusBadge.innerHTML = '<span class="status-dot" style="background: var(--danger);"></span> Connection Error';
+            }
+        }
+
+        async function handleSearch(e) {
+            const query = e.target.value;
+            const resultsPanel = document.getElementById('searchResults');
+
+            if (query.length < 2) {
+                resultsPanel.classList.remove('active');
+                return;
+            }
+
+            try {
+                // Fix: Backend expects POST with JSON body
+                const res = await fetch(`${API_BASE}/entities/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query, limit: 5 })
+                });
+
+                if (!res.ok) throw new Error("Search failed");
+
+                let data = await res.json();
+                let results = data.results || data.entities || [];
+
+                displaySearchResults(results);
+            } catch (err) {
+                console.error("Search Error", err);
+            }
+        }
+
+        /* --- VISUALIZATION CORE --- */
+
+        /* --- VISUALIZATION CORE --- */
+
+        let searchTimeout = null;
+
+        // Overlay debounce on the search input
+        const originalHandleSearch = handleSearch;
+        handleSearch = function (e) {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => originalHandleSearch(e), 300); // 300ms debounce
+        };
+
+        function setupGraph() {
+            const container = document.querySelector('.viz-container');
+            if (!container) return;
+
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collide", d3.forceCollide(30));
+
+            simulation.on("tick", () => {
+                const svg = d3.select("#graph-canvas");
+                svg.selectAll("line")
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                svg.selectAll("g.node")
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        async function initializeExploration() {
+            // Show loading state
+            const overlay = document.getElementById('welcomeOverlay');
+            if (overlay) {
+                const textEl = overlay.querySelector('.welcome-text');
+                if (textEl) textEl.innerText = "Loading network...";
+            }
+            
+            // Load central entities as a starting point
+            try {
+                const res = await fetch(`${API_BASE}/central?limit=10`);
+                if (!res.ok) throw new Error(`Failed to fetch central entities: ${res.status}`);
+                
+                const data = await res.json();
+                const ids = (data.results || []).map(e => e.id);
+
+                if (ids.length > 0) {
+                    await loadNetwork(ids[0], false); // Load the first one to start
+                } else {
+                    // No central entities, show message
+                    if (overlay) {
+                        overlay.style.display = 'block';
+                        const titleEl = overlay.querySelector('.welcome-title');
+                        const textEl = overlay.querySelector('.welcome-text');
+                        if (titleEl) titleEl.innerText = "No Data Available";
+                        if (textEl) {
+                            textEl.innerText = 
+                                "The graph is empty. Try ingesting data or searching for specific entities.";
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Init failed", e);
+                if (overlay) {
+                    overlay.style.display = 'block';
+                    const textEl = overlay.querySelector('.welcome-text');
+                    if (textEl) {
+                        textEl.innerText = 
+                            `Error initializing: ${e.message}. Try searching for an entity.`;
+                    }
+                }
+            }
+        }
+
+        async function loadNetwork(entityId, merge = false) {
+            try {
+                const res = await fetch(`${API_BASE}/network`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ entity_id: entityId, depth: 2 })
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Network fetch failed: ${res.status} - ${errorText}`);
+                }
+
+                const data = await res.json();
+
+                // Check for error in response
+                if (data.error) {
+                    console.error("Network query error:", data.error);
+                    showErrorMessage(`Error: ${data.error}`);
+                    return;
+                }
+
+                // Validate response structure
+                if (!data.nodes || !Array.isArray(data.nodes) || !data.edges || !Array.isArray(data.edges)) {
+                    console.error("Invalid response structure:", data);
+                    showErrorMessage("Invalid network data received from server");
+                    return;
+                }
+
+                // Log diagnostic info if available
+                if (data.query_stats) {
+                    console.log("Network query stats:", data.query_stats);
+                    if (data.query_stats.edges_filtered > 0) {
+                        console.warn(`${data.query_stats.edges_filtered} edges filtered out (missing nodes)`);
+                    }
+                    if (data.query_stats.nodes_missing > 0) {
+                        console.warn(`${data.query_stats.nodes_missing} entities referenced but not found in database`);
+                    }
+                }
+
+                // Ensure center entity is in nodes
+                if (data.nodes.length === 0 && !data.error) {
+                    console.warn("No nodes returned for entity:", entityId);
+                    showErrorMessage(`No network found for entity: ${entityId}. Entity may be isolated or not exist.`);
+                    return;
+                }
+
+                // Verify center entity is present (should always be after our fix)
+                const centerNode = data.nodes.find(n => n.id === entityId);
+                if (!centerNode) {
+                    console.warn("Center entity not in nodes list (this should not happen):", entityId);
+                    // Add center entity if missing (fallback)
+                    const centerEntity = await fetch(`${API_BASE}/entities/${entityId}`).then(r => r.ok ? r.json() : null);
+                    if (centerEntity) {
+                        data.nodes.unshift({
+                            id: centerEntity.id,
+                            name: centerEntity.name,
+                            type: centerEntity.type,
+                            countries: centerEntity.countries || [],
+                            sanctions_count: centerEntity.sanctions?.length || 0
+                        });
+                    }
+                }
+
+                // Show details for the main entity
+                selectedNode = data.nodes.find(n => n.id === entityId) || data.nodes[0];
+                if (selectedNode) {
+                    showDetails(selectedNode);
+                }
+
+                // Merge or replace data
+                if (merge && currentGraph.nodes.length > 0) {
+                    // Merge: deduplicate nodes by ID, add new edges
+                    const nodeMap = new Map(currentGraph.nodes.map(n => [n.id, n]));
+                    let nodesAdded = 0;
+                    data.nodes.forEach(n => {
+                        if (!nodeMap.has(n.id)) {
+                            nodeMap.set(n.id, n);
+                            nodesAdded++;
+                        }
+                    });
+                    currentGraph.nodes = Array.from(nodeMap.values());
+                    console.log(`Merged ${nodesAdded} new nodes into graph`);
+                    
+                    // Merge edges, deduplicate by source-target pair
+                    const edgeSet = new Set(currentGraph.links.map(l => {
+                        const src = l.source.id || l.source;
+                        const tgt = l.target.id || l.target;
+                        return `${src}-${tgt}`;
+                    }));
+                    let edgesAdded = 0;
+                    let edgesDropped = 0;
+                    data.edges.forEach(e => {
+                        const key = `${e.source}-${e.target}`;
+                        if (!edgeSet.has(key)) {
+                            // Find node objects for source and target
+                            const sourceNode = nodeMap.get(e.source);
+                            const targetNode = nodeMap.get(e.target);
+                            if (sourceNode && targetNode) {
+                                edgeSet.add(key);
+                                currentGraph.links.push({
+                                    source: sourceNode,
+                                    target: targetNode,
+                                    type: e.type
+                                });
+                                edgesAdded++;
+                            } else {
+                                edgesDropped++;
+                            }
+                        }
+                    });
+                    if (edgesDropped > 0) {
+                        console.warn(`Dropped ${edgesDropped} edges during merge (missing nodes)`);
+                    }
+                    console.log(`Merged ${edgesAdded} new edges into graph`);
+                } else {
+                    // Replace: create node map for link binding
+                    const nodeMap = new Map(data.nodes.map(n => [n.id, n]));
+                    currentGraph.nodes = data.nodes;
+                    let edgesDropped = 0;
+                    currentGraph.links = data.edges.map(e => {
+                        const sourceNode = nodeMap.get(e.source);
+                        const targetNode = nodeMap.get(e.target);
+                        if (sourceNode && targetNode) {
+                            return {
+                                source: sourceNode,
+                                target: targetNode,
+                                type: e.type
+                            };
+                        }
+                        edgesDropped++;
+                        return null;
+                    }).filter(l => l !== null);
+                    
+                    if (edgesDropped > 0) {
+                        console.warn(`Dropped ${edgesDropped} edges (missing nodes)`);
+                    }
+                }
+
+                // Hide welcome overlay if we have nodes
+                if (currentGraph.nodes.length > 0) {
+                    const overlay = document.getElementById('welcomeOverlay');
+                    if (overlay) {
+                        overlay.style.display = 'none';
+                    }
+                }
+
+                renderGraph();
+
+            } catch (e) {
+                console.error("Load Network Error", e);
+                showErrorMessage(`Error loading network: ${e.message}. Try searching for an entity first.`);
+            }
+        }
+
+        function showErrorMessage(message) {
+            const overlay = document.getElementById('welcomeOverlay');
+            if (overlay) {
+                overlay.style.display = 'block';
+                const titleEl = overlay.querySelector('.welcome-title');
+                const textEl = overlay.querySelector('.welcome-text');
+                if (titleEl) titleEl.innerText = "Error";
+                if (textEl) textEl.innerText = message;
+                // Change button to retry
+                const button = overlay.querySelector('.cta-button');
+                if (button) {
+                    button.innerText = "Retry";
+                    button.onclick = () => {
+                        if (titleEl) titleEl.innerText = "The Archive";
+                        if (textEl) {
+                            textEl.innerText = 
+                                "Access the complete network graph. Visualize connections between individuals, organizations, and offshore entities.";
+                        }
+                        button.innerText = "Launch Visualization";
+                        button.onclick = initializeExploration;
+                        initializeExploration();
+                    };
+                }
+            } else {
+                // Fallback: use alert if overlay not available
+                alert(message);
+            }
+        }
+
+        function renderGraph() {
+            svg = d3.select("#graph-canvas");
+            svg.selectAll("*").remove(); // Clear for simplicity
+            
+            // Create container group for zoom/pan (must be created first)
+            g = svg.append("g");
+            
+            // Set up zoom behavior
+            zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                });
+            
+            svg.call(zoom);
+
+            // Handle empty graph
+            if (currentGraph.nodes.length === 0) {
+                g.append("text")
+                    .attr("x", "50%")
+                    .attr("y", "50%")
+                    .attr("text-anchor", "middle")
+                    .attr("font-family", "var(--font-body)")
+                    .attr("font-size", "1.2rem")
+                    .attr("fill", "var(--text-muted)")
+                    .text("No entities found. Try searching for an entity.");
+                return;
+            }
+
+            // Handle graph with no connections
+            if (currentGraph.links.length === 0 && currentGraph.nodes.length > 0) {
+                // Still render nodes, just without edges
+                const node = g.append("g")
+                    .selectAll("g")
+                    .data(currentGraph.nodes)
+                    .join("g")
+                    .attr("class", "node")
+                    .attr("transform", (d, i) => {
+                        // Simple grid layout for unconnected nodes
+                        const cols = Math.ceil(Math.sqrt(currentGraph.nodes.length));
+                        const row = Math.floor(i / cols);
+                        const col = i % cols;
+                        const spacing = 150;
+                        return `translate(${100 + col * spacing}, ${100 + row * spacing})`;
+                    })
+                    .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
+
+                node.append("circle")
+                    .attr("r", d => {
+                        // Size based on sanctions or default
+                        return 8 + (d.sanctions_count || 0) * 2;
+                    })
+                    .attr("fill", d => {
+                        if (d.id === selectedNode?.id) return "var(--accent-primary)";
+                        // Color by type
+                        const typeColors = {
+                            "Person": "#4A90E2",
+                            "Company": "#50C878",
+                            "Organization": "#FF6B6B",
+                        };
+                        return typeColors[d.type] || "var(--text-primary)";
+                    });
+
+                node.append("text")
+                    .attr("x", 12)
+                    .attr("y", 3)
+                    .attr("font-size", "10px")
+                    .text(d => {
+                        const name = d.name || d.id || "Unknown";
+                        const displayName = name.replace(/^person_|^company_|^address_|^phone_/g, '')
+                                                .replace(/_/g, ' ')
+                                                .replace(/\b\w/g, l => l.toUpperCase());
+                        return displayName.substring(0, 20);
+                    });
+
+                node.on("click", (event, d) => {
+                    selectedNode = d;
+                    showDetails(d);
+                    loadNetwork(d.id, true); // Expand on click with merge
+                });
+
+                // Show message
+                g.append("text")
+                    .attr("x", "50%")
+                    .attr("y", 30)
+                    .attr("text-anchor", "middle")
+                    .attr("font-family", "var(--font-mono)")
+                    .attr("font-size", "0.8rem")
+                    .attr("fill", "var(--text-muted)")
+                    .text(`No connections found. ${currentGraph.nodes.length} isolated ${currentGraph.nodes.length === 1 ? 'entity' : 'entities'}.`);
+
+                return;
+            }
+
+            // Normal graph with connections - use force simulation
+            // Draw Links first (so nodes appear on top)
+            const link = g.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(currentGraph.links)
+                .join("line")
+                .attr("stroke", "#999")
+                .attr("stroke-opacity", 0.6)
+                .attr("stroke-width", 1);
+
+            // Draw Nodes
+            const node = g.append("g")
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(currentGraph.nodes)
+                .join("g")
+                .attr("class", "node")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            node.append("circle")
+                .attr("r", d => {
+                    // Size based on connections or sanctions
+                    const connections = currentGraph.links.filter(l => 
+                        (l.source.id || l.source) === d.id || (l.target.id || l.target) === d.id
+                    ).length;
+                    return 6 + Math.min(connections * 2, 10) + (d.sanctions_count || 0) * 2;
+                })
+                .attr("fill", d => {
+                    if (d.id === selectedNode?.id) return "var(--accent-primary)";
+                    // Color by type
+                    const typeColors = {
+                        "Person": "#4A90E2",
+                        "Company": "#50C878",
+                        "Organization": "#FF6B6B",
+                    };
+                    return typeColors[d.type] || "var(--text-primary)";
+                })
+                .attr("stroke", "var(--text-primary)")
+                .attr("stroke-width", 1.5);
+
+            const nodeLabels = node.append("text")
+                .attr("x", 12)
+                .attr("y", 3)
+                .attr("font-size", "10px")
+                .attr("font-family", "var(--font-mono)")
+                .attr("display", labelsVisible ? "block" : "none")
+                .text(d => {
+                    // Always show name, fallback to ID, make it readable
+                    const name = d.name || d.id || "Unknown";
+                    // Clean up entity IDs to be more readable
+                    const displayName = name.replace(/^person_|^company_|^address_|^phone_/g, '')
+                                            .replace(/_/g, ' ')
+                                            .replace(/\b\w/g, l => l.toUpperCase());
+                    return displayName.length > 25 ? displayName.substring(0, 22) + "..." : displayName;
+                });
+
+            node.on("click", (event, d) => {
+                event.stopPropagation();
+                selectedNode = d;
+                showDetails(d);
+                loadNetwork(d.id, true); // Expand on click with merge
+            });
+
+            // Update simulation with proper node/link binding
+            simulation.nodes(currentGraph.nodes);
+            simulation.force("link")
+                .links(currentGraph.links)
+                .distance(100)
+                .id(d => d.id);
+            
+            // Update forces for better layout
+            simulation.force("charge").strength(-300);
+            simulation.force("collide").radius(30);
+            
+            simulation.alpha(1).restart();
+
+            // Update link positions on tick
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node.attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        async function showDetails(node) {
+            if (!node) return;
+            document.getElementById('emptyDetailState').style.display = 'none';
+            document.getElementById('activeDetailContent').style.display = 'block';
+
+            document.getElementById('detailName').innerText = node.name || "Unknown Entity";
+            document.getElementById('detailId').innerText = node.id;
+            document.getElementById('detailType').innerText = node.type || "Entity";
+
+            // Props
+            const props = node.properties || {};
+            const html = Object.entries(props).slice(0, 5).map(([k, v]) => `
+                <div class="prop-item">
+                    <span class="prop-label">${k}</span>
+                    <span class="prop-val">${truncate(String(v), 20)}</span>
+                </div>
+            `).join('');
+            document.getElementById('detailProps').innerHTML = html || '<div class="prop-item"><span class="prop-label">No properties</span></div>';
+
+            // Load and display actual relationships
+            try {
+                const res = await fetch(`${API_BASE}/entities/${node.id}`);
+                if (res.ok) {
+                    const entityData = await res.json();
+                    const relationships = entityData.relationships || [];
+                    
+                    // Also get relationships from current graph
+                    const graphRelationships = currentGraph.links.filter(l => 
+                        (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
+                    );
+                    
+                    // Combine and deduplicate
+                    const allRels = new Map();
+                    relationships.forEach(r => {
+                        const key = `${r.source}-${r.target}`;
+                        allRels.set(key, {
+                            type: r.type,
+                            target: r.target === node.id ? r.source : r.target,
+                            confidence: r.confidence || 1.0
+                        });
+                    });
+                    graphRelationships.forEach(l => {
+                        const targetId = (l.source.id || l.source) === node.id ? (l.target.id || l.target) : (l.source.id || l.source);
+                        const key = `${node.id}-${targetId}`;
+                        if (!allRels.has(key)) {
+                            // Find target node name
+                            const targetNode = currentGraph.nodes.find(n => (n.id || n) === targetId);
+                            allRels.set(key, {
+                                type: l.type || "RELATED_TO",
+                                target: targetId,
+                                targetName: targetNode ? targetNode.name : targetId,
+                                confidence: 1.0
+                            });
+                        }
+                    });
+                    
+                    // Display relationships
+                    if (allRels.size > 0) {
+                        const relsHtml = Array.from(allRels.values()).map(rel => {
+                            const targetName = rel.targetName || rel.target;
+                            return `
+                                <div class="prop-item" style="cursor: pointer; border-bottom: 1px solid var(--border-light);" 
+                                     onclick="loadAndSelect('${rel.target}')">
+                                    <span class="prop-label">${rel.type || "RELATED_TO"}</span>
+                                    <span class="prop-val">${truncate(targetName, 30)}</span>
+                                </div>
+                            `;
+                        }).join('');
+                        document.getElementById('detailConnections').innerHTML = relsHtml;
+                    } else {
+                        document.getElementById('detailConnections').innerHTML = 
+                            '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
+                    }
+                } else {
+                    // Fallback: show graph relationships only
+                    const graphRelationships = currentGraph.links.filter(l => 
+                        (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
+                    );
+                    if (graphRelationships.length > 0) {
+                        const relsHtml = graphRelationships.map(l => {
+                            const targetId = (l.source.id || l.source) === node.id ? (l.target.id || l.target) : (l.source.id || l.source);
+                            const targetNode = currentGraph.nodes.find(n => (n.id || n) === targetId);
+                            const targetName = targetNode ? targetNode.name : targetId;
+                            return `
+                                <div class="prop-item" style="cursor: pointer;" onclick="loadAndSelect('${targetId}')">
+                                    <span class="prop-label">${l.type || "RELATED_TO"}</span>
+                                    <span class="prop-val">${truncate(targetName, 30)}</span>
+                                </div>
+                            `;
+                        }).join('');
+                        document.getElementById('detailConnections').innerHTML = relsHtml;
+                    } else {
+                        document.getElementById('detailConnections').innerHTML = 
+                            '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading relationships:", e);
+                // Show graph relationships as fallback
+                const graphRelationships = currentGraph.links.filter(l => 
+                    (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
+                );
+                document.getElementById('detailConnections').innerHTML = 
+                    graphRelationships.length > 0 
+                        ? `<div class="prop-item"><span class="prop-label">Connections</span><span class="prop-val">${graphRelationships.length}</span></div>`
+                        : '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
+            }
+            
+            // Show sanctions count
+            if (node.sanctions_count > 0) {
+                const sanctionsHtml = `<div class="prop-item"><span class="prop-label">Sanctions</span><span class="prop-val">${node.sanctions_count}</span></div>`;
+                document.getElementById('detailConnections').innerHTML += sanctionsHtml;
+            }
+        }
+
+        // Expand Function hooked to button
+        window.expandCurrentNode = () => {
+            if (selectedNode) loadNetwork(selectedNode.id);
+        };
+
+        /* --- VIEWS & NAVIGATION --- */
+
+        async function switchView(viewName) {
+            // Update UI
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const target = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(viewName));
+            if (target) target.classList.add('active');
+
+            const container = document.querySelector('.panel-center');
+
+            if (viewName === 'network') {
+                // Restore Graph View
+                container.innerHTML = `
+                    <div class="viz-container">
+                        <svg id="graph-canvas"></svg>
+                    </div>`;
+                // Re-init D3
+                setupGraph();
+                // If we have a selected node, reload it
+                if (selectedNode) loadNetwork(selectedNode.id);
+                else initializeExploration();
+
+            } else if (viewName === 'analytics') {
+                // High Value Targets View
+                container.innerHTML = '<div style="padding: 2rem; overflow-y: auto; height: 100%;"><h2 class="welcome-title" style="font-size: 2rem;">High Value Targets</h2><div id="hvt-grid" class="prop-list">Loading...</div></div>';
+
+                try {
+                    const res = await fetch(`${API_BASE}/central?limit=20`);
+                    const data = await res.json();
+
+                    const grid = document.getElementById('hvt-grid');
+                    grid.innerHTML = (data.results || []).map((e, i) => `
+                        <div class="detail-card" style="margin-bottom: 1rem; cursor: pointer;" onclick="loadAndSelect('${e.id}')">
+                            <div class="detail-header" style="padding: 1rem;">
+                                <div class="detail-status">#${i + 1}</div>
+                                <div class="detail-title" style="font-size: 1.2rem;">${e.name}</div>
+                                <div class="detail-subtitle">${e.type} • Score: ${parseFloat(e.score).toFixed(4)}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (e) {
+                    container.innerHTML += `<p style="color: var(--danger)">Error loading targets: ${e.message}</p>`;
+                }
+
+            } else if (viewName === 'matrix') {
+                // Source Matrix View
+                container.innerHTML = '<div style="padding: 2rem; overflow-y: auto; height: 100%;"><h2 class="welcome-title" style="font-size: 2rem;">Source Matrix</h2><div id="matrix-stats" class="prop-list">Loading...</div></div>';
+
+                try {
+                    const res = await fetch(`${API_BASE}/status`);
+                    const data = await res.json();
+
+                    const stats = document.getElementById('matrix-stats');
+                    const types = data.by_type || {};
+                    const typeHtml = Object.entries(types).map(([k, v]) => `
+                        <div class="prop-item">
+                            <span class="prop-label">${k}</span>
+                            <span class="prop-val">${formatNumber(v)}</span>
+                        </div>
+                    `).join('');
+
+                    stats.innerHTML = `
+                        <div class="detail-card">
+                            <div class="detail-header">
+                                <div class="detail-title" style="font-size: 1.5rem;">Database Status</div>
+                            </div>
+                            <div class="detail-body">
+                                <div class="prop-list">
+                                    <div class="prop-item"><span class="prop-label">Backend</span><span class="prop-val">${data.backend}</span></div>
+                                    <div class="prop-item"><span class="prop-label">Total Entities</span><span class="prop-val">${formatNumber(data.total_entities)}</span></div>
+                                    <div class="prop-item"><span class="prop-label">Total Relationships</span><span class="prop-val">${formatNumber(data.total_relationships)}</span></div>
+                                    ${typeHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } catch (e) { /* ignore */ }
+            }
+        }
+
+
+        // Helper to jump to graph from lists
+        function loadAndSelect(id) {
+            switchView('network');
+            setTimeout(() => {
+                loadNetwork(id, true); // Merge with existing graph
+            }, 100);
+        }
+
+        function displaySearchResults(results) {
+            const panel = document.getElementById('searchResults');
+            panel.innerHTML = '';
+            panel.classList.add('active');
+
+            if (results.length === 0) {
+                panel.innerHTML = '<div class="result-item"><div class="result-name">No results found</div></div>';
+                return;
+            }
+
+            results.forEach(r => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `
+                    <div class="result-name">${r.name}</div>
+                    <div class="result-meta">${r.entity_type || 'Unknown'} • ${r.countries ? r.countries.join(', ') : 'Global'}</div>
+                `;
+                div.onclick = () => {
+                    // Hide search results
+                    panel.classList.remove('active');
+                    panel.innerHTML = '';
+                    document.getElementById('searchInput').value = ''; // clear
+
+                    // Hide welcome if visible
+                    const overlay = document.getElementById('welcomeOverlay');
+                    if (overlay) overlay.style.display = 'none';
+
+                    // Load Graph
+                    loadNetwork(r.id);
+                };
+                panel.appendChild(div);
+            });
+        }
+
+        /* --- D3 DRAG --- */
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
+
+        /* --- GRAPH CONTROLS --- */
+        function zoomIn() {
+            if (svg) {
+                svg.transition().call(zoom.scaleBy, 1.5);
+            }
+        }
+
+        function zoomOut() {
+            if (svg) {
+                svg.transition().call(zoom.scaleBy, 1 / 1.5);
+            }
+        }
+
+        function resetView() {
+            if (svg) {
+                svg.transition().call(zoom.transform, d3.zoomIdentity);
+            }
+        }
+
+        function toggleLabels() {
+            labelsVisible = !labelsVisible;
+            if (g) {
+                g.selectAll("text").attr("display", labelsVisible ? "block" : "none");
+            }
+        }
+
+        async function loadDiagnostics() {
+            try {
+                const res = await fetch(`${API_BASE}/diagnostics`);
+                const data = await res.json();
+                
+                const message = `
+Diagnostics Report:
+- Backend: ${data.backend}
+- Entities: ${data.entities.total}
+- Relationships: ${data.relationships.total}
+- Relationship Ratio: ${data.data_quality.relationship_ratio.toFixed(3)} (${data.data_quality.status})
+- Matrix DB: ${data.matrix_db.available ? 'Available' : 'Not Available'}
+${data.matrix_db.available ? `- Matrix Relationships: ${data.matrix_db.relationship_count}` : ''}
+${data.sample_relationships.length > 0 ? `\nSample Relationships:\n${data.sample_relationships.map(r => `  ${r.source} → ${r.target} (${r.type})`).join('\n')}` : ''}
+                `.trim();
+                
+                alert(message);
+            } catch (e) {
+                console.error("Diagnostics failed:", e);
+                alert("Could not load diagnostics: " + e.message);
+            }
+        }
+
+        /* --- UTILS --- */
+        function formatNumber(num) {
+            try {
+                return new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
+            } catch (e) { return num; }
+        }
+
+        function truncate(str, n) {
+            if (!str) return "";
+            return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
+        }
+
+    </script>
+</body>
+
+</html>

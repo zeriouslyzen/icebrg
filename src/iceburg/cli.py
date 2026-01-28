@@ -105,6 +105,100 @@ def research(query: str, out: Optional[str], verbose: bool) -> None:
 
 @main.command()
 @click.argument("query", type=str)
+@click.option("--depth", "-d", type=click.Choice(["quick", "standard", "deep"]), default="standard", help="Investigation depth")
+@click.option("--out", "-o", type=click.Path(), help="Output file path for dossier markdown")
+@click.option("--vault", is_flag=True, default=True, help="Save to investigation vault")
+@click.option("--verbose", "-v", is_flag=True, help="Enable verbose output with progress")
+def investigate(query: str, depth: str, out: Optional[str], vault: bool, verbose: bool) -> None:
+    """
+    Run full ICEBURG investigation on a subject.
+    
+    This runs the complete Dossier Protocol:
+    1. Gatherer - Multi-source intelligence collection
+    2. Decoder - Symbol/pattern analysis  
+    3. Mapper - Network relationship mapping
+    4. Synthesizer - Final dossier compilation
+    5. Indexer - Auto-ingest into PEGASUS graph
+    
+    Examples:
+        iceburg investigate "Erik Strombeck asset hiding"
+        iceburg investigate "Vladimir Putin" --depth deep --verbose
+        iceburg investigate "Humboldt County property transfers" -o report.md
+    """
+    try:
+        from .config import load_config
+        from .protocols.dossier import DossierSynthesizer
+        from .investigations import Investigation, get_investigation_store
+        
+        cfg = load_config()
+        
+        # Progress callback
+        def progress(msg: str):
+            if verbose:
+                click.echo(f"  {msg}")
+        
+        if verbose:
+            click.echo("🧊 ICEBURG Investigation Protocol")
+            click.echo("=" * 50)
+            click.echo(f"📋 Query: {query}")
+            click.echo(f"🔍 Depth: {depth}")
+            click.echo()
+        
+        # Run full Dossier Protocol
+        synthesizer = DossierSynthesizer(cfg)
+        dossier = synthesizer.generate_dossier(
+            query=query, 
+            depth=depth,
+            thinking_callback=progress if verbose else None
+        )
+        
+        if verbose:
+            click.echo()
+            click.echo("📊 Results:")
+            click.echo(f"   Sources gathered: {dossier.metadata.get('total_sources', 0)}")
+            click.echo(f"   Entities found: {dossier.metadata.get('entities_found', 0)}")
+            click.echo(f"   Symbols detected: {dossier.metadata.get('symbols_detected', 0)}")
+            click.echo(f"   Relationships mapped: {dossier.metadata.get('relationships_mapped', 0)}")
+            click.echo(f"   Generation time: {dossier.metadata.get('generation_time_seconds', 0):.1f}s")
+        
+        # Save to vault if requested
+        if vault:
+            try:
+                investigation = Investigation.from_dossier(dossier, query, depth)
+                store = get_investigation_store()
+                inv_id = store.save(investigation)
+                if verbose:
+                    click.echo(f"   Saved to vault: {inv_id}")
+            except Exception as e:
+                if verbose:
+                    click.echo(f"   ⚠️ Vault save failed: {e}")
+        
+        # Output
+        markdown = dossier.to_markdown()
+        
+        if out:
+            with open(out, "w") as f:
+                f.write(markdown)
+            click.echo(f"\n✅ Dossier saved to: {out}")
+        else:
+            click.echo()
+            click.echo(markdown)
+        
+        if verbose:
+            click.echo()
+            click.echo("✅ Investigation complete!")
+            click.echo("   View in PEGASUS: http://localhost:8000/pegasus.html")
+        
+    except Exception as e:
+        click.echo(f"❌ Investigation failed: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
+        return 1
+
+
+@main.command()
+@click.argument("query", type=str)
 @click.option("--out", "-o", type=click.Path(), help="Output file path for results")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
 def chat(query: str, out: Optional[str], verbose: bool) -> None:

@@ -344,8 +344,33 @@ class DossierSynthesizer:
             "relationships_mapped": len(mapper_report.network.relationships)
         }
         
+        # === PHASE 5: INGEST ===
+        # Auto-ingest into Colossus Graph for Pegasus/Search availability
+        if thinking_callback:
+            thinking_callback("💾 Phase 5: Indexing dossier into Pegasus Matrix...")
+        
+        self._ingest_to_colossus(dossier)
+        
         logger.info(f"✅ Dossier generation complete in {dossier.metadata['generation_time_seconds']:.1f}s")
         return dossier
+
+    def _ingest_to_colossus(self, dossier: IcebergDossier):
+        """Best-effort ingestion into Colossus Graph."""
+        try:
+            # Local import to avoid circular dependency
+            from ...colossus.api import get_graph
+            graph = get_graph()
+            
+            # Check if graph supports ingestion (it should)
+            if hasattr(graph, 'ingest_dossier'):
+                graph.ingest_dossier(dossier.to_dict())
+                logger.info(f"✅ Dossier '{dossier.query}' ingested into Colossus")
+            else:
+                logger.warning("Colossus Graph missing ingest_dossier method")
+                
+        except Exception as e:
+            # Non-blocking error - verification is optional
+            logger.warning(f"Failed to ingest dossier into Colossus: {e}")
     
     def _compile_sources(self, intelligence: IntelligencePackage) -> List[Dict[str, str]]:
         """Compile all sources into a list."""

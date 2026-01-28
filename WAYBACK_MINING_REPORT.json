@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-26T21:41:02.465612",
+  "date_range": {
+    "start": "2023-01-27T21:36:23.883033",
+    "end": "2026-01-26T21:36:23.883033"
+  },
+  "findings_count": 1,
+  "findings": [
+    {
+      "type": "website_snapshot",
+      "data": {
+        "url": "strombeckproperties.com/staff.html",
+        "timestamp": "20250209153434",
+        "phone_numbers": [
+          "(707) 822-4525",
+          "(707) 822-4557"
+        ],
+        "addresses": [
+          "Eureka"
+        ],
+        "names": [
+          "Erik Strombeck"
+        ],
+        "properties": []
+      }
+    }
+  ]
+}

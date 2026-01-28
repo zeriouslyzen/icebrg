@@ -122,11 +122,50 @@ class ColossusGraph:
             return self._memory_add_entity(entity)
     
     def get_entity(self, entity_id: str) -> Optional[GraphEntity]:
-        """Get entity by ID."""
+        """Get entity by ID (with lazy loading from Matrix)."""
+        entity = None
         if self.is_neo4j:
-            return self._neo4j_get_entity(entity_id)
+            entity = self._neo4j_get_entity(entity_id)
         else:
-            return self._memory_get_entity(entity_id)
+            entity = self._memory_get_entity(entity_id)
+            
+        # Lazy Load: If not in graph, check MatrixStore and import it
+        if not entity:
+            from ..matrix_store import MatrixStore
+            store = MatrixStore()
+            entity = store.get_entity(entity_id)
+            if entity:
+                logger.info(f"📥 Lazy Loaded entity: {entity.name} ({entity.id})")
+                self.add_entity(entity)
+                
+                # Extract and add relationships
+                # Extract and add relationships
+                try:
+                    relationships = store.get_relationships(entity_id)
+                    logger.info(f"🔗 Loaded {len(relationships)} relationships for {entity.name}")
+                    
+                    neighbor_ids = set()
+                    
+                    for rel in relationships:
+                        self.add_relationship(rel)
+                        
+                        # Identify neighbor
+                        if rel.source_id == entity.id:
+                            neighbor_ids.add(rel.target_id)
+                        else:
+                            neighbor_ids.add(rel.source_id)
+                            
+                    # Lazy load neighbors (node data) so the graph is valid
+                    # Only load if not already in memory
+                    for nid in neighbor_ids:
+                        if not self._memory_get_entity(nid):
+                            neighbor = store.get_entity(nid)
+                            if neighbor:
+                                self.add_entity(neighbor)
+                except Exception as e:
+                    logger.error(f"Error loading relationships for {entity.name}: {e}")
+                
+        return entity
     
     def search_entities(
         self,
@@ -245,13 +284,113 @@ class ColossusGraph:
         total_entities = stats.get("total_entities", 0)
         logger.info(f"📊 Found {total_entities:,} entities to migrate")
         
-        # TODO: Implement actual migration with relationship extraction
-        # This requires parsing raw OpenSanctions data for relationships
-        
         return {
             "entities_migrated": 0,
             "relationships_created": 0,
             "status": "pending_implementation"
+        }
+
+    def ingest_dossier(self, dossier_data: Dict[str, Any]) -> Dict[str, int]:
+        """
+        Ingest an IcebergDossier into the graph.
+        Extracts:
+        - Main topic entity
+        - Key players (entities)
+        - Relationships found in network map
+        - Hidden connections
+        """
+        entities_count = 0
+        rels_count = 0
+        
+        # 1. Create/Update Main Topic Entity
+        topic = dossier_data.get("query", "Unknown Topic")
+        topic_id = f"topic_{topic.lower().replace(' ', '_')}"
+        
+        main_entity = GraphEntity(
+            id=topic_id,
+            name=topic,
+            entity_type="investigation_topic",
+            properties={
+                "source": "iceburg_dossier",
+                "executive_summary": dossier_data.get("executive_summary", ""),
+                "official_narrative": dossier_data.get("official_narrative", ""),
+                "confidence": str(dossier_data.get("confidence_ratings", {}))
+            },
+            sources=["iceburg_dossier"]
+        )
+        self.add_entity(main_entity)
+        entities_count += 1
+        
+        # 2. Ingest Key Players
+        player_map = {}  # name -> id
+        
+        for player in dossier_data.get("key_players", []):
+            name = player.get("name")
+            if not name:
+                continue
+                
+            p_id = f"entity_{name.lower().replace(' ', '_')}"
+            player_map[name] = p_id
+            
+            p_entity = GraphEntity(
+                id=p_id,
+                name=name,
+                entity_type=player.get("type", "unknown"),
+                properties={
+                    "description": player.get("description", ""),
+                    "role": player.get("role", "")
+                },
+                sources=["iceburg_dossier"]
+            )
+            self.add_entity(p_entity)
+            entities_count += 1
+            
+            # Link to topic
+            self.add_relationship(GraphRelationship(
+                id=f"{p_id}_related_to_{topic_id}",
+                source_id=p_id,
+                target_id=topic_id,
+                relationship_type="INVOLVED_IN",
+                confidence=0.9,
+                sources=["iceburg_dossier"]
+            ))
+            rels_count += 1
+            
+        # 3. Ingest Hidden Connections
+        for conn in dossier_data.get("hidden_connections", []):
+            e1_name = conn.get("entity_1")
+            e2_name = conn.get("entity_2")
+            via = conn.get("connected_via", "unknown connection")
+            
+            if e1_name and e2_name:
+                # Ensure entities exist (simple check)
+                id1 = player_map.get(e1_name) or f"entity_{e1_name.lower().replace(' ', '_')}"
+                id2 = player_map.get(e2_name) or f"entity_{e2_name.lower().replace(' ', '_')}"
+                
+                # Create if not mapped (lightweight creation)
+                if e1_name not in player_map:
+                    self.add_entity(GraphEntity(id=id1, name=e1_name, entity_type="unknown", sources=["iceburg_dossier"]))
+                    entities_count += 1
+                if e2_name not in player_map:
+                    self.add_entity(GraphEntity(id=id2, name=e2_name, entity_type="unknown", sources=["iceburg_dossier"]))
+                    entities_count += 1
+                
+                # Add relationship
+                self.add_relationship(GraphRelationship(
+                    id=f"{id1}_{id2}_hidden",
+                    source_id=id1,
+                    target_id=id2,
+                    relationship_type="HIDDEN_CONNECTION",
+                    properties={"via": via},
+                    confidence=0.8,
+                    sources=["iceburg_dossier"]
+                ))
+                rels_count += 1
+
+        logger.info(f"📥 Ingested Dossier '{topic}': {entities_count} entities, {rels_count} relationships")
+        return {
+            "entities_ingested": entities_count,
+            "relationships_ingested": rels_count
         }
     
     # ==================== In-Memory Implementations ====================
