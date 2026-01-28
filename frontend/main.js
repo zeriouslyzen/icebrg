@@ -9173,3 +9173,127 @@ document.addEventListener('DOMContentLoaded', loadThemePreference);
 // Expose to window for inline handler
 window.toggleLightMode = toggleLightMode;
 
+
+/* Paywall / Locked Module Logic - Robust Event Delegation */
+(function () {
+    // We use an IIFE to avoid polluting global scope, but attach listener to document immediately
+    // rather than waiting for DOMContentLoaded, so it's active as soon as this script runs.
+
+    function handleLockedClick(e) {
+        // Find the closest ancestor (or self) that is a locked module
+        const lockedModule = e.target.closest('.locked-module') || e.target.closest('[data-locked="true"]');
+
+        if (lockedModule) {
+            // CHECK CLEARANCE
+            if (localStorage.getItem('iceburg_clearance') === 'granted') {
+                const targetUrl = lockedModule.getAttribute('data-original-href');
+                if (targetUrl) {
+                    // Allow navigation if it's a real link, or manually navigate
+                    // Since href is likely '#', we manually set window.location
+                    window.location.href = targetUrl;
+                    return; // Allow navigation
+                }
+                // If no original href, maybe it's just allowed to bubble? 
+                // But let's assume we need to navigate.
+            }
+
+            // STOP EVERYTHING
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            console.log('🔒 Intercepted click on locked module:', lockedModule.getAttribute('href'));
+
+            const paywallModal = document.getElementById('paywallModal');
+            if (paywallModal) {
+                paywallModal.style.display = 'flex';
+                // Trigger reflow force
+                void paywallModal.offsetWidth;
+                paywallModal.style.opacity = '1';
+            } else {
+                console.warn('⚠️ Paywall modal element (#paywallModal) not found in DOM!');
+            }
+
+            return false;
+        }
+    }
+
+    // Use 'click' with capture=true to catch it as early as possible
+    document.addEventListener('click', handleLockedClick, true);
+
+    // Also handle touch if needed, though click usually fires on touch devices too
+    // We'll trust 'click' for links to avoid double-firing or scrolling issues with touchend
+
+    // Setup Modal Close Logic (this can wait for DOM)
+    document.addEventListener('DOMContentLoaded', () => {
+        const paywallModal = document.getElementById('paywallModal');
+        if (paywallModal) {
+            // Check for redirect error param
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'locked') {
+                paywallModal.style.display = 'flex';
+                // Trigger reflow force
+                void paywallModal.offsetWidth;
+                paywallModal.style.opacity = '1';
+                console.log('🔒 Access denied redirect detected. Showing paywall.');
+
+                // Clean up URL
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+
+            // Close on overlay click
+            paywallModal.addEventListener('click', (e) => {
+                if (e.target === paywallModal) {
+                    paywallModal.style.opacity = '0';
+                    setTimeout(() => {
+                        paywallModal.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Close button
+            const closeBtn = paywallModal.querySelector('.paywall-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    paywallModal.style.opacity = '0';
+                    setTimeout(() => {
+                        paywallModal.style.display = 'none';
+                    }, 300);
+                });
+            }
+
+            // --- LOGIN LOGIC ---
+            const loginBtn = paywallModal.querySelector('.login-btn');
+            if (loginBtn) {
+                // Remove inline onclick if possible, or just add listener behavior
+                // The inline onclick might still fire, but this will add the real logic.
+                // Ideally we'd remove the inline attribute but let's just add the listener first.
+                loginBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const code = prompt("Identity Verification Required", "");
+                    if (code && code.trim().toUpperCase() === 'OBSIDIAN') {
+                        localStorage.setItem('iceburg_clearance', 'granted');
+
+                        // Silent success - professional fade out
+                        paywallModal.style.opacity = '0';
+                        setTimeout(() => {
+                            paywallModal.style.display = 'none';
+                            // Reload to enable links or redirect back if we have a saved return path
+                            const returnPath = sessionStorage.getItem('redirect_after_login');
+                            if (returnPath) {
+                                sessionStorage.removeItem('redirect_after_login');
+                                window.location.href = returnPath;
+                            } else {
+                                window.location.reload();
+                            }
+                        }, 300);
+                    } else if (code) {
+                        alert('Authentication Failed');
+                    }
+                };
+            }
+        }
+    });
+})();

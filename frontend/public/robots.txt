@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /research
+Disallow: /encyclopedia
+Disallow: /wiki
+Disallow: /pegasus.html
+Disallow: /protocols
+Disallow: /features
