@@ -597,12 +597,13 @@
                         <span class="prop-label">Data Quality</span>
                         <span class="prop-val" id="dataQuality">--</span>
                     </div>
-                    <button class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px;" 
-                            onclick="loadDiagnostics()" title="View detailed diagnostics">
+                    <button class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px;"
+                        onclick="loadDiagnostics()" title="View detailed diagnostics">
                         Diagnostics
                     </button>
-                    <button id="cleanupButton" class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px; display: none; background: var(--warning);" 
-                            onclick="runCleanup()" title="Remove invalid relationships">
+                    <button id="cleanupButton" class="cta-button"
+                        style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px; display: none; background: var(--warning);"
+                        onclick="runCleanup()" title="Remove invalid relationships">
                         Clean Data
                     </button>
                 </div>
@@ -705,7 +706,7 @@
 
                 const count = data.count || data.total_entities || 0;
                 const relCount = data.relationships || data.total_relationships || 0;
-                
+
                 document.getElementById('statEntities').innerText = formatNumber(count);
                 document.getElementById('statLinks').innerText = formatNumber(relCount);
 
@@ -737,6 +738,36 @@
             }
         }
 
+        async function loadStaticFallback() {
+            console.log("Loading static fallback...");
+            try {
+                const res = await fetch('/strombeck_network.json');
+                if (!res.ok) throw new Error("Static fallback not found");
+                const data = await res.json();
+
+                // Static JSON is usually in {nodes, edges} or {nodes, links} format
+                currentGraph.nodes = data.nodes || [];
+                currentGraph.links = (data.edges || data.links || []).map(e => ({
+                    source: e.source,
+                    target: e.target,
+                    type: e.type || "CONNECTED_TO"
+                }));
+
+                if (currentGraph.nodes.length > 0) {
+                    const overlay = document.getElementById('welcomeOverlay');
+                    if (overlay) overlay.style.display = 'none';
+
+                    document.getElementById('statEntities').innerText = currentGraph.nodes.length;
+                    document.getElementById('statLinks').innerText = currentGraph.links.length;
+
+                    renderGraph();
+                    if (currentGraph.nodes[0]) showDetails(currentGraph.nodes[0]);
+                }
+            } catch (e) {
+                console.error("Static fallback failed", e);
+            }
+        }
+
         async function loadDataQuality() {
             try {
                 const res = await fetch(`${API_BASE}/data-quality`);
@@ -747,15 +778,15 @@
                     }
                     return;
                 }
-                
+
                 const data = await res.json();
                 const qualityElement = document.getElementById('dataQuality');
                 const cleanupButton = document.getElementById('cleanupButton');
-                
+
                 if (qualityElement) {
                     const pct = data.quality_percentage || 0;
                     qualityElement.innerText = `${pct.toFixed(1)}%`;
-                    
+
                     // Color code based on quality
                     if (pct < 10) {
                         qualityElement.style.color = "var(--warning)";
@@ -781,17 +812,17 @@
             if (!confirm('This will remove invalid relationships from the database. A backup will be created first. Continue?')) {
                 return;
             }
-            
+
             const button = document.getElementById('cleanupButton');
             if (button) {
                 button.disabled = true;
                 button.innerText = 'Cleaning...';
             }
-            
+
             try {
                 const res = await fetch(`${API_BASE}/cleanup`, { method: 'POST' });
                 const data = await res.json();
-                
+
                 if (data.status === 'success') {
                     alert(`Cleanup complete!\n\nDeleted: ${data.deleted?.toLocaleString() || 0} invalid relationships\nRemaining: ${data.after?.total?.toLocaleString() || 0} valid relationships\n\nBackup saved to: ${data.backup_path}`);
                     // Reload stats
@@ -913,12 +944,12 @@
                 const textEl = overlay.querySelector('.welcome-text');
                 if (textEl) textEl.innerText = "Loading network...";
             }
-            
+
             // Load central entities as a starting point
             try {
                 const res = await fetch(`${API_BASE}/central?limit=10`);
                 if (!res.ok) throw new Error(`Failed to fetch central entities: ${res.status}`);
-                
+
                 const data = await res.json();
                 const ids = (data.results || []).map(e => e.id);
 
@@ -932,19 +963,24 @@
                         const textEl = overlay.querySelector('.welcome-text');
                         if (titleEl) titleEl.innerText = "No Data Available";
                         if (textEl) {
-                            textEl.innerText = 
+                            textEl.innerText =
                                 "The graph is empty. Try ingesting data or searching for specific entities.";
                         }
                     }
                 }
             } catch (e) {
                 console.error("Init failed", e);
-                if (overlay) {
-                    overlay.style.display = 'block';
-                    const textEl = overlay.querySelector('.welcome-text');
-                    if (textEl) {
-                        textEl.innerText = 
-                            `Error initializing: ${e.message}. Try searching for an entity.`;
+                // Try static fallback
+                await loadStaticFallback();
+
+                if (currentGraph.nodes.length === 0) {
+                    if (overlay) {
+                        overlay.style.display = 'block';
+                        const textEl = overlay.querySelector('.welcome-text');
+                        if (textEl) {
+                            textEl.innerText =
+                                `Error initializing: ${e.message}. Try searching for an entity.`;
+                        }
                     }
                 }
             }
@@ -957,7 +993,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ entity_id: entityId, depth: 2 })
                 });
-                
+
                 if (!res.ok) {
                     const errorText = await res.text();
                     throw new Error(`Network fetch failed: ${res.status} - ${errorText}`);
@@ -1033,7 +1069,7 @@
                     });
                     currentGraph.nodes = Array.from(nodeMap.values());
                     console.log(`Merged ${nodesAdded} new nodes into graph`);
-                    
+
                     // Merge edges, deduplicate by source-target pair
                     const edgeSet = new Set(currentGraph.links.map(l => {
                         const src = l.source.id || l.source;
@@ -1083,7 +1119,7 @@
                         edgesDropped++;
                         return null;
                     }).filter(l => l !== null);
-                    
+
                     if (edgesDropped > 0) {
                         console.warn(`Dropped ${edgesDropped} edges (missing nodes)`);
                     }
@@ -1120,7 +1156,7 @@
                     button.onclick = () => {
                         if (titleEl) titleEl.innerText = "The Archive";
                         if (textEl) {
-                            textEl.innerText = 
+                            textEl.innerText =
                                 "Access the complete network graph. Visualize connections between individuals, organizations, and offshore entities.";
                         }
                         button.innerText = "Launch Visualization";
@@ -1137,17 +1173,17 @@
         function renderGraph() {
             svg = d3.select("#graph-canvas");
             svg.selectAll("*").remove(); // Clear for simplicity
-            
+
             // Create container group for zoom/pan (must be created first)
             g = svg.append("g");
-            
+
             // Set up zoom behavior
             zoom = d3.zoom()
                 .scaleExtent([0.1, 4])
                 .on("zoom", (event) => {
                     g.attr("transform", event.transform);
                 });
-            
+
             svg.call(zoom);
 
             // Handle empty graph
@@ -1207,8 +1243,8 @@
                     .text(d => {
                         const name = d.name || d.id || "Unknown";
                         const displayName = name.replace(/^person_|^company_|^address_|^phone_/g, '')
-                                                .replace(/_/g, ' ')
-                                                .replace(/\b\w/g, l => l.toUpperCase());
+                            .replace(/_/g, ' ')
+                            .replace(/\b\w/g, l => l.toUpperCase());
                         return displayName.substring(0, 20);
                     });
 
@@ -1257,7 +1293,7 @@
             node.append("circle")
                 .attr("r", d => {
                     // Size based on connections or sanctions
-                    const connections = currentGraph.links.filter(l => 
+                    const connections = currentGraph.links.filter(l =>
                         (l.source.id || l.source) === d.id || (l.target.id || l.target) === d.id
                     ).length;
                     return 6 + Math.min(connections * 2, 10) + (d.sanctions_count || 0) * 2;
@@ -1286,8 +1322,8 @@
                     const name = d.name || d.id || "Unknown";
                     // Clean up entity IDs to be more readable
                     const displayName = name.replace(/^person_|^company_|^address_|^phone_/g, '')
-                                            .replace(/_/g, ' ')
-                                            .replace(/\b\w/g, l => l.toUpperCase());
+                        .replace(/_/g, ' ')
+                        .replace(/\b\w/g, l => l.toUpperCase());
                     return displayName.length > 25 ? displayName.substring(0, 22) + "..." : displayName;
                 });
 
@@ -1304,11 +1340,11 @@
                 .links(currentGraph.links)
                 .distance(100)
                 .id(d => d.id);
-            
+
             // Update forces for better layout
             simulation.force("charge").strength(-300);
             simulation.force("collide").radius(30);
-            
+
             simulation.alpha(1).restart();
 
             // Update link positions on tick
@@ -1348,12 +1384,12 @@
                 if (res.ok) {
                     const entityData = await res.json();
                     const relationships = entityData.relationships || [];
-                    
+
                     // Also get relationships from current graph
-                    const graphRelationships = currentGraph.links.filter(l => 
+                    const graphRelationships = currentGraph.links.filter(l =>
                         (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
                     );
-                    
+
                     // Combine and deduplicate
                     const allRels = new Map();
                     relationships.forEach(r => {
@@ -1378,7 +1414,7 @@
                             });
                         }
                     });
-                    
+
                     // Display relationships
                     if (allRels.size > 0) {
                         const relsHtml = Array.from(allRels.values()).map(rel => {
@@ -1393,12 +1429,12 @@
                         }).join('');
                         document.getElementById('detailConnections').innerHTML = relsHtml;
                     } else {
-                        document.getElementById('detailConnections').innerHTML = 
+                        document.getElementById('detailConnections').innerHTML =
                             '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
                     }
                 } else {
                     // Fallback: show graph relationships only
-                    const graphRelationships = currentGraph.links.filter(l => 
+                    const graphRelationships = currentGraph.links.filter(l =>
                         (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
                     );
                     if (graphRelationships.length > 0) {
@@ -1415,22 +1451,22 @@
                         }).join('');
                         document.getElementById('detailConnections').innerHTML = relsHtml;
                     } else {
-                        document.getElementById('detailConnections').innerHTML = 
+                        document.getElementById('detailConnections').innerHTML =
                             '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
                     }
                 }
             } catch (e) {
                 console.error("Error loading relationships:", e);
                 // Show graph relationships as fallback
-                const graphRelationships = currentGraph.links.filter(l => 
+                const graphRelationships = currentGraph.links.filter(l =>
                     (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
                 );
-                document.getElementById('detailConnections').innerHTML = 
-                    graphRelationships.length > 0 
+                document.getElementById('detailConnections').innerHTML =
+                    graphRelationships.length > 0
                         ? `<div class="prop-item"><span class="prop-label">Connections</span><span class="prop-val">${graphRelationships.length}</span></div>`
                         : '<div class="prop-item"><span class="prop-label">No connections</span><span class="prop-val">0</span></div>';
             }
-            
+
             // Show sanctions count
             if (node.sanctions_count > 0) {
                 const sanctionsHtml = `<div class="prop-item"><span class="prop-label">Sanctions</span><span class="prop-val">${node.sanctions_count}</span></div>`;
@@ -1614,7 +1650,7 @@
             try {
                 const res = await fetch(`${API_BASE}/diagnostics`);
                 const data = await res.json();
-                
+
                 const message = `
 Diagnostics Report:
 - Backend: ${data.backend}
@@ -1625,7 +1661,7 @@ Diagnostics Report:
 ${data.matrix_db.available ? `- Matrix Relationships: ${data.matrix_db.relationship_count}` : ''}
 ${data.sample_relationships.length > 0 ? `\nSample Relationships:\n${data.sample_relationships.map(r => `  ${r.source} → ${r.target} (${r.type})`).join('\n')}` : ''}
                 `.trim();
-                
+
                 alert(message);
             } catch (e) {
                 console.error("Diagnostics failed:", e);
