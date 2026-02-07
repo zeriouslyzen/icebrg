@@ -698,6 +698,26 @@ function handleStreamingMessage(data) {
 
         handleThinkingStream(data, lastMessage);
         scrollToBottom();
+    } else if (data.type === 'research_status') {
+        // Research progress: stage + elapsed time; "complete" when done
+        let strip = lastMessage.querySelector('.research-status-strip');
+        if (!strip) {
+            strip = document.createElement('div');
+            strip.className = 'research-status-strip';
+            strip.style.cssText = 'margin: 8px 0; padding: 8px 12px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 12px; color: #444;';
+            lastMessage.querySelector('.message-content')?.appendChild(strip);
+        }
+        const stage = data.stage || 'processing';
+        const elapsed = data.elapsed_seconds != null ? data.elapsed_seconds : 0;
+        const stageLabel = stage === 'complete' ? 'Research complete' : `Research: ${stage}`;
+        strip.textContent = `${stageLabel} (${elapsed}s)`;
+        strip.style.color = stage === 'complete' ? '#0a0' : '#444';
+        if (stage === 'complete') {
+            const modeSelectEl = document.getElementById('modeSelect');
+            if (modeSelectEl) modeSelectEl.value = 'fast';
+            if (typeof updateAgentOptionsForMode === 'function') updateAgentOptionsForMode('fast');
+        }
+        scrollToBottom();
     } else if (data.type === 'informatics') {
         addToStatusCarousel('informatics', data, lastMessage);
         scrollToBottom();
@@ -926,6 +946,38 @@ function handleStreamingMessage(data) {
                         });
                         renderCharts(visibleText);
                     });
+
+                    // If Fast/Chat response offered multi-agent research, show option to proceed
+                    const doneMode = data.mode || (data.metadata && data.metadata.mode);
+                    const isChatOrFast = (doneMode === 'fast' || doneMode === 'chat');
+                    if (isChatOrFast && finalText && textSuggestsResearchOffer(finalText)) {
+                        const msgContent = lastMessage.querySelector('.message-content');
+                        if (msgContent && !lastMessage.querySelector('.run-full-research-cta')) {
+                            const cta = document.createElement('div');
+                            cta.className = 'run-full-research-cta';
+                            cta.style.cssText = 'margin-top: 12px; padding: 10px 14px; background: rgba(0,0,0,0.04); border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);';
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.textContent = 'Run full research (Surveyor → Dissident → Synthesist → Oracle)';
+                            btn.style.cssText = 'padding: 8px 14px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.12); background: #fff; cursor: pointer; font-size: 13px;';
+                            btn.addEventListener('click', () => {
+                                const modeSelectEl = document.getElementById('modeSelect');
+                                const inputEl = document.getElementById('queryInput');
+                                if (modeSelectEl) modeSelectEl.value = 'research';
+                                const query = conversationContext.lastUserMessage || (() => {
+                                    const m = document.querySelector('#chatContainer .message.user:last-child .message-content');
+                                    return m ? m.textContent.trim() : '';
+                                })();
+                                if (query && inputEl) {
+                                    inputEl.value = query;
+                                    if (typeof updateAgentOptionsForMode === 'function') updateAgentOptionsForMode('research');
+                                    sendQuery();
+                                }
+                            });
+                            cta.appendChild(btn);
+                            msgContent.appendChild(cta);
+                        }
+                    }
                 }
             }
 
@@ -3358,6 +3410,8 @@ async function sendQuery() {
     let agent;
     if (mode === 'chat' || mode === 'web_research' || mode === 'local_rag' || mode === 'hybrid') {
         agent = 'secretary'; // ALWAYS secretary in chat/search modes
+    } else if (mode === 'astrophysiology') {
+        agent = 'celestial_calc'; // Specialized agent for astro-physiology
     } else {
         agent = agentSelect ? agentSelect.value : 'auto';
     }
@@ -4358,6 +4412,19 @@ function clearAllConversations() {
 function searchConversations(query) {
     searchQuery = query.toLowerCase().trim();
     updateConversationsList();
+}
+
+// Detect when assistant (in Fast/Chat) offered to run multi-agent research
+function textSuggestsResearchOffer(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase();
+    const hasSurveyor = t.includes('surveyor');
+    const hasDissident = t.includes('dissident');
+    const hasSynthesist = t.includes('synthesist');
+    const hasOracle = t.includes('oracle');
+    const hasProtocol = t.includes('research protocol') || t.includes('full pipeline');
+    const hasOffer = t.includes("i'll have the surveyor") || t.includes("i'll have the dissident") || t.includes('surveyor provide') || t.includes('dissident offer');
+    return (hasSurveyor && (hasDissident || hasSynthesist || hasOracle)) || hasProtocol || hasOffer;
 }
 
 // Update conversation context for natural flow
@@ -8666,6 +8733,39 @@ function showModeLoadingState(messageContent, mode = 'research') {
             { icon: '3', text: 'Context compilation...' }
         ]
     };
+    
+    // Add missing modes to steps
+    Object.assign(modeSteps, {
+        protocol: [
+            { icon: '1', text: 'Direct agent connection...' },
+            { icon: '2', text: 'Processing request...' }
+        ],
+        code: [
+            { icon: '1', text: 'Analysis: Reading codebase...' },
+            { icon: '2', text: 'Weaver: Implementing changes...' },
+            { icon: '3', text: 'IDE: Verifying syntax...' }
+        ],
+        finance: [
+            { icon: '1', text: 'Market data retrieval...' },
+            { icon: '2', text: 'Analyst: Technical analysis...' },
+            { icon: '3', text: 'Synthesist: Risk assessment...' }
+        ],
+        civilization: [
+            { icon: '1', text: 'Initializing simulation parameters...' },
+            { icon: '2', text: 'SocialNormSystem: Calculating dynamics...' },
+            { icon: '3', text: 'Emergence: Detecting patterns...' }
+        ],
+        astrophysiology: [
+            { icon: '1', text: 'Calculating celestial positions...' },
+            { icon: '2', text: 'Computing molecular imprint...' },
+            { icon: '3', text: 'Mapping biological correlations...' }
+        ],
+        dossier: [
+            { icon: '1', text: 'Archive search...' },
+            { icon: '2', text: 'Scrutineer: validating records...' },
+            { icon: '3', text: 'Profiler: Constructing timeline...' }
+        ]
+    });
 
     const steps = modeSteps[mode] || modeSteps.research;
     const modeLabel = mode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -8805,27 +8905,49 @@ function astro_showExampleQueries(inputElement) {
     examples.id = 'astro-example-queries';
     examples.style.cssText = `
         position: absolute;
-        top: 100%;
+        bottom: 115%; /* Above the input */
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 20, 40, 0.85); /* Deep space glass */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(0, 212, 255, 0.3);
-        border-radius: 6px;
-        padding: 10px;
-        margin-top: 5px;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
         z-index: 1000;
         display: grid;
         gap: 8px;
+        box-shadow: 0 -4px 20px rgba(0, 212, 255, 0.15);
+        animation: hudSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: bottom center;
     `;
+    
+    // Add animation style if not exists
+    if (!document.getElementById('hud-style-anim')) {
+        const style = document.createElement('style');
+        style.id = 'hud-style-anim';
+        style.textContent = `
+            @keyframes hudSlideUp {
+                from { opacity: 0; transform: translateY(10px) scale(0.95); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     examples.innerHTML = `
-        <div style="color: #00D4FF; font-size: 0.85em; margin-bottom: 5px;">💡 Try asking:</div>
-        <button class="astro-example-query" style="text-align: left; padding: 8px; background: rgba(0, 212, 255, 0.1); color: #ccc; border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 4px;">
+            <div style="color: #00D4FF; font-size: 0.75em; letter-spacing: 1px; text-transform: uppercase;">SUGGESTED_VECTORS</div>
+            <div style="color: #00D4FF; font-size: 0.75em;">[HUD_ACTIVE]</div>
+        </div>
+        <button class="astro-example-query" style="text-align: left; padding: 10px; background: rgba(0, 212, 255, 0.05); color: #e0faff; border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: all 0.2s;">
             "What are my strongest behavioral traits?"
         </button>
-        <button class="astro-example-query" style="text-align: left; padding: 8px; background: rgba(0, 212, 255, 0.1); color: #ccc; border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+        <button class="astro-example-query" style="text-align: left; padding: 10px; background: rgba(0, 212, 255, 0.05); color: #e0faff; border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: all 0.2s;">
             "How does Mars affect me today?"
         </button>
-        <button class="astro-example-query" style="text-align: left; padding: 8px; background: rgba(0, 212, 255, 0.1); color: #ccc; border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+        <button class="astro-example-query" style="text-align: left; padding: 10px; background: rgba(0, 212, 255, 0.05); color: #e0faff; border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: all 0.2s;">
             "Show my organ system correlations"
         </button>
     `;
@@ -8919,28 +9041,76 @@ let workflowState = {
 };
 
 // Mode templates for different processing configurations
+// Mode templates for different processing configurations
 const MODE_TEMPLATES = {
-    fast: { icon: '⚡', name: 'Fast', agents: ['secretary'] },
-    research: { icon: '🔬', name: 'Research', agents: ['surveyor', 'deliberation', 'synthesist'] },
+    fast: { icon: '⚡', name: 'Fast Mode', agents: ['secretary'] },
+    research: { icon: '🔬', name: 'Research', agents: ['surveyor', 'dissident', 'synthesist'] },
+    protocol: { icon: '🧠', name: 'Protocol', agents: ['dissident', 'oracle'] }, // Manual usually runs single, but we show potential
+    code: { icon: '💻', name: 'Code Mode', agents: ['weaver', 'ide', 'code_validator'] },
+    finance: { icon: '💰', name: 'Finance', agents: ['finance_analyst', 'synthesist'] },
+    civilization: { icon: '🌍', name: 'Civilization', agents: ['social_norm_system', 'emergence_detector'] },
+    astrophysiology: { icon: '🌌', name: 'Astro-Phys', agents: ['celestial_calc', 'molecular_sim'] },
+    dossier: { icon: '📂', name: 'Dossier', agents: ['archaeologist', 'scrutineer', 'scribe'] },
     deep_research: { icon: '🧬', name: 'Deep Research', agents: ['surveyor', 'dissident', 'deliberation', 'archaeologist', 'synthesist', 'oracle'] },
-    unbounded: { icon: '♾️', name: 'Unbounded', agents: ['surveyor', 'dissident', 'deliberation', 'archaeologist', 'synthesist', 'oracle', 'self_redesign'] }
+    unbounded: { icon: '♾️', name: 'Unbounded', agents: ['surveyor', 'dissident', 'deliberation', 'archaeologist', 'synthesist', 'oracle', 'self_redesign'] },
+    truth: { icon: '👁️', name: 'Truth Finding', agents: ['scrutineer', 'dissident', 'synthesist'] }
 };
 
 // Current processing mode
 let currentMode = 'research';
 
 /**
- * Initialize the workflow pill DOM elements
+ * Initialize the agent workflow pill (HUD Style)
  */
 function initWorkflowPill() {
-    // Create workflow pill container if it doesn't exist
-    if (!document.getElementById('agentWorkflowPill')) {
-        const pill = document.createElement('div');
-        pill.id = 'agentWorkflowPill';
-        pill.className = 'agent-workflow-pill hidden';
-        pill.innerHTML = '<span class="workflow-loading">Initializing...</span>';
-        document.body.appendChild(pill);
+    // 1. Clean up existing pill to prevent duplicates
+    const existingPill = document.getElementById('agentWorkflowPill');
+    if (existingPill) existingPill.remove();
+
+    // 2. Inject robust HUD styles
+    if (!document.getElementById('hud-pill-style')) {
+        const style = document.createElement('style');
+        style.id = 'hud-pill-style';
+        style.textContent = `
+            .hud-workflow-pill {
+                position: fixed !important;
+                top: 80px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                z-index: 9999 !important;
+                background: rgba(0, 0, 0, 0.6) !important;
+                backdrop-filter: blur(8px) !important;
+                -webkit-backdrop-filter: blur(8px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 20px !important;
+                padding: 8px 16px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+                width: max-content !important;
+                height: auto !important;
+                max-width: 90vw !important;
+                white-space: nowrap !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            .hud-workflow-pill.hidden {
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transform: translateX(-50%) translateY(-10px) !important;
+            }
+        `;
+        document.head.appendChild(style);
     }
+
+    // 3. Create the new pill
+    const pill = document.createElement('div');
+    pill.id = 'agentWorkflowPill';
+    pill.className = 'agent-workflow-pill hud-workflow-pill hidden';
+    pill.innerHTML = '<span class="workflow-loading">Initializing...</span>';
+    document.body.appendChild(pill);
 
     // Create metacog indicators container
     if (!document.getElementById('metacogIndicators')) {
@@ -9032,10 +9202,20 @@ function updateWorkflowPill(agentName, status, index = null, total = null) {
 
     let pillHTML = '';
     agents.forEach((agent, i) => {
-        const displayName = agentDisplayNames[agent] || agent;
-        const isActive = agent.toLowerCase() === agentName.toLowerCase() && status === 'active';
-        const isCompleted = i < workflowState.currentIndex ||
-            (agent.toLowerCase() === agentName.toLowerCase() && status === 'completed');
+        const displayName = agentDisplayNames[agent] || agent.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        
+        let isActive = false;
+        let isCompleted = false;
+
+        if (status === 'preview') {
+             // Static preview state
+             isActive = false;
+             isCompleted = false;
+        } else {
+             isActive = agent.toLowerCase() === (agentName||'').toLowerCase() && status === 'active';
+             isCompleted = i < workflowState.currentIndex ||
+                (agent.toLowerCase() === (agentName||'').toLowerCase() && status === 'completed');
+        }
 
         const stepClass = isActive ? 'active' : (isCompleted ? 'completed' : '');
 
@@ -9105,14 +9285,59 @@ function setProcessingMode(mode) {
         currentMode = mode;
         console.log(`📋 Processing mode set to: ${MODE_TEMPLATES[mode].name}`);
 
-        // Update any mode selector UI
+        // 1. Update Mode Selector UI (Label/Icon)
         const modeLabel = document.querySelector('.mode-selector-label');
-        if (modeLabel) {
-            modeLabel.textContent = MODE_TEMPLATES[mode].name;
-        }
+        if (modeLabel) modeLabel.textContent = MODE_TEMPLATES[mode].name;
+        
         const modeIcon = document.querySelector('.mode-selector-icon');
-        if (modeIcon) {
-            modeIcon.textContent = MODE_TEMPLATES[mode].icon;
+        if (modeIcon) modeIcon.textContent = MODE_TEMPLATES[mode].icon;
+
+        // Custom Mode Handler Invocation (Restore specific mode UIs)
+        const customHandlers = {
+            'astrophysiology': (m) => typeof astro_updateModeUI === 'function' && astro_updateModeUI(m)
+        };
+
+        if (customHandlers[mode]) {
+             // Let the custom handler manage specific UI elements (like placeholders/helpers)
+             customHandlers[mode](mode);
+        }
+
+        // 2. Update Input Placeholder (Generic Fallback)
+        // Only apply generic placeholders if the custom handler didn't likely handle it
+        // For uniformity, we can apply context-aware placeholders, but let's check.
+        // Astro sets its own complex placeholder logic based on localstorage.
+        
+        if (mode !== 'astrophysiology') {
+            const placeholders = {
+                fast: "Ask a quick question...",
+                research: "Enter research topic for swarm debate...",
+                protocol: "Message the active agent directly...",
+                code: "Describe the feature or bug fix...",
+                finance: "Enter ticker or market query...",
+                civilization: "Describe social simulation parameters...",
+                dossier: "Enter target subject name...",
+                deep_research: "Enter complex topic for multi-step analysis...",
+                unbounded: "Enter high-level AGI directive...",
+                truth: "Enter claim to verify against suppressed data..."
+            };
+
+            const newPlaceholder = placeholders[mode] || "Enter your query...";
+            const inputs = document.querySelectorAll('#queryInput, #mainInput, .chat-input');
+            inputs.forEach(input => {
+                input.setAttribute('placeholder', newPlaceholder);
+                input.style.transition = "transform 0.2s";
+                input.style.transform = "scale(0.98)";
+                setTimeout(() => input.style.transform = "scale(1)", 200);
+            });
+        }
+
+        // 3. Preview Agent Pipeline (Workflow Pill)
+        // Show what *will* happen - BUT NOT for Astro-Physiology (User Request)
+        if (mode !== 'astrophysiology') {
+            showWorkflowPill();
+            updateWorkflowPill(null, 'preview'); 
+        } else {
+            hideWorkflowPill();
         }
     }
 }
