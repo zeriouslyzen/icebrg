@@ -23,3 +23,9 @@
 ## Update: 2026-01-15 17:46:57
 
 - It's designed for collaborative truth-finding with a focus on deep domain research, multi-agent coordination, real-time streaming, and persistent memory.
+
+---
+
+## Update: 2026-01-30 22:12:16
+
+- Multi-agent coordination allows for deep research.

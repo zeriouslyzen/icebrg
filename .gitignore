@@ -34,9 +34,19 @@ wheels/
 MANIFEST
 venv/
 .venv/
+.venv_broken/
 env/
 ENV/
 environments/
+
+# Large model files (3.9GB+)
+models/
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
 
 # Node.js
 node_modules/
@@ -126,3 +136,7 @@ xcuserdata/
 
 # Investigations vault - private client data
 investigations_vault/
+
+# Chroma DB temp directories
+test_chroma/
+tmp_chroma/

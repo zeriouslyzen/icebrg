@@ -148,6 +148,9 @@ from ..caching.semantic_cache import SemanticCache
 from ..llm import embed_texts # For generating embeddings
 semantic_cache = SemanticCache(similarity_threshold=0.85)
 
+# RESEARCH DEFENCE TERMINAL ROUTE (Early Registration)
+
+
 # Warm cache in background
 try:
     transcript_path = os.path.join(os.getcwd(), "fast_mode_transcript.md")
@@ -2736,18 +2739,23 @@ Task: Explain what the investigation data says about this topic.
                         # Deep dossier: create simplified investigation from synthesis
                         from ..investigations.storage import InvestigationMetadata
                         investigation_id = f"{datetime.now().strftime('%Y-%m-%d')}_{query[:30].replace(' ', '-').lower()}-deep"
-                        investigation = Investigation(
+                        metadata = InvestigationMetadata(
                             investigation_id=investigation_id,
-                            metadata=InvestigationMetadata(
-                                title=f"Deep Investigation: {query[:50]}",
-                                query=query,
-                                created_at=datetime.now().isoformat(),
-                                updated_at=datetime.now().isoformat(),
-                                status="complete",
-                                depth="deep",
-                                sources_count=dossier.total_sources,
-                                entities_count=dossier.total_layers
-                            ),
+                            title=f"Deep Investigation: {query[:50]}",
+                            query=query,
+                            created_at=datetime.now().isoformat(),
+                            updated_at=datetime.now().isoformat(),
+                            status="complete",
+                            tags=[],
+                            confidence_score=0.0,
+                            sources_count=dossier.total_sources,
+                            entities_count=dossier.total_layers,
+                            depth="deep",
+                            version=1
+                        )
+                        investigation = Investigation(
+                            metadata=metadata,
+                            dossier_markdown=dossier_markdown,
                             executive_summary=dossier.synthesis,
                             official_narrative="",
                             alternative_narratives=[],
@@ -3377,6 +3385,11 @@ Task: Explain what the investigation data says about this topic.
                                 # user_original_mode is defined earlier in this block before any mode override
                                 mode_for_secretary = user_original_mode
                                 
+                                # Pass last research so Secretary can build on it in Fast Chat
+                                last_research_summary = None
+                                if websocket in connection_metadata:
+                                    lr = connection_metadata[websocket].get("last_research", {})
+                                    last_research_summary = lr.get("summary", "").strip() or None
                                 # Wrap with global middleware if available
                                 if global_middleware:
                                     secretary_response = await global_middleware.execute_agent(
@@ -3389,7 +3402,8 @@ Task: Explain what the investigation data says about this topic.
                                         conversation_id=conversation_id,
                                         user_id=user_id,
                                         routing_mode=routing_mode_to_pass,
-                                        mode=mode_for_secretary  # Pass original user mode for chat detection
+                                        mode=mode_for_secretary,
+                                        last_research_summary=last_research_summary
                                     )
                                 else:
                                     # Directly await since run() is now async
@@ -3401,7 +3415,8 @@ Task: Explain what the investigation data says about this topic.
                                         conversation_id=conversation_id,
                                         user_id=user_id,
                                         routing_mode=routing_mode_to_pass,
-                                        mode=mode_for_secretary  # Pass original user mode for chat detection
+                                        mode=mode_for_secretary,
+                                        last_research_summary=last_research_summary
                                     )
                                 
                                 # Cancel thinking task
@@ -3655,19 +3670,42 @@ Task: Explain what the investigation data says about this topic.
                     # Clear any cached Google provider
                     clear_provider_singleton()
                     
+                    # For research mode, respect frontend model selection
+                    # Always use the frontend-provided model (or 8b default) to prevent OOM from large defaults
+                    effective_model = primary_model or "llama3.1:8b"
+                    logger.info(f"🔬 Research mode using model: {effective_model}")
+                    
                     base_cfg = load_config_with_model(
-                        primary_model=primary_model or "llama3.1:8b",
-                        use_small_models=False,  # Use full models for research
+                        primary_model=effective_model,
+                        use_small_models=False,  # Respect primary_model selection
                         fast=False
                     )
+                    
+                    # Override any large models from base config with the frontend-selected model
+                    # This ensures we use the user's choice, not the default 70b models
+                    large_model_markers = ["70b", "65b", "32b", "40b"]
+                    surveyor_model = base_cfg.surveyor_model
+                    dissident_model = base_cfg.dissident_model
+                    synthesist_model = base_cfg.synthesist_model
+                    oracle_model = base_cfg.oracle_model
+                    
+                    # If any agent got a large model from defaults, replace with frontend model
+                    if any(marker in surveyor_model.lower() for marker in large_model_markers):
+                        surveyor_model = effective_model
+                    if any(marker in dissident_model.lower() for marker in large_model_markers):
+                        dissident_model = effective_model
+                    if any(marker in synthesist_model.lower() for marker in large_model_markers):
+                        synthesist_model = effective_model
+                    if any(marker in oracle_model.lower() for marker in large_model_markers):
+                        oracle_model = effective_model
                     
                     # Force Ollama provider for research mode
                     custom_cfg = IceburgConfig(
                         data_dir=base_cfg.data_dir,
-                        surveyor_model=base_cfg.surveyor_model,
-                        dissident_model=base_cfg.dissident_model,
-                        synthesist_model=base_cfg.synthesist_model,
-                        oracle_model=base_cfg.oracle_model,
+                        surveyor_model=surveyor_model,
+                        dissident_model=dissident_model,
+                        synthesist_model=synthesist_model,
+                        oracle_model=oracle_model,
                         embed_model=base_cfg.embed_model,
                         llm_provider="ollama",  # Force Ollama
                         provider_url=base_cfg.provider_url,
@@ -3687,29 +3725,42 @@ Task: Explain what the investigation data says about this topic.
                         logger.warning("WebSocket not connected, breaking loop")
                         break
                     
-                    # Create progress callback for real-time engine/algorithm updates
+                    research_start_time = time.time()
+                    
+                    # Create progress callback for real-time engine/algorithm updates and research_status (stage + time)
                     async def research_progress_callback(msg: Dict[str, Any]):
                         """Send real-time progress updates during research"""
                         msg_type = msg.get("type", "action")
+                        elapsed = round(time.time() - research_start_time, 1)
                         
                         if msg_type == "engines":
-                            # Send engines update with glitch effect trigger
                             await safe_send_json(websocket, {
                                 "type": "engines",
                                 "engines": msg.get("engines", [])
                             })
                         elif msg_type == "algorithms":
                             await safe_send_json(websocket, {
-                                "type": "algorithms", 
+                                "type": "algorithms",
                                 "algorithms": msg.get("algorithms", [])
                             })
                         elif msg_type == "action":
-                            # Transform to thinking_stream for glitch effect
+                            stage = msg.get("action", "processing")
+                            await safe_send_json(websocket, {
+                                "type": "research_status",
+                                "stage": stage,
+                                "elapsed_seconds": elapsed
+                            })
                             await safe_send_json(websocket, {
                                 "type": "thinking_stream",
                                 "content": msg.get("description", "Processing...")
                             })
                         elif msg_type == "agent_thinking":
+                            stage = msg.get("agent", "agent").lower()
+                            await safe_send_json(websocket, {
+                                "type": "research_status",
+                                "stage": stage,
+                                "elapsed_seconds": elapsed
+                            })
                             await safe_send_json(websocket, {
                                 "type": "thinking_stream",
                                 "content": f"{msg.get('agent', 'Agent')}: {msg.get('content', 'Analyzing...')}"
@@ -3728,6 +3779,25 @@ Task: Explain what the investigation data says about this topic.
                         timeout=query_timeout
                     )
                     result["mode"] = mode
+                    
+                    # Research complete: send research_status and store last_research for Fast Chat to build on
+                    elapsed_total = round(time.time() - research_start_time, 1)
+                    await safe_send_json(websocket, {
+                        "type": "research_status",
+                        "stage": "complete",
+                        "elapsed_seconds": elapsed_total
+                    })
+                    result_content = (result.get("results") or {}).get("content", "")
+                    if not result_content:
+                        ar = (result.get("results") or {}).get("agent_results", {})
+                        result_content = (
+                            ar.get("supervisor") or ar.get("synthesist") or ar.get("oracle")
+                        ) or (str(ar) if ar else "")
+                    if result_content and websocket in connection_metadata:
+                        connection_metadata[websocket]["last_research"] = {
+                            "summary": result_content[:12000],
+                            "timestamp": time.time()
+                        }
                     
                 elif agent == "auto":
                     # Chat mode - Intelligent routing with fast/deep paths (FALLBACK for non-chat modes)
@@ -4151,11 +4221,14 @@ Task: Explain what the investigation data says about this topic.
                             break
                         await asyncio.sleep(sleep_delay)
                         # Scrutineer needs synthesis (use synthesist output)
-                        from ..agents.surveyor import run as surveyor_run
                         from ..agents.dissident import run as dissident_run
                         from ..agents.synthesist import run as synthesist_run
+                        
+                        # Get defense mode flag
+                        defense_mode = message.get("defense_mode", False)
+                        
                         surveyor_result = surveyor_run(cfg, vs, query, verbose=True)
-                        dissident_result = dissident_run(cfg, query, surveyor_result, verbose=True)
+                        dissident_result = dissident_run(cfg, query, surveyor_result, verbose=True, defense_mode=defense_mode)
                         enhanced_context = {
                             "surveyor": surveyor_result,
                             "dissident": dissident_result
@@ -4167,6 +4240,36 @@ Task: Explain what the investigation data says about this topic.
                             "results": {
                                 "content": agent_result,
                                 "agent": "scrutineer"
+                            }
+                        }
+                    elif agent == "dissident":
+                        # Direct Dissident access for audits
+                        from ..agents.surveyor import run as surveyor_run
+                        from ..agents.dissident import run as dissident_run
+                        
+                        defense_mode = message.get("defense_mode", False)
+                        thinking_msg = "CONDUCTING STRATEGIC AUDIT..." if defense_mode else format_thinking_message(agent="dissident", mode=mode)
+                        
+                        await safe_send_json(websocket, {
+                            "type": "agent_thinking",
+                            "agent": "dissident",
+                            "content": thinking_msg
+                        })
+                        
+                        surveyor_result = surveyor_run(cfg, vs, query, verbose=True)
+                        if defense_mode:
+                            await safe_send_json(websocket, {
+                                "type": "agent_thinking",
+                                "agent": "dissident",
+                                "content": "IDENTIFYING LEVERAGE POINTS..."
+                            })
+                            
+                        agent_result = dissident_run(cfg, query, surveyor_result, verbose=True, defense_mode=defense_mode)
+                        result = {
+                            "query": query,
+                            "results": {
+                                "content": agent_result,
+                                "agent": "dissident"
                             }
                         }
                     elif agent == "ide":
@@ -4986,6 +5089,15 @@ def create_app() -> FastAPI:
 try:
     from pathlib import Path
     frontend_dir = Path(__file__).parent.parent.parent.parent / "frontend"
+    # Research Defence Terminal - Always register if frontend exists
+    if frontend_dir.exists():
+        @app.get("/defence")
+        async def defence_terminal():
+            """Serve the Research Defence terminal interface"""
+            from fastapi.responses import FileResponse
+            logger.info("Serving Research Defence terminal")
+            return FileResponse(str(frontend_dir / "research_defence.html"))
+
     if frontend_dir.exists() and (frontend_dir / "index.html").exists():
         # Mount static files - this will serve index.html for / and other static files
         # API routes take precedence because they're defined first

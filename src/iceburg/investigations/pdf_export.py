@@ -231,6 +231,9 @@ class DossierPDFExporter:
         # Key players
         story.extend(self._build_key_players(investigation))
         
+        # Matrix summary (connects, bridges from Colossus query APIs)
+        story.extend(self._build_matrix_summary(investigation))
+        
         # Contradictions
         if investigation.contradictions:
             story.extend(self._build_contradictions(investigation))
@@ -395,6 +398,40 @@ class DossierPDFExporter:
         elements.append(Spacer(1, 20))
         return elements
     
+    def _build_matrix_summary(self, investigation: "Investigation") -> List:
+        """Build Matrix summary: who connects, who bridges (from Colossus query APIs)."""
+        elements = []
+        try:
+            from ..colossus.api import get_graph
+            graph = get_graph()
+            connects = graph.get_relationships_by_type(["CONNECTS", "GATEKEEPER_FOR"], limit=50)
+            bridges = graph.get_bridge_entities(limit=30)
+        except Exception as e:
+            logger.debug("Matrix summary skipped (Colossus unavailable): %s", e)
+            return []
+        if not connects and not bridges:
+            return []
+        elements.append(Paragraph("NETWORK MATRIX SUMMARY", self.styles['IceburgH1']))
+        elements.append(Spacer(1, 10))
+        if connects:
+            elements.append(Paragraph("Connectors / gatekeepers (CONNECTS, GATEKEEPER_FOR):", self.styles['IceburgH2']))
+            for r in connects[:15]:
+                elements.append(Paragraph(
+                    f"  {r.source_id} -> {r.target_id} ({r.relationship_type})",
+                    self.styles['IceburgBody']
+                ))
+            elements.append(Spacer(1, 8))
+        if bridges:
+            elements.append(Paragraph("Bridge entities (multiple domains):", self.styles['IceburgH2']))
+            for e in bridges[:15]:
+                domains = (e.properties or {}).get("domains") or []
+                elements.append(Paragraph(
+                    f"  {e.name} ({e.id}): {', '.join(domains)}",
+                    self.styles['IceburgBody']
+                ))
+        elements.append(Spacer(1, 20))
+        return elements
+
     def _build_contradictions(self, investigation: "Investigation") -> List:
         """Build the contradictions section."""
         elements = []

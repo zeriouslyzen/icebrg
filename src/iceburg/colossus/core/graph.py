@@ -257,6 +257,32 @@ class ColossusGraph:
             return self._neo4j_get_central_entities(entity_type, centrality_measure, limit)
         else:
             return self._memory_get_central_entities(entity_type, centrality_measure, limit)
+
+    def get_relationships_by_type(
+        self,
+        relationship_types: List[str],
+        limit: int = 500
+    ) -> List[GraphRelationship]:
+        """Get all relationships whose type is in the given list."""
+        if self.is_neo4j:
+            return self._neo4j_get_relationships_by_type(relationship_types, limit)
+        return self._memory_get_relationships_by_type(relationship_types, limit)
+
+    def get_bridge_entities(self, limit: int = 100) -> List[GraphEntity]:
+        """Get entities that span multiple domains (len(properties.domains) >= 2)."""
+        if self.is_neo4j:
+            return self._neo4j_get_bridge_entities(limit)
+        return self._memory_get_bridge_entities(limit)
+
+    def run_bridge_detector(self) -> int:
+        """
+        Compute domains per entity from properties and relationship edges;
+        set bridge_score and domains on entity properties when len(domains) >= 2.
+        Returns count of entities updated.
+        """
+        if self.is_neo4j:
+            return self._neo4j_run_bridge_detector()
+        return self._memory_run_bridge_detector()
     
     # ==================== Bulk Operations ====================
     
@@ -295,17 +321,18 @@ class ColossusGraph:
         Ingest an IcebergDossier into the graph.
         Extracts:
         - Main topic entity
-        - Key players (entities)
-        - Relationships found in network map
-        - Hidden connections
+        - Key players (entities) with roles, domains, themes
+        - Relationships from hidden_connections (with relationship_type, domain)
+        - Full network_map entities and relationships when present
         """
         entities_count = 0
         rels_count = 0
-        
+        player_map = {}  # name -> id (populated by key_players and network_map)
+
         # 1. Create/Update Main Topic Entity
         topic = dossier_data.get("query", "Unknown Topic")
         topic_id = f"topic_{topic.lower().replace(' ', '_')}"
-        
+
         main_entity = GraphEntity(
             id=topic_id,
             name=topic,
@@ -320,72 +347,151 @@ class ColossusGraph:
         )
         self.add_entity(main_entity)
         entities_count += 1
-        
-        # 2. Ingest Key Players
-        player_map = {}  # name -> id
-        
+
+        # 2. Ingest Key Players (with roles, domains, themes in properties)
         for player in dossier_data.get("key_players", []):
             name = player.get("name")
             if not name:
                 continue
-                
+
             p_id = f"entity_{name.lower().replace(' ', '_')}"
             player_map[name] = p_id
-            
+
+            props = {
+                "description": player.get("description", ""),
+                "role": player.get("role", ""),
+            }
+            if player.get("roles"):
+                props["roles"] = player["roles"] if isinstance(player["roles"], list) else [player["roles"]]
+            if player.get("domains"):
+                props["domains"] = player["domains"] if isinstance(player["domains"], list) else [player["domains"]]
+            if player.get("themes"):
+                props["themes"] = player["themes"] if isinstance(player["themes"], list) else [player["themes"]]
+            if player.get("linguistic_flags"):
+                props["linguistic_flags"] = player["linguistic_flags"] if isinstance(player["linguistic_flags"], list) else [player["linguistic_flags"]]
+
             p_entity = GraphEntity(
                 id=p_id,
                 name=name,
                 entity_type=player.get("type", "unknown"),
-                properties={
-                    "description": player.get("description", ""),
-                    "role": player.get("role", "")
-                },
+                properties=props,
                 sources=["iceburg_dossier"]
             )
             self.add_entity(p_entity)
             entities_count += 1
-            
-            # Link to topic
+
+            rel_type = player.get("relationship_type", "INVOLVED_IN")
             self.add_relationship(GraphRelationship(
                 id=f"{p_id}_related_to_{topic_id}",
                 source_id=p_id,
                 target_id=topic_id,
-                relationship_type="INVOLVED_IN",
+                relationship_type=rel_type,
                 confidence=0.9,
                 sources=["iceburg_dossier"]
             ))
             rels_count += 1
-            
-        # 3. Ingest Hidden Connections
+
+        # 3. Ingest Hidden Connections (with relationship_type and domain)
         for conn in dossier_data.get("hidden_connections", []):
             e1_name = conn.get("entity_1")
             e2_name = conn.get("entity_2")
             via = conn.get("connected_via", "unknown connection")
-            
+            rel_type = conn.get("relationship_type", "HIDDEN_CONNECTION")
+            domain = conn.get("domain")
+
             if e1_name and e2_name:
-                # Ensure entities exist (simple check)
                 id1 = player_map.get(e1_name) or f"entity_{e1_name.lower().replace(' ', '_')}"
                 id2 = player_map.get(e2_name) or f"entity_{e2_name.lower().replace(' ', '_')}"
-                
-                # Create if not mapped (lightweight creation)
+
                 if e1_name not in player_map:
                     self.add_entity(GraphEntity(id=id1, name=e1_name, entity_type="unknown", sources=["iceburg_dossier"]))
                     entities_count += 1
                 if e2_name not in player_map:
                     self.add_entity(GraphEntity(id=id2, name=e2_name, entity_type="unknown", sources=["iceburg_dossier"]))
                     entities_count += 1
-                
-                # Add relationship
+
+                rel_props = {"via": via}
+                if domain is not None:
+                    rel_props["domain"] = domain
                 self.add_relationship(GraphRelationship(
-                    id=f"{id1}_{id2}_hidden",
+                    id=f"{id1}_{id2}_{rel_type.lower()}",
                     source_id=id1,
                     target_id=id2,
-                    relationship_type="HIDDEN_CONNECTION",
-                    properties={"via": via},
+                    relationship_type=rel_type,
+                    properties=rel_props,
                     confidence=0.8,
                     sources=["iceburg_dossier"]
                 ))
                 rels_count += 1
+
+        # 4. Ingest full network_map (entities + relationships) when present
+        network_map = dossier_data.get("network_map") or {}
+        nm_entities = network_map.get("entities") or []
+        nm_relationships = network_map.get("relationships") or []
+        entity_ids_from_network = set()
+
+        for e in nm_entities:
+            eid = e.get("id") or f"entity_{(e.get('name') or 'unknown').lower().replace(' ', '_')}"
+            name = e.get("name", eid)
+            entity_type = e.get("type", "unknown")
+            metadata = e.get("metadata") or {}
+            props = {"description": e.get("description", "")}
+            if metadata.get("roles") is not None:
+                props["roles"] = metadata["roles"] if isinstance(metadata["roles"], list) else [metadata["roles"]]
+            if metadata.get("domains") is not None:
+                props["domains"] = metadata["domains"] if isinstance(metadata["domains"], list) else [metadata["domains"]]
+            if metadata.get("themes") is not None:
+                props["themes"] = metadata["themes"] if isinstance(metadata["themes"], list) else [metadata["themes"]]
+            if metadata.get("linguistic_flags") is not None:
+                props["linguistic_flags"] = metadata["linguistic_flags"] if isinstance(metadata["linguistic_flags"], list) else [metadata["linguistic_flags"]]
+            if e.get("role"):
+                props["role"] = e["role"]
+
+            self.add_entity(GraphEntity(
+                id=eid,
+                name=name,
+                entity_type=entity_type,
+                properties=props,
+                sources=["iceburg_dossier"]
+            ))
+            entities_count += 1
+            entity_ids_from_network.add(eid)
+            player_map[name] = eid
+
+        for r in nm_relationships:
+            src = r.get("source") or r.get("source_id")
+            tgt = r.get("target") or r.get("target_id")
+            if not src or not tgt:
+                continue
+            rel_type = r.get("type", "RELATED_TO")
+            desc = r.get("description", "")
+            domain = r.get("domain")
+            rel_props = {}
+            if desc:
+                rel_props["description"] = desc
+            if domain is not None:
+                rel_props["domain"] = domain
+            if r.get("evidence"):
+                rel_props["evidence"] = r["evidence"] if isinstance(r["evidence"], list) else [r["evidence"]]
+            rel_id = f"{src}_{tgt}_{rel_type.lower()}_{rels_count}"
+            self.add_relationship(GraphRelationship(
+                id=rel_id,
+                source_id=src,
+                target_id=tgt,
+                relationship_type=rel_type,
+                properties=rel_props,
+                confidence=float(r.get("strength", 0.8)),
+                sources=["iceburg_dossier"]
+            ))
+            rels_count += 1
+
+        # Optional: run bridge detector to set bridge_score and domains on entities
+        try:
+            bridge_updated = self.run_bridge_detector()
+            if bridge_updated:
+                logger.info(f"Bridge detector updated {bridge_updated} entities")
+        except Exception as e:
+            logger.debug(f"Bridge detector skipped: {e}")
 
         logger.info(f"📥 Ingested Dossier '{topic}': {entities_count} entities, {rels_count} relationships")
         return {
@@ -573,31 +679,45 @@ class ColossusGraph:
                         next_level.append(neighbor)
             current_level = next_level
         
-        # Build response
+        # Build response (nodes with domains, roles from properties; edges with type and properties)
         nodes = []
         for node_id in visited:
             entity = self._memory_get_entity(node_id)
             if entity:
-                nodes.append({
+                node_data = {
                     "id": entity.id,
                     "name": entity.name,
                     "type": entity.entity_type,
                     "countries": entity.countries,
                     "sanctions_count": len(entity.sanctions),
-                })
-        
+                }
+                if entity.properties:
+                    if entity.properties.get("domains") is not None:
+                        node_data["domains"] = entity.properties["domains"]
+                    if entity.properties.get("roles") is not None:
+                        node_data["roles"] = entity.properties["roles"]
+                    if entity.properties.get("themes") is not None:
+                        node_data["themes"] = entity.properties["themes"]
+                nodes.append(node_data)
+
         edges = []
         for source in visited:
             for target in self._memory_graph.neighbors(source):
                 if target in visited:
                     for key, data in self._memory_graph[source][target].items():
-                        edges.append({
+                        edge_data = {
                             "source": source,
                             "target": target,
                             "type": data.get("relationship_type", "RELATED_TO"),
                             "confidence": data.get("confidence", 1.0),
-                        })
-        
+                        }
+                        if data.get("properties"):
+                            if "domain" in data["properties"]:
+                                edge_data["domain"] = data["properties"]["domain"]
+                            if data["properties"]:
+                                edge_data["properties"] = data["properties"]
+                        edges.append(edge_data)
+
         return {
             "nodes": nodes,
             "edges": edges,
@@ -612,6 +732,107 @@ class ColossusGraph:
             "total_relationships": self._memory_graph.number_of_edges(),
             "backend": "networkx",
         }
+
+    def _memory_get_relationships_by_type(
+        self,
+        relationship_types: List[str],
+        limit: int
+    ) -> List[GraphRelationship]:
+        """Get all relationships whose type is in the given list."""
+        types_set = set(relationship_types)
+        results = []
+        for source, target, key, data in self._memory_graph.edges(keys=True, data=True):
+            if len(results) >= limit:
+                break
+            if data.get("relationship_type") in types_set:
+                results.append(self._edge_to_relationship(source, target, key, data))
+        return results
+
+    def _memory_get_bridge_entities(self, limit: int) -> List[GraphEntity]:
+        """Get entities with len(properties.domains) >= 2."""
+        results = []
+        for node_id, data in self._memory_graph.nodes(data=True):
+            if len(results) >= limit:
+                break
+            props = data.get("properties") or {}
+            domains = props.get("domains") if isinstance(props.get("domains"), list) else []
+            if len(domains) >= 2:
+                entity = self._memory_get_entity(node_id)
+                if entity:
+                    results.append(entity)
+        return results
+
+    def _memory_run_bridge_detector(self) -> int:
+        """Compute domains per entity from properties and edges; set bridge_score and domains."""
+        updated = 0
+        for node_id in list(self._memory_graph.nodes()):
+            data = self._memory_graph.nodes[node_id]
+            props = dict(data.get("properties") or {})
+            domains = set()
+            if isinstance(props.get("domains"), list):
+                domains.update(props["domains"])
+            for _u, _v, key, edge_data in list(self._memory_graph.in_edges(node_id, keys=True, data=True)) + list(
+                self._memory_graph.out_edges(node_id, keys=True, data=True)
+            ):
+                ep = edge_data.get("properties") or {}
+                if ep.get("domain"):
+                    domains.add(ep["domain"])
+            domains = list(domains)
+            if len(domains) >= 2:
+                props["domains"] = domains
+                props["bridge_score"] = len(domains)
+                data["properties"] = props
+                self._memory_graph.nodes[node_id]["properties"] = props
+                updated += 1
+        return updated
+
+    def _neo4j_run_bridge_detector(self) -> int:
+        """Neo4j bridge detector: compute domains from entity props + relationship props, set bridge_score."""
+        updated = 0
+        with self._driver.session() as session:
+            # Collect entity id -> current properties (JSON string)
+            entity_props = {}
+            result = session.run("MATCH (e:Entity) RETURN e.id as id, e.properties as properties")
+            for record in result:
+                entity_props[record["id"]] = record["properties"]
+            # Collect relationship domain per entity (source and target)
+            rel_domains = {}
+            result = session.run("""
+                MATCH (a:Entity)-[r]-(b:Entity)
+                WHERE r.properties IS NOT NULL
+                RETURN a.id as aid, b.id as bid, r.properties as rprops
+            """)
+            for record in result:
+                rprops = record["rprops"]
+                if isinstance(rprops, str):
+                    try:
+                        rprops = json.loads(rprops) if rprops else {}
+                    except Exception:
+                        rprops = {}
+                domain = (rprops or {}).get("domain")
+                if domain:
+                    for eid in (record["aid"], record["bid"]):
+                        if eid not in rel_domains:
+                            rel_domains[eid] = set()
+                        rel_domains[eid].add(domain)
+            # For each entity, merge entity.properties.domains + rel_domains; update where len(domains) >= 2
+            for eid, props_str in entity_props.items():
+                try:
+                    props = json.loads(props_str) if props_str else {}
+                except Exception:
+                    props = {}
+                domains = set(props.get("domains") or [])
+                domains.update(rel_domains.get(eid) or set())
+                if len(domains) >= 2:
+                    props["domains"] = list(domains)
+                    props["bridge_score"] = len(domains)
+                    session.run(
+                        "MATCH (e:Entity {id: $id}) SET e.properties = $props",
+                        id=eid,
+                        props=json.dumps(props),
+                    )
+                    updated += 1
+        return updated
     
     def _memory_bulk_import(
         self,
@@ -1083,7 +1304,73 @@ class ColossusGraph:
                 entities.append((entity, float(record["degree"])))
             
             return entities
-    
+
+    def _neo4j_get_relationships_by_type(
+        self,
+        relationship_types: List[str],
+        limit: int
+    ) -> List[GraphRelationship]:
+        """Get all relationships whose type is in the given list (Neo4j stub)."""
+        results = []
+        with self._driver.session() as session:
+            for rtype in relationship_types[:10]:
+                try:
+                    query = f"""
+                    MATCH (a:Entity)-[r]->(b:Entity)
+                    WHERE type(r) = $rtype
+                    RETURN a.id as source_id, b.id as target_id, r
+                    LIMIT $limit
+                    """
+                    result = session.run(query, rtype=rtype, limit=limit)
+                    for record in result:
+                        r = record["r"]
+                        results.append(GraphRelationship(
+                            id=r.get("id", ""),
+                            source_id=record["source_id"],
+                            target_id=record["target_id"],
+                            relationship_type=rtype,
+                            confidence=r.get("confidence", 1.0),
+                            properties=json.loads(r.get("properties", "{}")),
+                            sources=list(r.get("sources", [])),
+                        ))
+                        if len(results) >= limit:
+                            return results
+                except Exception:
+                    continue
+        return results
+
+    def _neo4j_get_bridge_entities(self, limit: int) -> List[GraphEntity]:
+        """Get entities with multiple domains (Neo4j stub)."""
+        results = []
+        try:
+            with self._driver.session() as session:
+                query = """
+                MATCH (e:Entity)
+                WHERE e.properties IS NOT NULL
+                RETURN e
+                LIMIT $limit
+                """
+                result = session.run(query, limit=limit * 2)
+                for record in result:
+                    node = record["e"]
+                    props = json.loads(node.get("properties", "{}"))
+                    domains = props.get("domains") if isinstance(props.get("domains"), list) else []
+                    if len(domains) >= 2:
+                        results.append(GraphEntity(
+                            id=node["id"],
+                            name=node.get("name", ""),
+                            entity_type=node.get("entity_type", "unknown"),
+                            properties=props,
+                            countries=list(node.get("countries", [])),
+                            sanctions=list(node.get("sanctions", [])),
+                            sources=list(node.get("sources", [])),
+                        ))
+                        if len(results) >= limit:
+                            break
+        except Exception:
+            pass
+        return results
+
     def _neo4j_bulk_import(
         self,
         entities: List[GraphEntity],

@@ -284,6 +284,105 @@
 <node id="altman, (English: Meaning of altman,)">
   <data key="d0">evidence</data>
 </node>
+<node id="analyze">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: analyze | Etymology: analyze (English: Meaning of analyze)">
+  <data key="d0">principle</data>
+</node>
+<node id="analyze (English: Meaning of analyze)">
+  <data key="d0">evidence</data>
+</node>
+<node id="potential">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: potential | Etymology: potential (English: Meaning of potential)">
+  <data key="d0">principle</data>
+</node>
+<node id="potential (English: Meaning of potential)">
+  <data key="d0">evidence</data>
+</node>
+<node id="bioelectric">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: bioelectric | Etymology: bioelectric (English: Meaning of bioelectric)">
+  <data key="d0">principle</data>
+</node>
+<node id="bioelectric (English: Meaning of bioelectric)">
+  <data key="d0">evidence</data>
+</node>
+<node id="conduct">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: conduct | Etymology: conduct (English: Meaning of conduct)">
+  <data key="d0">principle</data>
+</node>
+<node id="conduct (English: Meaning of conduct)">
+  <data key="d0">evidence</data>
+</node>
+<node id="strategic">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: strategic | Etymology: strategic (English: Meaning of strategic)">
+  <data key="d0">principle</data>
+</node>
+<node id="strategic (English: Meaning of strategic)">
+  <data key="d0">evidence</data>
+</node>
+<node id="assessment">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: assessment | Etymology: assessment (English: Meaning of assessment)">
+  <data key="d0">principle</data>
+</node>
+<node id="assessment (English: Meaning of assessment)">
+  <data key="d0">evidence</data>
+</node>
+<node id="lawyer">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)">
+  <data key="d0">principle</data>
+</node>
+<node id="lawyer (English: Meaning of lawyer)">
+  <data key="d0">evidence</data>
+</node>
+<node id="suggests">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: suggests | Etymology: suggests (English: Meaning of suggests)">
+  <data key="d0">principle</data>
+</node>
+<node id="suggests (English: Meaning of suggests)">
+  <data key="d0">evidence</data>
+</node>
+<node id="settling">
+  <data key="d0">principle</data>
+</node>
+<node id="Term: settling | Etymology: settling (English: Meaning of settling)">
+  <data key="d0">principle</data>
+</node>
+<node id="settling (English: Meaning of settling)">
+  <data key="d0">evidence</data>
+</node>
+<node id="astrology">
+  <data key="d0">principle</data>
+</node>
+<node id="secret_society">
+  <data key="d0">domain</data>
+</node>
+<node id="suppressed_knowledge">
+  <data key="d0">domain</data>
+</node>
+<node id="Term: astrology | Etymology: astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: star) → *h₂ster- (PIE: star) → Sanskrit 'star' (Sanskrit: star) → Babyl">
+  <data key="d0">principle</data>
+</node>
+<node id="astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: ">
+  <data key="d0">evidence</data>
+</node>
+<node id="Hermetic tradition of astrology">
+  <data key="d0">evidence</data>
+</node>
 <edge source="Collective Consciousness Drives Evolution" target="Ecological succession">
   <data key="d1">touches</data>
   <data key="d2">0</data>
@@ -679,6 +778,165 @@
   <data key="d1">implies</data>
 </edge>
 <edge source="altman," target="altman, (English: Meaning of altman,)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="analyze" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="analyze" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="analyze" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="analyze" target="Term: analyze | Etymology: analyze (English: Meaning of analyze)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="analyze" target="analyze (English: Meaning of analyze)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="potential" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="potential" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="potential" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="potential" target="Term: potential | Etymology: potential (English: Meaning of potential)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="potential" target="potential (English: Meaning of potential)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="bioelectric" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="bioelectric" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="bioelectric" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="bioelectric" target="Term: bioelectric | Etymology: bioelectric (English: Meaning of bioelectric)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="bioelectric" target="bioelectric (English: Meaning of bioelectric)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="conduct" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="conduct" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="conduct" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="conduct" target="Term: conduct | Etymology: conduct (English: Meaning of conduct)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="conduct" target="conduct (English: Meaning of conduct)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="strategic" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="strategic" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="strategic" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="strategic" target="Term: strategic | Etymology: strategic (English: Meaning of strategic)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="strategic" target="strategic (English: Meaning of strategic)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="assessment" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="assessment" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="assessment" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="assessment" target="Term: assessment | Etymology: assessment (English: Meaning of assessment)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="assessment" target="assessment (English: Meaning of assessment)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="lawyer" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="lawyer" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="lawyer" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="lawyer" target="Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="lawyer" target="lawyer (English: Meaning of lawyer)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="suggests" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="suggests" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="suggests" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="suggests" target="Term: suggests | Etymology: suggests (English: Meaning of suggests)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="suggests" target="suggests (English: Meaning of suggests)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="settling" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="settling" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="settling" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="settling" target="Term: settling | Etymology: settling (English: Meaning of settling)">
+  <data key="d1">implies</data>
+</edge>
+<edge source="settling" target="settling (English: Meaning of settling)">
+  <data key="d1">supports</data>
+</edge>
+<edge source="astrology" target="etymology">
+  <data key="d1">touches</data>
+</edge>
+<edge source="astrology" target="occult">
+  <data key="d1">touches</data>
+</edge>
+<edge source="astrology" target="history">
+  <data key="d1">touches</data>
+</edge>
+<edge source="astrology" target="secret_society">
+  <data key="d1">touches</data>
+</edge>
+<edge source="astrology" target="suppressed_knowledge">
+  <data key="d1">touches</data>
+</edge>
+<edge source="astrology" target="Term: astrology | Etymology: astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: star) → *h₂ster- (PIE: star) → Sanskrit 'star' (Sanskrit: star) → Babyl">
+  <data key="d1">implies</data>
+</edge>
+<edge source="astrology" target="astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: ">
+  <data key="d1">supports</data>
+</edge>
+<edge source="astrology" target="Hermetic tradition of astrology">
   <data key="d1">supports</data>
 </edge>
 </graph></graphml>

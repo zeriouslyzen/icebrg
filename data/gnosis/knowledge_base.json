@@ -1274,6 +1274,193 @@
       "confidence": 0.9,
       "metadata": {},
       "timestamp": "2026-01-18T03:49:40.186322"
+    },
+    "knowledge_75": {
+      "knowledge_id": "knowledge_75",
+      "content": "Term: analyze | Etymology: analyze (English: Meaning of analyze)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_analyze"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.232376"
+    },
+    "knowledge_76": {
+      "knowledge_id": "knowledge_76",
+      "content": "Term: potential | Etymology: potential (English: Meaning of potential)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_potential"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.243813"
+    },
+    "knowledge_77": {
+      "knowledge_id": "knowledge_77",
+      "content": "Term: bioelectric | Etymology: bioelectric (English: Meaning of bioelectric)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_bioelectric"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.250725"
+    },
+    "knowledge_78": {
+      "knowledge_id": "knowledge_78",
+      "content": "Term: conduct | Etymology: conduct (English: Meaning of conduct)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_conduct"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.217108"
+    },
+    "knowledge_79": {
+      "knowledge_id": "knowledge_79",
+      "content": "Term: strategic | Etymology: strategic (English: Meaning of strategic)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_strategic"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.227284"
+    },
+    "knowledge_80": {
+      "knowledge_id": "knowledge_80",
+      "content": "Term: assessment | Etymology: assessment (English: Meaning of assessment)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_assessment"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.235401"
+    },
+    "knowledge_81": {
+      "knowledge_id": "knowledge_81",
+      "content": "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)",
+      "knowledge_type": "principle",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_lawyer"
+      ],
+      "confidence": 0.8,
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.444201"
+    },
+    "knowledge_82": {
+      "knowledge_id": "knowledge_82",
+      "content": "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_lawyer"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.444212"
+    },
+    "knowledge_83": {
+      "knowledge_id": "knowledge_83",
+      "content": "Term: suggests | Etymology: suggests (English: Meaning of suggests)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_suggests"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.459132"
+    },
+    "knowledge_84": {
+      "knowledge_id": "knowledge_84",
+      "content": "Term: settling | Etymology: settling (English: Meaning of settling)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_settling"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.467881"
+    },
+    "knowledge_85": {
+      "knowledge_id": "knowledge_85",
+      "content": "Term: astrology | Etymology: astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: star) → *h₂ster- (PIE: star) → Sanskrit 'star' (Sanskrit: star) → Babylonian astrology (Akkadian: celestial divination) → Egyptian star knowledge (Egyptian: celestial wisdom) | Occult: Hermetic astrology → Kabbalistic astrology → Alchemical astrology | Secret Societies: Rosicrucians → Freemasons | Suppressed: Babylonian star knowledge (suppressed) → Egyptian celestial wisdom (suppressed) | Historical: Astrology knowledge transmission through secret so → Suppression of astrological knowledge in scientifi",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_astrology"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-05T06:33:02.386951"
     }
   },
   "insights": [
@@ -2701,9 +2888,218 @@
       ],
       "metadata": {},
       "timestamp": "2026-01-18T03:49:40.186322"
+    },
+    {
+      "insight_id": "insight_0_1769700636.232372",
+      "source_conversation_id": "total_knowledge_total_analyze",
+      "insight_type": "fact",
+      "content": "Term: analyze | Etymology: analyze (English: Meaning of analyze)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is analyze?",
+        "Term: analyze | Etymology: analyze (English: Meaning of analyze)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.232376"
+    },
+    {
+      "insight_id": "insight_0_1769700636.24381",
+      "source_conversation_id": "total_knowledge_total_potential",
+      "insight_type": "fact",
+      "content": "Term: potential | Etymology: potential (English: Meaning of potential)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is potential?",
+        "Term: potential | Etymology: potential (English: Meaning of potential)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.243813"
+    },
+    {
+      "insight_id": "insight_0_1769700636.250722",
+      "source_conversation_id": "total_knowledge_total_bioelectric",
+      "insight_type": "fact",
+      "content": "Term: bioelectric | Etymology: bioelectric (English: Meaning of bioelectric)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is bioelectric?",
+        "Term: bioelectric | Etymology: bioelectric (English: Meaning of bioelectric)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T07:30:36.250725"
+    },
+    {
+      "insight_id": "insight_0_1769745595.217101",
+      "source_conversation_id": "total_knowledge_total_conduct",
+      "insight_type": "fact",
+      "content": "Term: conduct | Etymology: conduct (English: Meaning of conduct)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is conduct?",
+        "Term: conduct | Etymology: conduct (English: Meaning of conduct)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.217108"
+    },
+    {
+      "insight_id": "insight_0_1769745595.227281",
+      "source_conversation_id": "total_knowledge_total_strategic",
+      "insight_type": "fact",
+      "content": "Term: strategic | Etymology: strategic (English: Meaning of strategic)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is strategic?",
+        "Term: strategic | Etymology: strategic (English: Meaning of strategic)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.227284"
+    },
+    {
+      "insight_id": "insight_0_1769745595.235398",
+      "source_conversation_id": "total_knowledge_total_assessment",
+      "insight_type": "fact",
+      "content": "Term: assessment | Etymology: assessment (English: Meaning of assessment)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is assessment?",
+        "Term: assessment | Etymology: assessment (English: Meaning of assessment)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T19:59:55.235401"
+    },
+    {
+      "insight_id": "insight_0_1769751889.444197",
+      "source_conversation_id": "total_knowledge_total_lawyer",
+      "insight_type": "principle",
+      "content": "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)",
+      "confidence": 0.8,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is lawyer?",
+        "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.444201"
+    },
+    {
+      "insight_id": "insight_1_1769751889.444208",
+      "source_conversation_id": "total_knowledge_total_lawyer",
+      "insight_type": "fact",
+      "content": "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is lawyer?",
+        "Term: lawyer | Etymology: lawyer (English: Meaning of lawyer)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.444212"
+    },
+    {
+      "insight_id": "insight_0_1769751889.459129",
+      "source_conversation_id": "total_knowledge_total_suggests",
+      "insight_type": "fact",
+      "content": "Term: suggests | Etymology: suggests (English: Meaning of suggests)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is suggests?",
+        "Term: suggests | Etymology: suggests (English: Meaning of suggests)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.459132"
+    },
+    {
+      "insight_id": "insight_0_1769751889.467877",
+      "source_conversation_id": "total_knowledge_total_settling",
+      "insight_type": "fact",
+      "content": "Term: settling | Etymology: settling (English: Meaning of settling)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is settling?",
+        "Term: settling | Etymology: settling (English: Meaning of settling)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-01-29T21:44:49.467881"
+    },
+    {
+      "insight_id": "insight_0_1770301982.386946",
+      "source_conversation_id": "total_knowledge_total_astrology",
+      "insight_type": "fact",
+      "content": "Term: astrology | Etymology: astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: star) → *h₂ster- (PIE: star) → Sanskrit 'star' (Sanskrit: star) → Babylonian astrology (Akkadian: celestial divination) → Egyptian star knowledge (Egyptian: celestial wisdom) | Occult: Hermetic astrology → Kabbalistic astrology → Alchemical astrology | Secret Societies: Rosicrucians → Freemasons | Suppressed: Babylonian star knowledge (suppressed) → Egyptian celestial wisdom (suppressed) | Historical: Astrology knowledge transmission through secret so → Suppression of astrological knowledge in scientifi",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is astrology?",
+        "Term: astrology | Etymology: astrology (English: Study of celestial bodies and their influence on human affairs) → astro (Greek: star) → *h₂ster- (PIE: star) → Sanskrit 'star' (Sanskrit: star) → Babyl"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-05T06:33:02.386951"
     }
   ],
-  "total_conversations": 75,
-  "total_insights": 75,
-  "last_updated": "2026-01-18T03:49:40.193741"
+  "total_conversations": 85,
+  "total_insights": 86,
+  "last_updated": "2026-02-05T06:33:02.397706"
 }

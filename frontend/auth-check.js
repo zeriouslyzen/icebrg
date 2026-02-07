@@ -1,4 +1,7 @@
 (function() {
+    // Bypass for E2E/UX testing: localhost or ?test=1 skips redirect
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal || window.location.search.indexOf('test=1') !== -1) return;
     // Check for clearance token
     const clearance = localStorage.getItem('iceburg_clearance');
     

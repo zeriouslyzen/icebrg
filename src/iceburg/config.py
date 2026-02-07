@@ -32,10 +32,10 @@ def load_config() -> IceburgConfig:
     base_dir = Path(os.getenv("ICEBURG_DATA_DIR", "./data")).expanduser().resolve()
     base_dir.mkdir(parents=True, exist_ok=True)
 
-    preferred_surveyor = os.getenv("ICEBURG_SURVEYOR_MODEL", "llama3.1:8b")
-    preferred_dissident = os.getenv("ICEBURG_DISSIDENT_MODEL", "mistral:7b-instruct")
-    preferred_synthesist = os.getenv("ICEBURG_SYNTHESIST_MODEL", "llama3:70b-instruct")
-    preferred_oracle = os.getenv("ICEBURG_ORACLE_MODEL", "llama3:70b-instruct")
+    preferred_surveyor = os.getenv("ICEBURG_SURVEYOR_MODEL", "qwen2.5:7b")
+    preferred_dissident = os.getenv("ICEBURG_DISSIDENT_MODEL", "mistral:7b")
+    preferred_synthesist = os.getenv("ICEBURG_SYNTHESIST_MODEL", "deepseek-v2:16b")
+    preferred_oracle = os.getenv("ICEBURG_ORACLE_MODEL", "deepseek-v2:16b")
     preferred_embed = os.getenv("ICEBURG_EMBED_MODEL", "nomic-embed-text")
     enable_code_gen = os.getenv("ICEBURG_ENABLE_CODE_GENERATION", "0") == "1"
 
@@ -105,7 +105,7 @@ def load_config_with_model(
         # Force Surveyor to use a small model explicitly
         from .model_select import _available_model_names
         available = _available_model_names()
-        small_candidates = ["llama3.1:8b", "llama3:8b", "llama3.2:3b", "qwen2.5:7b", "mistral:7b", "phi3:mini"]
+        small_candidates = ["deepseek-r1:7b", "llama3.1:8b", "llama3:8b", "llama3.2:3b", "qwen2.5:7b", "mistral:7b", "phi3:mini", "deepseek-coder:6.7b"]
         s = None
         for candidate in small_candidates:
             if candidate in available:
@@ -119,7 +119,7 @@ def load_config_with_model(
                         s = model
                         break
         if not s:
-            s = "llama3.1:8b"  # Final fallback
+            s = "qwen2.5:7b"  # Final fallback
         # Other agents can use resolve_models_small
         _, d, y, o, e = resolve_models_small()
         # But ensure they're not huge models either
@@ -145,7 +145,7 @@ def load_config_with_model(
             logger = logging.getLogger(__name__)
             logger.warning(f"⚠️ Primary model {primary_model} is large - using smaller model for Surveyor to prevent OOM")
             # Explicitly find a small model for Surveyor (8b or smaller) - must be EXACT match
-            small_candidates = ["llama3.1:8b", "llama3:8b", "llama3.2:3b", "qwen2.5:7b", "mistral:7b", "phi3:mini"]
+            small_candidates = ["deepseek-r1:7b", "llama3.1:8b", "llama3:8b", "llama3.2:3b", "qwen2.5:7b", "mistral:7b", "phi3:mini", "deepseek-coder:6.7b"]
             s = None
             for candidate in small_candidates:
                 if candidate in available:
@@ -159,7 +159,7 @@ def load_config_with_model(
                             s = model
                             break
             if not s:
-                s = "llama3.1:8b"  # Final fallback
+                s = "qwen2.5:7b"  # Final fallback
             logger.info(f"✅ Surveyor will use {s} instead of {primary_model} to prevent OOM")
             d = y = o = primary_model if (primary_model in available or not available) else s
         elif primary_model in available or not available:

@@ -33,3 +33,9 @@ Information about research from conversation.
 
 - The Surveyor focuses on research.
 - The Dissident acts as a devil's advocate, pushing the research team to think critically and consider alternative perspectives.
+
+---
+
+## Update: 2026-01-30 22:15:10
+
+- ICEBURG supports multi-modal environment that includes chat, Research, Software, Science, and Civilization modes.

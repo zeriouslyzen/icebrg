@@ -33,11 +33,13 @@ class MoERouter:
         # Expert mappings
         # These can be overridden by environment variables
         self.experts = {
-            "fast_chat": getattr(cfg, "surveyor_model", "dolphin-mistral"),
-            "deep_research": getattr(cfg, "synthesist_model", "llama3:70b-instruct"),
-            "finance": "llama3:70b-instruct", # Could use a finance-tuned model later
-            "code": "mistral:7b-instruct",  # Or deepseek-coder
-            "philosophical": getattr(cfg, "oracle_model", "llama3:70b-instruct")
+            "simple_chat": "phi3:mini",  # Ultra-fast for greetings
+            "fast_chat": getattr(cfg, "surveyor_model", "qwen2.5:7b-instruct"),
+            "deep_research": getattr(cfg, "synthesist_model", "deepseek-v2:16b"),
+            "finance": "deepseek-v2:16b", 
+            "code": "mistral:7b-instruct",
+            "philosophical": getattr(cfg, "oracle_model", "deepseek-v2:16b"),
+            "general": getattr(cfg, "surveyor_model", "qwen2.5:7b")
         }
         
         # M4 Hardware Optimization
@@ -66,9 +68,23 @@ class MoERouter:
         # 1. Use base RequestRouter for primary mode classification
         routing_decision = self.base_router.route(query, context)
         
-        # 2. Check for specialized domains
+        # 2. FAST PATH: Simple chat gets ultra-fast model
+        if routing_decision.metadata.get("fast_path"):
+            logger.info(f"⚡ Simple chat fast-path: {query[:30]}...")
+            return MoEDecision(
+                model_id=self.experts["simple_chat"],
+                expert_domain="simple_chat",
+                confidence=0.99,
+                reasoning="Simple greeting/chat - using ultra-fast model",
+                metadata={
+                    "routing_mode": routing_decision.mode,
+                    "fast_path": True
+                }
+            )
+        
+        # 3. Check for specialized domains
         domain = "general"
-        model_id = self.experts["fast_chat"]
+        model_id = self.experts["general"]
         
         # Finance Detection
         if any(re.search(p, query_lower) for p in self.finance_patterns):
@@ -88,13 +104,13 @@ class MoERouter:
             model_id = self.experts["deep_research"]
             logger.info(f"🔬 Deep research domain detected: {query[:50]}...")
             
-        # Philosophical/Abstract
+        # Philosophical/Abstract (not fast_path)
         elif routing_decision.mode == "pure_reasoning":
             domain = "philosophical"
             model_id = self.experts["philosophical"]
             logger.info(f"🧠 Philosophical domain detected: {query[:50]}...")
 
-        # 3. Final decision
+        # 4. Final decision
         return MoEDecision(
             model_id=model_id,
             expert_domain=domain,

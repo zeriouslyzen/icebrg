@@ -10,9 +10,9 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 import asyncio
 
-from iceburg.civilization.world_model import AGICivilization, WorldState
-from iceburg.civilization.persistent_agents import PersistentAgent, AgentRole, GoalPriority
-from iceburg.civilization.agent_society import MultiAgentSociety
+from ..civilization.world_model import AGICivilization, WorldState
+from ..civilization.persistent_agents import PersistentAgent, AgentRole, GoalPriority
+from ..civilization.agent_society import MultiAgentSociety
 
 logger = logging.getLogger(__name__)
 

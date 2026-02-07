@@ -126,3 +126,15 @@ Information about ICEBURG from conversation.
 ## Update: 2026-01-17 00:46:36
 
 Information about ICEBURG from conversation.
+
+---
+
+## Update: 2026-01-30 12:05:18
+
+- Includes Surveyor for conducting in-depth research, Dissident for critiquing and analyzing existing information, Synthesist for integrating disparate pieces into cohesive understanding, Oracle for verifying evidence through rigorous validation, and Secretary as a bridge between users and the ICEBURG system
+
+---
+
+## Update: 2026-01-30 22:14:41
+
+- Deep research is leveraged at ICEBURG

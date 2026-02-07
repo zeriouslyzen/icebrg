@@ -6,18 +6,105 @@
     "iceburg_description": "Truth-Finding AI Civilization",
     "models": [
       {
-        "modelId": "llama3.1:8b",
-        "name": "ICEBURG Fast",
-        "description": "Quick responses",
+        "modelId": "qwen2.5:7b",
+        "name": "ICEBURG Fast (Qwen 2.5 7B)",
+        "description": "Ultra-fast, optimized for M4",
         "modeDescription": "Fast mode for quick answers",
         "modelMode": "ICEBURG_MODE_FAST",
         "agent": "auto",
-        "tags": [],
-        "badgeText": "",
+        "tags": ["optimized", "M4"],
+        "badgeText": "M4 Optimized",
         "isDefault": true
       },
       {
-        "modelId": "llama3.1:8b",
+        "modelId": "deepseek-v2:16b",
+        "name": "ICEBURG Deep Research (DeepSeek V2)",
+        "description": "High-intelligence synthesis & reasoning",
+        "modeDescription": "Full protocol research & synthesis",
+        "modelMode": "ICEBURG_MODE_PROTOCOL",
+        "agent": "protocol",
+        "tags": ["deep-research", "heavy"],
+        "badgeText": "Max Intelligence",
+        "isDefault": false
+      },
+      {
+        "modelId": "deepseek-r1:7b",
+        "name": "DeepSeek R1 7B",
+        "description": "Advanced reasoning, excellent for research",
+        "modeDescription": "Deep reasoning and complex analysis",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "reasoning",
+          "research"
+        ],
+        "badgeText": "Reasoning"
+      },
+      {
+        "modelId": "qwen2.5:7b",
+        "name": "Qwen 2.5 7B",
+        "description": "Strong general-purpose model",
+        "modeDescription": "General purpose, multilingual",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "multilingual",
+          "general"
+        ],
+        "badgeText": ""
+      },
+      {
+        "modelId": "mistral:7b",
+        "name": "Mistral 7B",
+        "description": "Fast and efficient",
+        "modeDescription": "Fast responses, good quality",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "fast"
+        ],
+        "badgeText": ""
+      },
+      {
+        "modelId": "dolphin-mistral:latest",
+        "name": "Dolphin Mistral",
+        "description": "Uncensored variant, unrestricted",
+        "modeDescription": "Uncensored responses",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "uncensored"
+        ],
+        "badgeText": "Uncensored"
+      },
+      {
+        "modelId": "phi3:mini",
+        "name": "Phi-3 Mini",
+        "description": "Ultra-fast, lightweight",
+        "modeDescription": "Fastest responses, minimal resources",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "fast",
+          "lightweight"
+        ],
+        "badgeText": "Fast"
+      },
+      {
+        "modelId": "deepseek-coder:6.7b",
+        "name": "DeepSeek Coder 6.7B",
+        "description": "Specialized for code generation",
+        "modeDescription": "Code generation and programming",
+        "modelMode": "ICEBURG_MODE_FAST",
+        "agent": "auto",
+        "tags": [
+          "coding",
+          "programming"
+        ],
+        "badgeText": "Code"
+      },
+      {
+        "modelId": "qwen2.5:7b",
         "name": "ICEBURG Surveyor",
         "description": "Research Expert",
         "modeDescription": "Deep research and gnostic analysis",
@@ -27,10 +114,10 @@
           "research",
           "gnosis"
         ],
-        "badgeText": ""
+        "badgeText": "Qwen-Powered"
       },
       {
-        "modelId": "llama3.1:8b",
+        "modelId": "deepseek-v2:16b",
         "name": "ICEBURG Protocol",
         "description": "Multi-Agent",
         "modeDescription": "Full protocol with all agents",
@@ -39,7 +126,7 @@
         "tags": [
           "multi-agent"
         ],
-        "badgeText": ""
+        "badgeText": "DeepSeek-V2"
       }
     ],
     "mode_templates": {
@@ -96,9 +183,9 @@
       }
     },
     "unavailableModels": [],
-    "defaultFastModelId": "llama3.1:8b",
-    "defaultExpertModelId": "llama3.1:8b",
-    "defaultProtocolModelId": "llama3.1:8b",
+    "defaultFastModelId": "qwen2.5:7b",
+    "defaultExpertModelId": "deepseek-v2:16b",
+    "defaultProtocolModelId": "deepseek-v2:16b",
     "agents": {
       "agentPresets": [
         {
@@ -228,25 +315,25 @@
     },
     "model_mode_models": {
       "ICEBURG_MODE_FAST": {
-        "modelId": "llama3.1:8b",
+        "modelId": "qwen2.5:7b",
         "agent": "auto",
         "description": "Quick responses",
         "useSmallModels": true
       },
       "ICEBURG_MODE_SURVEYOR": {
-        "modelId": "llama3.1:8b",
+        "modelId": "qwen2.5:7b",
         "agent": "surveyor",
         "description": "Deep research and analysis",
         "useSmallModels": false
       },
       "ICEBURG_MODE_PROTOCOL": {
-        "modelId": "llama3.1:8b",
+        "modelId": "deepseek-v2:16b",
         "agent": "protocol",
         "description": "Full multi-agent protocol",
         "useSmallModels": false
       },
       "ICEBURG_MODE_AUTO": {
-        "modelId": "llama3.1:8b",
+        "modelId": "qwen2.5:7b",
         "agent": "auto",
         "description": "Auto-selects based on query complexity",
         "useSmallModels": true

@@ -1387,51 +1387,390 @@
       <div class="settings-section">
         <h3>Mode</h3>
         <div class="settings-group">
-          <select class="settings-select" id="modeSelectSettings"
-            onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
-            <option value="fast" selected>Fast (Chat)</option>
-            <option value="research">Research</option>
-            <option value="dossier">🔍 Dossier (Deep Intel)</option>
-            <option value="deep_research" disabled style="text-decoration: line-through; color: #666;">Deep Research
-              (Coming Soon)</option>
-            <option value="unbounded" disabled style="text-decoration: line-through; color: #666;">Unbounded (Coming
-              Soon)</option>
-            <option value="chat">Chat (Legacy)</option>
-            <option value="web_research">Research (Web)</option>
-            <option value="local_rag">Local (Code/Docs)</option>
-            <option value="hybrid">Hybrid (Web + Local)</option>
-            <option value="device" disabled style="text-decoration: line-through; color: #666;">Device Generation
-              (Coming Soon)</option>
-            <option value="truth">Truth Finding</option>
-            <option value="swarm" disabled style="text-decoration: line-through; color: #666;">Swarm (Coming Soon)
-            </option>
-            <option value="gnosis" disabled style="text-decoration: line-through; color: #666;">Deep Knowledge (Coming
-              Soon)</option>
-            <option value="astrophysiology" disabled style="text-decoration: line-through; color: #666;">
-              Astro-Physiology (Coming Soon)</option>
-            <option value="prediction_lab" disabled style="text-decoration: line-through; color: #666;">Prediction Lab
-              (Coming Soon)</option>
-          </select>
+            <!-- MODE SELECTOR (Rich UI) -->
+            <div class="rich-select-container" id="modeRichSelect">
+              <!-- Native Select (Hidden but functional) -->
+              <select id="modeSelectSettings" style="display: none;" 
+                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); updateRichSelectDisplay('modeRichSelect', this); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
+                <option value="fast" selected>Fast Mode</option>
+                <option value="research">Research</option>
+                <option value="protocol">Protocol Mode</option>
+                <option value="code">Code Mode</option>
+                <option value="finance">Finance Mode</option>
+                <option value="civilization">Civilization</option>
+                <option value="astrophysiology">Astro-Physiology</option>
+                <option value="dossier">Dossier</option>
+                <option value="deep_research">Deep Research</option>
+                <option value="unbounded">Unbounded</option>
+                <option value="truth">Truth Finding</option>
+              </select>
+
+              <!-- Custom Trigger -->
+              <div class="rich-select-trigger" onclick="toggleRichSelect('modeRichSelect')">
+                <div class="rich-select-value">
+                  <span class="rich-icon-slot"></span> <!-- Icon injected here -->
+                  <span class="rich-text-slot">Fast Mode</span>
+                </div>
+                <svg class="rich-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </div>
+
+              <!-- Custom Dropdown -->
+              <div class="rich-select-dropdown">
+                <!-- Defines items with data-value and SVG content -->
+                <div class="rich-option" data-value="fast" onclick="selectRichOption('modeRichSelect', 'fast')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Fast Mode</span>
+                    <span class="opt-desc">Secretary + Qwen 7B</span>
+                  </div>
+                </div>
+                <div class="rich-option" data-value="research" onclick="selectRichOption('modeRichSelect', 'research')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Research</span>
+                    <span class="opt-desc">DeepSeek Swarm Debate</span>
+                  </div>
+                </div>
+                <div class="rich-option" data-value="protocol" onclick="selectRichOption('modeRichSelect', 'protocol')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Protocol Mode</span>
+                    <span class="opt-desc">Direct Agent Access</span>
+                  </div>
+                </div>
+                <div class="rich-option" data-value="code" onclick="selectRichOption('modeRichSelect', 'code')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Code Mode</span>
+                    <span class="opt-desc">Weaver / IDE Implementation</span>
+                  </div>
+                </div>
+                <div class="rich-option" data-value="finance" onclick="selectRichOption('modeRichSelect', 'finance')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M16 4h4v4"/><path d="M4 16l6-6 4 4 6-6"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Finance</span>
+                    <span class="opt-desc">Market Intelligence</span>
+                  </div>
+                </div>
+                 <div class="rich-option" data-value="civilization" onclick="selectRichOption('modeRichSelect', 'civilization')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Civilization</span>
+                    <span class="opt-desc">Social Modeling Sim</span>
+                  </div>
+                </div>
+                 <div class="rich-option" data-value="astrophysiology" onclick="selectRichOption('modeRichSelect', 'astrophysiology')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Astro-Physiology</span>
+                    <span class="opt-desc">Molecular Dynamics</span>
+                  </div>
+                </div>
+                 <div class="rich-option" data-value="dossier" onclick="selectRichOption('modeRichSelect', 'dossier')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Dossier</span>
+                    <span class="opt-desc">Investigation Archive</span>
+                  </div>
+                </div>
+                <div class="rich-group-label">Advanced</div>
+                <div class="rich-option" data-value="deep_research" onclick="selectRichOption('modeRichSelect', 'deep_research')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"/><path d="M12 2v20"/><path d="M4.93 4.93l14.14 14.14"/><path d="M19.07 4.93L4.93 19.07"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Deep Research</span>
+                    <span class="opt-desc">Multi-Step Synthesis</span>
+                  </div>
+                </div>
+                <div class="rich-option" data-value="unbounded" onclick="selectRichOption('modeRichSelect', 'unbounded')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  <div class="rich-opt-text">
+                    <span class="opt-title">Unbounded</span>
+                    <span class="opt-desc">AGI Self-Redesign</span>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
       <div class="settings-section">
         <h3>Agent</h3>
         <div class="settings-group">
-          <select class="settings-select" id="agentSelectSettings"
-            onchange="document.getElementById('agentSelect') && (document.getElementById('agentSelect').value = this.value)">
-            <option value="auto">Auto (Full Protocol)</option>
-            <option value="secretary" selected>Secretary (Chat Assistant)</option>
-            <option value="dissident">Dissident</option>
-            <option value="synthesist">Synthesist</option>
-            <option value="oracle">Oracle</option>
-            <option value="archaeologist">Archaeologist</option>
-            <option value="supervisor">Supervisor</option>
-            <option value="scribe">Scribe</option>
-            <option value="weaver">Weaver</option>
-            <option value="scrutineer">Scrutineer</option>
-            <option value="swarm">Swarm</option>
-            <option value="ide">IDE Agent</option>
-          </select>
+            <!-- AGENT SELECTOR (Rich UI) -->
+            <div class="rich-select-container" id="agentRichSelect">
+               <select id="agentSelectSettings" style="display: none;"
+                onchange="document.getElementById('agentSelect') && (document.getElementById('agentSelect').value = this.value); updateRichSelectDisplay('agentRichSelect', this);">
+                <option value="auto" selected>Auto</option>
+                <option value="secretary">Secretary</option>
+                <option value="surveyor">Surveyor</option>
+                <option value="dissident">Dissident</option>
+                <option value="synthesist">Synthesist</option>
+                <option value="oracle">Oracle</option>
+                <option value="archaeologist">Archaeologist</option>
+                <option value="scrutineer">Scrutineer</option>
+                <option value="weaver">Weaver</option>
+                <option value="scribe">Scribe</option>
+                <option value="ide">IDE Agent</option>
+                <option value="supervisor">Supervisor</option>
+              </select>
+
+               <!-- Custom Trigger -->
+              <div class="rich-select-trigger" onclick="toggleRichSelect('agentRichSelect')">
+                <div class="rich-select-value">
+                  <span class="rich-icon-slot"></span>
+                  <span class="rich-text-slot">Auto</span>
+                </div>
+                <svg class="rich-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </div>
+
+               <!-- Custom Dropdown -->
+              <div class="rich-select-dropdown">
+                 <div class="rich-option" data-value="auto" onclick="selectRichOption('agentRichSelect', 'auto')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Auto</span><span class="opt-desc">Context Aware</span></div>
+                </div>
+                <div class="rich-option" data-value="secretary" onclick="selectRichOption('agentRichSelect', 'secretary')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Secretary</span><span class="opt-desc">Fast Assistant</span></div>
+                </div>
+                 <div class="rich-option" data-value="surveyor" onclick="selectRichOption('agentRichSelect', 'surveyor')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Surveyor</span><span class="opt-desc">Deep Discovery</span></div>
+                </div>
+                 <div class="rich-option" data-value="dissident" onclick="selectRichOption('agentRichSelect', 'dissident')">
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Dissident</span><span class="opt-desc">Challenger</span></div>
+                </div>
+                 <div class="rich-option" data-value="synthesist" onclick="selectRichOption('agentRichSelect', 'synthesist')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Synthesist</span><span class="opt-desc">Connector</span></div>
+                </div>
+                 <div class="rich-option" data-value="oracle" onclick="selectRichOption('agentRichSelect', 'oracle')">
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Oracle</span><span class="opt-desc">Metaphysician</span></div>
+                </div>
+                 <div class="rich-option" data-value="archaeologist" onclick="selectRichOption('agentRichSelect', 'archaeologist')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.31V2"/><path d="M4.93 4.93l14.14 14.14"/><path d="M19.07 4.93L4.93 19.07"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Archaeologist</span><span class="opt-desc">History Excavator</span></div>
+                </div>
+                 <div class="rich-option" data-value="scrutineer" onclick="selectRichOption('agentRichSelect', 'scrutineer')">
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Scrutineer</span><span class="opt-desc">Forensic Validator</span></div>
+                </div>
+                 <div class="rich-option" data-value="weaver" onclick="selectRichOption('agentRichSelect', 'weaver')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Weaver</span><span class="opt-desc">Coder</span></div>
+                </div>
+                <div class="rich-option" data-value="scribe" onclick="selectRichOption('agentRichSelect', 'scribe')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Scribe</span><span class="opt-desc">Writer</span></div>
+                </div>
+                 <div class="rich-option" data-value="ide" onclick="selectRichOption('agentRichSelect', 'ide')">
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">IDE Agent</span><span class="opt-desc">System Operator</span></div>
+                </div>
+                 <div class="rich-option" data-value="supervisor" onclick="selectRichOption('agentRichSelect', 'supervisor')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Supervisor</span><span class="opt-desc">Quality Control</span></div>
+                </div>
+              </div>
+            </div>
+
+            <style>
+            /* RICH SELECT CSS - SOMATIC DESIGN */
+            .rich-select-container {
+              position: relative;
+              font-family: 'Inter', sans-serif;
+              width: 100%;
+            }
+            .rich-select-trigger {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: var(--bg-elevated); /* Matches panel */
+              padding: 0.7rem 0.9rem;
+              border-radius: 8px;
+              border: 1px solid var(--border-primary);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              user-select: none;
+            }
+            .rich-select-trigger:hover {
+              border-color: rgba(255,255,255,0.3);
+              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .rich-select-value {
+              display: flex;
+              align-items: center;
+              gap: 0.6rem;
+              color: var(--text-primary);
+            }
+            .rich-icon-slot svg {
+              width: 16px;
+              height: 16px;
+              stroke: var(--text-secondary);
+            }
+            .rich-text-slot {
+              font-size: 0.9rem;
+              font-weight: 500;
+            }
+            .rich-chevron {
+              color: var(--text-tertiary);
+              transition: transform 0.2s;
+            }
+            .rich-select-container.open .rich-chevron {
+              transform: rotate(180deg);
+            }
+            
+            /* Dropdown */
+            .rich-select-dropdown {
+              position: absolute;
+              top: calc(100% + 6px);
+              left: 0;
+              width: 100%;
+              background: #0a0a0a; /* Deep black/dark */
+              border: 1px solid var(--border-primary);
+              border-radius: 8px;
+              z-index: 100;
+              max-height: 0;
+              opacity: 0;
+              overflow: hidden;
+              visibility: hidden;
+              box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+              transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .rich-select-container.open .rich-select-dropdown {
+              max-height: 350px;
+              opacity: 1;
+              visibility: visible;
+              overflow-y: auto;
+              padding: 0.4rem;
+            }
+            
+            /* Options */
+            .rich-option {
+              display: flex;
+              align-items: center;
+              gap: 0.8rem;
+              padding: 0.6rem 0.8rem;
+              cursor: pointer;
+              border-radius: 6px;
+              transition: background 0.15s;
+            }
+            .rich-option:hover {
+              background: rgba(255,255,255,0.08);
+            }
+            .rich-option.selected {
+              background: rgba(255,255,255,0.12);
+            }
+            .rich-option svg {
+              flex-shrink: 0;
+              stroke: var(--text-secondary);
+            }
+            .rich-option:hover svg {
+              stroke: #fff;
+            }
+            .rich-opt-text {
+              display: flex;
+              flex-direction: column;
+            }
+            .opt-title {
+              font-size: 0.85rem;
+              color: var(--text-primary);
+              font-weight: 500;
+            }
+            .opt-desc {
+              font-size: 0.7rem;
+              color: var(--text-tertiary);
+              margin-top: 1px;
+            }
+            .rich-group-label {
+              font-size: 0.65rem;
+              color: var(--text-tertiary);
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              padding: 0.4rem 0.8rem;
+              margin-top: 0.4rem;
+              border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            
+            /* Light Mode Support */
+            body.light-mode .rich-select-trigger {
+              background: #fff;
+              border-color: #ddd;
+            }
+            body.light-mode .rich-select-dropdown {
+              background: #fff;
+              border-color: #ddd;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            }
+            body.light-mode .rich-option:hover {
+              background: #f5f5f5;
+            }
+            body.light-mode .rich-option.selected {
+               background: #eee;
+            }
+            </style>
+
+            <script>
+            // RICH SELECT LOGIC
+            function toggleRichSelect(id) {
+              const container = document.getElementById(id);
+              // Close others
+              document.querySelectorAll('.rich-select-container').forEach(el => {
+                if(el.id !== id) el.classList.remove('open');
+              });
+              container.classList.toggle('open');
+            }
+            
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+              if(!e.target.closest('.rich-select-container')) {
+                document.querySelectorAll('.rich-select-container').forEach(el => el.classList.remove('open'));
+              }
+            });
+
+            function selectRichOption(containerId, value) {
+              const container = document.getElementById(containerId);
+              const nativeSelect = container.querySelector('select');
+              
+              // Update native select
+              nativeSelect.value = value;
+              nativeSelect.dispatchEvent(new Event('change')); // Trigger binding
+              
+              updateRichSelectDisplay(containerId, nativeSelect);
+              container.classList.remove('open');
+            }
+
+            function updateRichSelectDisplay(containerId, selectElement) {
+              const container = document.getElementById(containerId);
+              const selectedValue = selectElement.value;
+              
+              // Find the visual option that matches
+              const visualOption = container.querySelector(`.rich-option[data-value="${selectedValue}"]`);
+              if(visualOption) {
+                 // Copy icon and title
+                 const iconHTML = visualOption.querySelector('svg').outerHTML;
+                 const title = visualOption.querySelector('.opt-title').textContent;
+                 
+                 container.querySelector('.rich-icon-slot').innerHTML = iconHTML;
+                 container.querySelector('.rich-text-slot').textContent = title;
+                 
+                 // Mark selected
+                 container.querySelectorAll('.rich-option').forEach(o => o.classList.remove('selected'));
+                 visualOption.classList.add('selected');
+              }
+            }
+            
+            // Init on load
+            document.addEventListener('DOMContentLoaded', () => {
+               updateRichSelectDisplay('modeRichSelect', document.getElementById('modeSelectSettings'));
+               updateRichSelectDisplay('agentRichSelect', document.getElementById('agentSelectSettings'));
+            });
+            </script>
         </div>
       </div>
       <div class="settings-section">
@@ -1651,7 +1990,7 @@
   </div>
   <!-- astro_physiology_viz.js removed - visualizations now inline in main answer -->
   <!-- astro_animated_streaming.js removed - not needed -->
-  <script type="module" src="/main.js?v=3"></script>
+  <script type="module" src="/main.js?v=7"></script>
   <script>
     // === Cinimatic Welcome Experience ===
     document.addEventListener('DOMContentLoaded', () => {

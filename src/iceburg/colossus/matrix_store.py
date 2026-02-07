@@ -200,15 +200,19 @@ class MatrixStore:
             logger.info(f"Center entity found: {center_entity.name} (requested: {entity_id}, actual: {actual_entity_id})")
             
             # Phase 2: Always include center entity in result (guaranteed)
-            nodes_map = {
-                actual_entity_id: {
-                    "id": center_entity.id,
-                    "name": center_entity.name,
-                    "type": center_entity.entity_type,
-                    "countries": center_entity.countries,
-                    "sanctions_count": len(center_entity.sanctions),
-                }
+            center_props = center_entity.properties or {}
+            center_node = {
+                "id": center_entity.id,
+                "name": center_entity.name,
+                "type": center_entity.entity_type,
+                "countries": center_entity.countries,
+                "sanctions_count": len(center_entity.sanctions),
             }
+            if center_props.get("domains") is not None:
+                center_node["domains"] = center_props["domains"]
+            if center_props.get("roles") is not None:
+                center_node["roles"] = center_props["roles"]
+            nodes_map = {actual_entity_id: center_node}
             
             # Phase 3: Handle depth=0 case explicitly
             if depth == 0:
@@ -237,13 +241,12 @@ class MatrixStore:
                     logger.debug(f"BFS depth {d}: processing {len(current_level)} entities")
                     next_level = set()
                     
-                    # Query relationships for current level entities
-                    # Use JOIN to only get relationships where both entities exist (optimization)
+                    # Query relationships for current level entities (include properties for domain)
                     if current_level:
                         placeholders = ','.join('?' for _ in current_level)
                         query_params = list(current_level) + list(current_level) + [limit * 2]
                         cursor.execute(f"""
-                            SELECT r.relationship_id, r.source_id, r.target_id, r.relationship_type
+                            SELECT r.relationship_id, r.source_id, r.target_id, r.relationship_type, r.properties
                             FROM relationships r
                             INNER JOIN entities e1 ON e1.entity_id = r.source_id
                             INNER JOIN entities e2 ON e2.entity_id = r.target_id
@@ -256,12 +259,16 @@ class MatrixStore:
                         logger.debug(f"Found {len(rows)} relationships at depth {d}")
                         
                         for row in rows:
-                            all_edges.append({
+                            rel_props = json.loads(row["properties"]) if row["properties"] else {}
+                            edge = {
                                 "id": row["relationship_id"],
                                 "source": row["source_id"],
                                 "target": row["target_id"],
                                 "type": row["relationship_type"],
-                            })
+                            }
+                            if rel_props.get("domain") is not None:
+                                edge["domain"] = rel_props["domain"]
+                            all_edges.append(edge)
                             
                             # Add neighbors to next level (if not already visited)
                             if row["source_id"] not in visited_entities:
@@ -281,26 +288,30 @@ class MatrixStore:
                 visited_entities.update(current_level)
                 logger.debug(f"BFS complete: {len(visited_entities)} entities visited, {len(all_edges)} edges found")
                 
-                # Phase 5: Fetch node details for visited entities
-                # This validates which entities actually exist in the database
+                # Phase 5: Fetch node details for visited entities (include properties for domains/roles)
                 if visited_entities:
                     placeholders = ','.join('?' for _ in visited_entities)
                     cursor.execute(f"""
-                        SELECT entity_id, name, entity_type, countries, datasets
+                        SELECT entity_id, name, entity_type, countries, datasets, properties
                         FROM entities
                         WHERE entity_id IN ({placeholders})
                     """, list(visited_entities))
                     
                     for row in cursor.fetchall():
                         entity_id_found = row["entity_id"]
-                        # Update or add to nodes_map (center entity already there)
-                        nodes_map[entity_id_found] = {
+                        props = json.loads(row["properties"]) if row["properties"] else {}
+                        node = {
                             "id": row["entity_id"],
                             "name": row["name"],
                             "type": row["entity_type"],
                             "countries": json.loads(row["countries"]) if row["countries"] else [],
                             "sanctions_count": len(json.loads(row["datasets"])) if row["datasets"] else 0,
                         }
+                        if props.get("domains") is not None:
+                            node["domains"] = props["domains"]
+                        if props.get("roles") is not None:
+                            node["roles"] = props["roles"]
+                        nodes_map[entity_id_found] = node
                     
                     query_stats["nodes_found"] = len(nodes_map)
                     query_stats["nodes_missing"] = len(visited_entities) - len(nodes_map)

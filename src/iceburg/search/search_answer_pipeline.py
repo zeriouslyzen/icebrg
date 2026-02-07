@@ -108,16 +108,16 @@ class SearchAnswerPipeline:
             Generated answer with citations
         """
         # Uncensored, direct prompt (dolphin-mistral style)
-        prompt = f"""You are a direct, unfiltered search assistant powered by real-time web data.
+        system_prompt = """You are a direct, unfiltered search assistant powered by real-time web data.
 
 RULES:
 1. Answer using ONLY the provided web sources
 2. ALWAYS cite sources using [Source N] format
 3. Be direct and factual - no hedging, no apologies
 4. If sources conflict, mention both viewpoints
-5. If sources don't answer the query, say so directly
+5. If sources don't answer the query, say so directly"""
 
-WEB SOURCES:
+        user_prompt = f"""WEB SOURCES:
 {context}
 
 USER QUERY: {query}
@@ -127,19 +127,22 @@ Provide a direct answer with inline citations [Source N]:"""
         # Generate with LLM
         if self.llm_client:
             try:
-                response = self.llm_client.generate(
-                    model="dolphin-mistral",
-                    prompt=prompt,
+                # Use Ollama chat API format (more reliable than generate)
+                response = self.llm_client.chat(
+                    model="llama3.1:8b",  # Use available model
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
                     options={
                         "temperature": 0.3,  # Lower for factual answers
-                        "top_p": 0.9,
-                        "max_tokens": 500
+                        "num_predict": 500
                     }
                 )
-                return response.get('response', 'Error generating answer')
+                return response.get('message', {}).get('content', 'Error generating answer')
             except Exception as e:
                 logger.error(f"LLM generation error: {e}")
-                return f"Error: Could not generate answer - {str(e)}"
+                return self._fallback_answer(context)
         else:
             # Fallback: simple extraction from sources
             logger.warning("No LLM client provided, using fallback extraction")
@@ -192,10 +195,14 @@ def is_current_event_query(query: str) -> bool:
     """
     keywords = [
         'today', 'now', 'current', 'currently', 'latest', 'recent', 'recently',
-        'this week', 'this month', 'this year', '2024', '2025',
+        'this week', 'this month', 'this year', '2024', '2025', '2026', '2027',
         'price', 'market', 'stock', 'crypto', 'bitcoin', 'ethereum',
         'news', 'breaking', 'update', 'happening', 'just',
-        'weather', 'score', 'result', 'election'
+        'weather', 'score', 'result', 'election',
+        # Added: common current event topics
+        'protest', 'protests', 'immigration', 'war', 'conflict', 'attack',
+        'government', 'trump', 'biden', 'congress', 'senate',
+        'ice', 'raid', 'arrests', 'deportation'
     ]
     
     query_lower = query.lower()

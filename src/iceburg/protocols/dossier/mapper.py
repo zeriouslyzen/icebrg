@@ -23,36 +23,48 @@ class Entity:
     entity_type: str  # 'person', 'organization', 'location', 'event'
     description: str = ""
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+    roles: List[str] = field(default_factory=list)
+    domains: List[str] = field(default_factory=list)
+
     def to_dict(self) -> Dict[str, Any]:
+        meta = dict(self.metadata)
+        if self.roles:
+            meta["roles"] = self.roles
+        if self.domains:
+            meta["domains"] = self.domains
         return {
             "id": self.id,
             "name": self.name,
             "type": self.entity_type,
             "description": self.description,
-            "metadata": self.metadata
+            "metadata": meta,
+            "role": meta.get("role", ""),
         }
 
 
-@dataclass 
+@dataclass
 class Relationship:
     """A relationship between two entities."""
     source_id: str
     target_id: str
-    relationship_type: str  # 'member_of', 'funds', 'owns', 'connected_to', 'married_to', etc.
+    relationship_type: str  # CONNECTS, RECIPROCITY, member_of, funds, connected_to, etc.
     description: str = ""
     strength: float = 0.5  # 0.0 to 1.0
     evidence: List[str] = field(default_factory=list)
-    
+    domain: Optional[str] = None
+
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        out = {
             "source": self.source_id,
             "target": self.target_id,
             "type": self.relationship_type,
             "description": self.description,
             "strength": self.strength,
-            "evidence": self.evidence
+            "evidence": self.evidence,
         }
+        if self.domain is not None:
+            out["domain"] = self.domain
+        return out
 
 
 @dataclass
@@ -216,26 +228,28 @@ class MapperAgent:
         query: str,
         entities_from_gatherer: List[Dict[str, Any]] = None,
         content: str = "",
-        thinking_callback: Optional[callable] = None
+        thinking_callback: Optional[callable] = None,
+        decoder_report: Optional[Any] = None,
     ) -> MapperReport:
         """
         Build network map for a topic.
-        
+
         Args:
             query: Research topic
             entities_from_gatherer: Pre-extracted entities from Gatherer
             content: Source content
             thinking_callback: Progress callback
-            
+            decoder_report: Optional DecoderReport with linguistic_markers for tagging entities
+
         Returns:
             MapperReport with network graph
         """
         report = MapperReport(query=query)
         report.network.central_topic = query
-        
+
         if thinking_callback:
-            thinking_callback("🗺️ Building entity network...")
-        
+            thinking_callback("Building entity network...")
+
         # Start with entities from gatherer
         if entities_from_gatherer:
             for entity_data in entities_from_gatherer:
@@ -243,42 +257,72 @@ class MapperAgent:
                     id=self._make_id(entity_data.get("name", "")),
                     name=entity_data.get("name", "Unknown"),
                     entity_type=entity_data.get("type", "unknown"),
-                    description=entity_data.get("context", "")
+                    description=entity_data.get("context", ""),
                 )
                 report.network.add_entity(entity)
-        
+
         if thinking_callback:
-            thinking_callback("🔗 Discovering relationships...")
-        
+            thinking_callback("Discovering relationships...")
+
         # Discover relationships using LLM
         if content or entities_from_gatherer:
             relationships = self._discover_relationships(query, report.network.entities, content)
             for rel in relationships:
                 report.network.add_relationship(rel)
-        
+
         if thinking_callback:
-            thinking_callback("🏛️ Checking power structure connections...")
-        
+            thinking_callback("Checking power structure connections...")
+
         # Check for known power structure connections
         power_connections = self._check_power_connections(report.network.entities, content)
         for entity, rel in power_connections:
             report.network.add_entity(entity)
             report.network.add_relationship(rel)
-        
+
+        # Tag entities with linguistic markers from decoder_report when content available
+        if decoder_report and getattr(decoder_report, "linguistic_markers", None) and content:
+            self._apply_linguistic_markers(report.network, content, decoder_report.linguistic_markers)
+
         # Identify key players (highest connection count)
         report.key_players = self._identify_key_players(report.network)
-        
+
         # Identify power centers
         report.power_centers = self._identify_power_centers(report.network)
-        
+
         # Find hidden connections (entities connected through intermediaries)
         report.hidden_connections = self._find_hidden_connections(report.network)
-        
+
         # Analyze funding flows
         report.funding_flows = self._analyze_funding(report.network)
-        
-        logger.info(f"✅ Network mapping complete: {len(report.network.entities)} entities, {len(report.network.relationships)} relationships")
+
+        logger.info(f"Network mapping complete: {len(report.network.entities)} entities, {len(report.network.relationships)} relationships")
         return report
+
+    def _apply_linguistic_markers(
+        self,
+        network: NetworkGraph,
+        content: str,
+        markers: List[Dict[str, Any]],
+    ) -> None:
+        """Tag entities with linguistic_flags when entity name appears near a marker in content."""
+        content_lower = content.lower()
+        for entity in network.entities:
+            name_lower = entity.name.lower()
+            if len(name_lower) < 3:
+                continue
+            pos = 0
+            flags = set(entity.metadata.get("linguistic_flags") or [])
+            while True:
+                idx = content_lower.find(name_lower, pos)
+                if idx == -1:
+                    break
+                for m in markers:
+                    start, end = m.get("span", (0, 0))
+                    if abs(idx - start) <= 150 or abs(idx - end) <= 150:
+                        flags.add(m.get("type", ""))
+                pos = idx + 1
+            if flags:
+                entity.metadata["linguistic_flags"] = list(flags)
     
     def _make_id(self, name: str) -> str:
         """Create a clean ID from a name."""
@@ -309,9 +353,9 @@ And this context:
 {content[:2000]}
 
 Identify relationships between these entities. Return JSON array:
-[{{"source": "entity name", "target": "entity name", "type": "relationship type", "description": "brief description"}}]
+[{{"source": "entity name", "target": "entity name", "type": "relationship type", "description": "brief description", "domain": "optional domain if applicable"}}]
 
-Relationship types: member_of, funds, owns, works_for, connected_to, married_to, partnered_with, opposes, founded, advises
+Relationship types: member_of, funds, owns, works_for, connected_to, married_to, partnered_with, opposes, founded, advises, CONNECTS (brokers access), RECIPROCITY (debt/favor), CORRESPONDENT_WITH (communication link), FUNDS, FUNDED_BY, HIDDEN_CONNECTION (indirect link). Use domain (finance, science, politics, media) when relevant.
 
 Return ONLY valid JSON array."""
             
@@ -323,16 +367,14 @@ Return ONLY valid JSON array."""
                 options={"max_tokens": 800}
             )
             
-            response = response.strip()
-            if response.startswith("```"):
-                response = response.split("```")[1]
-                if response.startswith("json"):
-                    response = response[4:]
-                response = response.strip()
-            
-            rel_data = json.loads(response)
+            from .llm_json import parse_llm_json
+            rel_data = parse_llm_json(response, default=[], log_context="relationship discovery")
+            if not isinstance(rel_data, list):
+                rel_data = []
             
             for rel in rel_data:
+                if not isinstance(rel, dict):
+                    continue
                 source_id = self._make_id(rel.get("source", ""))
                 target_id = self._make_id(rel.get("target", ""))
                 
@@ -343,7 +385,8 @@ Return ONLY valid JSON array."""
                         target_id=target_id,
                         relationship_type=rel.get("type", "connected_to"),
                         description=rel.get("description", ""),
-                        strength=0.6
+                        strength=float(rel.get("strength", 0.6)),
+                        domain=rel.get("domain"),
                     ))
                     
         except Exception as e:
@@ -402,13 +445,23 @@ Return ONLY valid JSON array."""
         for entity_id, count in sorted_entities[:10]:
             entity = network.get_entity(entity_id)
             if entity:
-                key_players.append({
+                entry = {
                     "name": entity.name,
                     "type": entity.entity_type,
                     "connections": count,
-                    "description": entity.description
-                })
-        
+                    "description": entity.description,
+                }
+                if entity.roles:
+                    entry["roles"] = entity.roles
+                if entity.domains:
+                    entry["domains"] = entity.domains
+                if entity.metadata.get("role"):
+                    entry["role"] = entity.metadata["role"]
+                if entity.metadata.get("themes"):
+                    entry["themes"] = entity.metadata["themes"] if isinstance(entity.metadata["themes"], list) else [entity.metadata["themes"]]
+                if entity.metadata.get("linguistic_flags"):
+                    entry["linguistic_flags"] = entity.metadata["linguistic_flags"]
+                key_players.append(entry)
         return key_players
     
     def _identify_power_centers(self, network: NetworkGraph) -> List[str]:
@@ -448,17 +501,27 @@ Return ONLY valid JSON array."""
                 intermediaries = connections_1 & connections_2
                 
                 if intermediaries:
-                    for int_id in list(intermediaries)[:1]:  # Just take first
+                    for int_id in list(intermediaries)[:1]:
                         intermediary = network.get_entity(int_id)
                         if intermediary:
+                            conns_e1 = network.get_connections(e1.id)
+                            conns_e2 = network.get_connections(e2.id)
+                            rel_type = "HIDDEN_CONNECTION"
+                            domain = None
+                            for _, rel in conns_e1:
+                                if rel.target_id == int_id or rel.source_id == int_id:
+                                    rel_type = rel.relationship_type
+                                    domain = rel.domain
+                                    break
                             hidden.append({
                                 "entity_1": e1.name,
                                 "entity_2": e2.name,
                                 "connected_via": intermediary.name,
-                                "significance": "Two-hop connection suggests possible indirect relationship"
+                                "relationship_type": rel_type,
+                                "domain": domain,
+                                "significance": "Two-hop connection suggests possible indirect relationship",
                             })
-        
-        return hidden[:10]  # Limit
+        return hidden[:10]
     
     def _analyze_funding(self, network: NetworkGraph) -> List[Dict[str, Any]]:
         """Analyze funding relationships."""

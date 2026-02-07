@@ -44,7 +44,7 @@ class RequestRouter:
         # Patterns for web_research (default)
         self.web_research_patterns = [
             r"\b(what|when|where|who|how|why)\s+(is|are|was|were|did|does|will|can|could)\s+",
-            r"\b(current|latest|recent|new|today|2025|2024)\b",
+            r"\b(current|latest|recent|new|today|2025|2024|2026)\\b",
             r"\b(explain|describe|tell me about|what's|what is)\s+",
             r"\b(search|find|look up|research|information about)\b",
             r"\b(definition|meaning|examples?|comparison|difference)\b",
@@ -63,13 +63,23 @@ class RequestRouter:
             r"\b(api|endpoint|route|handler)\b",
         ]
         
-        # Patterns for pure_reasoning
+        # Patterns for pure_reasoning (including simple chat)
         self.pure_reasoning_patterns = [
             r"\b(philosophy|philosophical|meaning of life|ethics|morality)\b",
             r"\b(creative|imagine|hypothetical|what if|scenario)\b",
             r"\b(opinion|think|believe|perspective|viewpoint)\b",
             r"\b(abstract|conceptual|theoretical|metaphysical)\b",
             r"\b(art|poetry|story|narrative|fiction)\b",
+        ]
+        
+        # Simple greetings/chat that DON'T need web search (fast path)
+        self.simple_chat_patterns = [
+            r"^(hi|hello|hey|howdy|greetings|yo|sup)(\s|$|\!|\?)",
+            r"^(thanks|thank you|thx|ty)(\s|$|\!)",
+            r"^(bye|goodbye|see ya|later|ciao)(\s|$|\!)",
+            r"^(ok|okay|sure|yes|no|yep|nope|yeah|nah)(\s|$|\!|\?)",
+            r"^(good morning|good afternoon|good evening|good night)(\s|$|\!)",
+            r"^(what can you do|who are you|help|help me)(\s|$|\?)",
         ]
         
         logger.info("RequestRouter initialized")
@@ -96,6 +106,17 @@ class RequestRouter:
                     confidence=1.0,
                     reasoning=f"Explicit mode specified: {explicit_mode}",
                     metadata={"explicit": True}
+                )
+        
+        # FAST PATH: Simple greetings/chat don't need web search
+        for pattern in self.simple_chat_patterns:
+            if re.match(pattern, query_lower):
+                logger.debug(f"Fast path: simple chat detected for '{query[:20]}...'")
+                return RoutingDecision(
+                    mode="pure_reasoning",
+                    confidence=0.95,
+                    reasoning="Simple greeting/chat - no web search needed",
+                    metadata={"fast_path": True, "matched_pattern": pattern}
                 )
         
         # Score each mode

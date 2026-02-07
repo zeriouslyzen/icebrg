@@ -24,7 +24,7 @@ from . import lab
 from . import security
 from . import autonomous
 from . import integration
-from . import research
+
 from . import generation
 
 __all__ = [

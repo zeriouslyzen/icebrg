@@ -418,14 +418,14 @@
         </div>
 
         <div class="query-section">
-            <input type="text" class="query-input" id="dossierQuery"
+            <input type="text" class="query-input" id="dossierQuery" data-testid="dossierQuery"
                 placeholder="Enter your research topic (e.g., 'Why does Trump want Greenland?')">
-            <select class="depth-select" id="depthSelect">
+            <select class="depth-select" id="depthSelect" data-testid="depthSelect">
                 <option value="quick">Quick (1-2 min)</option>
                 <option value="standard" selected>Standard (3-5 min)</option>
                 <option value="deep">Deep (5-10 min)</option>
             </select>
-            <button class="generate-btn" id="generateBtn" onclick="generateDossier()">
+            <button class="generate-btn" id="generateBtn" data-testid="generateBtn" onclick="generateDossier()">
                 Generate Dossier
             </button>
         </div>

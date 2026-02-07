@@ -133,6 +133,27 @@ ICEBURG powers the research capabilities for [katanx.com](https://www.katanx.com
 
 ## Development Status
 
+## Documentation
+
+### Quick Start Guides
+- **[AI_CONSTITUTION.md](AI_CONSTITUTION.md)** - 🤖 AI Assistant quick reference for instant system understanding
+- **[FEATURES_INVENTORY.md](FEATURES_INVENTORY.md)** - 📋 Complete catalog of all 150+ system capabilities
+- **[README.md](README.md)** - Project overview and quick start
+
+### Detailed Documentation
+- **[docs/architecture/](docs/architecture/)** - Complete system architecture
+- **[docs/COMPLETE_FEATURE_REFERENCE.md](docs/COMPLETE_FEATURE_REFERENCE.md)** - All features with technical details
+- **[docs/INDEX.md](docs/INDEX.md)** - Documentation index
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history
+
+### For AI Assistants
+> **Start here**: Read [AI_CONSTITUTION.md](AI_CONSTITUTION.md) first for instant system comprehension. It reduces context requirements from 679+ lines to ~400 lines of essential information.
+
+---
+
+**License**: Proprietary  
+**Maintained By**: Praxis Research & Engineering Inc.  
+**Contact**: Jackson M. Danger Signal (Principal Investigator)
 **Version**: 3.4.0  
 **Status**: Chat & Research features operational  
 **Last Updated**: December 23, 2025

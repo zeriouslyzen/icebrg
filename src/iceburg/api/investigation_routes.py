@@ -239,22 +239,62 @@ async def archive_investigation(investigation_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _network_graph_to_nodes_links(network_graph: dict) -> dict:
+    """Normalize network_graph: if it has entities/relationships, add nodes and links for Pegasus."""
+    if not network_graph:
+        return network_graph
+    if network_graph.get("nodes") and network_graph.get("links"):
+        return network_graph
+    if network_graph.get("nodes") and network_graph.get("edges"):
+        return {**network_graph, "links": network_graph["edges"]}
+    entities = network_graph.get("entities") or []
+    relationships = network_graph.get("relationships") or []
+    if not entities and not relationships:
+        return network_graph
+    nodes = []
+    for e in entities:
+        n = {
+            "id": e.get("id", ""),
+            "name": e.get("name", e.get("label", "")),
+            "type": e.get("type", e.get("entity_type", "unknown")),
+        }
+        if e.get("domains") is not None:
+            n["domains"] = e["domains"]
+        if e.get("roles") is not None:
+            n["roles"] = e["roles"]
+        if e.get("themes") is not None:
+            n["themes"] = e["themes"]
+        nodes.append(n)
+    links = []
+    for r in relationships:
+        link = {
+            "source": r.get("source_id", r.get("source", "")),
+            "target": r.get("target_id", r.get("target", "")),
+            "type": r.get("relationship_type", r.get("type", "RELATED_TO")),
+        }
+        if r.get("domain") is not None:
+            link["domain"] = r["domain"]
+        links.append(link)
+    return {**network_graph, "nodes": nodes, "links": links, "edges": links}
+
+
 @router.get("/{investigation_id}/network")
 async def get_network_graph(investigation_id: str):
-    """Get network graph data for visualization."""
+    """Get network graph data for visualization (nodes/links for Pegasus)."""
     try:
         from ..investigations import get_investigation_store
-        
+
         store = get_investigation_store()
         investigation = store.load(investigation_id)
-        
+
         if investigation is None:
             raise HTTPException(status_code=404, detail="Investigation not found")
-        
+
+        network_graph = _network_graph_to_nodes_links(investigation.network_graph or {})
         return {
             "investigation_id": investigation_id,
-            "network_graph": investigation.network_graph,
-            "key_players": investigation.key_players
+            "network_graph": network_graph,
+            "key_players": investigation.key_players,
         }
     except HTTPException:
         raise

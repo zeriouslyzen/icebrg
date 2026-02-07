@@ -62,11 +62,14 @@ def resolve_models(
 
     if not surveyor:
         surveyor = _first_present([
+            "deepseek-r1:7b",
             "llama3:8b-instruct",
             "llama3.1:8b-instruct",
             "llama3:latest",
             "llama3.1:8b",
+            "qwen2.5:7b",
             "mistral:7b-instruct",
+            "mistral:7b",
             "mistral:latest",
             "qwen2.5:7b-instruct",
             "qwen2.5:latest",
@@ -74,32 +77,41 @@ def resolve_models(
 
     if not dissident:
         dissident = _first_present([
+            "deepseek-r1:7b",
             "mistral:7b-instruct",
+            "mistral:7b",
             "mistral:latest",
             "llama3:8b-instruct",
             "llama3:latest",
+            "qwen2.5:7b",
             "qwen2.5:7b-instruct",
             "qwen2.5:latest",
         ], available) or dissident_pref
 
     if not synthesist:
         synthesist = _first_present([
-            "llama3:70b-instruct",
-            "llama3:latest",
-            "qwen2.5:32b-instruct",
-            "qwen2.5:latest",
-            "mixtral:latest",
+            "deepseek-r1:7b",
+            "qwen2.5:7b",
             "llama3.1:8b",
+            "llama3:latest",
+            "mistral:7b",
+            "qwen2.5:latest",
+            "llama3:70b-instruct",
+            "qwen2.5:32b-instruct",
+            "mixtral:latest",
         ], available) or synthesist_pref
 
     if not oracle:
         oracle = _first_present([
-            "llama3:70b-instruct",
-            "llama3:latest",
-            "qwen2.5:32b-instruct",
-            "qwen2.5:latest",
-            "mixtral:latest",
+            "deepseek-r1:7b",
+            "qwen2.5:7b",
             "llama3.1:8b",
+            "llama3:latest",
+            "mistral:7b",
+            "qwen2.5:latest",
+            "llama3:70b-instruct",
+            "qwen2.5:32b-instruct",
+            "mixtral:latest",
         ], available) or oracle_pref
 
     if not embed:
@@ -149,11 +161,16 @@ def resolve_models_small() -> tuple:
         "gemma2:2b",
     ]
     small = [
+        "deepseek-r1:7b",
         "llama3.1:8b",
         "llama3:8b",
         "llama3:latest",
-        "mistral:latest",
+        "qwen2.5:7b",
         "qwen2.5:latest",
+        "mistral:7b",
+        "mistral:latest",
+        "deepseek-coder:6.7b",
+        "phi3:mini",
     ]
 
     surveyor = _first_present(tiny + small, available) or (available[0] if available else "llama3.2:1b")
@@ -172,28 +189,39 @@ def resolve_models_small() -> tuple:
 def resolve_models_hybrid() -> tuple:
     available = _available_model_names()
     surveyor_prefer = [
+        "deepseek-r1:7b",
         "llama3.1:8b",
         "llama3:8b",
+        "qwen2.5:7b",
         "llama3:latest",
+        "mistral:7b",
         "mistral:latest",
         "qwen2.5:latest",
+        "phi3:mini",
         "phi3.5",
         "llama3.2:1b",
     ]
     dissident_prefer = [
+        "deepseek-r1:7b",
         "llama3.1:8b",
         "llama3:8b",
+        "mistral:7b",
         "mistral:latest",
+        "qwen2.5:7b",
         "qwen2.5:latest",
+        "phi3:mini",
         "phi3.5",
         "llama3.2:1b",
     ]
     big_candidates = [
+        "deepseek-r1:7b",
+        "qwen2.5:7b",
+        "llama3.1:8b",
+        "llama3:latest",
+        "mistral:7b",
         "llama3:70b-instruct",
         "qwen2.5:32b-instruct",
         "mixtral:latest",
-        "llama3.1:8b",
-        "llama3:latest",
     ]
     surveyor = _first_present(surveyor_prefer, available) or (available[0] if available else "llama3.1:8b")
     dissident = _first_present(dissident_prefer, available) or surveyor

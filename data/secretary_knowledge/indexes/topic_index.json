@@ -33,22 +33,22 @@
     "ICEBURG": {
       "file": "topics/ICEBURG.md",
       "created": "2025-12-30T05:02:46.178899",
-      "last_updated": "2026-01-15T14:04:53.352238"
+      "last_updated": "2026-01-30T22:14:41.258435"
     },
     "AI research system": {
       "file": "topics/AI-research-system.md",
       "created": "2025-12-30T05:02:46.242310",
-      "last_updated": "2026-01-15T14:00:16.214072"
+      "last_updated": "2026-01-30T12:05:18.223767"
     },
     "truth-finding": {
       "file": "topics/truth-finding.md",
       "created": "2025-12-30T05:02:46.242614",
-      "last_updated": "2026-01-15T14:00:16.214899"
+      "last_updated": "2026-01-15T18:00:49.517059"
     },
     "deep knowledge discovery": {
       "file": "topics/deep-knowledge-discovery.md",
       "created": "2025-12-30T05:02:46.242864",
-      "last_updated": "2026-01-15T14:00:16.216080"
+      "last_updated": "2026-01-30T12:05:18.226113"
     },
     "starting a research task": {
       "file": "topics/starting-a-research-task.md",
@@ -113,7 +113,7 @@
     "research": {
       "file": "topics/research.md",
       "created": "2025-12-30T19:19:53.651889",
-      "last_updated": "2026-01-15T13:43:41.223839"
+      "last_updated": "2026-01-30T22:15:10.070632"
     },
     "Capabilities of ICEBURG": {
       "file": "topics/Capabilities-of-ICEBURG.md",
@@ -138,12 +138,12 @@
     "deep domain research": {
       "file": "topics/deep-domain-research.md",
       "created": "2025-12-30T19:21:12.325436",
-      "last_updated": "2025-12-30T19:21:12.325514"
+      "last_updated": "2026-01-15T17:46:57.693922"
     },
     "multi-agent coordination": {
       "file": "topics/multi-agent-coordination.md",
       "created": "2025-12-30T19:21:12.326833",
-      "last_updated": "2026-01-15T13:12:05.727390"
+      "last_updated": "2026-01-30T22:12:16.779828"
     },
     "research mode": {
       "file": "topics/research-mode.md",
@@ -163,7 +163,7 @@
     "ICEBURG system": {
       "file": "topics/ICEBURG-system.md",
       "created": "2026-01-15T13:04:14.206002",
-      "last_updated": "2026-01-15T13:04:14.206018"
+      "last_updated": "2026-01-30T22:12:16.774303"
     },
     "questions": {
       "file": "topics/questions.md",
@@ -188,12 +188,12 @@
     "multi-agent coordination system": {
       "file": "topics/multi-agent-coordination-system.md",
       "created": "2026-01-15T13:05:19.124902",
-      "last_updated": "2026-01-15T13:47:15.697087"
+      "last_updated": "2026-01-30T22:14:41.260311"
     },
     "agents in ICEBURG": {
       "file": "topics/agents-in-ICEBURG.md",
       "created": "2026-01-15T13:05:57.455445",
-      "last_updated": "2026-01-15T13:10:23.610762"
+      "last_updated": "2026-01-15T17:52:12.517754"
     },
     "ICEBURG's architecture": {
       "file": "topics/ICEBURGs-architecture.md",
@@ -218,12 +218,12 @@
     "Surveyor agent": {
       "file": "topics/Surveyor-agent.md",
       "created": "2026-01-15T13:07:45.064461",
-      "last_updated": "2026-01-15T14:01:18.205753"
+      "last_updated": "2026-01-17T00:15:19.202107"
     },
     "Dissident agent": {
       "file": "topics/Dissident-agent.md",
       "created": "2026-01-15T13:07:45.065554",
-      "last_updated": "2026-01-15T14:01:18.203918"
+      "last_updated": "2026-01-15T14:19:00.219401"
     },
     "Synthesist agent": {
       "file": "topics/Synthesist-agent.md",
@@ -253,7 +253,7 @@
     "persistent memory": {
       "file": "topics/persistent-memory.md",
       "created": "2026-01-15T13:08:17.215424",
-      "last_updated": "2026-01-15T13:08:17.215527"
+      "last_updated": "2026-01-15T17:46:57.696490"
     },
     "modes": {
       "file": "topics/modes.md",
@@ -263,7 +263,7 @@
     "ICEBURG research platform": {
       "file": "topics/ICEBURG-research-platform.md",
       "created": "2026-01-15T13:09:29.844468",
-      "last_updated": "2026-01-15T13:09:29.844507"
+      "last_updated": "2026-01-17T00:15:19.196857"
     },
     "advanced AI system": {
       "file": "topics/advanced-AI-system.md",
@@ -313,7 +313,7 @@
     "comprehensive understanding": {
       "file": "topics/comprehensive-understanding.md",
       "created": "2026-01-15T13:12:31.287074",
-      "last_updated": "2026-01-15T13:12:31.287091"
+      "last_updated": "2026-01-30T22:14:41.262708"
     },
     "complex topics": {
       "file": "topics/complex-topics.md",
@@ -399,6 +399,206 @@
       "file": "topics/Peer-review.md",
       "created": "2026-01-15T14:01:18.207957",
       "last_updated": "2026-01-15T14:01:18.207971"
+    },
+    "four agents (Surveyor, Dissident, Oracle, Synthesist)": {
+      "file": "topics/four-agents-Surveyor-Dissident-Oracle-Synthesist.md",
+      "created": "2026-01-15T14:09:18.148888",
+      "last_updated": "2026-01-15T14:09:18.148913"
+    },
+    "integration of diverse perspectives": {
+      "file": "topics/integration-of-diverse-perspectives.md",
+      "created": "2026-01-15T14:09:18.149570",
+      "last_updated": "2026-01-15T14:09:18.149582"
+    },
+    "collaborative research process": {
+      "file": "topics/collaborative-research-process.md",
+      "created": "2026-01-15T14:19:00.220457",
+      "last_updated": "2026-01-15T14:19:00.220479"
+    },
+    "critical thinking": {
+      "file": "topics/critical-thinking.md",
+      "created": "2026-01-15T14:19:00.223050",
+      "last_updated": "2026-01-15T14:19:00.223063"
+    },
+    "agents": {
+      "file": "topics/agents.md",
+      "created": "2026-01-15T14:39:36.780020",
+      "last_updated": "2026-01-15T18:00:49.516372"
+    },
+    "assumptions": {
+      "file": "topics/assumptions.md",
+      "created": "2026-01-15T14:39:36.781243",
+      "last_updated": "2026-01-15T14:39:36.781260"
+    },
+    "ICEBURG capabilities": {
+      "file": "topics/ICEBURG-capabilities.md",
+      "created": "2026-01-15T14:43:25.072374",
+      "last_updated": "2026-01-15T14:43:25.072409"
+    },
+    "ICEBERG platform": {
+      "file": "topics/ICEBERG-platform.md",
+      "created": "2026-01-15T17:46:57.690024",
+      "last_updated": "2026-01-15T17:46:57.690076"
+    },
+    "AI research tool": {
+      "file": "topics/AI-research-tool.md",
+      "created": "2026-01-15T17:46:57.692035",
+      "last_updated": "2026-01-15T17:46:57.692046"
+    },
+    "collaborative truth-finding": {
+      "file": "topics/collaborative-truth-finding.md",
+      "created": "2026-01-15T17:46:57.692819",
+      "last_updated": "2026-01-15T17:46:57.692826"
+    },
+    "real-time streaming": {
+      "file": "topics/real-time-streaming.md",
+      "created": "2026-01-15T17:46:57.695789",
+      "last_updated": "2026-01-15T17:46:57.695796"
+    },
+    "modes for user needs": {
+      "file": "topics/modes-for-user-needs.md",
+      "created": "2026-01-17T00:01:26.930618",
+      "last_updated": "2026-01-17T00:01:26.930663"
+    },
+    "Surveyor": {
+      "file": "topics/Surveyor.md",
+      "created": "2026-01-17T00:07:21.782494",
+      "last_updated": "2026-01-17T00:46:36.133300"
+    },
+    "Dissident": {
+      "file": "topics/Dissident.md",
+      "created": "2026-01-17T00:07:21.783853",
+      "last_updated": "2026-01-17T00:46:36.135607"
+    },
+    "Synthesist": {
+      "file": "topics/Synthesist.md",
+      "created": "2026-01-17T00:07:21.786774",
+      "last_updated": "2026-01-17T00:46:36.137723"
+    },
+    "Oracle": {
+      "file": "topics/Oracle.md",
+      "created": "2026-01-17T00:07:21.787771",
+      "last_updated": "2026-01-17T00:46:36.139808"
+    },
+    "modes for exploration": {
+      "file": "topics/modes-for-exploration.md",
+      "created": "2026-01-17T00:15:19.199804",
+      "last_updated": "2026-01-17T00:15:19.199847"
+    },
+    "capabilities of ICEBURG": {
+      "file": "topics/capabilities-of-ICEBURG.md",
+      "created": "2026-01-17T00:19:25.581320",
+      "last_updated": "2026-01-17T00:19:25.581368"
+    },
+    "in-depth analysis": {
+      "file": "topics/in-depth-analysis.md",
+      "created": "2026-01-17T00:19:25.583287",
+      "last_updated": "2026-01-17T00:19:25.583298"
+    },
+    "critique and challenging assumptions": {
+      "file": "topics/critique-and-challenging-assumptions.md",
+      "created": "2026-01-17T00:19:25.584316",
+      "last_updated": "2026-01-17T00:19:25.584325"
+    },
+    "integrating findings": {
+      "file": "topics/integrating-findings.md",
+      "created": "2026-01-17T00:19:25.585688",
+      "last_updated": "2026-01-17T00:19:25.585696"
+    },
+    "verifying evidence": {
+      "file": "topics/verifying-evidence.md",
+      "created": "2026-01-17T00:19:25.586465",
+      "last_updated": "2026-01-17T00:19:25.586473"
+    },
+    "Astrology and Organs": {
+      "file": "topics/Astrology-and-Organs.md",
+      "created": "2026-01-17T00:55:47.067322",
+      "last_updated": "2026-01-17T00:55:47.067376"
+    },
+    "Sigilistic Astrology": {
+      "file": "topics/Sigilistic-Astrology.md",
+      "created": "2026-01-17T00:55:47.070709",
+      "last_updated": "2026-01-17T00:55:47.070748"
+    },
+    "Symbolic Connections between Astrology and Organs": {
+      "file": "topics/Symbolic-Connections-between-Astrology-and-Organs.md",
+      "created": "2026-01-17T00:55:47.073346",
+      "last_updated": "2026-01-17T00:55:47.073379"
+    },
+    "pharmaceutical companies": {
+      "file": "topics/pharmaceutical-companies.md",
+      "created": "2026-01-19T15:26:39.142012",
+      "last_updated": "2026-01-19T15:26:39.142115"
+    },
+    "political lobbying": {
+      "file": "topics/political-lobbying.md",
+      "created": "2026-01-19T15:26:39.145674",
+      "last_updated": "2026-01-19T15:26:39.145706"
+    },
+    "persistent memory systems": {
+      "file": "topics/persistent-memory-systems.md",
+      "created": "2026-01-30T22:12:16.783104",
+      "last_updated": "2026-01-30T22:12:16.783174"
+    },
+    "knowledge base expansion": {
+      "file": "topics/knowledge-base-expansion.md",
+      "created": "2026-01-30T22:12:16.785588",
+      "last_updated": "2026-01-30T22:12:16.785623"
+    },
+    "immediate answers and discussions": {
+      "file": "topics/immediate-answers-and-discussions.md",
+      "created": "2026-01-30T22:12:16.788031",
+      "last_updated": "2026-01-30T22:12:16.788060"
+    },
+    "complex research": {
+      "file": "topics/complex-research.md",
+      "created": "2026-01-30T22:13:00.744339",
+      "last_updated": "2026-01-30T22:13:00.744434"
+    },
+    "casual banter in chat mode": {
+      "file": "topics/casual-banter-in-chat-mode.md",
+      "created": "2026-01-30T22:13:00.747977",
+      "last_updated": "2026-01-30T22:13:00.748009"
+    },
+    "Surveyor and Dissident working together": {
+      "file": "topics/Surveyor-and-Dissident-working-together.md",
+      "created": "2026-01-30T22:13:00.750192",
+      "last_updated": "2026-01-30T22:13:00.750223"
+    },
+    "harmonious integration facilitated by Synthesist": {
+      "file": "topics/harmonious-integration-facilitated-by-Synthesist.md",
+      "created": "2026-01-30T22:13:00.752383",
+      "last_updated": "2026-01-30T22:13:00.752404"
+    },
+    "Oracle's validation of evidence": {
+      "file": "topics/Oracles-validation-of-evidence.md",
+      "created": "2026-01-30T22:13:00.754570",
+      "last_updated": "2026-01-30T22:13:00.754596"
+    },
+    "Science offers exploration beyond the surface level into phenomena": {
+      "file": "topics/Science-offers-exploration-beyond-the-surface-level-into-phenomena.md",
+      "created": "2026-01-30T22:13:00.757163",
+      "last_updated": "2026-01-30T22:13:00.757190"
+    },
+    "Civilization allows grand visions to unfold across scales that touch humanity itself": {
+      "file": "topics/Civilization-allows-grand-visions-to-unfold-across-scales-that-touch-humanity-itself.md",
+      "created": "2026-01-30T22:13:00.759714",
+      "last_updated": "2026-01-30T22:13:00.759738"
+    },
+    "software solutions": {
+      "file": "topics/software-solutions.md",
+      "created": "2026-01-30T22:15:10.071868",
+      "last_updated": "2026-01-30T22:15:10.071890"
+    },
+    "scientific inquiries": {
+      "file": "topics/scientific-inquiries.md",
+      "created": "2026-01-30T22:15:10.074282",
+      "last_updated": "2026-01-30T22:15:10.074304"
+    },
+    "civilization-scale thinking perspectives": {
+      "file": "topics/civilization-scale-thinking-perspectives.md",
+      "created": "2026-01-30T22:15:10.075609",
+      "last_updated": "2026-01-30T22:15:10.075621"
     }
   },
   "cross_references": {
@@ -479,6 +679,18 @@
       },
       {
         "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
         "common_words": [
           "iceburg"
         ]
@@ -585,13 +797,32 @@
       {
         "topic": "Advanced AI research system",
         "common_words": [
+          "research",
           "ai",
-          "system",
-          "research"
+          "system"
         ]
       },
       {
         "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research",
+          "ai"
+        ]
+      },
+      {
+        "topic": "complex research",
         "common_words": [
           "research"
         ]
@@ -615,6 +846,12 @@
         "common_words": [
           "truth-finding"
         ]
+      },
+      {
+        "topic": "collaborative truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
       }
     ],
     "deep knowledge discovery": [
@@ -633,16 +870,22 @@
       {
         "topic": "truth discovery and new knowledge",
         "common_words": [
-          "knowledge",
-          "discovery"
+          "discovery",
+          "knowledge"
         ]
       },
       {
         "topic": "Truth-finding and deep knowledge discovery",
         "common_words": [
+          "discovery",
           "knowledge",
-          "deep",
-          "discovery"
+          "deep"
+        ]
+      },
+      {
+        "topic": "knowledge base expansion",
+        "common_words": [
+          "knowledge"
         ]
       }
     ],
@@ -715,6 +958,24 @@
       },
       {
         "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
         "common_words": [
           "research"
         ]
@@ -805,6 +1066,30 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "casual banter in chat mode",
+        "common_words": [
+          "mode"
+        ]
       }
     ],
     "Surveyor and Dissident agents": [
@@ -872,8 +1157,8 @@
       {
         "topic": "Surveyor and Dissident collaboration",
         "common_words": [
-          "and",
           "surveyor",
+          "and",
           "dissident"
         ]
       },
@@ -881,6 +1166,62 @@
         "topic": "Validity and reliability of data",
         "common_words": [
           "and"
+        ]
+      },
+      {
+        "topic": "four agents (Surveyor, Dissident, Oracle, Synthesist)",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Surveyor",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "surveyor",
+          "and",
+          "dissident"
         ]
       }
     ],
@@ -900,8 +1241,8 @@
       {
         "topic": "multi-agent coordination",
         "common_words": [
-          "coordination",
-          "multi-agent"
+          "multi-agent",
+          "coordination"
         ]
       },
       {
@@ -919,9 +1260,9 @@
       {
         "topic": "multi-agent coordination system",
         "common_words": [
-          "system",
+          "multi-agent",
           "coordination",
-          "multi-agent"
+          "system"
         ]
       },
       {
@@ -979,6 +1320,20 @@
         "common_words": [
           "software"
         ]
+      },
+      {
+        "topic": "software solutions",
+        "common_words": [
+          "software"
+        ]
+      }
+    ],
+    "AGI civilization simulation": [
+      {
+        "topic": "Civilization allows grand visions to unfold across scales that touch humanity itself",
+        "common_words": [
+          "civilization"
+        ]
       }
     ],
     "ICEBURG's Science framework": [
@@ -1014,6 +1369,12 @@
       },
       {
         "topic": "science exploration",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "Science offers exploration beyond the surface level into phenomena",
         "common_words": [
           "science"
         ]
@@ -1091,6 +1452,24 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
       }
     ],
     "Capabilities of ICEBURG": [
@@ -1103,15 +1482,15 @@
       {
         "topic": "Modes of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
         "topic": "Agents of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
@@ -1167,6 +1546,33 @@
         "common_words": [
           "of"
         ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "of"
+        ]
       }
     ],
     "Modes of ICEBURG": [
@@ -1179,15 +1585,15 @@
       {
         "topic": "Capabilities of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
         "topic": "Agents of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
@@ -1219,6 +1625,43 @@
         "common_words": [
           "of"
         ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "modes for user needs",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes for exploration",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "of"
+        ]
       }
     ],
     "Agents of ICEBURG": [
@@ -1237,15 +1680,15 @@
       {
         "topic": "Capabilities of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
         "topic": "Modes of ICEBURG",
         "common_words": [
-          "of",
-          "iceburg"
+          "iceburg",
+          "of"
         ]
       },
       {
@@ -1257,8 +1700,8 @@
       {
         "topic": "agents in ICEBURG",
         "common_words": [
-          "agents",
-          "iceburg"
+          "iceburg",
+          "agents"
         ]
       },
       {
@@ -1275,6 +1718,43 @@
       },
       {
         "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "four agents (Surveyor, Dissident, Oracle, Synthesist)",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
         "common_words": [
           "of"
         ]
@@ -1314,15 +1794,15 @@
       {
         "topic": "real-time streaming system",
         "common_words": [
-          "streaming",
-          "real-time"
+          "real-time",
+          "streaming"
         ]
       },
       {
         "topic": "persistent memory",
         "common_words": [
-          "persistent",
-          "memory"
+          "memory",
+          "persistent"
         ]
       },
       {
@@ -1345,6 +1825,51 @@
       },
       {
         "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "real-time streaming",
+        "common_words": [
+          "real-time",
+          "streaming"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "persistent memory systems",
+        "common_words": [
+          "systems",
+          "memory",
+          "persistent"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
         "common_words": [
           "and"
         ]
@@ -1435,21 +1960,39 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
       }
     ],
     "multi-agent coordination": [
       {
         "topic": "ICEBURG's multi-agent coordination system",
         "common_words": [
-          "coordination",
-          "multi-agent"
+          "multi-agent",
+          "coordination"
         ]
       },
       {
         "topic": "multi-agent coordination system",
         "common_words": [
-          "coordination",
-          "multi-agent"
+          "multi-agent",
+          "coordination"
         ]
       },
       {
@@ -1544,6 +2087,30 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "casual banter in chat mode",
+        "common_words": [
+          "mode"
+        ]
       }
     ],
     "software development mode": [
@@ -1577,6 +2144,18 @@
           "development",
           "software"
         ]
+      },
+      {
+        "topic": "casual banter in chat mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "software solutions",
+        "common_words": [
+          "software"
+        ]
       }
     ],
     "science mode": [
@@ -1606,6 +2185,18 @@
       },
       {
         "topic": "science exploration",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "casual banter in chat mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "Science offers exploration beyond the surface level into phenomena",
         "common_words": [
           "science"
         ]
@@ -1683,6 +2274,18 @@
         "common_words": [
           "system"
         ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
       }
     ],
     "ICEBURG's main capabilities": [
@@ -1731,6 +2334,18 @@
       },
       {
         "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
         "common_words": [
           "capabilities"
         ]
@@ -1850,8 +2465,8 @@
         "topic": "Truth-finding and deep knowledge discovery",
         "common_words": [
           "and",
-          "truth-finding",
-          "deep"
+          "deep",
+          "truth-finding"
         ]
       },
       {
@@ -1877,6 +2492,60 @@
         "common_words": [
           "and"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
       }
     ],
     "multi-agent coordination system": [
@@ -1889,16 +2558,16 @@
       {
         "topic": "ICEBURG's multi-agent coordination system",
         "common_words": [
-          "system",
+          "multi-agent",
           "coordination",
-          "multi-agent"
+          "system"
         ]
       },
       {
         "topic": "multi-agent coordination",
         "common_words": [
-          "coordination",
-          "multi-agent"
+          "multi-agent",
+          "coordination"
         ]
       },
       {
@@ -1960,8 +2629,8 @@
       {
         "topic": "Agents of ICEBURG",
         "common_words": [
-          "agents",
-          "iceburg"
+          "iceburg",
+          "agents"
         ]
       },
       {
@@ -1980,6 +2649,36 @@
         "topic": "ICEBURG research platform",
         "common_words": [
           "iceburg"
+        ]
+      },
+      {
+        "topic": "four agents (Surveyor, Dissident, Oracle, Synthesist)",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "casual banter in chat mode",
+        "common_words": [
+          "in"
         ]
       }
     ],
@@ -2067,8 +2766,8 @@
       {
         "topic": "ICEBURG's research capabilities",
         "common_words": [
-          "capabilities",
-          "research"
+          "research",
+          "capabilities"
         ]
       },
       {
@@ -2103,6 +2802,36 @@
       },
       {
         "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "complex research",
         "common_words": [
           "research"
         ]
@@ -2153,6 +2882,36 @@
       },
       {
         "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
         "common_words": [
           "and"
         ]
@@ -2235,8 +2994,8 @@
       {
         "topic": "research capabilities",
         "common_words": [
-          "capabilities",
-          "research"
+          "research",
+          "capabilities"
         ]
       },
       {
@@ -2271,6 +3030,36 @@
       },
       {
         "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "complex research",
         "common_words": [
           "research"
         ]
@@ -2312,6 +3101,18 @@
         "common_words": [
           "surveyor"
         ]
+      },
+      {
+        "topic": "Surveyor",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "surveyor"
+        ]
       }
     ],
     "Dissident agent": [
@@ -2350,6 +3151,18 @@
         "common_words": [
           "dissident"
         ]
+      },
+      {
+        "topic": "Dissident",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "dissident"
+        ]
       }
     ],
     "Synthesist agent": [
@@ -2375,6 +3188,18 @@
         "topic": "Secretary agent",
         "common_words": [
           "agent"
+        ]
+      },
+      {
+        "topic": "Synthesist",
+        "common_words": [
+          "synthesist"
+        ]
+      },
+      {
+        "topic": "harmonious integration facilitated by Synthesist",
+        "common_words": [
+          "synthesist"
         ]
       }
     ],
@@ -2402,6 +3227,12 @@
         "common_words": [
           "agent"
         ]
+      },
+      {
+        "topic": "Oracle",
+        "common_words": [
+          "oracle"
+        ]
       }
     ],
     "AI systems": [
@@ -2427,6 +3258,18 @@
         "topic": "Advanced AI research system",
         "common_words": [
           "ai"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "persistent memory systems",
+        "common_words": [
+          "systems"
         ]
       }
     ],
@@ -2521,6 +3364,60 @@
         "common_words": [
           "and"
         ]
+      },
+      {
+        "topic": "four agents (Surveyor, Dissident, Oracle, Synthesist)",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
       }
     ],
     "real-time streaming system": [
@@ -2539,8 +3436,8 @@
       {
         "topic": "Real-time streaming and persistent memory systems",
         "common_words": [
-          "streaming",
-          "real-time"
+          "real-time",
+          "streaming"
         ]
       },
       {
@@ -2566,20 +3463,46 @@
         "common_words": [
           "system"
         ]
+      },
+      {
+        "topic": "real-time streaming",
+        "common_words": [
+          "real-time",
+          "streaming"
+        ]
       }
     ],
     "persistent memory": [
       {
         "topic": "Real-time streaming and persistent memory systems",
         "common_words": [
-          "persistent",
-          "memory"
+          "memory",
+          "persistent"
+        ]
+      },
+      {
+        "topic": "persistent memory systems",
+        "common_words": [
+          "memory",
+          "persistent"
         ]
       }
     ],
     "modes": [
       {
         "topic": "Modes of ICEBURG",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes for user needs",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes for exploration",
         "common_words": [
           "modes"
         ]
@@ -2693,6 +3616,42 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBERG platform",
+        "common_words": [
+          "platform"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
       }
     ],
     "advanced AI system": [
@@ -2737,8 +3696,14 @@
         "topic": "Advanced AI research system",
         "common_words": [
           "ai",
-          "advanced",
-          "system"
+          "system",
+          "advanced"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "ai"
         ]
       }
     ],
@@ -2746,8 +3711,8 @@
       {
         "topic": "deep knowledge discovery",
         "common_words": [
-          "knowledge",
-          "discovery"
+          "discovery",
+          "knowledge"
         ]
       },
       {
@@ -2789,9 +3754,9 @@
       {
         "topic": "Truth-finding and deep knowledge discovery",
         "common_words": [
+          "discovery",
           "and",
-          "knowledge",
-          "discovery"
+          "knowledge"
         ]
       },
       {
@@ -2802,6 +3767,42 @@
       },
       {
         "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "knowledge base expansion",
+        "common_words": [
+          "knowledge"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
         "common_words": [
           "and"
         ]
@@ -2834,6 +3835,18 @@
       },
       {
         "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
         "common_words": [
           "capabilities"
         ]
@@ -2886,6 +3899,12 @@
           "development",
           "software"
         ]
+      },
+      {
+        "topic": "software solutions",
+        "common_words": [
+          "software"
+        ]
       }
     ],
     "science exploration": [
@@ -2900,12 +3919,38 @@
         "common_words": [
           "science"
         ]
+      },
+      {
+        "topic": "modes for exploration",
+        "common_words": [
+          "exploration"
+        ]
+      },
+      {
+        "topic": "Science offers exploration beyond the surface level into phenomena",
+        "common_words": [
+          "exploration",
+          "science"
+        ]
       }
     ],
     "civilization-scale thinking": [
       {
         "topic": "Critical thinking",
         "common_words": [
+          "thinking"
+        ]
+      },
+      {
+        "topic": "critical thinking",
+        "common_words": [
+          "thinking"
+        ]
+      },
+      {
+        "topic": "civilization-scale thinking perspectives",
+        "common_words": [
+          "civilization-scale",
           "thinking"
         ]
       }
@@ -2927,6 +3972,14 @@
         "topic": "multi-agent coordination system",
         "common_words": [
           "multi-agent"
+        ]
+      }
+    ],
+    "complex topics": [
+      {
+        "topic": "complex research",
+        "common_words": [
+          "complex"
         ]
       }
     ],
@@ -3008,14 +4061,38 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Civilization allows grand visions to unfold across scales that touch humanity itself",
+        "common_words": [
+          "to"
+        ]
       }
     ],
     "black holes": [
       {
         "topic": "Black Holes",
         "common_words": [
-          "black",
-          "holes"
+          "holes",
+          "black"
         ]
       }
     ],
@@ -3023,8 +4100,8 @@
       {
         "topic": "black holes",
         "common_words": [
-          "black",
-          "holes"
+          "holes",
+          "black"
         ]
       }
     ],
@@ -3032,9 +4109,9 @@
       {
         "topic": "AI research system",
         "common_words": [
+          "research",
           "ai",
-          "system",
-          "research"
+          "system"
         ]
       },
       {
@@ -3125,8 +4202,8 @@
         "topic": "advanced AI system",
         "common_words": [
           "ai",
-          "advanced",
-          "system"
+          "system",
+          "advanced"
         ]
       },
       {
@@ -3137,6 +4214,25 @@
       },
       {
         "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research",
+          "ai"
+        ]
+      },
+      {
+        "topic": "complex research",
         "common_words": [
           "research"
         ]
@@ -3152,9 +4248,9 @@
       {
         "topic": "deep knowledge discovery",
         "common_words": [
+          "discovery",
           "knowledge",
-          "deep",
-          "discovery"
+          "deep"
         ]
       },
       {
@@ -3179,8 +4275,8 @@
         "topic": "deep research and truth-finding",
         "common_words": [
           "and",
-          "truth-finding",
-          "deep"
+          "deep",
+          "truth-finding"
         ]
       },
       {
@@ -3198,9 +4294,9 @@
       {
         "topic": "truth discovery and new knowledge",
         "common_words": [
+          "discovery",
           "and",
-          "knowledge",
-          "discovery"
+          "knowledge"
         ]
       },
       {
@@ -3217,6 +4313,48 @@
       },
       {
         "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "collaborative truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "knowledge base expansion",
+        "common_words": [
+          "knowledge"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
         "common_words": [
           "and"
         ]
@@ -3240,14 +4378,20 @@
         "common_words": [
           "truth-finding"
         ]
+      },
+      {
+        "topic": "collaborative truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
       }
     ],
     "Surveyor and Dissident collaboration": [
       {
         "topic": "Surveyor and Dissident agents",
         "common_words": [
-          "and",
           "surveyor",
+          "and",
           "dissident"
         ]
       },
@@ -3303,6 +4447,50 @@
         "topic": "Validity and reliability of data",
         "common_words": [
           "and"
+        ]
+      },
+      {
+        "topic": "Surveyor",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "surveyor",
+          "and",
+          "dissident"
         ]
       }
     ],
@@ -3378,6 +4566,24 @@
         "common_words": [
           "research"
         ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
       }
     ],
     "Validity and reliability of data": [
@@ -3446,6 +4652,54 @@
         "common_words": [
           "and"
         ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "of"
+        ]
       }
     ],
     "Critical thinking": [
@@ -3454,8 +4708,1534 @@
         "common_words": [
           "thinking"
         ]
+      },
+      {
+        "topic": "critical thinking",
+        "common_words": [
+          "critical",
+          "thinking"
+        ]
+      },
+      {
+        "topic": "civilization-scale thinking perspectives",
+        "common_words": [
+          "thinking"
+        ]
+      }
+    ],
+    "four agents (Surveyor, Dissident, Oracle, Synthesist)": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents",
+        "common_words": [
+          "agents"
+        ]
+      }
+    ],
+    "integration of diverse perspectives": [
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "harmonious integration facilitated by Synthesist",
+        "common_words": [
+          "integration"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "civilization-scale thinking perspectives",
+        "common_words": [
+          "perspectives"
+        ]
+      }
+    ],
+    "collaborative research process": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative truth-finding",
+        "common_words": [
+          "collaborative"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "critical thinking": [
+      {
+        "topic": "civilization-scale thinking",
+        "common_words": [
+          "thinking"
+        ]
+      },
+      {
+        "topic": "Critical thinking",
+        "common_words": [
+          "critical",
+          "thinking"
+        ]
+      },
+      {
+        "topic": "civilization-scale thinking perspectives",
+        "common_words": [
+          "thinking"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "agents"
+        ]
+      },
+      {
+        "topic": "four agents (Surveyor, Dissident, Oracle, Synthesist)",
+        "common_words": [
+          "agents"
+        ]
+      }
+    ],
+    "assumptions": [
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "assumptions"
+        ]
+      }
+    ],
+    "ICEBURG capabilities": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "capabilities"
+        ]
+      }
+    ],
+    "ICEBERG platform": [
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "platform"
+        ]
+      }
+    ],
+    "AI research tool": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research",
+          "ai"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "advanced AI system",
+        "common_words": [
+          "ai"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research",
+          "ai"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex research",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "collaborative truth-finding": [
+      {
+        "topic": "truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "truth-finding mission",
+        "common_words": [
+          "truth-finding"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "collaborative"
+        ]
+      }
+    ],
+    "real-time streaming": [
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "real-time",
+          "streaming"
+        ]
+      },
+      {
+        "topic": "real-time streaming system",
+        "common_words": [
+          "real-time",
+          "streaming"
+        ]
+      }
+    ],
+    "modes for user needs": [
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes for exploration",
+        "common_words": [
+          "modes",
+          "for"
+        ]
+      }
+    ],
+    "Surveyor": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "surveyor"
+        ]
+      }
+    ],
+    "Dissident": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "dissident"
+        ]
+      }
+    ],
+    "Synthesist": [
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "synthesist"
+        ]
+      },
+      {
+        "topic": "harmonious integration facilitated by Synthesist",
+        "common_words": [
+          "synthesist"
+        ]
+      }
+    ],
+    "Oracle": [
+      {
+        "topic": "Oracle agent",
+        "common_words": [
+          "oracle"
+        ]
+      }
+    ],
+    "modes for exploration": [
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "modes",
+        "common_words": [
+          "modes"
+        ]
+      },
+      {
+        "topic": "science exploration",
+        "common_words": [
+          "exploration"
+        ]
+      },
+      {
+        "topic": "modes for user needs",
+        "common_words": [
+          "modes",
+          "for"
+        ]
+      },
+      {
+        "topic": "Science offers exploration beyond the surface level into phenomena",
+        "common_words": [
+          "exploration"
+        ]
+      }
+    ],
+    "capabilities of ICEBURG": [
+      {
+        "topic": "ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "iceburg",
+          "of"
+        ]
+      },
+      {
+        "topic": "ICEBURG system",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "ICEBURG's main capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "iceburg"
+        ]
+      },
+      {
+        "topic": "capabilities",
+        "common_words": [
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "ICEBURG capabilities",
+        "common_words": [
+          "iceburg",
+          "capabilities"
+        ]
+      },
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "of"
+        ]
+      }
+    ],
+    "critique and challenging assumptions": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "assumptions",
+        "common_words": [
+          "assumptions"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "verifying evidence": [
+      {
+        "topic": "Oracle's validation of evidence",
+        "common_words": [
+          "evidence"
+        ]
+      }
+    ],
+    "Astrology and Organs": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Sigilistic Astrology",
+        "common_words": [
+          "astrology"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "astrology",
+          "and",
+          "organs"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "Sigilistic Astrology": [
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "astrology"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "astrology"
+        ]
+      }
+    ],
+    "Symbolic Connections between Astrology and Organs": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "astrology",
+          "and",
+          "organs"
+        ]
+      },
+      {
+        "topic": "Sigilistic Astrology",
+        "common_words": [
+          "astrology"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "persistent memory systems": [
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "systems",
+          "memory",
+          "persistent"
+        ]
+      },
+      {
+        "topic": "AI systems",
+        "common_words": [
+          "systems"
+        ]
+      },
+      {
+        "topic": "persistent memory",
+        "common_words": [
+          "memory",
+          "persistent"
+        ]
+      }
+    ],
+    "knowledge base expansion": [
+      {
+        "topic": "deep knowledge discovery",
+        "common_words": [
+          "knowledge"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "knowledge"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "knowledge"
+        ]
+      }
+    ],
+    "immediate answers and discussions": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident working together",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "complex research": [
+      {
+        "topic": "AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "starting a research task",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep domain research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG's research capabilities",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "ICEBURG research platform",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "complex topics",
+        "common_words": [
+          "complex"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Advanced AI research system",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "Research question refinement",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "collaborative research process",
+        "common_words": [
+          "research"
+        ]
+      },
+      {
+        "topic": "AI research tool",
+        "common_words": [
+          "research"
+        ]
+      }
+    ],
+    "casual banter in chat mode": [
+      {
+        "topic": "Research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "research mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "mode"
+        ]
+      },
+      {
+        "topic": "agents in ICEBURG",
+        "common_words": [
+          "in"
+        ]
+      }
+    ],
+    "Surveyor and Dissident working together": [
+      {
+        "topic": "Surveyor and Dissident agents",
+        "common_words": [
+          "surveyor",
+          "and",
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Real-time streaming and persistent memory systems",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "deep research and truth-finding",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "tools and abilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor agent",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident agent",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "agents and capabilities",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "truth discovery and new knowledge",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Truth-finding and deep knowledge discovery",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor and Dissident collaboration",
+        "common_words": [
+          "surveyor",
+          "and",
+          "dissident"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Surveyor",
+        "common_words": [
+          "surveyor"
+        ]
+      },
+      {
+        "topic": "Dissident",
+        "common_words": [
+          "dissident"
+        ]
+      },
+      {
+        "topic": "critique and challenging assumptions",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "Symbolic Connections between Astrology and Organs",
+        "common_words": [
+          "and"
+        ]
+      },
+      {
+        "topic": "immediate answers and discussions",
+        "common_words": [
+          "and"
+        ]
+      }
+    ],
+    "harmonious integration facilitated by Synthesist": [
+      {
+        "topic": "Synthesist agent",
+        "common_words": [
+          "synthesist"
+        ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "integration"
+        ]
+      },
+      {
+        "topic": "Synthesist",
+        "common_words": [
+          "synthesist"
+        ]
+      }
+    ],
+    "Oracle's validation of evidence": [
+      {
+        "topic": "Capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Modes of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Agents of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "Validity and reliability of data",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "capabilities of ICEBURG",
+        "common_words": [
+          "of"
+        ]
+      },
+      {
+        "topic": "verifying evidence",
+        "common_words": [
+          "evidence"
+        ]
+      }
+    ],
+    "Science offers exploration beyond the surface level into phenomena": [
+      {
+        "topic": "ICEBURG's Science framework",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "science mode",
+        "common_words": [
+          "science"
+        ]
+      },
+      {
+        "topic": "science exploration",
+        "common_words": [
+          "exploration",
+          "science"
+        ]
+      },
+      {
+        "topic": "modes for exploration",
+        "common_words": [
+          "exploration"
+        ]
+      }
+    ],
+    "Civilization allows grand visions to unfold across scales that touch humanity itself": [
+      {
+        "topic": "AGI civilization simulation",
+        "common_words": [
+          "civilization"
+        ]
+      },
+      {
+        "topic": "new topic to research",
+        "common_words": [
+          "to"
+        ]
+      }
+    ],
+    "software solutions": [
+      {
+        "topic": "software application design",
+        "common_words": [
+          "software"
+        ]
+      },
+      {
+        "topic": "software development mode",
+        "common_words": [
+          "software"
+        ]
+      },
+      {
+        "topic": "software development",
+        "common_words": [
+          "software"
+        ]
+      }
+    ],
+    "civilization-scale thinking perspectives": [
+      {
+        "topic": "civilization-scale thinking",
+        "common_words": [
+          "civilization-scale",
+          "thinking"
+        ]
+      },
+      {
+        "topic": "Critical thinking",
+        "common_words": [
+          "thinking"
+        ]
+      },
+      {
+        "topic": "integration of diverse perspectives",
+        "common_words": [
+          "perspectives"
+        ]
+      },
+      {
+        "topic": "critical thinking",
+        "common_words": [
+          "thinking"
+        ]
       }
     ]
   },
-  "last_built": "2026-01-15T14:04:53.355861"
+  "last_built": "2026-01-30T22:15:10.076632"
 }

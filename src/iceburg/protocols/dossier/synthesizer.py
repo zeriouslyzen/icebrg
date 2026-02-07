@@ -298,10 +298,11 @@ class DossierSynthesizer:
             query,
             entities_from_gatherer=intelligence.entities_found,
             content=content,
-            thinking_callback=thinking_callback
+            thinking_callback=thinking_callback,
+            decoder_report=decoder_report,
         )
-        
-        dossier.network_map = mapper_report.network.to_d3_format()
+
+        dossier.network_map = mapper_report.network.to_dict()
         dossier.key_players = mapper_report.key_players
         dossier.hidden_connections = mapper_report.hidden_connections
         

@@ -79,16 +79,21 @@ class UnifiedMemory:
         # Singleton PersistentClient with telemetry disabled
         global _UNIFIED_MEMORY_CHROMA_CLIENT
         try:
-            _UNIFIED_MEMORY_CHROMA_CLIENT
-        except NameError:
-            _UNIFIED_MEMORY_CHROMA_CLIENT = None  # type: ignore
-        if _UNIFIED_MEMORY_CHROMA_CLIENT is None:
-            # TEMPORARILY DISABLED: ChromaDB Rust bindings are panicking
-            # TODO: Upgrade chromadb package or investigate root cause
+            if '_UNIFIED_MEMORY_CHROMA_CLIENT' not in globals() or _UNIFIED_MEMORY_CHROMA_CLIENT is None:
+                # Attempt to initialize ChromaDB PersistentClient
+                _UNIFIED_MEMORY_CHROMA_CLIENT = chromadb.PersistentClient(
+                    path=str(self._root / "chroma"),
+                    settings=Settings(anonymized_telemetry=False)
+                )
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.info("⚡ ChromaDB initialized successfully at %s", self._root / "chroma")
+        except Exception as e:
             import logging
             logger = logging.getLogger(__name__)
-            logger.warning("ChromaDB initialization SKIPPED (Rust binding issue). Using mock mode.")
+            logger.warning("ChromaDB initialization FAILED: %s. Falling back to mock mode.", e)
             _UNIFIED_MEMORY_CHROMA_CLIENT = None
+
         self._client = _UNIFIED_MEMORY_CHROMA_CLIENT
         self._embed_fn = SafeEmbeddingFunction(self._cfg)
         self._collections: Dict[str, Any] = {}
@@ -133,7 +138,11 @@ class UnifiedMemory:
         if col is None:
             return []  # Graceful degradation when ChromaDB is unavailable
         if metadatas is None:
-            metadatas = [{} for _ in texts]
+            metadatas = [{"source": "iceburg"} for _ in texts]
+        else:
+            # Ensure no metadata dict is empty
+            metadatas = [{**m, "source": m.get("source", "iceburg")} for m in metadatas]
+        
         if ids is None:
             # Use time-based ids to avoid collisions
             base = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")

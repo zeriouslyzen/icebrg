@@ -69,17 +69,20 @@ CURRENT STATUS:
 
 
 SECRETARY_SYSTEM_PROMPT = """
-You're ICEBURG's friendly assistant. People might call you by different names—ice, berg, iceburg, icy, or any variation—they're all referring to you or the ICEBURG system.
+You are ICEBURG's primary interface: linguistically tuned for maximum effect and efficient comprehension. Operate with targeted hyper-vigilant awareness—notice what the user is really asking, what is implied, and what would move the conversation forward.
 
-When someone asks what ICEBURG can do, you give them the full picture: deep research with multi-agent coordination (Surveyor for research, Dissident for critique, Synthesist for integration, Oracle for evidence validation), real-time streaming, persistent memory, and different modes for chat, research, software development, science exploration, and civilization-scale thinking.
+When someone asks what ICEBURG can do, give the full picture: deep research with multi-agent coordination (Surveyor, Dissident, Synthesist, Oracle), real-time streaming, persistent memory, and modes for chat, research, software, science, and civilization-scale thinking.
 
-You're running locally on Ollama, so you keep responses punchy and efficient to maintain high token velocity. You're professional but approachable, concise but thorough when the situation calls for it. You help people navigate ICEBURG's capabilities naturally, without needing exact keywords or formal commands.
+You run locally on Ollama. Keep responses punchy and efficient for high token velocity. Be professional and approachable, concise but thorough when needed. Help users navigate ICEBURG naturally without exact keywords.
+
+When LAST RESEARCH is provided in context: treat it as authoritative background. Build on it in conversation—synthesize, surface emergent patterns, and co-explore with the user. Do not re-run research; reference and extend it. Stay in fast chat; the user remains in conversation with you while you use the research.
 
 CRITICAL RULES:
-1. NEVER repeat or echo the user's question in your response. Start answering directly.
-2. In multi-turn conversations, be consistent with what you previously said. If you mentioned three agents, the fourth is the one you didn't list.
-3. ICEBURG has exactly four main agents: Surveyor, Dissident, Synthesist, and Oracle. Know their roles accurately.
-4. Don't start responses with phrases like "You asked..." or "Your question is..." - just answer.
+1. NEVER repeat or echo the user's question. Start with the answer directly.
+2. Be consistent across turns. If you named three agents, the fourth is the one you didn't list.
+3. ICEBURG's four main agents: Surveyor, Dissident, Synthesist, Oracle. Know their roles accurately.
+4. Do not start with "You asked..." or "Your question is..."—answer immediately.
+5. When research context is present, use it: synthesize, highlight patterns, and build with the user.
 """
 
 
@@ -220,6 +223,7 @@ class SecretaryAgent:
         multimodal_input: Optional[Any] = None,
         mode: Optional[str] = None,
         routing_mode: Optional[str] = None,
+        **kwargs: Any,
     ) -> str:
         """
         Enhanced Secretary agent with memory persistence.
@@ -440,6 +444,15 @@ class SecretaryAgent:
             except Exception as e:
                 logger.warning(f"Error with tool execution: {e}. Continuing without tools.")
         
+        # Optional: last research result so Secretary can build on it in Fast Chat
+        last_research_block = ""
+        last_research_summary = kwargs.get("last_research_summary") if kwargs else None
+        if last_research_summary and isinstance(last_research_summary, str) and last_research_summary.strip():
+            last_research_block = f"""
+LAST RESEARCH (build on this; synthesize and surface emergent patterns with the user):
+{last_research_summary.strip()[:8000]}
+
+"""
         # Build enhanced prompt with ICEBURG knowledge, memory context, tool results, multimodal, agent context, and knowledge base
         enhanced_prompt = f"""{agent_context}
 
@@ -450,7 +463,7 @@ class SecretaryAgent:
 {multimodal_context}
 
 {tool_context}
-
+{last_research_block}
 ICEBURG KNOWLEDGE BASE (for reference if the question is about ICEBURG):
 {ICEBURG_KNOWLEDGE}
 
@@ -461,6 +474,7 @@ IMPORTANT INSTRUCTIONS:
 2. If you previously mentioned information in this conversation, be consistent - don't contradict yourself.
 3. Answer naturally and conversationally without preamble like "You asked..." or "Your question is...".
 4. Be accurate about ICEBURG's four agents: Surveyor, Dissident, Synthesist, and Oracle.
+5. When LAST RESEARCH is present above, use it: synthesize, highlight patterns, and build on it with the user.
 """
         
         if thinking_callback:
@@ -537,16 +551,20 @@ IMPORTANT INSTRUCTIONS:
                         logger.warning(f"Error storing memory: {e}. Continuing without storing.")
                 
                 # Process conversation for knowledge extraction
+                # SKIP for short/simple queries (greetings etc.) to improve speed
                 if self.enable_knowledge_base and self.knowledge_base:
-                    try:
-                        self.knowledge_base.process_conversation(
-                            query=query,
-                            response=response_text,
-                            user_id=user_id,
-                            conversation_id=conversation_id
-                        )
-                    except Exception as e:
-                        logger.debug(f"Error processing conversation for knowledge: {e}")
+                    if len(query) > 20 and len(response_text) > 100:  # Substantive conversation
+                        try:
+                            self.knowledge_base.process_conversation(
+                                query=query,
+                                response=response_text,
+                                user_id=user_id,
+                                conversation_id=conversation_id
+                            )
+                        except Exception as e:
+                            logger.debug(f"Error processing conversation for knowledge: {e}")
+                    else:
+                        logger.debug(f"Skipping knowledge extraction for short query (len={len(query)})")
                 
                 # Store tool usage in memory if tools were used
                 if tool_results and self.enable_memory:
@@ -1185,34 +1203,33 @@ def run(
     """
     # Use enhanced SecretaryAgent if memory, tools, multimodal, or planning is requested
     # But only if we can safely initialize it
-    if conversation_id or user_id or files or multimodal_input:
-        try:
-            # Use cached agent for performance (avoid expensive re-initialization)
-            # Cache key includes provider to ensure we don't mix providers
-            cache_key = f"enhanced_{cfg.llm_provider}"
-            agent = _get_cached_secretary(
-                cfg,
-                cache_key=cache_key,
-                enable_memory=bool(conversation_id or user_id), 
-                enable_tools=True,
-                enable_blackboard=True,  # Blackboard integration now working synchronously
-                enable_cache=True,
-                enable_planning=True,  # Enable goal-driven planning
-                enable_knowledge_base=True  # Enable self-updating knowledge base
-            )
-            return agent.run(
-                query=query,
-                conversation_id=conversation_id,
-                user_id=user_id,
-                verbose=verbose,
-                thinking_callback=thinking_callback,
-                files=files,
-                multimodal_input=multimodal_input,
-                **kwargs
-            )
-        except Exception as e:
-            logger.warning(f"Enhanced Secretary failed, falling back to basic: {e}", exc_info=True)
-            # Fall through to basic implementation
+    # ALWAYS use cached agent for performance (avoid expensive re-initialization)
+    try:
+        # Cache key includes provider to ensure we don't mix providers
+        cache_key = f"enhanced_{cfg.llm_provider}"
+        agent = _get_cached_secretary(
+            cfg,
+            cache_key=cache_key,
+            enable_memory=bool(conversation_id or user_id), 
+            enable_tools=True,
+            enable_blackboard=True,  # Blackboard integration now working synchronously
+            enable_cache=True,
+            enable_planning=True,  # Enable goal-driven planning
+            enable_knowledge_base=True  # Enable self-updating knowledge base
+        )
+        return agent.run(
+            query=query,
+            conversation_id=conversation_id,
+            user_id=user_id,
+            verbose=verbose,
+            thinking_callback=thinking_callback,
+            files=files,
+            multimodal_input=multimodal_input,
+            **kwargs
+        )
+    except Exception as e:
+        logger.warning(f"Enhanced Secretary failed, falling back to basic: {e}", exc_info=True)
+        # Fall through to basic implementation
     
     # Basic implementation (original behavior)
     logger.info(f"🔍🔍🔍 SECRETARY: Received query='{query}' (type={type(query).__name__}, length={len(query) if query else 0})")

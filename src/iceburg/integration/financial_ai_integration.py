@@ -15,7 +15,24 @@ import pandas as pd
 
 from ..config import IceburgConfig
 from ..protocol import iceberg_protocol
-from ..agents.surveyor import Surveyor
+from ..agents.surveyor import run as surveyor_run
+# Adapter for Surveyor functional interface
+class Surveyor:
+    def __init__(self, config):
+        self.config = config
+    
+    async def analyze(self, query, context):
+        import asyncio
+        loop = asyncio.get_event_loop()
+        # Run synchronous surveyor in executor
+        return await loop.run_in_executor(
+            None, 
+            surveyor_run, 
+            self.config, 
+            query, 
+            None, # documents
+            True  # verbose
+        )
 from ..memory.unified_memory import UnifiedMemory
 from ..reasoning.hybrid_reasoning_engine import HybridReasoningEngine
 from ..emergence.quantum_emergence_detector import QuantumEmergenceDetector

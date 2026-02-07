@@ -180,18 +180,39 @@ async def validate_entity(entity_id: str):
 
 @router.post("/network")
 async def get_network(request: NetworkRequest):
-    """Get entity network directly from SQLite relationships table."""
-    from .matrix_store import MatrixStore
-    
-    # Use MatrixStore for direct SQLite query (much faster, 1.4M relationships)
-    store = MatrixStore()
-    network = store.get_network(
-        entity_id=request.entity_id,
-        depth=request.depth,
-        limit=request.limit,
-    )
-    
-    return network
+    """Get entity network. Prefer Colossus graph (dossier-ingested); fallback to MatrixStore SQLite."""
+    graph = get_graph()
+    entity_id = request.entity_id
+
+    # Try Colossus graph first (dossier-ingested data)
+    entity = graph.get_entity(entity_id)
+    if entity:
+        network = graph.get_network(entity_id, depth=request.depth, limit=request.limit)
+        if network.get("nodes") or network.get("edges"):
+            return network
+
+    # Fallback to MatrixStore when graph empty or entity not in graph
+    try:
+        from .matrix_store import MatrixStore
+        store = MatrixStore()
+        if store.db_path and store.db_path.exists():
+            network = store.get_network(
+                entity_id=entity_id,
+                depth=request.depth,
+                limit=request.limit,
+            )
+            if not network.get("error"):
+                return network
+    except Exception as e:
+        logger.debug(f"MatrixStore get_network fallback failed: {e}")
+
+    return {
+        "nodes": [],
+        "edges": [],
+        "center": entity_id,
+        "depth": request.depth,
+        "query_stats": {},
+    }
 
 
 @router.post("/path")
@@ -253,29 +274,114 @@ async def get_central_entities(
     entity_type: Optional[str] = None,
     measure: str = Query(default="degree", regex="^(degree|betweenness|pagerank)$"),
     limit: int = Query(default=20, le=100),
+    relationship_type: Optional[str] = Query(default=None, description="Filter by relationship type (e.g. CONNECTS)"),
 ):
-    """Get most central entities."""
+    """Get most central entities. Optionally filter by relationship_type."""
     graph = get_graph()
-    
     results = graph.get_central_entities(
         entity_type=entity_type,
         centrality_measure=measure,
         limit=limit,
     )
-    
+    out = [
+        {
+            "id": entity.id,
+            "name": entity.name,
+            "type": entity.entity_type,
+            "score": score,
+            "sanctions_count": len(entity.sanctions),
+        }
+        for entity, score in results
+    ]
+    if relationship_type:
+        rels = graph.get_relationships_by_type([relationship_type], limit=limit * 2)
+        entity_ids_with_type = {r.source_id for r in rels} | {r.target_id for r in rels}
+        out = [e for e in out if e["id"] in entity_ids_with_type]
+    return {"measure": measure, "results": out[:limit]}
+
+
+@router.get("/query/connects")
+async def query_connects(
+    limit: int = Query(default=100, le=500),
+):
+    """Who connects whom: relationships of type CONNECTS or GATEKEEPER_FOR."""
+    graph = get_graph()
+    rels = graph.get_relationships_by_type(["CONNECTS", "GATEKEEPER_FOR"], limit=limit)
     return {
-        "measure": measure,
-        "results": [
+        "relationship_types": ["CONNECTS", "GATEKEEPER_FOR"],
+        "count": len(rels),
+        "relationships": [
+            {"source_id": r.source_id, "target_id": r.target_id, "type": r.relationship_type, "properties": r.properties}
+            for r in rels
+        ],
+    }
+
+
+@router.get("/query/obligation")
+async def query_obligation(
+    limit: int = Query(default=100, le=500),
+):
+    """Who owes whom: relationships of type RECIPROCITY or OBLIGATION."""
+    graph = get_graph()
+    rels = graph.get_relationships_by_type(["RECIPROCITY", "OBLIGATION"], limit=limit)
+    return {
+        "relationship_types": ["RECIPROCITY", "OBLIGATION"],
+        "count": len(rels),
+        "relationships": [
+            {"source_id": r.source_id, "target_id": r.target_id, "type": r.relationship_type, "properties": r.properties}
+            for r in rels
+        ],
+    }
+
+
+@router.get("/query/bridges")
+async def query_bridges(
+    limit: int = Query(default=100, le=500),
+):
+    """Entities that bridge multiple domains (len(domains) >= 2)."""
+    graph = get_graph()
+    entities = graph.get_bridge_entities(limit=limit)
+    return {
+        "count": len(entities),
+        "entities": [
             {
+                "id": e.id,
+                "name": e.name,
+                "type": e.entity_type,
+                "domains": e.properties.get("domains", []),
+            }
+            for e in entities
+        ],
+    }
+
+
+@router.post("/query/bridges/run")
+async def run_bridge_detector():
+    """Run bridge detector: compute domains and bridge_score for all entities."""
+    graph = get_graph()
+    updated = graph.run_bridge_detector()
+    return {"status": "ok", "entities_updated": updated}
+
+
+@router.get("/query/silent")
+async def query_silent(
+    limit: int = Query(default=100, le=500),
+):
+    """Entities with SILENCE_TRACKED relationship or documents_where_silent property."""
+    graph = get_graph()
+    rels = graph.get_relationships_by_type(["SILENCE_TRACKED"], limit=limit)
+    target_ids = {r.target_id for r in rels}
+    entities = []
+    for eid in list(target_ids)[:limit]:
+        entity = graph.get_entity(eid)
+        if entity:
+            entities.append({
                 "id": entity.id,
                 "name": entity.name,
                 "type": entity.entity_type,
-                "score": score,
-                "sanctions_count": len(entity.sanctions),
-            }
-            for entity, score in results
-        ],
-    }
+                "properties": entity.properties,
+            })
+    return {"count": len(entities), "entities": entities}
 
 
 @router.post("/risk")

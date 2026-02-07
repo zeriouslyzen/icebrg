@@ -1,9 +1,11 @@
 """
 Gatherer Agent - Multi-source intelligence collection.
 Collects raw intelligence from surface, alternative, academic, and deep sources.
+Supports optional corpus/email ingest hook and silence/mention tracking.
 """
 
-from typing import Dict, Any, List, Optional
+from pathlib import Path
+from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 import logging
@@ -43,6 +45,8 @@ class IntelligencePackage:
     key_claims: List[str] = field(default_factory=list)
     contradictions: List[Dict[str, str]] = field(default_factory=list)
     timestamp: datetime = field(default_factory=datetime.now)
+    # Optional: structured evidence objects built from sources
+    evidence: List[Dict[str, Any]] = field(default_factory=list)
     
     @property
     def total_sources(self) -> int:
@@ -90,12 +94,44 @@ class GathererAgent:
         "reuters.com", "apnews.com", "bbc.com", "nytimes.com",
         "wsj.com", "guardian.com", "washingtonpost.com"
     ]
+
+    # Keywords that suggest funding / ownership / power-structure questions
+    FINANCE_POWER_KEYWORDS = [
+        "fund", "funding", "pension", "sovereign wealth", "asset manager",
+        "hedge fund", "private equity", "lp", "limited partner", "board",
+        "director", "chairman", "vision fund", "investment authority"
+    ]
     
     def __init__(self, cfg: IceburgConfig):
         self.cfg = cfg
         self.web_search = get_web_search()
         self.provider = None
-        
+        self._corpus_ingest_hook: Optional[Callable[[Path], Dict[str, Any]]] = None
+
+    def set_corpus_ingest_hook(self, hook: Callable[[Path], Dict[str, Any]]) -> None:
+        """Register a hook for email/corpus ingest. Called by ingest_corpus(path)."""
+        self._corpus_ingest_hook = hook
+
+    def ingest_corpus(self, path: Path, **kwargs: Any) -> Dict[str, Any]:
+        """
+        Ingest a corpus (e.g. email export, document folder) for investigation.
+        If a corpus ingest hook was set via set_corpus_ingest_hook, it is called;
+        otherwise uses the built-in pipeline (load_corpus_from_path / ingest_corpus_for_dossier).
+        """
+        if self._corpus_ingest_hook:
+            try:
+                return self._corpus_ingest_hook(path, **kwargs)
+            except Exception as e:
+                logger.warning(f"Corpus ingest hook failed: {e}")
+                return {"status": "error", "path": str(path), "error": str(e)}
+        try:
+            from .corpus_ingest import ingest_corpus_for_dossier
+            max_files = int(kwargs.get("max_files", 10_000))
+            return ingest_corpus_for_dossier(path, max_files=max_files)
+        except Exception as e:
+            logger.warning(f"Corpus ingest failed: {e}")
+            return {"status": "error", "path": str(path), "error": str(e)}
+
     def _get_provider(self):
         if self.provider is None:
             self.provider = provider_factory(self.cfg)
@@ -149,7 +185,7 @@ class GathererAgent:
             package.historical_sources = self._gather_historical(query)
             logger.info(f"📜 Gathered {len(package.historical_sources)} historical sources")
         
-        if depth == "deep":
+        if depth == "deep" or self._query_looks_finance_or_power(query):
             if thinking_callback:
                 thinking_callback("🔍 Searching deep records...")
             
@@ -166,6 +202,23 @@ class GathererAgent:
         package.contradictions = self._find_contradictions(package)
         
         logger.info(f"✅ Intelligence gathering complete: {package.total_sources} total sources")
+
+        # Build structured evidence list from all sources for downstream modules
+        try:
+            from .evidence import Evidence, EvidenceStore
+            store = EvidenceStore()
+            for src in (
+                package.surface_sources
+                + package.alternative_sources
+                + package.academic_sources
+                + package.historical_sources
+                + package.deep_sources
+            ):
+                store.add(Evidence.from_source(query, src))
+            package.evidence = store.to_dicts()
+        except Exception as e:  # pragma: no cover - evidence is best-effort
+            logger.warning(f"Evidence build failed: {e}")
+
         return package
     
     def _gather_surface(self, query: str) -> List[IntelligenceSource]:
@@ -274,22 +327,73 @@ class GathererAgent:
         
         return sources[:8]
     
-    def _gather_deep(self, query: str) -> List[IntelligenceSource]:
-        """Gather deep sources (corporate, legal records)."""
+    def _query_looks_finance_or_power(self, query: str) -> bool:
+        """Heuristic: query likely about funds/ownership/power structures."""
+        lower = query.lower()
+        return any(kw in lower for kw in self.FINANCE_POWER_KEYWORDS)
+
+    def _query_looks_like_entity(self, query: str) -> bool:
+        """Heuristic: query may be a company or person name (for OSINT hook)."""
+        q = query.strip()
+        if len(q) > 80:
+            return False
+        lower = q.lower()
+        if lower.startswith(("how ", "what ", "why ", "when ", "where ", "is ", "are ", "did ", "does ")):
+            return False
+        if "?" in q:
+            return False
+        return True
+
+    def _gather_deep_osint(self, query: str) -> List[IntelligenceSource]:
+        """When depth=deep and query looks like entity, call OpenCorporates (and optionally OpenSecrets)."""
         sources = []
-        
-        # For now, search for corporate/legal context
-        # TODO: Integrate OpenCorporates, PACER APIs
+        try:
+            from ...tools.osint.apis.opencorporates import OpenCorporatesClient
+            client = OpenCorporatesClient()
+            companies = client.search_companies(query, limit=5)
+            for co in companies:
+                content = f"Company: {co.name}. Jurisdiction: {co.jurisdiction_code}. Status: {co.status or 'unknown'}. Incorporation: {co.incorporation_date or 'unknown'}."
+                officers = getattr(co, "officers", None) or []
+                if officers:
+                    content += " Officers: " + "; ".join(
+                        f"{o.name} ({o.position})" if hasattr(o, "name") else str(o)
+                        for o in (officers[:5] if isinstance(officers, list) else [])
+                    )
+                url = getattr(co, "registry_url", None) or (co.metadata or {}).get("opencorporates_url") or "#"
+                sources.append(IntelligenceSource(
+                    url=url,
+                    title=co.name,
+                    content=content,
+                    source_type="deep",
+                    credibility_score=0.8,
+                    metadata={"source_api": "opencorporates", "company_number": co.company_number}
+                ))
+            if companies:
+                logger.info(f"Deep OSINT: OpenCorporates returned {len(companies)} companies for query")
+        except Exception as e:
+            logger.debug(f"Deep OSINT (OpenCorporates) skipped or failed: {e}")
+        return sources
+
+    def _gather_deep(self, query: str) -> List[IntelligenceSource]:
+        """Gather deep sources (corporate, legal records). Optionally call OSINT APIs when query looks like entity."""
+        sources = []
+
+        # When depth=deep and query looks like company/person name, call OpenCorporates
+        if self._query_looks_like_entity(query):
+            osint_sources = self._gather_deep_osint(query)
+            sources.extend(osint_sources)
+
+        # Web search for corporate/legal context
         deep_queries = [
             f"{query} SEC filing",
             f"{query} corporate records",
             f"{query} court case"
         ]
-        
+
         try:
             for deep_q in deep_queries[:2]:
                 results = self.web_search.search(deep_q, sources=['ddg'], max_results_per_source=3)
-                
+
                 for result in results:
                     sources.append(IntelligenceSource(
                         url=result.url,
@@ -301,7 +405,7 @@ class GathererAgent:
                     ))
         except Exception as e:
             logger.warning(f"Deep gathering failed: {e}")
-        
+
         return sources[:6]
     
     def _extract_entities(self, package: IntelligencePackage) -> List[Dict[str, Any]]:
@@ -340,19 +444,14 @@ Return ONLY valid JSON array, no other text."""
                 options={"max_tokens": 800}
             )
             
-            # Parse JSON
-            import json
-            response = response.strip()
-            if response.startswith("```"):
-                response = response.split("```")[1]
-                if response.startswith("json"):
-                    response = response[4:]
-                response = response.strip()
-            
-            entities = json.loads(response)
+            from .llm_json import parse_llm_json
+            entities = parse_llm_json(response, default=[], log_context="entity extraction")
+            if not isinstance(entities, list):
+                entities = [entities] if entities is not None else []
             
         except Exception as e:
             logger.warning(f"Entity extraction failed: {e}")
+            entities = []
         
         return entities[:20]  # Limit to 20 entities
     
@@ -389,18 +488,14 @@ Return ONLY valid JSON array."""
                 options={"max_tokens": 500}
             )
             
-            import json
-            response = response.strip()
-            if response.startswith("```"):
-                response = response.split("```")[1]
-                if response.startswith("json"):
-                    response = response[4:]
-                response = response.strip()
-            
-            claims = json.loads(response)
+            from .llm_json import parse_llm_json
+            claims = parse_llm_json(response, default=[], log_context="claim extraction")
+            if not isinstance(claims, list):
+                claims = [str(claims)] if claims is not None else []
             
         except Exception as e:
             logger.warning(f"Claim extraction failed: {e}")
+            claims = []
         
         return claims[:10]
     
@@ -439,18 +534,14 @@ Return ONLY valid JSON array."""
                 options={"max_tokens": 600}
             )
             
-            import json
-            response = response.strip()
-            if response.startswith("```"):
-                response = response.split("```")[1]
-                if response.startswith("json"):
-                    response = response[4:]
-                response = response.strip()
-            
-            contradictions = json.loads(response)
+            from .llm_json import parse_llm_json
+            contradictions = parse_llm_json(response, default=[], log_context="contradiction finding")
+            if not isinstance(contradictions, list):
+                contradictions = []
             
         except Exception as e:
             logger.warning(f"Contradiction finding failed: {e}")
+            contradictions = []
         
         return contradictions[:5]
 

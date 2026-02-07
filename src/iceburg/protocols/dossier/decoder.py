@@ -191,9 +191,10 @@ class DecoderReport:
     numerological_patterns: List[Dict[str, Any]] = field(default_factory=list)
     society_connections: List[Dict[str, Any]] = field(default_factory=list)
     linguistic_patterns: List[str] = field(default_factory=list)
+    linguistic_markers: List[Dict[str, Any]] = field(default_factory=list)  # gatekeeper, reciprocity, euphemism, compartmentation
     hidden_meanings: List[str] = field(default_factory=list)
     timestamp: datetime = field(default_factory=datetime.now)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "query": self.query,
@@ -202,6 +203,7 @@ class DecoderReport:
             "numerological_patterns": self.numerological_patterns,
             "society_connections": self.society_connections,
             "linguistic_patterns": self.linguistic_patterns,
+            "linguistic_markers": self.linguistic_markers,
             "hidden_meanings": self.hidden_meanings,
             "timestamp": self.timestamp.isoformat()
         }
@@ -282,7 +284,14 @@ class DecoderAgent:
         # Linguistic analysis for hidden meanings
         report.linguistic_patterns = self._analyze_linguistics(query, content)
         report.hidden_meanings = self._find_hidden_meanings(query, content)
-        
+
+        # Intel-style linguistic marker pass (gatekeeper, reciprocity, euphemism, compartmentation)
+        combined = f"{query} {content}".strip() if content else query
+        if combined:
+            from .linguistic_markers import detect_linguistic_markers
+            report.linguistic_markers = detect_linguistic_markers(combined)
+            logger.info(f"Detected {len(report.linguistic_markers)} linguistic markers")
+
         logger.info("✅ Decoding complete")
         return report
     

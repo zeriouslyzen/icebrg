@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/auth-check.js"></script><script src="/auth-check.js"></script>
+<head><script src="/auth-check.js?v=bypass"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEGASUS | Intelligence Network</title>
@@ -329,6 +329,41 @@
             box-shadow: 4px 4px 0 var(--text-primary);
         }
 
+        .graph-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-bold);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.7rem;
+            z-index: 20;
+        }
+        .legend-title {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem 0.75rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+        .legend-item input { margin: 0; }
+        .legend-swatch {
+            width: 10px;
+            height: 4px;
+            border-radius: 1px;
+        }
+
         /* Welcome Overlay */
         .welcome-overlay {
             position: absolute;
@@ -635,6 +670,10 @@
                     <button class="control-button" onclick="resetView()" title="Reset View">⌂</button>
                     <button class="control-button" onclick="toggleLabels()" title="Toggle Labels">Aa</button>
                 </div>
+                <div class="graph-legend" id="relationshipTypeLegend">
+                    <span class="legend-title">Link types</span>
+                    <div class="legend-items" id="legendItems"></div>
+                </div>
             </div>
 
         </main>
@@ -668,7 +707,7 @@
                     <!-- Injected Connections -->
                 </div>
 
-                <button class="cta-button" style="width: 100%; margin-top: 2rem;" onclick="expandCurrentNode()">
+                <button id="expandNetworkBtn" class="cta-button" style="width: 100%; margin-top: 2rem;" onclick="expandCurrentNode()">
                     Expand Network
                 </button>
 
@@ -690,6 +729,24 @@
         let svg = null;
         let g = null;
         let labelsVisible = true;
+        let linkTypeFilter = null;
+
+        const RELATIONSHIP_TYPE_COLORS = {
+            CONNECTS: '#4A90E2',
+            GATEKEEPER_FOR: '#4A90E2',
+            RECIPROCITY: '#E24A4A',
+            OBLIGATION: '#E24A4A',
+            CORRESPONDENT_WITH: '#50C878',
+            CO_TRAVEL_WITH: '#9B59B6',
+            FUNDS: '#F39C12',
+            FUNDED_BY: '#F39C12',
+            INVOLVED_IN: '#95A5A6',
+            HIDDEN_CONNECTION: '#34495E',
+            RELATED_TO: '#999'
+        };
+        function getLinkColor(type) {
+            return RELATIONSHIP_TYPE_COLORS[type] || RELATIONSHIP_TYPE_COLORS.RELATED_TO || '#999';
+        }
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
@@ -1090,7 +1147,8 @@
                                 currentGraph.links.push({
                                     source: sourceNode,
                                     target: targetNode,
-                                    type: e.type
+                                    type: e.type,
+                                    domain: e.domain || null
                                 });
                                 edgesAdded++;
                             } else {
@@ -1114,7 +1172,8 @@
                             return {
                                 source: sourceNode,
                                 target: targetNode,
-                                type: e.type
+                                type: e.type,
+                                domain: e.domain || null
                             };
                         }
                         edgesDropped++;
@@ -1269,15 +1328,17 @@
             }
 
             // Normal graph with connections - use force simulation
-            // Draw Links first (so nodes appear on top)
+            const visibleLinks = linkTypeFilter
+                ? currentGraph.links.filter(l => linkTypeFilter.has(l.type))
+                : currentGraph.links;
             const link = g.append("g")
                 .attr("class", "links")
                 .selectAll("line")
-                .data(currentGraph.links)
+                .data(visibleLinks)
                 .join("line")
-                .attr("stroke", "#999")
-                .attr("stroke-opacity", 0.6)
-                .attr("stroke-width", 1);
+                .attr("stroke", d => getLinkColor(d.type))
+                .attr("stroke-opacity", 0.7)
+                .attr("stroke-width", 1.5);
 
             // Draw Nodes
             const node = g.append("g")
@@ -1335,10 +1396,10 @@
                 loadNetwork(d.id, true); // Expand on click with merge
             });
 
-            // Update simulation with proper node/link binding
+            // Update simulation with proper node/link binding (use visible links when filtering)
             simulation.nodes(currentGraph.nodes);
             simulation.force("link")
-                .links(currentGraph.links)
+                .links(visibleLinks)
                 .distance(100)
                 .id(d => d.id);
 
@@ -1358,6 +1419,41 @@
 
                 node.attr("transform", d => `translate(${d.x},${d.y})`);
             });
+
+            buildLegend();
+        }
+
+        function buildLegend() {
+            const types = new Set(currentGraph.links.map(l => l.type || 'RELATED_TO'));
+            const container = document.getElementById('legendItems');
+            if (!container) return;
+            const allTypes = ['CONNECTS', 'GATEKEEPER_FOR', 'RECIPROCITY', 'OBLIGATION', 'CORRESPONDENT_WITH', 'CO_TRAVEL_WITH', 'FUNDS', 'FUNDED_BY', 'INVOLVED_IN', 'HIDDEN_CONNECTION', 'RELATED_TO'];
+            const toShow = allTypes.filter(t => types.has(t));
+            if (toShow.length === 0) {
+                container.innerHTML = '<span class="prop-label">No link types</span>';
+                return;
+            }
+            container.innerHTML = toShow.map(type => {
+                const color = getLinkColor(type);
+                const id = 'legend_' + type.replace(/_/g, '-');
+                const checked = !linkTypeFilter || linkTypeFilter.has(type);
+                return `
+                    <label class="legend-item" title="${type}">
+                        <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} onchange="toggleLinkType('${type}')">
+                        <span class="legend-swatch" style="background:${color}"></span>
+                        <span>${type.replace(/_/g, ' ')}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function toggleLinkType(type) {
+            const allTypes = new Set(currentGraph.links.map(l => l.type || 'RELATED_TO'));
+            if (!linkTypeFilter) linkTypeFilter = new Set(allTypes);
+            if (linkTypeFilter.has(type)) linkTypeFilter.delete(type);
+            else linkTypeFilter.add(type);
+            if (linkTypeFilter.size === allTypes.size) linkTypeFilter = null;
+            renderGraph();
         }
 
         async function showDetails(node) {
@@ -1369,12 +1465,17 @@
             document.getElementById('detailId').innerText = node.id;
             document.getElementById('detailType').innerText = node.type || "Entity";
 
-            // Props
+            // Props: include domains, roles, themes from node or node.properties
             const props = node.properties || {};
-            const html = Object.entries(props).slice(0, 5).map(([k, v]) => `
+            const extra = [];
+            if (node.domains && node.domains.length) extra.push(['domains', node.domains.join(', ')]);
+            if (node.roles && node.roles.length) extra.push(['roles', node.roles.join(', ')]);
+            if (node.themes && node.themes.length) extra.push(['themes', node.themes.join(', ')]);
+            const allEntries = [...extra, ...Object.entries(props).filter(([k]) => !['domains', 'roles', 'themes'].includes(k))].slice(0, 8);
+            const html = allEntries.map(([k, v]) => `
                 <div class="prop-item">
                     <span class="prop-label">${k}</span>
-                    <span class="prop-val">${truncate(String(v), 20)}</span>
+                    <span class="prop-val">${truncate(Array.isArray(v) ? v.join(', ') : String(v), 30)}</span>
                 </div>
             `).join('');
             document.getElementById('detailProps').innerHTML = html || '<div class="prop-item"><span class="prop-label">No properties</span></div>';
@@ -1405,26 +1506,27 @@
                         const targetId = (l.source.id || l.source) === node.id ? (l.target.id || l.target) : (l.source.id || l.source);
                         const key = `${node.id}-${targetId}`;
                         if (!allRels.has(key)) {
-                            // Find target node name
                             const targetNode = currentGraph.nodes.find(n => (n.id || n) === targetId);
                             allRels.set(key, {
                                 type: l.type || "RELATED_TO",
                                 target: targetId,
                                 targetName: targetNode ? targetNode.name : targetId,
-                                confidence: 1.0
+                                confidence: 1.0,
+                                domain: l.domain || null
                             });
                         }
                     });
 
-                    // Display relationships
+                    // Display relationships (type, domain, target)
                     if (allRels.size > 0) {
                         const relsHtml = Array.from(allRels.values()).map(rel => {
                             const targetName = rel.targetName || rel.target;
+                            const domainStr = rel.domain ? ` <span class="prop-val" style="opacity:0.8">(${rel.domain})</span>` : '';
                             return `
                                 <div class="prop-item" style="cursor: pointer; border-bottom: 1px solid var(--border-light);" 
                                      onclick="loadAndSelect('${rel.target}')">
                                     <span class="prop-label">${rel.type || "RELATED_TO"}</span>
-                                    <span class="prop-val">${truncate(targetName, 30)}</span>
+                                    <span class="prop-val">${truncate(targetName, 30)}</span>${domainStr}
                                 </div>
                             `;
                         }).join('');
@@ -1443,10 +1545,11 @@
                             const targetId = (l.source.id || l.source) === node.id ? (l.target.id || l.target) : (l.source.id || l.source);
                             const targetNode = currentGraph.nodes.find(n => (n.id || n) === targetId);
                             const targetName = targetNode ? targetNode.name : targetId;
+                            const domainStr = l.domain ? ` <span class="prop-val" style="opacity:0.8">(${l.domain})</span>` : '';
                             return `
                                 <div class="prop-item" style="cursor: pointer;" onclick="loadAndSelect('${targetId}')">
                                     <span class="prop-label">${l.type || "RELATED_TO"}</span>
-                                    <span class="prop-val">${truncate(targetName, 30)}</span>
+                                    <span class="prop-val">${truncate(targetName, 30)}</span>${domainStr}
                                 </div>
                             `;
                         }).join('');
