@@ -23,3 +23,9 @@ Information about Oracle agent from conversation.
 ## Update: 2026-01-15 13:12:05
 
 Information about Oracle agent from conversation.
+
+---
+
+## Update: 2026-02-07 14:11:56
+
+- The Oracle Agent verifies evidence and provides insights into specific historical events or claims related to truth-finding.

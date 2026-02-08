@@ -138,3 +138,9 @@ Information about ICEBURG from conversation.
 ## Update: 2026-01-30 22:14:41
 
 - Deep research is leveraged at ICEBURG
+
+---
+
+## Update: 2026-02-07 14:11:56
+
+- ICEBURG is an advanced AI research platform designed for deep knowledge discovery using multi-agent coordination.

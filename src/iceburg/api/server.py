@@ -381,6 +381,14 @@ try:
 except Exception as e:
     logger.warning(f"Could not register COLOSSUS API routes: {e}")
 
+# V2 Unified API routes (Consumer-ready single endpoint)
+try:
+    from .v2_routes import router as v2_router
+    app.include_router(v2_router)
+    logger.info("✅ V2 Unified API routes registered (/v2/query, /v2/health, /v2/providers)")
+except Exception as e:
+    logger.warning(f"Could not register V2 API routes: {e}")
+
 # WebSocket connections
 active_connections: List[WebSocket] = []
 # Track connection metadata for debugging

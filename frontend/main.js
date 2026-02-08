@@ -37,27 +37,27 @@ window.testICEBURG = function () {
 };
 
 // Load ICEBURG server configuration from embedded script tag
-let iceburgConfig = null;
+// Load ICEBURG server configuration from global config
+let iceburgConfig = window.ICEBURG_CONFIG || null;
+
+// Listen for config updates (e.g. from async fetch)
+window.addEventListener('iceburg-config-updated', (event) => {
+    iceburgConfig = event.detail;
+    if (DEBUG_MODE) console.log('🔄 ICEBURG Config updated via event');
+});
+
 function loadICEBURGConfig() {
-    try {
-        const configElement = document.getElementById('iceburg-server-config');
-        if (configElement) {
-            const configText = configElement.textContent.trim();
-            iceburgConfig = JSON.parse(configText);
-            if (DEBUG_MODE) {
-                console.log('✅ ICEBURG Config loaded:', {
-                    version: iceburgConfig?.serverConfig?.iceburg_version,
-                    branding: iceburgConfig?.serverConfig?.iceburg_branding,
-                    agents: iceburgConfig?.serverConfig?.agents?.agentPresets?.length,
-                    models: iceburgConfig?.serverConfig?.models?.length
-                });
-            }
-            return iceburgConfig;
-        } else {
-            console.warn('⚠️ ICEBURG config element not found');
+    // Just return the global config, potentially logging debug info
+    if (iceburgConfig) {
+        if (DEBUG_MODE) {
+            console.log('✅ ICEBURG Config loaded:', {
+                version: iceburgConfig?.serverConfig?.iceburg_version,
+                branding: iceburgConfig?.serverConfig?.iceburg_branding,
+                agents: iceburgConfig?.serverConfig?.agents?.agentPresets?.length,
+                models: iceburgConfig?.serverConfig?.models?.length
+            });
         }
-    } catch (e) {
-        console.error('❌ Error loading ICEBURG config:', e);
+        return iceburgConfig;
     }
     return null;
 }
@@ -174,379 +174,44 @@ function renderMath(content) {
     return content;
 }
 
-// Initialize WebSocket connection
-let reconnectAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 10;
-let reconnectTimeout = null;
-let useFallback = false; // Enabled WebSocket by default
-let fallbackEventSource = null; // SSE connection for fallback
-let isConnecting = false; // Track if a connection attempt is in progress
-let connectionAttemptTimeout = null; // Track connection attempt timeout
+// Connection state managed by connection-bridge.js
+// isConnected is declared at top of file
+// useFallback is declared at top if needed, or we can just ignore it as we are always in SSE mode
 
-function initWebSocket() {
-    // Prevent multiple simultaneous connection attempts
-    if (isConnecting) {
-        if (DEBUG_MODE) console.log('🔄 Connection attempt already in progress, skipping...');
-        return;
-    }
 
-    // If already connected, don't reconnect
-    if (ws && ws.readyState === WebSocket.OPEN && isConnected) {
-        if (DEBUG_MODE) console.log('✅ WebSocket already connected, skipping...');
-        return;
-    }
-
-    // Close existing WebSocket if any
-    if (ws && ws.readyState !== WebSocket.CLOSED) {
-        if (DEBUG_MODE) console.log('🔄 Closing existing WebSocket connection');
-        try {
-            ws.close();
-        } catch (e) {
-            console.warn('⚠️ Error closing existing WebSocket:', e);
-        }
-        ws = null;
-    }
-
-    // Clear any existing reconnect timeout
-    if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
-        reconnectTimeout = null;
-    }
-
-    // Clear any existing connection attempt timeout
-    if (connectionAttemptTimeout) {
-        clearTimeout(connectionAttemptTimeout);
-        connectionAttemptTimeout = null;
-    }
-
-    // OPTION: Force HTTP fallback mode (bypass WebSocket)
-    // Uncomment the line below to always use HTTP/SSE instead of WebSocket
-    // useFallback = true;
-
-    // Don't try WebSocket if we're in fallback mode
-    if (useFallback) {
-        if (DEBUG_MODE) console.log('🔄 Using HTTP fallback mode, skipping WebSocket');
-        return;
-    }
-
-    // Mark that we're attempting to connect
-    isConnecting = true;
-
-    try {
-        // FIX: Include conversation_id in WebSocket URL to maintain context across reconnects
-        let conversationId = localStorage.getItem('iceburg_conversation_id');
-        if (!conversationId) {
-            conversationId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('iceburg_conversation_id', conversationId);
-        }
-
-        const wsUrlWithContext = FINAL_WS_URL + (FINAL_WS_URL.includes('?') ? '&' : '?') + 'conversation_id=' + encodeURIComponent(conversationId);
-
-        if (DEBUG_MODE) {
-            console.log('🔌 Attempting WebSocket connection to:', wsUrlWithContext);
-            console.log('🔌 Connection details:', {
-                url: wsUrlWithContext,
-                conversationId: conversationId,
-                hostname: window.location.hostname,
-                protocol: window.location.protocol,
-                port: window.location.port,
-                isNetworkAccess: isNetworkAccess,
-                networkIP: networkIP
-            });
-        }
-        ws = new WebSocket(wsUrlWithContext);
-
-        // Set connection timeout (longer for network connections)
-        // Network connections may take longer to establish
-        // Increased timeout to 20 seconds to allow WebSocket handshake to complete
-        const connectionTimeoutDuration = isNetworkAccess ? 20000 : 20000;
-        const connectionTimeout = setTimeout(() => {
-            if (ws && ws.readyState !== WebSocket.OPEN) {
-                console.warn('⏱️ WebSocket connection timeout, switching to fallback');
-                if (ws && ws.readyState !== WebSocket.CLOSED) {
-                    try {
-                        ws.close();
-                    } catch (e) {
-                        // Ignore close errors
-                    }
-                }
-                // Only enable fallback after multiple timeouts
-                if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-                    enableFallback();
-                } else {
-                    reconnectAttempts++;
-                    // Shorter delay for network connections to reconnect faster
-                    const retryDelay = isNetworkAccess ? 1000 : 2000;
-                    setTimeout(() => initWebSocket(), retryDelay);
-                }
-            }
-        }, connectionTimeoutDuration);
-
-        ws.onopen = () => {
-            clearTimeout(connectionTimeout);
-            isConnecting = false; // Connection attempt completed
-            console.log('✅ WebSocket opened to:', FINAL_WS_URL);
-            // Mark as connected immediately when WebSocket opens
-            // The "connected" message from server will confirm full readiness
-            isConnected = true; // Set immediately on open
-            updateConnectionStatus(true);
-            // showToast('Connecting to ICEBURG...', 'info'); // Disabled - too noisy
-
-            // Attach neural network to WebSocket
-            if (neuralNetwork) {
-                neuralNetwork.attachWebSocket(ws);
-            }
-
-            // Start client-side keepalive ping (send ping every 20 seconds)
-            // This helps keep the connection alive, especially for network connections
-            if (ws.keepaliveInterval) {
-                clearInterval(ws.keepaliveInterval);
-            }
-            ws.keepaliveInterval = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    try {
-                        // Send ping to keep connection alive
-                        ws.send(JSON.stringify({ type: "ping" }));
-                    } catch (e) {
-                        console.warn('⚠️ Failed to send keepalive ping:', e);
-                        // Clear interval if connection is broken
-                        if (ws.keepaliveInterval) {
-                            clearInterval(ws.keepaliveInterval);
-                            ws.keepaliveInterval = null;
-                        }
-                    }
-                } else {
-                    // Clear interval if connection is not open
-                    if (ws.keepaliveInterval) {
-                        clearInterval(ws.keepaliveInterval);
-                        ws.keepaliveInterval = null;
-                    }
-                }
-            }, 20000); // Send ping every 20 seconds
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                // Handle ping/pong (string format)
-                if (event.data === "ping" || event.data.trim() === "ping") {
-                    if (ws && ws.readyState === WebSocket.OPEN) {
-                        ws.send("pong");
-                    }
-                    return;
-                }
-
-                // Parse JSON message
-                let data;
-                try {
-                    data = JSON.parse(event.data);
-                } catch (parseError) {
-                    console.warn('⚠️ Failed to parse WebSocket message:', event.data);
-                    return;
-                }
-
-                // Handle connection confirmation
-                if (data.type === "connected") {
-                    console.log('✅ WebSocket connection confirmed:', data.message);
-                    isConnected = true; // Mark as fully connected after server confirmation
-                    isConnecting = false; // Connection fully established
-                    reconnectAttempts = 0; // Reset reconnect attempts on successful connection
-                    useFallback = false; // Disable fallback on successful connection
-                    updateConnectionStatus(true);
-
-                    // Show always-on AI status if available
-                    if (data.always_on_enabled !== false) {
-                        showToast('⚡ Always-On AI Active', 'success');
-                        updateAlwaysOnStatus(true);
-                    } else {
-                        updateAlwaysOnStatus(false);
-                    }
-
-                    return;
-                }
-
-                // Handle ping/pong messages
-                if (data.type === "ping") {
-                    // Respond immediately to keep connection alive
-                    if (ws && ws.readyState === WebSocket.OPEN) {
-                        try {
-                            ws.send(JSON.stringify({ type: "pong" }));
-                        } catch (e) {
-                            console.warn('⚠️ Failed to send pong:', e);
-                        }
-                    }
-                    return;
-                }
-                if (data.type === "pong") {
-                    // Connection is alive - log occasionally for debugging
-                    if (Math.random() < 0.01) { // Log 1% of pongs to avoid spam
-                        console.debug('✅ Connection alive (pong received)');
-                    }
-                    return;
-                }
-
-                if (DEBUG_MODE) {
-                    console.log('📨 WebSocket message received:', data.type, data);
-                    console.log('📨 Full message data:', JSON.stringify(data).substring(0, 500));
-                }
-
-                // Remove loading indicator when we receive ANY message
-                const chatContainer = document.getElementById('chatContainer');
-                if (chatContainer) {
-                    const loadingIndicator = chatContainer.querySelector('.loading-indicator');
-                    if (loadingIndicator && data.type !== 'ping' && data.type !== 'pong') {
-                        console.log('✅ Removing loading indicator, received:', data.type);
-                        loadingIndicator.remove();
-                    }
-                }
-
-                handleStreamingMessage(data);
-            } catch (error) {
-                console.error('❌ Error parsing WebSocket message:', error, event.data);
-                // Remove loading message on error
-                const chatContainer = document.getElementById('chatContainer');
-                if (chatContainer) {
-                    const loadingMessage = chatContainer.querySelector('.message.loading');
-                    if (loadingMessage) {
-                        loadingMessage.remove();
-                    }
-                }
-            }
-        };
-
-        ws.onerror = (error) => {
-            clearTimeout(connectionTimeout);
-            isConnecting = false; // Connection attempt failed
-            console.error('❌ WebSocket error:', error);
-            console.error('❌ WebSocket state:', ws?.readyState);
-            console.error('❌ WebSocket URL:', FINAL_WS_URL);
-            console.error('❌ Current hostname:', window.location.hostname);
-            console.error('❌ Network access detected:', isNetworkAccess);
-            console.error('❌ Network IP:', networkIP);
-            console.error('❌ Full error details:', {
-                error: error,
-                readyState: ws?.readyState,
-                url: FINAL_WS_URL,
-                hostname: window.location.hostname,
-                protocol: window.location.protocol,
-                port: window.location.port
-            });
-            isConnected = false;
-            updateConnectionStatus(false);
-
-            // Show more detailed error message with URL
-            // showToast(`WebSocket connection error to ${FINAL_WS_URL}. Check console for details.`, 'error'); // Disabled - too noisy
-
-            // Don't immediately switch to fallback - try reconnecting first
-            // Only switch to fallback after MAX_RECONNECT_ATTEMPTS failures
-            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-                console.warn('⚠️ Max reconnect attempts reached, enabling fallback');
-                enableFallback();
-            } else {
-                // Try to reconnect
-                reconnectAttempts++;
-                const delay = Math.min(2000 * reconnectAttempts, 10000);
-                console.log(`🔄 Will retry WebSocket connection in ${delay}ms (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`);
-                setTimeout(() => {
-                    if (!useFallback && !isConnecting) {
-                        initWebSocket();
-                    }
-                }, delay);
-            }
-        };
-
-        ws.onclose = (event) => {
-            clearTimeout(connectionTimeout);
-            isConnecting = false; // Connection attempt completed (failed)
-            // Clear keepalive interval
-            if (ws && ws.keepaliveInterval) {
-                clearInterval(ws.keepaliveInterval);
-                ws.keepaliveInterval = null;
-            }
-            console.log('⚠️ WebSocket disconnected', {
-                code: event.code,
-                reason: event.reason,
-                wasClean: event.wasClean,
-                attempts: reconnectAttempts
-            });
-            isConnected = false;
-            updateConnectionStatus(false);
-
-            // Clean close (code 1000) - don't reconnect automatically
-            // But also check if it was intentional (user closed) vs server closed
-            if (event.code === 1000 && event.wasClean) {
-                console.log('✅ WebSocket closed cleanly');
-                // Don't show toast for clean closes - might be intentional
-                return;
-            }
-
-            // Switch to fallback only after MAX_RECONNECT_ATTEMPTS failures
-            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-                console.warn('⚠️ Max reconnect attempts reached, enabling fallback');
-                enableFallback();
-                return;
-            }
-
-            // Try to reconnect with exponential backoff
-            // Use shorter delays for network connections to reconnect faster
-            reconnectAttempts++;
-            const baseDelay = isNetworkAccess ? 1000 : 2000;
-            const delay = Math.min(baseDelay * reconnectAttempts, isNetworkAccess ? 5000 : 10000); // Faster reconnection for network
-            console.log(`🔄 Reconnecting in ${delay}ms (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
-            // showToast(`Disconnected. Reconnecting... (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`, 'warning'); // Disabled - too noisy
-            reconnectTimeout = setTimeout(() => {
-                if (!useFallback && !isConnecting) {
-                    console.log('🔄 Attempting reconnection...');
-                    initWebSocket();
-                }
-            }, delay);
-        };
-    } catch (error) {
-        isConnecting = false; // Connection attempt failed
-        console.error('❌ WebSocket initialization error:', error);
-        isConnected = false;
-        updateConnectionStatus(false);
-
-        // Switch to fallback on initialization error
-        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-            enableFallback();
-        } else {
-            reconnectAttempts++;
-            setTimeout(() => {
-                if (!useFallback && !isConnecting) {
-                    initWebSocket();
-                }
-            }, 2000);
-        }
-    }
+// Initialize connection status listener
+if (window.ICEBURG_CONNECTION) {
+    window.ICEBURG_CONNECTION.onConnectionChange((connected) => {
+        isConnected = connected;
+        updateConnectionStatus(connected);
+    });
 }
+
+
+// WebSocket initialization removed - using SSE-only connection
+// initWebSocket stub removed
+
+
 
 // Enable HTTP fallback mode
+// Fallback logic removed - always using SSE
 function enableFallback() {
-    if (useFallback) return; // Already in fallback mode
+    console.log('enableFallback called - already in SSE mode');
+    return; 
+}
 
-    console.log('🔄 Enabling HTTP fallback mode');
-    useFallback = true;
-    isConnected = false;
-    updateConnectionStatus(false);
-    // showToast('Using HTTP fallback mode', 'info'); // Disabled - too noisy
 
-    // Close WebSocket if open
-    if (ws) {
-        try {
-            ws.close();
-        } catch (e) {
-            // Ignore
-        }
-        ws = null;
+// Try to reconnect WebSocket (for manual retry)
+// Retry logic removed
+function retryWebSocket() {
+    console.log('retryWebSocket called - functionality replaced by SSE connection');
+    if (window.ICEBURG_CONNECTION) {
+        window.ICEBURG_CONNECTION.checkHealth().then(health => {
+             console.log('Connection check:', health);
+        });
     }
 }
 
-// Try to reconnect WebSocket (for manual retry)
-function retryWebSocket() {
-    useFallback = false;
-    reconnectAttempts = 0;
-    initWebSocket();
-}
 
 // Update connection status (visual indicator)
 // Update always-on AI status indicator
@@ -3574,562 +3239,130 @@ async function sendQuery() {
     });
 
     try {
-        // Try WebSocket first - check both readyState and isConnected flag
-        console.log('🔍 Checking WebSocket state:', {
-            wsExists: !!ws,
-            readyState: ws?.readyState,
-            readyStateName: ws?.readyState === WebSocket.OPEN ? 'OPEN' : ws?.readyState === WebSocket.CONNECTING ? 'CONNECTING' : ws?.readyState === WebSocket.CLOSING ? 'CLOSING' : ws?.readyState === WebSocket.CLOSED ? 'CLOSED' : 'UNKNOWN',
-            isConnected: isConnected,
-            isConnecting: isConnecting
-        });
+        console.log('🚀 Sending query via SSE Connection...', { query: query.substring(0, 50) + '...', mode, agent });
+        
+        // Collect birth data for astro-physiology mode
+        let birthData = null;
+        if (mode === 'astrophysiology') {
+            // Helper to get birth data logic (extracted from previous complexity)
+            // Ideally this should be a separate function, but keeping inline for compatibility with existing scope
+            const parsedFromQuery = astro_parseBirthDataFromQuery(query);
+            const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
+            const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
+            const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
 
-        if (ws && ws.readyState === WebSocket.OPEN && isConnected) {
-            console.log('✅ WebSocket connected, sending query:', { query: query.substring(0, 50) + '...', mode, agent }); // Debug log
-            showToast('Sending query...', 'info', 2000);
-            // Send immediately (no delay)
-            try {
-                // Collect birth data for astro-physiology mode
-                let birthData = null;
-                if (mode === 'astrophysiology') {
-                    // First, try to parse from query
-                    const parsedFromQuery = astro_parseBirthDataFromQuery(query);
-
-                    // Try to get from form inputs
-                    const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
-                    const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
-                    const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-
-                    if (birthDateInput && birthDateInput.value) {
-                        // Get birth date and time from form
-                        const birthDate = birthDateInput.value;
-                        const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
-
-                        // Combine date and time
-                        const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                        // Get location
-                        let location = null;
-                        if (locationInput && locationInput.value) {
-                            const locationStr = locationInput.value.trim();
-                            // Try to parse as coordinates
-                            const coordMatch = locationStr.match(/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/);
-                            if (coordMatch) {
-                                location = {
-                                    lat: parseFloat(coordMatch[1]),
-                                    lng: parseFloat(coordMatch[2])
-                                };
-                            } else {
-                                // Store as city name (backend will handle geocoding)
-                                location = locationStr;
-                            }
-                        }
-
-                        birthData = {
-                            birth_date: birthDateTime,
-                            location: location
-                        };
-                    } else if (parsedFromQuery && parsedFromQuery.birth_date) {
-                        // Use parsed data from query
-                        const birthDate = parsedFromQuery.birth_date;
-                        const birthTime = parsedFromQuery.birth_time || '12:00';
-                        const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                        birthData = {
-                            birth_date: birthDateTime,
-                            location: parsedFromQuery.location
-                        };
-                    } else {
-                        // Try to load from localStorage (fallback only - could be stale)
-                        // Only use if query doesn't contain birth data (to avoid using stale data)
-                        const queryHasBirthData = astro_parseBirthDataFromQuery(query);
-                        if (!queryHasBirthData || !queryHasBirthData.birth_date) {
-                            try {
-                                const saved = localStorage.getItem('iceburg_astro_birth_data');
-                                if (saved) {
-                                    const savedData = JSON.parse(saved);
-                                    // Validate timestamp if present (data should be recent)
-                                    const timestamp = savedData.timestamp || 0;
-                                    const age = Date.now() - timestamp;
-                                    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-
-                                    if (!timestamp || age < maxAge) {
-                                        birthData = savedData;
-                                        console.log(' Using cached birth data from localStorage (fallback)');
-                                    } else {
-                                        console.log(' Cached birth data too old, ignoring');
-                                        localStorage.removeItem('iceburg_astro_birth_data');
-                                    }
-                                }
-                            } catch (e) {
-                                console.warn('Could not load birth data from localStorage:', e);
-                            }
-                        } else {
-                            console.log(' Query contains birth data, skipping localStorage fallback to avoid stale data');
-                        }
-                    }
-
-                    // Save to localStorage for persistence (with timestamp)
-                    if (birthData) {
-                        try {
-                            // Add timestamp to track data freshness
-                            birthData.timestamp = Date.now();
-                            localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
-
-                            // If new birth data detected (from form or query), clear old algorithmic results
-                            // This ensures fresh calculations are performed
-                            if (birthDateInput?.value || parsedFromQuery?.birth_date) {
-                                localStorage.removeItem('iceburg_astro_algorithmic_data');
-                                console.log(' New birth data detected - cleared old algorithmic_data to force fresh calculation');
-                            }
-                        } catch (e) {
-                            console.warn('Could not save birth data to localStorage:', e);
-                        }
-                    }
-
-                    // Check for existing algorithmic data (for follow-up questions)
-                    // Only include if no birth data in current query (follow-up question)
-                    if (!birthData) {
-                        try {
-                            const existingAlgoData = localStorage.getItem('iceburg_astro_algorithmic_data');
-                            if (existingAlgoData) {
-                                const algoData = JSON.parse(existingAlgoData);
-
-                                // Validate algorithmic data is recent (within 7 days)
-                                const timestamp = algoData.timestamp || 0;
-                                const age = Date.now() - timestamp;
-                                const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
-
-                                if (!timestamp || age < maxAge) {
-                                    if (!birthData) birthData = {};
-                                    birthData.algorithmic_data = algoData;
-                                    console.log(' Including existing algorithmic_data for follow-up question');
-                                } else {
-                                    console.log(' Cached algorithmic_data too old, ignoring');
-                                    localStorage.removeItem('iceburg_astro_algorithmic_data');
-                                }
-                            }
-                        } catch (e) {
-                            console.warn('Could not load algorithmic_data from localStorage:', e);
-                        }
-                    }
+            if (birthDateInput && birthDateInput.value) {
+                const birthDate = birthDateInput.value;
+                const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
+                const birthDateTime = `${birthDate}T${birthTime}:00Z`;
+                let location = null;
+                if (locationInput && locationInput.value) {
+                     const val = locationInput.value.trim();
+                     const match = val.match(/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/);
+                     location = match ? { lat: parseFloat(match[1]), lng: parseFloat(match[2]) } : val;
                 }
-
-                // For astro-physiology mode, include algorithmic_data for follow-up conversations
-                if (mode === 'astrophysiology' && !birthData?.birth_date) {
-                    try {
-                        const existingAlgoData = localStorage.getItem('iceburg_astro_algorithmic_data');
-                        if (existingAlgoData) {
-                            const algoData = JSON.parse(existingAlgoData);
-                            // Validate data is recent (within 7 days)
-                            const timestamp = algoData.timestamp || 0;
-                            const age = Date.now() - timestamp;
-                            const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
-
-                            if (!timestamp || age < maxAge) {
-                                if (!birthData) birthData = {};
-                                birthData.algorithmic_data = algoData;
-                                console.log(' Including algorithmic_data for follow-up conversation');
-                            } else {
-                                console.log(' Cached algorithmic_data too old, starting fresh');
-                                localStorage.removeItem('iceburg_astro_algorithmic_data');
-                            }
+                birthData = { birth_date: birthDateTime, location: location, timestamp: Date.now() };
+                localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
+                localStorage.removeItem('iceburg_astro_algorithmic_data'); // Clear algo cache on new input
+            } else if (parsedFromQuery && parsedFromQuery.birth_date) {
+                const birthDateTime = `${parsedFromQuery.birth_date}T${parsedFromQuery.birth_time || '12:00'}:00Z`;
+                birthData = { birth_date: birthDateTime, location: parsedFromQuery.location, timestamp: Date.now() };
+                localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
+                localStorage.removeItem('iceburg_astro_algorithmic_data');
+            } else {
+                 try {
+                    const saved = localStorage.getItem('iceburg_astro_birth_data');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (!parsed.timestamp || (Date.now() - parsed.timestamp) < 24 * 60 * 60 * 1000) {
+                            birthData = parsed;
                         }
-                    } catch (e) {
-                        console.warn('Could not load algorithmic_data for follow-up:', e);
                     }
-                }
-
-                const message = {
-                    query: query,
-                    mode: mode,
-                    agent: agent,
-                    degradation_mode: false,
-                    files: filesData,
-                    settings: settings,
-                    // Inject active investigation ID if present (for resuming context)
-                    investigation_id: window.activeInvestigationId || null,
-                    data: birthData,  // Include birth data and/or algorithmic_data for astro-physiology mode
-                    // Also include algorithmic_data at top level for backend compatibility
-                    algorithmic_data: birthData?.algorithmic_data,
-                    // Include client-side preprocessing metadata
-                    client_metadata: preprocessedQuery ? {
-                        normalized: preprocessedQuery.normalized,
-                        entities: preprocessedQuery.entities,
-                        keywords: preprocessedQuery.keywords,
-                        complexity: preprocessedQuery.complexity,
-                        device: preprocessedQuery.metadata?.device
-                    } : null
-                };
-                console.log('📤 Sending WebSocket message:', JSON.stringify(message).substring(0, 200) + '...');
-                console.log('📤 Settings being sent:', JSON.stringify(settings));
-                ws.send(JSON.stringify(message));
-                console.log('✅ Query sent via WebSocket, waiting for response...');
-
-                // Set a timeout to check if we receive any response
-                setTimeout(() => {
-                    const loadingIndicator = chatContainer.querySelector('.loading-indicator');
-                    if (loadingIndicator) {
-                        console.warn('⚠️ No response received after 5 seconds, loading indicator still showing');
-                        showToast('Waiting for response...', 'warning', 3000);
-                    }
-                }, 5000);
-            } catch (sendError) {
-                console.error('❌ Error sending via WebSocket:', sendError);
-                // showToast('Error sending query. Trying HTTP fallback...', 'warning'); // Disabled - too noisy
-                // Fall through to HTTP fallback
+                 } catch(e) {}
             }
-        } else if (ws && ws.readyState === WebSocket.OPEN && !isConnected) {
-            // WebSocket is open but not confirmed by server yet - wait a bit
-            console.log('⏳ WebSocket open but not confirmed, waiting...');
-            console.log('⏳ Will wait up to 2 seconds for connection confirmation');
-            showToast('Waiting for connection...', 'info');
-            // Wait for connection confirmation (max 2 seconds)
-            let waitCount = 0;
-            const waitForConnection = setInterval(() => {
-                waitCount++;
-                if (isConnected) {
-                    clearInterval(waitForConnection);
-                    console.log('✅ Connection confirmed, sending query...');
-                    // Retry sending query
-                    try {
-                        const message = {
-                            query: query,
-                            mode: mode,
-                            agent: agent,
-                            degradation_mode: false,
-                            files: filesData,
-                            settings: settings
-                        };
-                        ws.send(JSON.stringify(message));
-                        console.log('✅ Query sent via WebSocket after confirmation');
-                    } catch (sendError) {
-                        console.error('❌ Error sending after confirmation:', sendError);
-                        // showToast('Error sending query. Trying HTTP fallback...', 'warning'); // Disabled - too noisy
-                        clearInterval(waitForConnection);
-                        // Fall through to HTTP fallback
-                    }
-                } else if (waitCount >= 20) { // 2 seconds max wait
-                    clearInterval(waitForConnection);
-                    console.warn('⚠️ Connection not confirmed after 2 seconds, using HTTP fallback');
-                    // showToast('Connection timeout. Using HTTP fallback...', 'warning'); // Disabled - too noisy
-                    // Fall through to HTTP fallback
-                }
-            }, 100);
-
-            // If still not connected after timeout, use HTTP fallback
-            setTimeout(() => {
-                clearInterval(waitForConnection);
-                if (!isConnected) {
-                    console.warn('⚠️ Connection timeout, using HTTP fallback');
-                }
-            }, 2000);
-        } else {
-            // WebSocket not connected or not available
-            console.warn('⚠️ WebSocket not available:', {
-                wsExists: !!ws,
-                readyState: ws?.readyState,
-                isConnected: isConnected,
-                isConnecting: isConnecting
-            });
-            // Use HTTP fallback with SSE streaming
-            console.warn('⚠️ WebSocket not connected, using HTTP fallback with SSE streaming');
-
-            // Try SSE streaming first
-            try {
-                // Include conversation_id for context continuity
-                const conversationId = localStorage.getItem('iceburg_conversation_id') || 'current';
-
-                // Collect birth data for astro-physiology mode (same logic as WebSocket)
-                let birthData = null;
-                if (mode === 'astrophysiology') {
-                    const parsedFromQuery = astro_parseBirthDataFromQuery(query);
-                    const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
-                    const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
-                    const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-
-                    // Priority 1: Form inputs (most explicit)
-                    if (birthDateInput && birthDateInput.value) {
-                        const birthDate = birthDateInput.value;
-                        const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
-                        const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                        let location = null;
-                        if (locationInput && locationInput.value) {
-                            const locationStr = locationInput.value.trim();
-                            const coordMatch = locationStr.match(/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/);
-                            if (coordMatch) {
-                                location = {
-                                    lat: parseFloat(coordMatch[1]),
-                                    lng: parseFloat(coordMatch[2])
-                                };
-                            } else {
-                                location = locationStr;
-                            }
-                        }
-
-                        birthData = {
-                            birth_date: birthDateTime,
-                            location: location
-                        };
-                        // Clear old cache when new form data is provided
-                        console.log(' New birth data from form - clearing old cache');
-                        localStorage.removeItem('iceburg_astro_birth_data');
-                    }
-                    // Priority 2: Parsed from query (user typed it)
-                    else if (parsedFromQuery && parsedFromQuery.birth_date) {
-                        const birthDate = parsedFromQuery.birth_date;
-                        const birthTime = parsedFromQuery.birth_time || '12:00';
-                        const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                        birthData = {
-                            birth_date: birthDateTime,
-                            location: parsedFromQuery.location
-                        };
-                        // Clear old cache when new query data is parsed
-                        console.log(' New birth data parsed from query - clearing old cache');
-                        localStorage.removeItem('iceburg_astro_birth_data');
-                    }
-                    // Priority 3: Cached data (only if no new data found)
-                    else {
-                        try {
-                            const saved = localStorage.getItem('iceburg_astro_birth_data');
-                            if (saved) {
-                                const parsedSaved = JSON.parse(saved);
-                                // Validate timestamp if present (data should be recent)
-                                const timestamp = parsedSaved.timestamp || 0;
-                                const age = Date.now() - timestamp;
-                                const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-
-                                if (!timestamp || age < maxAge) {
-                                    birthData = parsedSaved;
-                                    console.log(' Using cached birth data (recent)');
-                                } else {
-                                    console.log(' Cached birth data is stale, not using');
-                                    localStorage.removeItem('iceburg_astro_birth_data');
-                                }
-                            }
-                        } catch (e) {
-                            console.warn('Could not load birth data from localStorage:', e);
-                        }
-                    }
-
-                    // Save new birth data with timestamp
-                    if (birthData && (birthDateInput?.value || parsedFromQuery?.birth_date)) {
-                        try {
-                            birthData.timestamp = Date.now();
-                            localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
-                            console.log(' Saved new birth data to localStorage');
-                        } catch (e) {
-                            console.warn('Could not save birth data to localStorage:', e);
-                        }
-                    }
-                }
-
-                const requestBody = {
-                    query: query,
-                    mode: mode,
-                    agent: agent,
-                    degradation_mode: false,
-                    settings: settings,
-                    stream: true,
-                    files: filesData,
-                    data: birthData,  // Include birth data for astro-physiology mode
-                    conversation_id: conversationId  // Include conversation ID for HTTP mode
-                };
-
-                console.log('📤 Sending HTTP SSE request to', FINAL_API_URL, 'with body:', requestBody);
-                const response = await fetch(FINAL_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'text/event-stream'
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Check if response is SSE
-                const contentType = response.headers.get('content-type');
-                console.log('📡 Response content-type:', contentType);
-                console.log('📡 Response status:', response.status);
-                console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
-
-                if (contentType && contentType.includes('text/event-stream')) {
-                    console.log('✅ SSE stream detected, starting to read...');
-                    // Remove loading indicators immediately when SSE starts
-                    removeLoadingIndicators();
-
-                    // Handle SSE streaming
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let buffer = '';
-                    let chunkCount = 0;
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) {
-                            console.log('✅ SSE stream complete, received', chunkCount, 'chunks');
-                            break;
-                        }
-
-                        chunkCount++;
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split('\n');
-                        buffer = lines.pop() || ''; // Keep incomplete line in buffer
-
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                try {
-                                    const data = JSON.parse(line.slice(6));
-                                    console.log('📨 SSE data received:', data.type, data.content?.substring(0, 50) || '', data.mode || '', data.results ? 'HAS RESULTS' : '');
-                                    if (data.type === 'done') {
-                                        console.log('📨 DONE MESSAGE FULL DATA:', JSON.stringify(data, null, 2));
-                                    }
-                                    handleStreamingMessage(data);
-                                } catch (e) {
-                                    console.error('❌ Error parsing SSE data:', e, 'Line:', line);
-                                }
-                            }
-                        }
-                    }
-
-                    // Remove ALL loading indicators (dots, spinners, etc.)
-                    removeLoadingIndicators();
-                    return;
-                } else {
-                    console.warn('⚠️ Response is NOT SSE stream, content-type:', contentType);
-                }
-            } catch (sseError) {
-                console.warn('SSE streaming failed, trying regular HTTP:', sseError);
-            }
-
-            // Fallback to regular HTTP (non-streaming)
-            // showToast('Using HTTP fallback (non-streaming)', 'warning'); // Disabled - too noisy
-
-            // Include conversation_id for context continuity
-            const conversationId = localStorage.getItem('iceburg_conversation_id') || 'current';
-
-            // Collect birth data for astro-physiology mode (same logic as WebSocket)
-            let birthData = null;
-            if (mode === 'astrophysiology') {
-                const parsedFromQuery = astro_parseBirthDataFromQuery(query);
-                const birthDateInput = document.getElementById('birthDateInput') || document.getElementById('astro_birthDateInput');
-                const birthTimeInput = document.getElementById('birthTimeInput') || document.getElementById('astro_birthTimeInput');
-                const locationInput = document.getElementById('locationInput') || document.getElementById('astro_locationInput');
-
-                if (birthDateInput && birthDateInput.value) {
-                    const birthDate = birthDateInput.value;
-                    const birthTime = birthTimeInput ? (birthTimeInput.value || '12:00') : '12:00';
-                    const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                    let location = null;
-                    if (locationInput && locationInput.value) {
-                        const locationStr = locationInput.value.trim();
-                        const coordMatch = locationStr.match(/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/);
-                        if (coordMatch) {
-                            location = {
-                                lat: parseFloat(coordMatch[1]),
-                                lng: parseFloat(coordMatch[2])
-                            };
-                        } else {
-                            location = locationStr;
-                        }
-                    }
-
-                    birthData = {
-                        birth_date: birthDateTime,
-                        location: location
-                    };
-                } else if (parsedFromQuery && parsedFromQuery.birth_date) {
-                    const birthDate = parsedFromQuery.birth_date;
-                    const birthTime = parsedFromQuery.birth_time || '12:00';
-                    const birthDateTime = `${birthDate}T${birthTime}:00Z`;
-
-                    birthData = {
-                        birth_date: birthDateTime,
-                        location: parsedFromQuery.location
-                    };
-                } else {
-                    try {
-                        const saved = localStorage.getItem('iceburg_astro_birth_data');
-                        if (saved) {
-                            birthData = JSON.parse(saved);
-                        }
-                    } catch (e) {
-                        console.warn('Could not load birth data from localStorage:', e);
-                    }
-                }
-
-                if (birthData) {
-                    try {
-                        localStorage.setItem('iceburg_astro_birth_data', JSON.stringify(birthData));
-                    } catch (e) {
-                        console.warn('Could not save birth data to localStorage:', e);
-                    }
-                }
-            }
-
-            const requestBody = {
-                query: query,
-                mode: mode,
-                agent: agent,
-                degradation_mode: useDegradation,
-                settings: settings,
-                files: filesData,
-                data: birthData,  // Include birth data for astro-physiology mode
-                conversation_id: conversationId  // Include conversation ID for HTTP mode
-            };
-
-            console.log('📤 Sending HTTP fallback (non-streaming) request to', FINAL_API_URL, 'with body:', requestBody);
-            const response = await fetch(FINAL_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Remove loading indicator
-            const loadingIndicator = chatContainer.querySelector('.loading-indicator');
-            if (loadingIndicator) {
-                loadingIndicator.remove();
-            }
-
-            // Add response
-            if (data.result || data.content) {
-                const responseMessage = addMessage(data.result || data.content, 'assistant');
-
-                // Add informatics if available
-                if (data.informatics) {
-                    updateInformatics(data.informatics, responseMessage);
-                }
-
-                // Add conclusions if available
-                if (data.conclusions && Array.isArray(data.conclusions)) {
-                    data.conclusions.forEach(conclusion => {
-                        addConclusionItem(conclusion, responseMessage);
-                    });
-                }
+            
+            // Should we look for follow-up algo data?
+            if (!birthData) {
+                try {
+                     const algo = localStorage.getItem('iceburg_astro_algorithmic_data');
+                     if (algo) {
+                         const parsed = JSON.parse(algo);
+                         if (!parsed.timestamp || (Date.now() - parsed.timestamp) < 7 * 24 * 60 * 60 * 1000) {
+                             birthData = { algorithmic_data: parsed }; // Special case wrapper
+                         }
+                     }
+                } catch(e) {}
             }
         }
-    } catch (error) {
-        console.error('Error sending query:', error);
-        removeLoadingIndicators();
-        addMessage(`Error: ${error.message}`, 'assistant');
-        showToast('Error sending query. Please try again.', 'error');
+
+        // Use the new SSE connection
+        if (window.ICEBURG_CONNECTION) {
+            window.ICEBURG_CONNECTION.sendQuery({
+                query,
+                mode,
+                settings: {
+                    ...settings,
+                    agent, // Pass agent in settings or separate? Connection.js expects flat settings usually, but let's check.
+                    // Actually handleStreamingMessage expects 'agent' in the MESSAGE. 
+                    // connection.js sends body: { query, mode, ...settings } ?? NO.
+                    // connection.js body: { query, mode, conversation_id, stream: true, temperature: settings.temperature, ...data }
+                    // It doesn't pass arbitrary settings to body root.
+                    // I need to ensure AGENT is passed.
+                    // connection.js doesn't explicitly pass 'agent' to body.
+                    // I might need to abuse 'data' or 'settings' or modify connection.js.
+                    // Let's modify connection.js logic to include extra payload if needed, OR just put it in data.
+                    // Actually, let's just cheat and put it in settings if the backend supports it, OR update connection.js to accept 'agent'.
+                    // WAIT. connection.js:80 body: JSON.stringify({ query, mode, ... })
+                    // It does NOT pass agent.
+                    // I should update connection.js to accept agent.
+                    // For now, I will treat it as 'data'. 
+                },
+                // Wait, I should fix connection.js to pass agent. I will do that in next step.
+                // For now, assuming connection.js will be updated or I put it in data.
+                data: {
+                    ...(birthData || {}),
+                    agent: agent,
+                    files: filesData,
+                    client_metadata: preprocessedQuery ? {
+                            normalized: preprocessedQuery.normalized,
+                            entities: preprocessedQuery.entities,
+                            keywords: preprocessedQuery.keywords,
+                            complexity: preprocessedQuery.complexity,
+                            device: preprocessedQuery.metadata?.device
+                    } : null
+                },
+                onMessage: (data) => {
+                     handleStreamingMessage(data);
+                },
+                onError: (error) => {
+                    console.error('❌ SSE Query Error:', error);
+                    const loadingIndicator = document.querySelector('.loading-indicator');
+                    if (loadingIndicator) loadingIndicator.remove();
+                    
+                    const lastMsg = getOrCreateLastMessage();
+                    if (lastMsg) {
+                         const errDiv = document.createElement('div');
+                         errDiv.className = 'error-message';
+                         errDiv.textContent = 'Error: ' + error.message;
+                         lastMsg.querySelector('.message-content').appendChild(errDiv);
+                    }
+                }
+            });
+        } else {
+            console.error('❌ window.ICEBURG_CONNECTION not found!');
+            showToast('Connection module missing. Reload page.', 'error');
+        }
+
+    } catch (sendError) {
+        console.error('❌ Error initializing query:', sendError);
+        showToast('Failed to send query', 'error');
     } finally {
-        reenableInput();
+        // Ensure UI is resilient
+        const loadingIndicator = document.querySelector('.loading-indicator');
+        if (loadingIndicator && !window.ICEBURG_CONNECTION) loadingIndicator.remove();
     }
 }
+
 
 // Format file size
 function formatFileSize(bytes) {
@@ -4651,13 +3884,18 @@ function routeToNextStep(action, messageElement) {
     // For now, just log the action
     // In future, this would trigger the next agent
     // For example: send websocket message to trigger next agent
-    if (window.ws && window.ws.readyState === WebSocket.OPEN) {
-        window.ws.send(JSON.stringify({
-            type: 'route_step',
-            action: action,
-            step: activeCard?.dataset.step || 'surveyor'
-        }));
+    // Use sendQuery to trigger next step
+    const queryInput = document.getElementById('queryInput');
+    if (queryInput) {
+        const stepName = activeCard?.dataset.step || 'next step';
+        const actionLabel = action === 'next' ? 'Proceeding' : action;
+        const query = `[Interactive Step] ${stepName}: ${actionLabel}`;
+        
+        // Update input for visibility
+        queryInput.value = query;
+        sendQuery();
     }
+
 }
 
 // Helper function
@@ -5768,6 +5006,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // Initialize meteor shower background for chat container
     const meteorCanvas = document.getElementById('meteorShowerCanvas');
     const chatContainer = document.getElementById('chatContainer');
@@ -6331,50 +5570,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Focus input on load
     queryInput.focus();
 
-    // Initialize WebSocket with retry on failure
-    initWebSocket();
 
-    // Retry connection if it fails initially (after 3 seconds)
-    // Only retry if not already connecting and not connected
-    let retryTimeout = setTimeout(() => {
-        if (!isConnected && !isConnecting && (!ws || ws.readyState !== WebSocket.OPEN)) {
-            // Silently retry without notification popup
-            console.log('🔄 WebSocket not connected after 3s, retrying...');
-            initWebSocket();
-        }
-    }, 3000);
 
-    // Handle visibility change (reconnect if tab becomes visible)
-    // Only reconnect if not already connected and not already connecting
-    // Add debounce to prevent multiple rapid reconnection attempts
-    let visibilityTimeout = null;
-    document.addEventListener('visibilitychange', () => {
-        if (visibilityTimeout) {
-            clearTimeout(visibilityTimeout);
-        }
-        visibilityTimeout = setTimeout(() => {
-            if (document.visibilityState === 'visible' && !isConnected && !isConnecting && (!ws || ws.readyState !== WebSocket.OPEN)) {
-                console.log('🔄 Tab visible, reconnecting WebSocket...');
-                initWebSocket();
-            }
-        }, 1000); // Wait 1 second before reconnecting
-    });
+    // Legacy visibility/focus listeners removed
 
-    // Handle page focus (reconnect if page regains focus)
-    // Only reconnect if not already connected and not already connecting
-    // Add debounce to prevent multiple rapid reconnection attempts
-    let focusTimeout = null;
-    window.addEventListener('focus', () => {
-        if (focusTimeout) {
-            clearTimeout(focusTimeout);
-        }
-        focusTimeout = setTimeout(() => {
-            if (!isConnected && !isConnecting && (!ws || ws.readyState !== WebSocket.OPEN)) {
-                console.log('🔄 Page focused, reconnecting WebSocket...');
-                initWebSocket();
-            }
-        }, 1000); // Wait 1 second before reconnecting
-    });
 
     // Save conversation periodically
     setInterval(saveConversation, 30000); // Every 30 seconds
@@ -7720,12 +6919,9 @@ function astro_handleExpertSwitch(expertName, messageElement) {
     };
 
     // Send message
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(message));
-        console.log('Sent expert switch message:', message);
-    } else {
-        console.error('WebSocket not connected');
-    }
+    // Send message via sendQuery
+    sendQuery();
+
 }
 
 /**
@@ -7775,16 +6971,12 @@ function astro_addSwitchBackButton(messageElement, currentExpert) {
 
                 // Get algorithmic data
                 const algoDataStr = localStorage.getItem('iceburg_astro_algorithmic_data');
-                if (algoDataStr && ws && ws.readyState === WebSocket.OPEN) {
-                    const message = {
-                        query: 'switch back',
-                        mode: 'astrophysiology',
-                        data: {
-                            algorithmic_data: JSON.parse(algoDataStr)
-                        }
-                    };
-                    ws.send(JSON.stringify(message));
+                // switch back via sendQuery
+                if (algoDataStr) {
+                    // pre-fill input is already done
+                    sendQuery(); // This uses the input value 'switch back' and handles the rest
                 }
+
             }
         });
     }

@@ -65,11 +65,11 @@
     "ICEBURG": {
       "created": "2025-12-30T05:02:46.178899",
       "file": "topics/ICEBURG.md",
-      "last_updated": "2026-01-30T22:14:41.258435",
+      "last_updated": "2026-02-07T14:11:56.194966",
       "metadata": {
-        "conversation_id": "8ea39939-5bbf-4dd0-9e84-b485cad6376e",
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
         "user_id": null,
-        "extracted_at": "2026-01-30T22:14:41.257428"
+        "extracted_at": "2026-02-07T14:11:56.192175"
       }
     },
     "AI research system": {
@@ -845,11 +845,11 @@
     "agents": {
       "created": "2026-01-15T14:39:36.780020",
       "file": "topics/agents.md",
-      "last_updated": "2026-01-15T18:00:49.516372",
+      "last_updated": "2026-02-07T14:11:56.200474",
       "metadata": {
-        "conversation_id": "conv_1765955033491_i2dz6nac8",
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
         "user_id": null,
-        "extracted_at": "2026-01-15T18:00:49.513130"
+        "extracted_at": "2026-02-07T14:11:56.192175"
       }
     },
     "assumptions": {
@@ -1221,6 +1221,46 @@
         "user_id": null,
         "extracted_at": "2026-02-04T22:03:50.116898"
       }
+    },
+    "Surveyor Agent": {
+      "created": "2026-02-07T14:11:56.203358",
+      "file": "topics/Surveyor-Agent.md",
+      "last_updated": "2026-02-07T14:11:56.203405",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-02-07T14:11:56.192175"
+      }
+    },
+    "Dissident Agent": {
+      "created": "2026-02-07T14:11:56.207494",
+      "file": "topics/Dissident-Agent.md",
+      "last_updated": "2026-02-07T14:11:56.207532",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-02-07T14:11:56.192175"
+      }
+    },
+    "Synthesist Agent": {
+      "created": "2026-02-07T14:11:56.209528",
+      "file": "topics/Synthesist-Agent.md",
+      "last_updated": "2026-02-07T14:11:56.209543",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-02-07T14:11:56.192175"
+      }
+    },
+    "Oracle Agent": {
+      "created": "2026-02-07T14:11:56.210753",
+      "file": "topics/Oracle-Agent.md",
+      "last_updated": "2026-02-07T14:11:56.210797",
+      "metadata": {
+        "conversation_id": "conv_1768467859740_4i0k2g3j4",
+        "user_id": null,
+        "extracted_at": "2026-02-07T14:11:56.192175"
+      }
     }
   },
   "personas": {
@@ -1229,5 +1269,5 @@
       "last_updated": "2025-12-30T19:21:12.331292"
     }
   },
-  "last_updated": "2026-02-04T22:03:50.118607"
+  "last_updated": "2026-02-07T14:11:56.210804"
 }

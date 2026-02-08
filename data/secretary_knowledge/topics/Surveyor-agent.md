@@ -41,3 +41,9 @@ Information about Surveyor agent from conversation.
 ## Update: 2026-01-17 00:15:19
 
 Information about Surveyor agent from conversation.
+
+---
+
+## Update: 2026-02-07 14:11:56
+
+- The Surveyor Agent excels at in-depth analysis and research, diving into historical data and patterns to uncover truths.
