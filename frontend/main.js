@@ -8318,10 +8318,10 @@ function initWorkflowPill() {
         style.textContent = `
             .hud-workflow-pill {
                 position: fixed !important;
-                top: 80px !important;
+                bottom: 100px !important;
                 left: 50% !important;
                 transform: translateX(-50%) !important;
-                z-index: 9999 !important;
+                z-index: 500 !important;
                 background: rgba(0, 0, 0, 0.6) !important;
                 backdrop-filter: blur(8px) !important;
                 -webkit-backdrop-filter: blur(8px) !important;
@@ -8339,6 +8339,7 @@ function initWorkflowPill() {
                 max-width: 90vw !important;
                 white-space: nowrap !important;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                pointer-events: none !important;
             }
             .hud-workflow-pill.hidden {
                 opacity: 0 !important;
@@ -8437,7 +8438,11 @@ function updateWorkflowPill(agentName, status, index = null, total = null) {
         'oracle': 'Oracle',
         'archaeologist': 'Archaeologist',
         'self_redesign': 'Self-Redesign',
-        'scrutineer': 'Scrutineer'
+        'scrutineer': 'Scrutineer',
+        'social_norm_system': 'Social Norm System',
+        'emergence_detector': 'Emergence Detector',
+        'celestial_calc': 'Celestial Calc',
+        'molecular_sim': 'Molecular Sim'
     };
 
     // Build the pill HTML
@@ -8576,13 +8581,9 @@ function setProcessingMode(mode) {
         }
 
         // 3. Preview Agent Pipeline (Workflow Pill)
-        // Show what *will* happen - BUT NOT for Astro-Physiology (User Request)
-        if (mode !== 'astrophysiology') {
-            showWorkflowPill();
-            updateWorkflowPill(null, 'preview'); 
-        } else {
-            hideWorkflowPill();
-        }
+        // Don't show workflow pill when just selecting modes - it was blocking the UI
+        // The pill should only appear during active research, not when changing modes
+        hideWorkflowPill();
     }
 }
 
