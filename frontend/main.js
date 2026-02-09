@@ -4647,28 +4647,11 @@ class NeuralNetworkBackground {
             });
         }
 
-        // Listen for WebSocket messages (will be set up after WebSocket is initialized)
-        this.wsMessageHandler = (data) => {
-            if (data.type === 'chunk' || data.type === 'action' || data.type === 'thinking' ||
-                data.type === 'word_breakdown' || data.type === 'algorithm_step') {
-                this.activate();
-            }
-        };
-    }
-
-    // Method to be called when WebSocket is ready
-    attachWebSocket(ws) {
-        if (ws && this.wsMessageHandler) {
-            const originalOnMessage = ws.onmessage;
-            ws.onmessage = (event) => {
-                if (originalOnMessage) originalOnMessage(event);
-                try {
-                    const data = JSON.parse(event.data);
-                    this.wsMessageHandler(data);
-                } catch (e) {
-                    // Ignore parse errors
-                }
-            };
+        // Listen for SSE messages via handleStreamingMessage
+        // WebSocket removed - all messages come through V2 SSE endpoint
+        if (typeof handleStreamingMessage === 'function') {
+            // Messages are handled globally via handleStreamingMessage
+            // This class can listen for specific message types if needed
         }
     }
 
@@ -4703,79 +4686,93 @@ class NeuralNetworkBackground {
     }
 
     animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Update nodes
-        this.nodes.forEach(node => {
-            // Pulse animation
-            node.pulse += node.pulseSpeed;
-            node.radius = node.baseRadius + Math.sin(node.pulse) * 0.5;
-
-            // Intensity interpolation
-            node.intensity += (node.targetIntensity - node.intensity) * 0.1;
-        });
-
-        // Update connections
-        this.connections.forEach(conn => {
-            conn.pulse += conn.pulseSpeed;
-            conn.intensity += (conn.targetIntensity - conn.intensity) * 0.1;
-        });
-
-        // Draw connections
-        this.connections.forEach(conn => {
-            const alpha = conn.intensity * 0.3;
-            if (alpha > 0.01) {
-                this.ctx.beginPath();
-                this.ctx.moveTo(conn.from.x, conn.from.y);
-                this.ctx.lineTo(conn.to.x, conn.to.y);
-
-                // Glow effect for active connections
-                const glowIntensity = conn.intensity * (0.5 + Math.sin(conn.pulse) * 0.3);
-                this.ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * glowIntensity})`;
-                this.ctx.lineWidth = 0.5;
-                this.ctx.stroke();
-
-                // Subtle glow
-                if (glowIntensity > 0.2) {
-                    this.ctx.shadowBlur = 3;
-                    this.ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
-                    this.ctx.stroke();
-                    this.ctx.shadowBlur = 0;
-                }
-            }
-        });
-
-        // Draw nodes
-        this.nodes.forEach(node => {
-            const alpha = 0.2 + node.intensity * 0.8;
-            if (alpha > 0.01) {
-                this.ctx.beginPath();
-                this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-
-                // Fill
-                this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-                this.ctx.fill();
-
-                // Glow for active nodes
-                if (node.intensity > 0.3) {
-                    this.ctx.shadowBlur = node.radius * 2;
-                    this.ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
-                    this.ctx.fill();
-                    this.ctx.shadowBlur = 0;
-                }
-            }
-        });
-
-        // Subtle random activation
-        if (!this.isActive && Math.random() < 0.01) {
-            const randomNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
-            randomNode.targetIntensity = 0.2 + Math.random() * 0.3;
-            setTimeout(() => {
-                randomNode.targetIntensity = 0;
-            }, 1000);
+        // Check if canvas is still valid and visible
+        if (!this.canvas || !this.ctx) {
+            return;
         }
 
-        this.animationId = requestAnimationFrame(() => this.animate());
+        try {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Update nodes
+            this.nodes.forEach(node => {
+                // Pulse animation
+                node.pulse += node.pulseSpeed;
+                node.radius = node.baseRadius + Math.sin(node.pulse) * 0.5;
+
+                // Intensity interpolation
+                node.intensity += (node.targetIntensity - node.intensity) * 0.1;
+            });
+
+            // Update connections
+            this.connections.forEach(conn => {
+                conn.pulse += conn.pulseSpeed;
+                conn.intensity += (conn.targetIntensity - conn.intensity) * 0.1;
+            });
+
+            // Draw connections
+            this.connections.forEach(conn => {
+                const alpha = conn.intensity * 0.3;
+                if (alpha > 0.01) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(conn.from.x, conn.from.y);
+                    this.ctx.lineTo(conn.to.x, conn.to.y);
+
+                    // Glow effect for active connections
+                    const glowIntensity = conn.intensity * (0.5 + Math.sin(conn.pulse) * 0.3);
+                    this.ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * glowIntensity})`;
+                    this.ctx.lineWidth = 0.5;
+                    this.ctx.stroke();
+
+                    // Subtle glow
+                    if (glowIntensity > 0.2) {
+                        this.ctx.shadowBlur = 3;
+                        this.ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+                        this.ctx.stroke();
+                        this.ctx.shadowBlur = 0;
+                    }
+                }
+            });
+
+            // Draw nodes
+            this.nodes.forEach(node => {
+                const alpha = 0.2 + node.intensity * 0.8;
+                if (alpha > 0.01) {
+                    this.ctx.beginPath();
+                    this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+
+                    // Fill
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                    this.ctx.fill();
+
+                    // Glow for active nodes
+                    if (node.intensity > 0.3) {
+                        this.ctx.shadowBlur = node.radius * 2;
+                        this.ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+                        this.ctx.fill();
+                        this.ctx.shadowBlur = 0;
+                    }
+                }
+            });
+
+            // Subtle random activation
+            if (!this.isActive && Math.random() < 0.01) {
+                const randomNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
+                randomNode.targetIntensity = 0.2 + Math.random() * 0.3;
+                setTimeout(() => {
+                    randomNode.targetIntensity = 0;
+                }, 1000);
+            }
+
+            this.animationId = requestAnimationFrame(() => this.animate());
+        } catch (e) {
+            console.error('NeuralNetworkBackground animation error:', e);
+            // Stop animation on error to prevent infinite error loop
+            if (this.animationId) {
+                cancelAnimationFrame(this.animationId);
+                this.animationId = null;
+            }
+        }
     }
 
     destroy() {
@@ -4874,68 +4871,87 @@ class MeteorShowerBackground {
     }
 
     animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Update and draw stars
-        this.stars.forEach(star => {
-            star.twinkle += star.twinkleSpeed;
-            const twinkleOpacity = star.opacity + Math.sin(star.twinkle) * 0.2;
-
-            this.ctx.beginPath();
-            this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, Math.min(1, twinkleOpacity))})`;
-            this.ctx.fill();
-        });
-
-        // Spawn new meteors occasionally
-        if (Math.random() < 0.02) {
-            this.meteors.push(this.createMeteor());
+        // Check if canvas is still valid and visible
+        if (!this.canvas || !this.ctx || !this.canvas.parentElement) {
+            return;
         }
 
-        // Update and draw meteors
-        this.meteors = this.meteors.filter(meteor => {
-            meteor.x += meteor.vx;
-            meteor.y += meteor.vy;
-            meteor.life -= meteor.decay;
+        try {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Draw meteor trail
-            if (meteor.life > 0 &&
-                meteor.x > -50 && meteor.x < this.canvas.width + 50 &&
-                meteor.y > -50 && meteor.y < this.canvas.height + 50) {
-
-                const gradient = this.ctx.createLinearGradient(
-                    meteor.x - meteor.vx * meteor.length / meteor.speed,
-                    meteor.y - meteor.vy * meteor.length / meteor.speed,
-                    meteor.x,
-                    meteor.y
-                );
-
-                gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
-                gradient.addColorStop(0.5, `rgba(255, 255, 255, ${meteor.opacity * meteor.life * 0.3})`);
-                gradient.addColorStop(1, `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`);
+            // Update and draw stars
+            this.stars.forEach(star => {
+                star.twinkle += star.twinkleSpeed;
+                const twinkleOpacity = star.opacity + Math.sin(star.twinkle) * 0.2;
 
                 this.ctx.beginPath();
-                this.ctx.moveTo(
-                    meteor.x - meteor.vx * meteor.length / meteor.speed,
-                    meteor.y - meteor.vy * meteor.length / meteor.speed
-                );
-                this.ctx.lineTo(meteor.x, meteor.y);
-                this.ctx.strokeStyle = gradient;
-                this.ctx.lineWidth = 1.5;
-                this.ctx.stroke();
-
-                // Draw meteor head
-                this.ctx.beginPath();
-                this.ctx.arc(meteor.x, meteor.y, 2, 0, Math.PI * 2);
-                this.ctx.fillStyle = `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`;
+                this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, Math.min(1, twinkleOpacity))})`;
                 this.ctx.fill();
+            });
 
-                return true;
+            // Spawn new meteors occasionally
+            if (Math.random() < 0.02) {
+                this.meteors.push(this.createMeteor());
             }
-            return false;
-        });
 
-        this.animationId = requestAnimationFrame(() => this.animate());
+            // Limit meteors to prevent memory issues
+            if (this.meteors.length > 20) {
+                this.meteors = this.meteors.slice(-20);
+            }
+
+            // Update and draw meteors
+            this.meteors = this.meteors.filter(meteor => {
+                meteor.x += meteor.vx;
+                meteor.y += meteor.vy;
+                meteor.life -= meteor.decay;
+
+                // Draw meteor trail
+                if (meteor.life > 0 &&
+                    meteor.x > -50 && meteor.x < this.canvas.width + 50 &&
+                    meteor.y > -50 && meteor.y < this.canvas.height + 50) {
+
+                    const gradient = this.ctx.createLinearGradient(
+                        meteor.x - meteor.vx * meteor.length / meteor.speed,
+                        meteor.y - meteor.vy * meteor.length / meteor.speed,
+                        meteor.x,
+                        meteor.y
+                    );
+
+                    gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
+                    gradient.addColorStop(0.5, `rgba(255, 255, 255, ${meteor.opacity * meteor.life * 0.3})`);
+                    gradient.addColorStop(1, `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`);
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(
+                        meteor.x - meteor.vx * meteor.length / meteor.speed,
+                        meteor.y - meteor.vy * meteor.length / meteor.speed
+                    );
+                    this.ctx.lineTo(meteor.x, meteor.y);
+                    this.ctx.strokeStyle = gradient;
+                    this.ctx.lineWidth = 1.5;
+                    this.ctx.stroke();
+
+                    // Draw meteor head
+                    this.ctx.beginPath();
+                    this.ctx.arc(meteor.x, meteor.y, 2, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${meteor.opacity * meteor.life})`;
+                    this.ctx.fill();
+
+                    return true;
+                }
+                return false;
+            });
+
+            this.animationId = requestAnimationFrame(() => this.animate());
+        } catch (e) {
+            console.error('MeteorShowerBackground animation error:', e);
+            // Stop animation on error to prevent infinite error loop
+            if (this.animationId) {
+                cancelAnimationFrame(this.animationId);
+                this.animationId = null;
+            }
+        }
     }
 
     destroy() {
@@ -4981,7 +4997,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize neural network background
     const canvas = document.getElementById('neuralNetworkCanvas');
     if (canvas) {
-        neuralNetwork = new NeuralNetworkBackground(canvas);
+        try {
+            neuralNetwork = new NeuralNetworkBackground(canvas);
+
+            // Pause animation when page is hidden to save resources
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && neuralNetwork) {
+                    if (neuralNetwork.animationId) {
+                        cancelAnimationFrame(neuralNetwork.animationId);
+                        neuralNetwork.animationId = null;
+                    }
+                } else if (!document.hidden && neuralNetwork && !neuralNetwork.animationId) {
+                    neuralNetwork.animate();
+                }
+            });
+        } catch (e) {
+            console.error('Error initializing neural network background:', e);
+        }
     }
 
     // Initialize mode UI if astro-physiology is already selected
@@ -5013,16 +5045,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (meteorCanvas && chatContainer) {
         // Wait a bit for layout to settle
         setTimeout(() => {
-            meteorShower = new MeteorShowerBackground(meteorCanvas);
+            try {
+                meteorShower = new MeteorShowerBackground(meteorCanvas);
 
-            // Update canvas size when container resizes
-            const resizeObserver = new ResizeObserver(() => {
-                if (meteorShower) {
-                    meteorShower.setupCanvas();
-                    meteorShower.createStars();
-                }
-            });
-            resizeObserver.observe(chatContainer);
+                // Update canvas size when container resizes
+                const resizeObserver = new ResizeObserver(() => {
+                    if (meteorShower && meteorShower.canvas) {
+                        try {
+                            meteorShower.setupCanvas();
+                            meteorShower.createStars();
+                        } catch (e) {
+                            console.error('Error resizing meteor shower canvas:', e);
+                        }
+                    }
+                });
+                resizeObserver.observe(chatContainer);
+
+                // Pause animation when page is hidden to save resources
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && meteorShower) {
+                        if (meteorShower.animationId) {
+                            cancelAnimationFrame(meteorShower.animationId);
+                            meteorShower.animationId = null;
+                        }
+                    } else if (!document.hidden && meteorShower && !meteorShower.animationId) {
+                        meteorShower.animate();
+                    }
+                });
+            } catch (e) {
+                console.error('Error initializing meteor shower background:', e);
+            }
         }, 100);
     }
     const attachButton = document.getElementById('attachButton');
