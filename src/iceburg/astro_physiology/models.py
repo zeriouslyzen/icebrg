@@ -34,6 +34,7 @@ class CelestialEvent:
     
     # Computed Scalar Potential
     scalar_potential_index: float = field(init=False)
+    planetary_resonance_index: float = 0.5  # 0.0 (Stress) to 1.0 (Harmonic)
     
     def __post_init__(self):
         # We model the Scalar Potential of a solar event based on the 
@@ -126,9 +127,11 @@ class NetCoherenceSnapshot:
         noise = self.suppression.jamming_power
         
         # Calculate Net Inversion
-        # Signal * Efficiency - Noise
+        # Signal (Solar * Planetary) * Efficiency - Noise
+        effective_signal = carrier_strength * self.celestial_signal.planetary_resonance_index * receiver_efficiency
+        
         raw_score = calculate_inversion_index(
-            signal_strength=carrier_strength * receiver_efficiency, 
+            signal_strength=effective_signal, 
             noise_floor=0.1,  # Base entropy
             interference_vector=noise
         )

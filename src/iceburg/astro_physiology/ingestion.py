@@ -24,19 +24,21 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 
 from .models import CelestialEvent, PhysiologicalState, SuppressionVector, NetCoherenceSnapshot
+from .ephemeris import EphemerisIngestor
 
 logger = logging.getLogger(__name__)
 
 class AstroPhysiologyIngestor:
     """
-    Orchestrates the data intake.
-    Switches between "Hard Simulation" and "Real Data" based on available API keys.
+    The main Data Pipeline orchestrator.
     """
     
     def __init__(self):
         self.api_key_noaa = os.getenv("ICEBURG_NOAA_API_KEY") # Space Weather (Solar)
         self.api_key_ncdc = os.getenv("ICEBURG_NCDC_TOKEN")   # Earth Weather (Atmosphere)
         self.api_key_oura = os.getenv("ICEBURG_OURA_TOKEN")   # Bio Data
+        
+        self.ephemeris = EphemerisIngestor()
         
         if not self.api_key_noaa:
             logger.warning("⚠️ No NOAA API Key found for Space Weather. Using Simulation.")
@@ -56,9 +58,19 @@ class AstroPhysiologyIngestor:
     def fetch_current_snapshot(self, user_id: str) -> NetCoherenceSnapshot:
         """
         Generates a complete 'Net Coherence Snapshot' for the current moment.
+        If real APIs are available, uses them. Otherwise falls back to simulation.
         """
         now = datetime.utcnow()
         
+        # 0. Fetch Planetary Resonance (External Modulation)
+        try:
+            planetary_raw = self.ephemeris.fetch_planetary_positions(now)
+            planetary_resonance = self.ephemeris.calculate_resonance_index(planetary_raw)
+            logger.info(f"🪐 Planetary Resonance Index: {planetary_resonance:.4f}")
+        except Exception as e:
+            logger.error(f"Error fetching ephemeris: {e}")
+            planetary_resonance = 0.5 # Baseline
+            
         # 1. Fetch Celestial Data (The Signal)
         if self.api_key_noaa:
             try:
@@ -68,6 +80,9 @@ class AstroPhysiologyIngestor:
                 celestial = self._fetch_noaa_data_simulated(now)
         else:
             celestial = self._fetch_noaa_data_simulated(now)
+        
+        # Inject Planetary Modulation
+        celestial.planetary_resonance_index = planetary_resonance
         
         # 2. Fetch Biological Data (The Receiver)
         if self.api_key_oura:
