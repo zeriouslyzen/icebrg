@@ -12,6 +12,8 @@ This document serves as a persistent index for research related to "Reverse Harv
 - **Quantum Entanglement & Bio-Energy**: [Report Output](file:///Users/jackdanger/Desktop/Projects/iceburg/frontend/dist/data/research_outputs/Quantum_Entanglement_Biological_Systems_AlternativeEnergy_20251105_230836.md)
 - **Bioelectricity & Free Energy**: [Report Output](file:///Users/jackdanger/Desktop/Projects/iceburg/frontend/dist/data/research_outputs/Quantum_Consciousness_Bioelectricity_FreeEnergy_20251105_225940.md)
 
+> 🎓 **View & Cite via [ICEBURG Scholar](http://localhost:8000/scholar.html)**
+
 ## 3. Hardware & Schematics
 - **Energy Harvesting ICs**: Defined in `surveyor.py`.
   - Recommended: LTC3588, BQ25504, SPV1050.

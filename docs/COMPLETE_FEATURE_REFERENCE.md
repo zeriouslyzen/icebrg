@@ -204,6 +204,9 @@
 | POST | `/api/query` | Main research endpoint |
 | GET | `/test-thinking-stream` | Debug thinking process |
 | POST | `/api/device/generate` | Generate device specs |
+| GET | `/api/scholar/search` | **Scholar**: Search internal research corpus |
+| GET | `/scholar[ .html]` | **Scholar Interface**: Pretty academic search UI |
+| GET | `/data/research_outputs/*.md` | **Styled Reports**: Automatically rendered papers |
 
 ### File Management
 | Method | Endpoint | Description |

@@ -1,6 +1,6 @@
 # ICEBURG Roadmap & Implementation Status
 
-**Last Updated:** December 22, 2025
+**Last Updated:** February 11, 2026
 
 ---
 
@@ -14,19 +14,22 @@ ICEBURG aims to be the world's first **cognitive research architecture** — an 
 
 | Category | Status | Count |
 |----------|--------|-------|
-| ✅ Fully Working | Production-ready | 5 features |
-| 🔶 Partially Implemented | Needs work | 8 features |
-| 📋 Planned | Not started | 12+ features |
+| ✅ Fully Working | Production-ready | 8 features |
+| 🔶 Partially Implemented | Needs work | 6 features |
+| 📋 Planned | Not started | 10+ features |
 
 ---
 
-## ✅ Fully Working Features (v3.3.0)
+## ✅ Fully Working Features (v3.5.0)
 
 1. **Secretary Chat Agent** — Conversational interface
 2. **Multi-Agent Research Protocol** — Surveyor → Dissident → Synthesist → Oracle
 3. **Web Frontend** — Modern UI with streaming
 4. **Conversation Memory** — Session persistence
 5. **Knowledge Base** — Celestial Encyclopedia (233 entries)
+6. **ICEBURG Scholar** — 🎓 Internal academic search & BibTeX citations
+7. **Pegasus Deep Linking** — Research-to-Graph visualization bridging
+8. **Automated Report Rendering** — Markdown-to-HTML academic paper styling
 
 ---
 
@@ -63,8 +66,8 @@ ICEBURG aims to be the world's first **cognitive research architecture** — an 
 ### Research Capabilities
 - [ ] Real-time web search integration
 - [ ] PDF/document upload and analysis
-- [ ] Citation generation
-- [ ] Research export formats
+- [ ] Cross-linking "Cited by" metrics
+- [ ] Auto-updating "Breakthrough" feed
 
 ### Agent Enhancements
 - [ ] Agent performance dashboards

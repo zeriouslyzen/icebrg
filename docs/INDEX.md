@@ -132,6 +132,13 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 
 ---
 
+### Research & Scholarly Tools
+- **[ICEBURG Scholar](../frontend/scholar.html)** - 🎓 Internal research metadata & scholarly search
+- **[Research Transduction Index](../src/iceburg/research/TRANSDUCTION_INDEX.md)** - ⚡ Persistent research tracking
+- **[Scholar Implementation Walkthrough](../.gemini/antigravity/brain/23ecc4f3-8d51-4a64-b4c1-968d889ffbba/walkthrough.md)** - 🚀 Detailed walkthrough of research features
+
+---
+
 ## 📁 Related Files
 
 ### Configuration
@@ -147,6 +154,7 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 - `data/celestial_encyclopedia.json` - Knowledge base
 - `data/conversation_logs/` - Conversation history
 - `data/research_outputs/` - Multi-agent research reports
+- `frontend/dist/data/research_outputs/` - 📄 Scholarly formatted internal reports
 
 ---
 
