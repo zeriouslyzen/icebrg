@@ -123,45 +123,55 @@ class EphemerisIngestor:
         """
         Calculates a 'Planetary Resonance Index' (0.0 to 1.0).
         Logic:
-        1. Tidal Force Contribution (M / r^3)
-        2. Angular Aspects (Trines/Squares) - constructive vs destructive interference.
+        1. Tidal Force Contribution (M / r^3) - Weighting the influence of each body.
+        2. Aspect Coherence - Checking for harmonic angular relationships.
         """
         if not planetary_data:
             return 0.5 # Baseline
             
-        # 1. Normalized Tidal Strength (Total)
-        # We don't use this directly for the score yet, but it's available for weighting.
+        # 1. Calculate Tidal Forces and Total Weight
+        # We calculate relative tidal force: Mass / Distance^3
+        influences = {}
+        total_tidal_force = 1e-20 # Avoid div by zero
         
-        # 2. Aspect Coherence
-        # We check the angles between the three heaviest influences (Jupiter, Saturn, Venus)
-        primary_bodies = ["Jupiter", "Saturn", "Venus"]
-        aspect_score = 0.0
-        pairs = 0
+        for name, data in planetary_data.items():
+            # Distance is in AU, Mass in kg
+            # Force ~ M / d^3
+            force = data["mass_kg"] / (data["distance_au"] ** 3)
+            influences[name] = force
+            total_tidal_force += force
+
+        # 2. Aspect Coherence with Tidal Weighting
+        # We check the angles between all bodies, weighted by their combined tidal influence
+        primary_bodies = list(planetary_data.keys())
+        weighted_aspect_score = 0.0
+        total_weight = 0.0
         
         for i in range(len(primary_bodies)):
             for j in range(i + 1, len(primary_bodies)):
                 p1 = primary_bodies[i]
                 p2 = primary_bodies[j]
-                if p1 in planetary_data and p2 in planetary_data:
-                    angle = abs(planetary_data[p1]["longitude"] - planetary_data[p2]["longitude"]) % 180
-                    
-                    # Target Angles: 60, 120 (Harmonic) | 90, 180 (Stress)
-                    # We use a cosine wave centered on 120/60.
-                    # 120 * 3 = 360 (cos = 1)
-                    # 90 * 3 = 270 (cos = 0)
-                    # 60 * 3 = 180 (cos = -1) wait, 60 should be good.
-                    
-                    # Let's use a simpler mapping:
-                    # Resonance is high at 0, 60, 120. 
-                    # Stress is high at 90, 180.
-                    
-                    # Phase = angle * (360 / 120) = angle * 3
-                    # This makes 0, 120, 240 local maxima.
-                    coherence = 0.5 + 0.5 * math.cos(math.radians(angle * 3))
-                    aspect_score += coherence
-                    pairs += 1
+                
+                # Combined weight of this pair is the product of their relative tidal forces
+                # This ensures Jupiter-Venus aspects matter more than Mercury-Mars
+                weight = (influences[p1] * influences[p2]) / (total_tidal_force ** 2)
+                
+                angle = abs(planetary_data[p1]["longitude"] - planetary_data[p2]["longitude"]) % 180
+                
+                # Resonance is high at 0, 60, 120 (Harmonic)
+                # Stress is high at 90, 180 (Inversion)
+                # Phase = angle * 3 makes 0, 120, 240 local maxima
+                coherence = 0.5 + 0.5 * math.cos(math.radians(angle * 3))
+                
+                weighted_aspect_score += (coherence * weight)
+                total_weight += weight
         
-        if pairs == 0:
+        if total_weight == 0:
             return 0.5
             
-        return aspect_score / pairs
+        # Normalize weighted score
+        # The raw weighted score will be small since weights are products of fractions.
+        # We normalize by the total weight to get a 0-1 resonance index.
+        normalized_resonance = weighted_aspect_score / total_weight
+        
+        return normalized_resonance

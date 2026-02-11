@@ -752,6 +752,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSystemStats();
             setupGraph();
+
+            // Check for URL query params (Deep Linking)
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                const searchInput = document.getElementById('searchInput');
+                searchInput.value = query;
+                // Trigger search after a short delay to ensure graph/stats are ready
+                setTimeout(() => {
+                    handleSearch({ target: searchInput });
+                    // If it looks like an ID, try loading it directly
+                    if (query.match(/^[0-9a-fA-F-]{36}$/)) {
+                         loadNetwork(query);
+                    }
+                }, 500);
+            }
         });
 
         /* --- API INTERACTION --- */

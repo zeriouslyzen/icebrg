@@ -53,7 +53,7 @@ class PhysiologicalStateDetector:
         
         # Initialize subsystems
         self.sensor_interface = MacSensorInterface()
-        self.frequency_synthesizer = ConsciousnessFrequencySynthesizer()
+        self.frequency_synthesizer = PhysiologicalFrequencySynthesizer()
         self.earth_connection = EarthConnectionInterface()
         
         # Amplification profiles

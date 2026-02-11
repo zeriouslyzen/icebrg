@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Report | ICEBURG Scholar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #222;
+            --link-color: #1a0dab;
+            --meta-color: #5f6368;
+            --border-color: #dfe1e5;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .scholar-header {
+            background: #f2f2f2;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: #444;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            color: #4285f4; 
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Typography mimicking formatted papers */
+        h1, h2, h3 {
+            font-family: 'Roboto', sans-serif;
+            color: #111;
+            margin-top: 2rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            overflow-x: auto;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        blockquote {
+            border-left: 4px solid #ddd;
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        .meta-header {
+            color: var(--meta-color);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        #loading {
+            text-align: center;
+            color: #888;
+            margin-top: 4rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Print styles */
+        @media print {
+            .scholar-header, .back-link { display: none; }
+            body { font-size: 12pt; }
+            .container { margin: 0; padding: 0; max-width: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="scholar-header">
+        <a href="/scholar.html" class="logo">
+            <span class="logo-icon">🎓</span> ICEBURG Scholar
+        </a>
+    </header>
+
+    <div class="container">
+        <a href="/scholar.html" class="back-link">← Back to Search</a>
+        <div id="loading">Loading Research Report...</div>
+        <div id="content"></div>
+    </div>
+
+    <script>
+        // Use the current URL path to fetch the raw Markdown content
+        // This is a bit of a hack: The Render Endpoint serves THIS HTML file, 
+        // but we need to fetch the raw content from the filesystem via API or static serve.
+        // We will assume the server serves raw content if we add ?raw=true
+        
+        async function loadReport() {
+            try {
+                // Determine the raw file URL. 
+                // Render path: /data/research_outputs/File.md
+                // Raw fetch: /data/research_outputs/File.md?raw=true
+                const rawUrl = window.location.pathname + "?raw=true";
+                
+                const response = await fetch(rawUrl);
+                if (!response.ok) throw new Error("Document not found");
+                
+                const text = await response.text();
+                
+                // Parse date from filename for metadata
+                const filename = window.location.pathname.split('/').pop();
+                const match = filename.match(/(\d{4})(\d{2})(\d{2})/);
+                let dateStr = "Unknown Date";
+                if (match) {
+                    dateStr = `${match[1]}-${match[2]}-${match[3]}`;
+                }
+
+                const html = marked.parse(text);
+                
+                document.getElementById('content').innerHTML = `
+                    <div class="meta-header">
+                        ICEBURG INTERNAL REPORT • ${dateStr} • ACCESS LEVEL: UNCLASSIFIED
+                    </div>
+                    ${html}
+                `;
+                document.getElementById('loading').style.display = 'none';
+                
+                // Set title
+                const titleMatch = text.match(/^# (.*$)/m);
+                if (titleMatch) {
+                    document.title = titleMatch[1] + " | ICEBURG Scholar";
+                }
+
+            } catch (err) {
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: #d93025">Error loading report: ${err.message}</div>
+                `;
+            }
+        }
+
+        loadReport();
+    </script>
+</body>
+</html>

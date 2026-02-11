@@ -141,6 +141,7 @@ ICEBURG powers the research capabilities for [katanx.com](https://www.katanx.com
 - **[README.md](README.md)** - Project overview and quick start
 
 ### Detailed Documentation
+- **[src/iceburg/research/TRANSDUCTION_INDEX.md](src/iceburg/research/TRANSDUCTION_INDEX.md)** - ⚡ **Persistent index for Transduction & Device Generation research**
 - **[docs/architecture/](docs/architecture/)** - Complete system architecture
 - **[docs/COMPLETE_FEATURE_REFERENCE.md](docs/COMPLETE_FEATURE_REFERENCE.md)** - All features with technical details
 - **[docs/INDEX.md](docs/INDEX.md)** - Documentation index

@@ -798,7 +798,7 @@ async def knowledge_stats():
             # Count by topic
             topic = entry.get('topic', 'unknown')
             by_topic[topic] = by_topic.get(topic, 0) + 1
-            
+
             # High suppression entries
             if entry.get('suppression_score', 0.0) > 0.7:
                 high_suppression.append({
@@ -817,6 +817,79 @@ async def knowledge_stats():
             "last_updated": index.get('last_updated'),
             "timestamp": datetime.now().isoformat()
         }
+    
+    except Exception as e:
+        logger.error(f"Error getting knowledge stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# Scholar API Routes
+@app.get("/api/scholar/search")
+async def scholar_search(q: str = None, limit: int = 20):
+    """Search internal research corpus for ICEBURG Scholar"""
+    try:
+        if not q:
+            return {"results": []}
+
+        results = []
+        research_dir = os.path.join(os.getcwd(), "frontend", "dist", "data", "research_outputs")
+        
+        # Simple file-system search (grep-like)
+        # In future: use Whoosh or SQLite FTS
+        if os.path.exists(research_dir):
+            for filename in os.listdir(research_dir):
+                if filename.endswith(".md"):
+                    filepath = os.path.join(research_dir, filename)
+                    try:
+                        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            
+                        # Case-insensitive search
+                        if q.lower() in content.lower() or q.lower() in filename.lower():
+                            # Generate snippet
+                            idx = content.lower().find(q.lower())
+                            snippet = ""
+                            if idx != -1:
+                                start = max(0, idx - 60)
+                                end = min(len(content), idx + 140)
+                                snippet = "..." + content[start:end].replace("\n", " ") + "..."
+                            else:
+                                snippet = content[:200].replace("\n", " ") + "..."
+
+                            # Extract title from filename or first line
+                            title = filename.replace(".md", "").replace("_", " ")
+                            if content.startswith("# "):
+                                title = content.split("\n")[0].replace("# ", "")
+
+                            # Metadata extraction
+                            # Try to find date in filename (YYYYMMDD)
+                            year = "2026"
+                            import re
+                            date_match = re.search(r'(\d{4})\d{4}', filename)
+                            if date_match:
+                                year = date_match.group(1)
+
+                            results.append({
+                                "id": filename,
+                                "title": title,
+                                "link": f"/data/research_outputs/{filename}",
+                                "snippet": snippet,
+                                "authors": "ICEBURG Autonomous Research",
+                                "source": "Internal Corpus",
+                                "year": year
+                            })
+                    except Exception as e:
+                        logger.warning(f"Error reading {filename}: {e}")
+                        continue
+        
+        # Sort by relevance (simple: query in title = higher)
+        results.sort(key=lambda x: 0 if q.lower() in x['title'].lower() else 1)
+        
+        return {"results": results[:limit]}
+
+    except Exception as e:
+        logger.error(f"Error in scholar search: {e}")
+        return {"results": [], "error": str(e)}
     
     except Exception as e:
         logger.error(f"Error getting knowledge stats: {e}")
@@ -5057,6 +5130,45 @@ async def get_status():
     }
 
 
+@app.post("/debug/mode-test-report")
+async def save_mode_test_report(request: Request):
+    """Receive mode UI stress-test results from frontend and store them on disk for debugging."""
+    try:
+        payload = await request.json()
+    except Exception as e:
+        logger.error(f"Failed to parse mode test report JSON: {e}", exc_info=True)
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+
+    try:
+        from pathlib import Path
+
+        debug_dir = Path(__file__).parent.parent.parent.parent / "data" / "debug"
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        file_path = debug_dir / "mode_test_report.json"
+
+        report = {
+            "received_at": datetime.utcnow().isoformat() + "Z",
+            "client": {
+                "ip": request.client.host if request.client else None,
+                "user_agent": payload.get("userAgent"),
+            },
+            "results": sanitize_for_json(payload.get("results", [])),
+        }
+
+        with file_path.open("w", encoding="utf-8") as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+
+        logger.info(
+            "Saved mode test report with %s result entries to %s",
+            len(report["results"]),
+            file_path,
+        )
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(f"Failed to save mode test report: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to save report")
+
+
 @app.on_event("startup")
 async def startup_event():
     """Start background tasks on startup"""
@@ -5105,6 +5217,34 @@ try:
             from fastapi.responses import FileResponse
             logger.info("Serving Research Defence terminal")
             return FileResponse(str(frontend_dir / "research_defence.html"))
+
+    if frontend_dir.exists():
+        @app.get("/scholar")
+        @app.get("/scholar.html")
+        async def scholar_interface():
+            """Serve the ICEBURG Scholar interface"""
+            from fastapi.responses import FileResponse
+            logger.info("Serving ICEBURG Scholar interface")
+            return FileResponse(str(frontend_dir / "scholar.html"))
+
+        # Intercept Markdown Research Reports for pretty rendering
+        @app.get("/data/research_outputs/{filename:path}")
+        async def render_research_report(filename: str, raw: bool = False):
+            """Render Markdown reports with the Scholar template unless raw=True"""
+            from fastapi.responses import FileResponse
+            
+            # Security check - keep within research_outputs
+            file_path = frontend_dir / "dist/data/research_outputs" / filename
+            
+            # If requesting raw content or if file is not markdown, serve file directly
+            if raw or not filename.endswith(".md"):
+                if file_path.exists():
+                    return FileResponse(str(file_path))
+                return JSONResponse(status_code=404, content={"detail": "Report not found"})
+            
+            # Otherwise serve the renderer shell
+            # The renderer HTML will fetch ?raw=true to get the content
+            return FileResponse(str(frontend_dir / "render_report.html"))
 
     if frontend_dir.exists() and (frontend_dir / "index.html").exists():
         # Mount static files - this will serve index.html for / and other static files

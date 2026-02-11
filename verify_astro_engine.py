@@ -55,6 +55,7 @@ async def run_verification():
             print(f"   [CELESTIAL SIGNAL]")
             print(f"     Solar Wind: {cel.get('solar_wind', 0):.1f} km/s")
             print(f"     Scalar Potential: {cel.get('scalar_potential', 0):.4f}")
+            print(f"     Planetary Resonance: {cel.get('planetary_resonance', 0):.4f}")
             
             # Biological
             bio = telemetry.get('biological', {})

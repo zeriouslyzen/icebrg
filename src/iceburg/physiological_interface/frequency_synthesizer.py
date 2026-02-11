@@ -58,42 +58,42 @@ class PhysiologicalFrequencySynthesizer:
         
         # Consciousness state profiles
         self.consciousness_profiles = {
-            'deep_meditation': ConsciousnessState(
+            'deep_meditation': PhysiologicalState(
                 state_name='deep_meditation',
                 primary_frequency=4.0,  # Theta
                 secondary_frequencies=[2.0, 6.0],
                 binaural_beat=4.0,
                 description='Deep meditation and subconscious access'
             ),
-            'focused_attention': ConsciousnessState(
+            'focused_attention': PhysiologicalState(
                 state_name='focused_attention',
                 primary_frequency=40.0,  # Gamma
                 secondary_frequencies=[20.0, 60.0],
                 binaural_beat=40.0,
                 description='High focus and insight states'
             ),
-            'creative_flow': ConsciousnessState(
+            'creative_flow': PhysiologicalState(
                 state_name='creative_flow',
                 primary_frequency=10.0,  # Alpha
                 secondary_frequencies=[8.0, 12.0],
                 binaural_beat=10.0,
                 description='Creative flow and inspiration'
             ),
-            'earth_sync': ConsciousnessState(
+            'earth_sync': PhysiologicalState(
                 state_name='earth_sync',
                 primary_frequency=7.83,  # Schumann resonance
                 secondary_frequencies=[14.3, 20.8, 27.3, 33.8],
                 binaural_beat=7.83,
                 description='Synchronization with Earth frequencies'
             ),
-            'insight_breakthrough': ConsciousnessState(
+            'insight_breakthrough': PhysiologicalState(
                 state_name='insight_breakthrough',
                 primary_frequency=100.0,  # High gamma
                 secondary_frequencies=[40.0, 80.0, 120.0],
                 binaural_beat=100.0,
                 description='Breakthrough insights and epiphanies'
             ),
-            'icberg_sync': ConsciousnessState(
+            'icberg_sync': PhysiologicalState(
                 state_name='icberg_sync',
                 primary_frequency=432.0,  # A4 tuning
                 secondary_frequencies=[216.0, 864.0, 1296.0],

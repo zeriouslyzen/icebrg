@@ -40,11 +40,6 @@ window.testICEBURG = function () {
 // Load ICEBURG server configuration from global config
 let iceburgConfig = window.ICEBURG_CONFIG || null;
 
-// Listen for config updates (e.g. from async fetch)
-window.addEventListener('iceburg-config-updated', (event) => {
-    iceburgConfig = event.detail;
-    if (DEBUG_MODE) console.log('🔄 ICEBURG Config updated via event');
-});
 
 function loadICEBURGConfig() {
     // Just return the global config, potentially logging debug info
@@ -98,10 +93,19 @@ let conversationContext = {
     lastAssistantResponse: null
 };
 let settings = {
-    primaryModel: 'gemini-2.0-flash-exp',  // Default to Gemini Flash (fast, cheap)
+    primaryModel: window.ICEBURG_CONFIG?.serverConfig?.defaultFastModelId || 'qwen2.5:7b',
     temperature: 0.7,
     maxTokens: 2000
 };
+
+// Listen for config updates (e.g. from async fetch)
+window.addEventListener('iceburg-config-updated', (event) => {
+    iceburgConfig = event.detail;
+    if (iceburgConfig?.serverConfig?.defaultFastModelId && !settings.primaryModel) {
+        settings.primaryModel = iceburgConfig.serverConfig.defaultFastModelId;
+    }
+    if (DEBUG_MODE) console.log('🔄 ICEBURG Config updated via event in main.js');
+});
 
 // Chunk ordering and buffering for consistent text display
 let chunkBuffers = new Map(); // messageId -> {chunks: [], lastRender: 0}

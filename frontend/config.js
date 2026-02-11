@@ -11,41 +11,74 @@
         "status": "ready",
         "serverConfig": {
             "iceburg_version": "2.0",
-            "iceburg_branding": "Iceberg",
+            "iceburg_branding": "ICEBURG",
             "iceburg_description": "Truth-Finding AI Civilization",
             "models": [
                 {
                     "modelId": "qwen2.5:7b",
-                    "name": "ICEBURG Fast",
-                    "description": "Quick responses",
+                    "name": "ICEBURG Fast (Qwen 2.5 7B)",
+                    "description": "Ultra-fast, optimized for M4",
                     "modeDescription": "Fast mode for quick answers",
                     "modelMode": "ICEBURG_MODE_FAST",
                     "agent": "auto",
-                    "tags": [],
-                    "badgeText": "",
+                    "tags": ["optimized", "M4"],
+                    "badgeText": "M4 Optimized",
                     "isDefault": true
                 },
                 {
                     "modelId": "deepseek-v2:16b",
-                    "name": "ICEBURG Surveyor",
-                    "description": "Research Expert",
-                    "modeDescription": "Deep research and gnostic analysis",
-                    "modelMode": "ICEBURG_MODE_SURVEYOR",
-                    "agent": "surveyor",
-                    "tags": ["research", "gnosis"],
-                    "badgeText": ""
-                },
-                {
-                    "modelId": "deepseek-v2:16b",
-                    "name": "ICEBURG Protocol",
-                    "description": "Multi-Agent",
-                    "modeDescription": "Full protocol with all agents",
+                    "name": "ICEBURG Deep Research (DeepSeek V2)",
+                    "description": "High-intelligence synthesis & reasoning",
+                    "modeDescription": "Full protocol research & synthesis",
                     "modelMode": "ICEBURG_MODE_PROTOCOL",
                     "agent": "protocol",
-                    "tags": ["multi-agent"],
-                    "badgeText": ""
+                    "tags": ["deep-research", "heavy"],
+                    "badgeText": "Max Intelligence",
+                    "isDefault": false
+                },
+                {
+                    "modelId": "deepseek-r1:7b",
+                    "name": "DeepSeek R1 7B",
+                    "description": "Advanced reasoning, excellent for research",
+                    "modeDescription": "Deep reasoning and complex analysis",
+                    "modelMode": "ICEBURG_MODE_FAST",
+                    "agent": "auto",
+                    "tags": ["reasoning", "research"],
+                    "badgeText": "Reasoning"
                 }
             ],
+            "mode_templates": {
+                "fast": {
+                    "icon": "⚡",
+                    "name": "Fast",
+                    "description": "Quick chat responses",
+                    "agents": ["secretary"],
+                    "metacognition": false
+                },
+                "research": {
+                    "icon": "🔬",
+                    "name": "Research",
+                    "description": "Standard research with metacognition",
+                    "agents": ["surveyor", "deliberation", "synthesist"],
+                    "metacognition": true
+                },
+                "deep_research": {
+                    "icon": "🧬",
+                    "name": "Deep Research",
+                    "description": "Comprehensive multi-perspective analysis",
+                    "agents": ["surveyor", "dissident", "deliberation", "archaeologist", "synthesist", "oracle"],
+                    "metacognition": true
+                },
+                "unbounded": {
+                    "icon": "♾️",
+                    "name": "Unbounded",
+                    "description": "AGI mode with self-modification",
+                    "agents": ["surveyor", "dissident", "deliberation", "archaeologist", "synthesist", "oracle", "self_redesign"],
+                    "metacognition": true,
+                    "self_modification": true,
+                    "warning": "Experimental - enables self-redesign capabilities"
+                }
+            },
             "unavailableModels": [],
             "defaultFastModelId": "qwen2.5:7b",
             "defaultExpertModelId": "deepseek-v2:16b",
@@ -55,12 +88,19 @@
                     {
                         "agentId": "surveyor",
                         "title": "Surveyor",
-                        "systemPrompt": "You are ICEBURG Surveyor...",
+                        "systemPrompt": "You are ICEBURG Surveyor — a 2025-era gnostic research agent...",
                         "icon": "🔬",
-                        "description": "Gnostic research agent",
-                        "capabilities": ["research", "gnosis"]
+                        "description": "Gnostic research agent for deep analysis",
+                        "capabilities": ["research", "gnosis", "truth-finding", "uncensored-access"]
                     },
-                    // ... other agents will be loaded from server config or added dynamically
+                    {
+                        "agentId": "dissident",
+                        "title": "Dissident",
+                        "systemPrompt": "ROLE: A radical philosopher of science...",
+                        "icon": "⚡",
+                        "description": "Challenges consensus, explores alternatives",
+                        "capabilities": ["challenge", "alternatives", "paradigms", "uncensored-access"]
+                    }
                 ]
             }
         },
@@ -83,7 +123,7 @@
             "chunk_delay": 0.02,
             "thinking_stream_poll_interval": 50
         },
-         "timeline_navigator": {
+        "timeline_navigator": {
             "enabled": true,
             "maxResponses": 100,
             "minResponses": 2,
@@ -91,7 +131,7 @@
             "highlightOnScroll": true,
             "showAgentBadges": true
         },
-         "response_feedback": {
+        "response_feedback": {
             "show_like_dropdown": true,
             "show_dislike_dropdown": true,
             "show_research_quality": true,
@@ -111,7 +151,7 @@
             "enable_voice_mode": false,
             "enable_image_generation": false
         },
-         "suggestions_config": {
+        "suggestions_config": {
             "enabled": true,
             "maxItems": 7,
             "maxItemsMobile": 3,

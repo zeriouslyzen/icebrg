@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICEBURG Scholar</title>
+    <link rel="stylesheet" href="scholar.css">
+</head>
+<body>
+    <div id="scholar-app">
+        <header class="scholar-header">
+            <div class="logo-area">
+                <span class="iceburg-logo">ICEBURG</span><span class="scholar-label">Scholar</span>
+            </div>
+            <div class="search-container">
+                <input type="text" id="scholar-search-input" placeholder="Search internal research corpus..." autocomplete="off">
+                <button id="search-button" aria-label="Search">
+                    <svg focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+                </button>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">JD</div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="filters-sidebar">
+                <div class="filter-group">
+                    <h3>Date</h3>
+                    <label><input type="radio" name="date-filter" value="any" checked> Any time</label>
+                    <label><input type="radio" name="date-filter" value="2026"> Since 2026</label>
+                    <label><input type="radio" name="date-filter" value="2025"> Since 2025</label>
+                    <label><input type="radio" name="date-filter" value="custom"> Custom range...</label>
+                </div>
+                <div class="filter-group">
+                    <h3>Sort by</h3>
+                    <label><input type="radio" name="sort-filter" value="relevance" checked> Sort by relevance</label>
+                    <label><input type="radio" name="sort-filter" value="date"> Sort by date</label>
+                </div>
+                <div class="filter-group">
+                    <h3>Agent</h3>
+                    <label><input type="checkbox" name="agent-filter" value="surveyor"> Surveyor</label>
+                    <label><input type="checkbox" name="agent-filter" value="dissident"> Dissident</label>
+                    <label><input type="checkbox" name="agent-filter" value="synthesist"> Synthesist</label>
+                </div>
+            </aside>
+
+            <main class="results-container" id="results-container">
+                <div class="loading-state hidden">Searching internal corpus...</div>
+                <div class="empty-state">
+                    <h2>Stand on the shoulders of your own giants.</h2>
+                    <p>Search over 300+ generated research reports, simulation logs, and ancient texts.</p>
+                </div>
+                <!-- Results injected here -->
+            </main>
+
+            <aside class="stats-sidebar">
+                <!-- Optional: Graph of research velocity or top citations -->
+            </aside>
+        </div>
+    </div>
+
+    <script src="scholar.js"></script>
+</body>
+</html>

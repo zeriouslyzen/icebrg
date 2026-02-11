@@ -175,7 +175,8 @@ class ICEBURGPhysiologicalIntegration:
                 'celestial': {
                     'solar_wind': snap.celestial_signal.solar_wind_speed,
                     'kp_index': snap.celestial_signal.kp_index,
-                    'scalar_potential': snap.celestial_signal.scalar_potential_index
+                    'scalar_potential': snap.celestial_signal.scalar_potential_index,
+                    'planetary_resonance': snap.celestial_signal.planetary_resonance_index
                 },
                 'biological': {
                     'hrv_rmssd': snap.bio_receiver.hrv_rmssd,
