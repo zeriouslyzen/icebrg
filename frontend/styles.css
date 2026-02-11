@@ -1486,6 +1486,48 @@ body {
     min-width: 16px;
 }
 
+/* System Modules Cascading Layout */
+.sidebar-section-container {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-tertiary);
+    margin: 0 0 1rem 1rem;
+    opacity: 0.6;
+}
+
+/* Cascading indentation and scale effect */
+.sidebar-section-container .sidebar-link {
+    transition: all var(--transition-base);
+    transform-origin: left center;
+}
+
+.sidebar-section-container .sidebar-link:nth-of-type(1) { margin-left: 0.25rem; opacity: 0.6; transform: scale(0.94); }
+.sidebar-section-container .sidebar-link:nth-of-type(2) { margin-left: 0.45rem; opacity: 0.65; transform: scale(0.95); }
+.sidebar-section-container .sidebar-link:nth-of-type(3) { margin-left: 0.65rem; opacity: 0.72; transform: scale(0.96); }
+.sidebar-section-container .sidebar-link:nth-of-type(4) { margin-left: 0.85rem; opacity: 0.78; transform: scale(0.97); }
+.sidebar-section-container .sidebar-link:nth-of-type(5) { margin-left: 1.05rem; opacity: 0.85; transform: scale(0.98); }
+.sidebar-section-container .sidebar-link:nth-of-type(6) { margin-left: 1.25rem; opacity: 0.92; transform: scale(0.99); }
+.sidebar-section-container .sidebar-link:nth-of-type(7) { margin-left: 1.45rem; opacity: 1.0; transform: scale(1.0); }
+
+.sidebar-section-container .sidebar-link:hover {
+    margin-left: 1.5rem;
+    opacity: 1;
+    transform: scale(1.02);
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
 /* Prompt Bar Decorative Orbs */
 .prompt-orb-left,
 .prompt-orb-right {
