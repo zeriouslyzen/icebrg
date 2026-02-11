@@ -3,8 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -245,8 +244,8 @@
       gap: 0.6rem;
       padding: 0.7rem 1.1rem;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-      backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       border: 1px solid transparent;
       border-radius: 12px;
       cursor: pointer;
@@ -308,6 +307,7 @@
           rgba(184, 212, 255, 0.1) 50%,
           rgba(255, 255, 255, 0.05) 100%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       pointer-events: none;
@@ -746,6 +746,63 @@
         transform: translateY(100%);
       }
     }
+
+    /* Utility Helpers to replace inline styles */
+    .hidden-file-input, 
+    .hidden-select, 
+    .hidden-container {
+      display: none !important;
+    }
+
+    .sidebar-footer-spacer {
+      height: 2rem;
+    }
+
+    .settings-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .settings-micro-desc {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin: 0.25rem 0 0 0;
+    }
+
+    .settings-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .settings-no-margin {
+      margin: 0 !important;
+    }
+
+    .settings-keys-warning {
+      font-size: 0.65rem;
+      color: var(--text-tertiary);
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 200, 0, 0.1);
+      border-radius: 4px;
+      border-left: 2px solid rgba(255, 200, 0, 0.5);
+    }
+
+    .preview-line-1 { width: 80%; }
+    .preview-line-2 { width: 95%; }
+    .preview-line-3 { width: 60%; }
+    .preview-line-4 { width: 90%; }
+
+    .settings-icon-inline {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
   </style>
   <!-- Syntax highlighting and math rendering -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
@@ -808,8 +865,8 @@
       <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="iceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:rgba(200,220,255,0.9);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgba(255,255,255,0.6);stop-opacity:1" />
+            <stop offset="0%" stop-color="rgba(200,220,255,0.9)" stop-opacity="1" />
+            <stop offset="100%" stop-color="rgba(255,255,255,0.6)" stop-opacity="1" />
           </linearGradient>
         </defs>
         <!-- Main crack lines - visible but not distracting -->
@@ -857,7 +914,24 @@
     <div class="app-container">
       <!-- Sidebar -->
       <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
+        <!-- New Profile Section at Top -->
+        <div class="sidebar-user-section" id="sidebarUserSection">
+          <div class="user-profile-preview" id="userProfilePreview">
+            <div class="user-avatar-container">
+              <img src="/profile.png" class="user-avatar" id="userAvatar" alt="Danger">
+            </div>
+            <span class="user-name">Danger</span>
+            <button class="user-settings-trigger" id="userSettingsTrigger" aria-label="Profile Settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-view" id="sidebarNavView">
+          <div class="sidebar-header">
           <button class="new-conversation-btn" id="newConversationBtn" aria-label="New conversation">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -868,7 +942,7 @@
         <div class="sidebar-search">
           <input type="text" class="sidebar-search-input" id="sidebarSearchInput" placeholder="Search conversations..."
             autocomplete="off" spellcheck="false">
-          <button class="sidebar-search-clear" id="sidebarSearchClear" aria-label="Clear search" style="display: none;">
+          <button class="sidebar-search-clear" id="sidebarSearchClear" aria-label="Clear search">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
@@ -975,7 +1049,56 @@
             <span class="module-badge module-badge-nuclear">LOCKED</span>
           </a>
         </div>
-        <div style="height: 2rem;"></div> <!-- Extra space at bottom for scrolling -->
+        <div class="sidebar-footer-spacer"></div> <!-- Extra space at bottom for scrolling -->
+        </div>
+
+        <!-- Profile Settings View -->
+        <div class="sidebar-view sidebar-view-hidden" id="sidebarSettingsView">
+          <div class="sidebar-settings-header">
+            <button class="back-to-nav-btn" id="backToNavBtn" aria-label="Back to navigation">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <h3>Profile Settings</h3>
+          </div>
+          <div class="sidebar-settings-content">
+            <div class="settings-avatar-edit">
+              <div class="user-avatar-container large">
+                <img src="/profile.png" class="user-avatar" alt="User Avatar">
+                <div class="avatar-edit-overlay">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profileNameInput">Name</label>
+              <div class="field-input-wrapper">
+                <input type="text" id="profileNameInput" value="Jack Danger" readonly class="sidebar-settings-input" title="User Name">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profileEmailInput">Email</label>
+              <div class="field-input-wrapper">
+                <input type="email" id="profileEmailInput" value="jack@iceburg.ai" readonly class="sidebar-settings-input" title="User Email">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profilePasswordInput">Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="profilePasswordInput" value="********" readonly class="sidebar-settings-input" title="User Password">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            
+            <button class="sidebar-settings-save">Save Changes</button>
+          </div>
+        </div>
       </aside>
 
       <!-- Main Content -->
@@ -995,20 +1118,20 @@
 
         <main class="app-main">
           <!-- Hidden controls for JS sync - actual UI moved to settings panel -->
-          <div class="controls-panel" id="controlsPanel" style="display: none;">
+          <div class="controls-panel" id="controlsPanel">
             <div class="control-group">
-              <select class="control-select" id="modeSelect"
+              <select class="control-select" id="modeSelect" title="Select Mode"
                 onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
                 <!-- Dynamically populated -->
               </select>
             </div>
             <div class="control-group" id="agentGroup">
-              <select class="control-select" id="agentSelect">
+              <select class="control-select" id="agentSelect" title="Select Agent">
                 <!-- Dynamically populated -->
               </select>
             </div>
             <div class="control-group" id="modelGroup">
-              <select class="control-select" id="modelSelect">
+              <select class="control-select" id="modelSelect" title="Select Model">
                 <!-- Dynamically populated -->
               </select>
             </div>
@@ -1070,8 +1193,7 @@
           </button>
           <input type="text" class="input-field" id="queryInput" placeholder="Ask Iceberg anything..."
             autocomplete="off" spellcheck="false">
-          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx"
-            style="display: none;">
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" class="hidden-file-input" title="Upload files">
           <button class="send-button" id="sendButton" aria-label="Send message">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2"
@@ -1102,8 +1224,7 @@
             <!-- MODE SELECTOR (Rich UI) -->
             <div class="rich-select-container" id="modeRichSelect">
               <!-- Native Select (Hidden but functional) -->
-              <select id="modeSelectSettings" style="display: none;" 
-                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); updateRichSelectDisplay('modeRichSelect', this); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
+              <select id="modeSelectSettings" class="hidden-select" title="Native Mode Select"                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); updateRichSelectDisplay('modeRichSelect', this); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
                 <!-- Dynamically populated -->
               </select>
 
@@ -1130,7 +1251,7 @@
         <div class="settings-group">
             <!-- AGENT SELECTOR (Rich UI) -->
             <div class="rich-select-container" id="agentRichSelect">
-               <select id="agentSelectSettings" style="display: none;"
+               <select id="agentSelectSettings" class="hidden-select" title="Native Agent Select"
                 onchange="document.getElementById('agentSelect') && (document.getElementById('agentSelect').value = this.value); updateRichSelectDisplay('agentRichSelect', this);">
                 <!-- Dynamically populated -->
               </select>
@@ -1169,6 +1290,7 @@
               border: 1px solid var(--border-primary);
               cursor: pointer;
               transition: all 0.2s ease;
+              -webkit-user-select: none;
               user-select: none;
             }
             .rich-select-trigger:hover {
@@ -1492,11 +1614,11 @@
       </div>
       <div class="settings-section">
         <h3>Brainwave State</h3>
-        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+        <p class="settings-desc">
           Orb light patterns inspired by mental states
         </p>
         <div class="settings-group">
-          <select class="settings-select" id="brainwaveSelect"
+          <select class="settings-select" id="brainwaveSelect" title="Select Brainwave State"
             onchange="document.body.setAttribute('data-brainwave', this.value); localStorage.setItem('brainwaveMode', this.value)">
             <option value="auto">Auto (Adaptive)</option>
             <option value="alpha" selected>Alpha - Relaxed Focus (Green/Yellow)</option>
@@ -1521,32 +1643,30 @@
       <!-- API Keys Section -->
       <div class="settings-section">
         <h3>API Keys</h3>
-        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+        <p class="settings-desc">
           Connect your own AI providers for enhanced capabilities
         </p>
 
         <!-- Hybrid Mode Toggle -->
-        <div class="settings-group"
-          style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 1rem;">
+        <div class="settings-group settings-toggle-row">
           <div>
-            <label class="settings-label" style="margin: 0;">Hybrid Mode</label>
-            <p style="font-size: 0.7rem; color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Use multiple AI providers
-              together</p>
+            <label class="settings-label settings-no-margin">Hybrid Mode</label>
+            <p class="settings-micro-desc">Use multiple AI providers together</p>
           </div>
           <div class="theme-toggle-wrapper">
-            <input type="checkbox" id="hybridModeToggle" class="theme-toggle-input"
+            <input type="checkbox" id="hybridModeToggle" class="theme-toggle-input" title="Toggle Hybrid Mode"
               onchange="localStorage.setItem('hybridMode', this.checked); document.getElementById('apiKeysContainer').style.display = this.checked ? 'block' : 'none';">
             <label for="hybridModeToggle" class="theme-toggle-slider"></label>
           </div>
         </div>
 
         <!-- API Key Inputs Container -->
-        <div id="apiKeysContainer" style="display: none;">
+        <div id="apiKeysContainer" class="hidden-container">
           <!-- Gemini -->
           <div class="settings-group">
             <label class="settings-label" for="apiKeyGemini">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                style="margin-right: 0.5rem; vertical-align: middle;">
+                class="settings-icon-inline">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                 <path d="M2 17l10 5 10-5"></path>
               </svg>
@@ -1569,7 +1689,7 @@
           <div class="settings-group">
             <label class="settings-label" for="apiKeyClaude">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                style="margin-right: 0.5rem; vertical-align: middle;">
+                class="settings-icon-inline">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 6v6l4 2"></path>
               </svg>
@@ -1592,7 +1712,7 @@
           <div class="settings-group">
             <label class="settings-label" for="apiKeyGPT">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                style="margin-right: 0.5rem; vertical-align: middle;">
+                class="settings-icon-inline">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="9" y1="9" x2="15" y2="15"></line>
                 <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -1616,7 +1736,7 @@
           <div class="settings-group">
             <label class="settings-label" for="apiKeyGrok">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                style="margin-right: 0.5rem; vertical-align: middle;">
+                class="settings-icon-inline">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
               Grok (xAI)
@@ -1638,7 +1758,7 @@
           <div class="settings-group">
             <label class="settings-label" for="apiKeyDeepSeek">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                style="margin-right: 0.5rem; vertical-align: middle;">
+                class="settings-icon-inline">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
@@ -1657,8 +1777,7 @@
             </div>
           </div>
 
-          <p
-            style="font-size: 0.65rem; color: var(--text-tertiary); margin-top: 0.75rem; padding: 0.5rem; background: rgba(255,200,0,0.1); border-radius: 4px; border-left: 2px solid rgba(255,200,0,0.5);">
+          <p class="settings-keys-warning">
             🔒 Keys are stored locally in your browser. For production security, use a backend proxy.
           </p>
         </div>
@@ -1668,7 +1787,7 @@
   <div class="settings-overlay" id="settingsOverlay"></div>
 
   <!-- Paywall Modal -->
-  <div id="paywallModal" class="paywall-overlay" style="display: none;">
+  <div id="paywallModal" class="paywall-overlay">
     <div class="paywall-card">
       <button class="paywall-close" onclick="document.getElementById('paywallModal').style.display='none'">×</button>
       <div class="paywall-icon-container">
@@ -1686,10 +1805,10 @@
           <span class="preview-id">ID: #8892-A</span>
         </div>
         <div class="paywall-preview-content">
-          <div class="preview-line" style="width: 80%"></div>
-          <div class="preview-line" style="width: 95%"></div>
-          <div class="preview-line" style="width: 60%"></div>
-          <div class="preview-line" style="width: 90%"></div>
+          <div class="preview-line preview-line-1"></div>
+          <div class="preview-line preview-line-2"></div>
+          <div class="preview-line preview-line-3"></div>
+          <div class="preview-line preview-line-4"></div>
           <div class="preview-blur-overlay">
             <span>PREVIEW UNAVAILABLE</span>
           </div>

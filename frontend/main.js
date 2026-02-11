@@ -5159,6 +5159,179 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Sidebar toggle elements not found:', { sidebarToggle: !!sidebarToggle, sidebar: !!sidebar });
     }
 
+    // Sidebar View Toggling (Nav vs Profile Settings)
+    const userProfilePreview = document.getElementById('userProfilePreview');
+    const userSettingsTrigger = document.getElementById('userSettingsTrigger');
+    const backToNavBtn = document.getElementById('backToNavBtn');
+    const navView = document.getElementById('sidebarNavView');
+    const settingsView = document.getElementById('sidebarSettingsView');
+
+    function toggleSidebarView(showSettings) {
+        if (showSettings) {
+            navView.classList.add('sidebar-view-hidden');
+            settingsView.classList.remove('sidebar-view-hidden');
+            // Ensure sidebar is open on mobile when switching to settings
+            if (sidebar && !sidebar.classList.contains('open') && window.innerWidth <= 768) {
+                sidebar.classList.add('open');
+            }
+        } else {
+            settingsView.classList.add('sidebar-view-hidden');
+            navView.classList.remove('sidebar-view-hidden');
+        }
+    }
+
+    if (userProfilePreview) {
+        userProfilePreview.addEventListener('click', () => toggleSidebarView(true));
+    }
+    if (userSettingsTrigger) {
+        userSettingsTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidebarView(true);
+        });
+    }
+    if (backToNavBtn) {
+        backToNavBtn.addEventListener('click', () => toggleSidebarView(false));
+    }
+
+    // --- Profile Management Logic ---
+    function loadProfile() {
+        const savedProfile = localStorage.getItem('iceburg_profile');
+        if (savedProfile) {
+            try {
+                const profile = JSON.parse(savedProfile);
+                updateUIWithProfile(profile);
+            } catch (e) {
+                console.error('Failed to parse saved profile:', e);
+            }
+        }
+    }
+
+    function updateUIWithProfile(profile) {
+        const sidebarName = document.querySelector('.user-name');
+        const profileNameInput = document.getElementById('profileNameInput');
+        const profileEmailInput = document.getElementById('profileEmailInput');
+        
+        if (sidebarName && profile.lastName) {
+            sidebarName.textContent = profile.lastName;
+        }
+        if (profileNameInput && profile.name) {
+            profileNameInput.value = profile.name;
+        }
+        if (profileEmailInput && profile.email) {
+            profileEmailInput.value = profile.email;
+        }
+        if (profile.avatar) {
+            const avatars = document.querySelectorAll('.user-avatar');
+            avatars.forEach(img => img.src = profile.avatar);
+        }
+    }
+
+    function saveProfile() {
+        const profileNameInput = document.getElementById('profileNameInput');
+        const profileEmailInput = document.getElementById('profileEmailInput');
+        const sidebarName = document.querySelector('.user-name');
+        const avatarImg = document.querySelector('.user-avatar');
+        
+        // Basic validation
+        if (profileNameInput && !profileNameInput.value.trim()) {
+            showToast('Name cannot be empty', 'error');
+            return;
+        }
+
+        const profileName = profileNameInput ? profileNameInput.value.trim() : 'Jack Danger';
+        const profile = {
+            name: profileName,
+            email: profileEmailInput ? profileEmailInput.value.trim() : 'jack@iceburg.ai',
+            lastName: profileName.split(' ').pop(),
+            avatar: avatarImg ? avatarImg.src : '/profile.png'
+        };
+        
+        localStorage.setItem('iceburg_profile', JSON.stringify(profile));
+        
+        if (sidebarName) {
+            sidebarName.textContent = profile.lastName;
+        }
+        
+        showToast('Profile updated!', 'success');
+        
+        // Reset inputs to readonly
+        [profileNameInput, profileEmailInput].forEach(input => {
+            if (input) {
+                input.readOnly = true;
+                input.style.borderColor = '';
+            }
+        });
+        
+        // Return to nav view after a short delay
+        setTimeout(() => toggleSidebarView(false), 1000);
+    }
+
+    // Set up profile event listeners
+    const saveProfileBtn = document.querySelector('.sidebar-settings-save');
+    const fieldEditButtons = document.querySelectorAll('.field-edit-btn');
+    const avatarEditOverlay = document.querySelector('.avatar-edit-overlay');
+
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', saveProfile);
+    }
+
+    fieldEditButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const wrapper = e.target.closest('.sidebar-settings-field') || e.target.closest('.password-input-wrapper');
+            const input = wrapper.querySelector('input');
+            if (input) {
+                const isReadOnly = input.readOnly;
+                input.readOnly = !isReadOnly;
+                if (!input.readOnly) {
+                    input.focus();
+                    input.style.borderColor = 'var(--text-secondary)';
+                    e.target.textContent = 'Done';
+                } else {
+                    input.style.borderColor = '';
+                    e.target.textContent = 'Edit';
+                }
+            }
+        });
+    });
+
+    if (avatarEditOverlay) {
+        avatarEditOverlay.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const avatars = document.querySelectorAll('.user-avatar');
+                        avatars.forEach(img => img.src = event.target.result);
+                        // Save immediately or wait for profile save? Let's wait for save.
+                        showToast('Avatar updated! Click Save to persist.', 'info');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        });
+    }
+
+    // Also allow clicking values directly to edit
+    [document.getElementById('profileNameInput'), document.getElementById('profileEmailInput')].forEach(input => {
+        if (input) {
+            input.addEventListener('click', () => {
+                if (input.readOnly) {
+                    // Find the edit button next to it if any, or just enable
+                    input.readOnly = false;
+                    input.focus();
+                    input.style.borderColor = 'var(--text-secondary)';
+                }
+            });
+        }
+    });
+
+    loadProfile();
+
     // New conversation button
     if (newConversationBtn) {
         newConversationBtn.addEventListener('click', () => {
