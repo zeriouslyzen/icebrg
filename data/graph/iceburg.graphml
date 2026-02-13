@@ -383,6 +383,30 @@
 <node id="Hermetic tradition of astrology">
   <data key="d0">evidence</data>
 </node>
+<node id="The Hidden Architecture of Global Finance">
+  <data key="d0">principle</data>
+</node>
+<node id="Economics">
+  <data key="d0">domain</data>
+</node>
+<node id="Global Affairs">
+  <data key="d0">domain</data>
+</node>
+<node id="Global finance operates under a covert structure akin to an international shadow government, characterized by complex networks of deception and manipulation that are integral to maintaining economic control while obscuring true power dynamics.">
+  <data key="d0">principle</data>
+</node>
+<node id="The Complex Interplay of Elite Networks in Shaping Global Affairs">
+  <data key="d0">principle</data>
+</node>
+<node id="Business and Economy">
+  <data key="d0">domain</data>
+</node>
+<node id="Diplomacy">
+  <data key="d0">domain</data>
+</node>
+<node id="Global affairs are significantly influenced by elite networks that operate across traditional state boundaries, shaping policies and agendas through shared interests and mutual benefits.">
+  <data key="d0">principle</data>
+</node>
 <edge source="Collective Consciousness Drives Evolution" target="Ecological succession">
   <data key="d1">touches</data>
   <data key="d2">0</data>
@@ -938,5 +962,26 @@
 </edge>
 <edge source="astrology" target="Hermetic tradition of astrology">
   <data key="d1">supports</data>
+</edge>
+<edge source="The Hidden Architecture of Global Finance" target="Economics">
+  <data key="d1">touches</data>
+</edge>
+<edge source="The Hidden Architecture of Global Finance" target="Global Affairs">
+  <data key="d1">touches</data>
+</edge>
+<edge source="The Hidden Architecture of Global Finance" target="Global finance operates under a covert structure akin to an international shadow government, characterized by complex networks of deception and manipulation that are integral to maintaining economic control while obscuring true power dynamics.">
+  <data key="d1">implies</data>
+</edge>
+<edge source="The Complex Interplay of Elite Networks in Shaping Global Affairs" target="Global Affairs">
+  <data key="d1">touches</data>
+</edge>
+<edge source="The Complex Interplay of Elite Networks in Shaping Global Affairs" target="Business and Economy">
+  <data key="d1">touches</data>
+</edge>
+<edge source="The Complex Interplay of Elite Networks in Shaping Global Affairs" target="Diplomacy">
+  <data key="d1">touches</data>
+</edge>
+<edge source="The Complex Interplay of Elite Networks in Shaping Global Affairs" target="Global affairs are significantly influenced by elite networks that operate across traditional state boundaries, shaping policies and agendas through shared interests and mutual benefits.">
+  <data key="d1">implies</data>
 </edge>
 </graph></graphml>

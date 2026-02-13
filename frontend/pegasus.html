@@ -563,6 +563,46 @@
             margin-top: 4px;
             color: var(--text-secondary);
         }
+
+        /* Utility classes for layout */
+        .stats-footer {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+        .full-width-btn {
+            width: 100%;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+        .cleanup-btn {
+            display: none;
+            background: var(--warning) !important;
+        }
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 50%;
+        }
+        .no-selection-head {
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+        .no-selection-mono {
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+        .hidden-panel {
+            display: none;
+        }
+        .connections-section {
+            margin-top: 1rem;
+        }
+        .expand-btn {
+            width: 100%;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 
@@ -623,7 +663,7 @@
                         <div class="stat-label">Connections</div>
                     </div>
                 </div>
-                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+                <div class="stats-footer">
                     <div class="prop-item">
                         <span class="prop-label">Rel/Entity Ratio</span>
                         <span class="prop-val" id="statRatio">--</span>
@@ -632,12 +672,11 @@
                         <span class="prop-label">Data Quality</span>
                         <span class="prop-val" id="dataQuality">--</span>
                     </div>
-                    <button class="cta-button" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px;"
+                    <button class="cta-button full-width-btn"
                         onclick="loadDiagnostics()" title="View detailed diagnostics">
                         Diagnostics
                     </button>
-                    <button id="cleanupButton" class="cta-button"
-                        style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; padding: 8px; display: none; background: var(--warning);"
+                    <button id="cleanupButton" class="cta-button full-width-btn cleanup-btn"
                         onclick="runCleanup()" title="Remove invalid relationships">
                         Clean Data
                     </button>
@@ -682,12 +721,12 @@
         <!-- Right Panel: Details -->
         <aside class="panel-right" id="detailPanel">
             <!-- Empty state defaults to hidden via JS logic, but let's have a placeholder -->
-            <div id="emptyDetailState" style="text-align: center; color: var(--text-muted); margin-top: 50%;">
-                <p class="serif-head" style="font-size: 1.5rem; opacity: 0.3;">No Selection</p>
-                <p class="mono" style="font-size: 0.8rem; opacity: 0.5;">Select a node to inspect</p>
+            <div id="emptyDetailState" class="empty-state">
+                <p class="serif-head no-selection-head">No Selection</p>
+                <p class="mono no-selection-mono">Select a node to inspect</p>
             </div>
 
-            <div id="activeDetailContent" style="display: none;">
+            <div id="activeDetailContent" class="hidden-panel">
 
                 <div class="detail-card">
                     <div class="detail-header">
@@ -703,11 +742,11 @@
                 </div>
 
                 <div class="section-title">Connections</div>
-                <div class="prop-list" id="detailConnections" style="margin-top: 1rem;">
+                <div class="prop-list connections-section" id="detailConnections">
                     <!-- Injected Connections -->
                 </div>
 
-                <button id="expandNetworkBtn" class="cta-button" style="width: 100%; margin-top: 2rem;" onclick="expandCurrentNode()">
+                <button id="expandNetworkBtn" class="cta-button expand-btn" onclick="expandCurrentNode()">
                     Expand Network
                 </button>
 

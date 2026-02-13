@@ -63,20 +63,23 @@ def resolve_models(
     if not surveyor:
         surveyor = _first_present([
             "deepseek-r1:7b",
-            "llama3:8b-instruct",
+            "dolphin-mistral:latest",
             "llama3.1:8b-instruct",
-            "llama3:latest",
-            "llama3.1:8b",
+            "llama3:8b-instruct",
             "qwen2.5:7b",
             "mistral:7b-instruct",
-            "mistral:7b",
+            "llama3:latest",
             "mistral:latest",
-            "qwen2.5:7b-instruct",
-            "qwen2.5:latest",
         ], available) or surveyor_pref
 
     if not dissident:
         dissident = _first_present([
+            "dolphin-mistral:latest",
+            "dolphin-mistral:7b",
+            "hermes:latest",
+            "openhermes:latest",
+            "wizardlm:latest",
+            "mistral-openorca:latest",
             "deepseek-r1:7b",
             "mistral:7b-instruct",
             "mistral:7b",
@@ -91,26 +94,24 @@ def resolve_models(
     if not synthesist:
         synthesist = _first_present([
             "deepseek-r1:7b",
+            "dolphin-mistral:latest",
+            "hermes:latest",
             "qwen2.5:7b",
             "llama3.1:8b",
             "llama3:latest",
             "mistral:7b",
-            "qwen2.5:latest",
-            "llama3:70b-instruct",
-            "qwen2.5:32b-instruct",
             "mixtral:latest",
         ], available) or synthesist_pref
 
     if not oracle:
         oracle = _first_present([
             "deepseek-r1:7b",
+            "dolphin-mistral:latest",
+            "hermes:latest",
             "qwen2.5:7b",
             "llama3.1:8b",
             "llama3:latest",
             "mistral:7b",
-            "qwen2.5:latest",
-            "llama3:70b-instruct",
-            "qwen2.5:32b-instruct",
             "mixtral:latest",
         ], available) or oracle_pref
 

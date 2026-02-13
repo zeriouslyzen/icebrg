@@ -2653,9 +2653,12 @@ body {
     z-index: 10;
 }
 
+
 .sidebar-user-section:hover {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
 }
+
+
 
 .user-profile-preview {
     display: flex;
@@ -2722,6 +2725,7 @@ body {
     overflow: hidden;
     transition: opacity var(--transition-base), transform var(--transition-base);
 }
+
 
 .sidebar-view-hidden {
     display: none !important;

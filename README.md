@@ -15,9 +15,10 @@ ICEBURG currently provides:
 - **Knowledge Base**: 302-entry Celestial Encyclopedia on bioelectricity & consciousness.
 - **Metacognition**: Self-correction and contradiction detection (v3.4).
 
-### 🚀 Advanced Intelligence (Pegasus/Colossus)
+### 🚀 Advanced Intelligence (Pegasus/Colossus/Scholar)
 - **Pegasus Information Architecture**: High-fidelity network visualization extension for exploring complex entity relationships.
 - **Colossus Intelligence Platform**: Specialized backend tier providing unified graph/SQLite search for deep investigative research.
+- **ICEBURG Scholar**: Internal research metadata index and 🎓 academic search interface with automated styled report rendering.
 
 ## Quick Start
 
@@ -96,6 +97,8 @@ iceburg/
 │   └── tools/             # OSINT, Web Search, PDF toolsets
 ├── frontend/              # Web application
 │   ├── app.html           # Main research console
+│   ├── scholar.html       # Scholarly search interface
+│   ├── render_report.html # Academic report renderer
 │   └── pegasus.html       # Network discovery visualization
 ├── docs/                  # System documentation
 │   ├── architecture/      # System design & diagrams

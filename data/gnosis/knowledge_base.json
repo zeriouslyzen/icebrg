@@ -1461,6 +1461,108 @@
       "confidence": 0.9,
       "metadata": {},
       "timestamp": "2026-02-05T06:33:02.386951"
+    },
+    "knowledge_86": {
+      "knowledge_id": "knowledge_86",
+      "content": "Term: see, | Etymology: see, (English: Meaning of see,)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_see,"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.196320"
+    },
+    "knowledge_87": {
+      "knowledge_id": "knowledge_87",
+      "content": "Term: what | Etymology: what (English: Meaning of what)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_what"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.276145"
+    },
+    "knowledge_88": {
+      "knowledge_id": "knowledge_88",
+      "content": "Term: kinda | Etymology: kinda (English: Meaning of kinda)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_kinda"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.330811"
+    },
+    "knowledge_89": {
+      "knowledge_id": "knowledge_89",
+      "content": "Term: perform | Etymology: perform (English: Meaning of perform)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_perform"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.450948"
+    },
+    "knowledge_90": {
+      "knowledge_id": "knowledge_90",
+      "content": "Term: brief | Etymology: brief (English: Meaning of brief)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_brief"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.528127"
+    },
+    "knowledge_91": {
+      "knowledge_id": "knowledge_91",
+      "content": "Term: research | Etymology: research (English: Meaning of research)",
+      "knowledge_type": "fact",
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "sources": [
+        "total_knowledge_total_research"
+      ],
+      "confidence": 0.9,
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.575719"
     }
   },
   "insights": [
@@ -3097,9 +3199,123 @@
       ],
       "metadata": {},
       "timestamp": "2026-02-05T06:33:02.386951"
+    },
+    {
+      "insight_id": "insight_0_1770550062.196296",
+      "source_conversation_id": "total_knowledge_total_see,",
+      "insight_type": "fact",
+      "content": "Term: see, | Etymology: see, (English: Meaning of see,)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is see,?",
+        "Term: see, | Etymology: see, (English: Meaning of see,)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.196320"
+    },
+    {
+      "insight_id": "insight_0_1770550062.27614",
+      "source_conversation_id": "total_knowledge_total_what",
+      "insight_type": "fact",
+      "content": "Term: what | Etymology: what (English: Meaning of what)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is what?",
+        "Term: what | Etymology: what (English: Meaning of what)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.276145"
+    },
+    {
+      "insight_id": "insight_0_1770550062.330798",
+      "source_conversation_id": "total_knowledge_total_kinda",
+      "insight_type": "fact",
+      "content": "Term: kinda | Etymology: kinda (English: Meaning of kinda)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is kinda?",
+        "Term: kinda | Etymology: kinda (English: Meaning of kinda)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-08T03:27:42.330811"
+    },
+    {
+      "insight_id": "insight_0_1770661664.450934",
+      "source_conversation_id": "total_knowledge_total_perform",
+      "insight_type": "fact",
+      "content": "Term: perform | Etymology: perform (English: Meaning of perform)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is perform?",
+        "Term: perform | Etymology: perform (English: Meaning of perform)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.450948"
+    },
+    {
+      "insight_id": "insight_0_1770661664.528123",
+      "source_conversation_id": "total_knowledge_total_brief",
+      "insight_type": "fact",
+      "content": "Term: brief | Etymology: brief (English: Meaning of brief)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is brief?",
+        "Term: brief | Etymology: brief (English: Meaning of brief)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.528127"
+    },
+    {
+      "insight_id": "insight_0_1770661664.575714",
+      "source_conversation_id": "total_knowledge_total_research",
+      "insight_type": "fact",
+      "content": "Term: research | Etymology: research (English: Meaning of research)",
+      "confidence": 0.9,
+      "domains": [
+        "etymology",
+        "occult",
+        "history",
+        "suppressed_knowledge"
+      ],
+      "evidence": [
+        "What is research?",
+        "Term: research | Etymology: research (English: Meaning of research)"
+      ],
+      "metadata": {},
+      "timestamp": "2026-02-09T10:27:44.575719"
     }
   ],
-  "total_conversations": 85,
-  "total_insights": 86,
-  "last_updated": "2026-02-05T06:33:02.397706"
+  "total_conversations": 91,
+  "total_insights": 92,
+  "last_updated": "2026-02-09T10:27:44.625457"
 }
