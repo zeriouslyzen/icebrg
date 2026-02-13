@@ -244,11 +244,8 @@ async def _handle_research(request: V2QueryRequest, http_request: Request, conve
             )
         else:
             # Non-streaming research
-            loop = asyncio.get_event_loop()
-            result = await loop.run_in_executor(
-                None,
-                lambda: run_protocol(cfg, request.query, verbose=False)
-            )
+            # Protocol is now async, await it directly
+            result = await run_protocol(request.query, verbose=False)
             
             latency_ms = (time.time() - start_time) * 1000
             return V2QueryResponse(

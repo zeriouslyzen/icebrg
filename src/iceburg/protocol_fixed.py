@@ -7,7 +7,7 @@ import time
 import uuid
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 # Additional agent imports for protocol execution
 from .agents import (
@@ -920,7 +920,7 @@ def quick_chat_mode(
     fast: bool,
     hybrid: bool,
     verbose: bool,
-    multimodal_input: str | bytes | Path | dict | None = None,
+    multimodal_input: Union[str, bytes, Path, dict, None] = None,
 ) -> str:
     """Fast Q&A using existing components without full protocol, with multimodal support"""
     
@@ -960,7 +960,7 @@ def _generate_chat_response(
     query: str,
     consensus: str,
     context: list[str],
-    multimodal_input: str | bytes | Path | dict | None = None,
+    multimodal_input: Union[str, bytes, Path, dict, None] = None,
 ) -> str:
     """Generate conversational response from surveyor output and context"""
     
@@ -1079,7 +1079,7 @@ def _intelligently_enhance_query(query: str, routing_profile: str, verbose: bool
                 "traditional medicine approaches (TCM, Ayurveda, Indigenous, African)",
                 "cross-cultural healing systems (Chinese, Indian, African, Indigenous)"
         ]
-        enhanced_parts.extend(cross_cultural)
+            enhanced_parts.extend(cross_cultural)
     
     # Scientific Research Intelligence Enhancement  
     if any(keyword in query_lower for keyword in ["research", "study", "investigate", "analyze", "science", "discover", "breakthrough"]):
@@ -1246,11 +1246,11 @@ async def _iceberg_protocol_async(
     hybrid: bool = False,
     verbose: bool = False,
     evidence_strict: bool = False,
-    domains: list[str] | None = None,
-    project_id: str | None = None,
-    multimodal_input: str | bytes | Path | dict | None = None,
-    documents: list[str | bytes | Path | dict] | None = None,
-    multimodal_evidence: list[str | bytes | Path | dict] | None = None,
+    domains: Union[list[str], None] = None,
+    project_id: Union[str, None] = None,
+    multimodal_input: Union[str, bytes, Path, dict, None] = None,
+    documents: Union[list[Union[str, bytes, Path, dict]], None] = None,
+    multimodal_evidence: Union[list[Union[str, bytes, Path, dict]], None] = None,
     # Enhanced capabilities
     celestial_biological: bool = False,
     universal_meta: bool = False,
@@ -1291,10 +1291,9 @@ async def _iceberg_protocol_async(
         health_ok = await pre_run_health_check(verbose=verbose)
         
         if not health_ok:
-            pass
-        if verbose:
+            if verbose:
                 pass
-        return "ICEBURG execution aborted due to critical infrastructure issues. Please check system health and try again."
+            return "ICEBURG execution aborted due to critical infrastructure issues. Please check system health and try again."
         
         if verbose:
             pass
@@ -1527,11 +1526,11 @@ async def _iceberg_protocol_async_original(
     hybrid: bool = False,
     verbose: bool = False,
     evidence_strict: bool = False,
-    domains: list[str] | None = None,
-    project_id: str | None = None,
-    multimodal_input: str | bytes | Path | dict | None = None,
-    documents: list[str | bytes | Path | dict] | None = None,
-    multimodal_evidence: list[str | bytes | Path | dict] | None = None,
+    domains: Union[list[str], None] = None,
+    project_id: Union[str, None] = None,
+    multimodal_input: Union[str, bytes, Path, dict, None] = None,
+    documents: Union[list[Union[str, bytes, Path, dict]], None] = None,
+    multimodal_evidence: Union[list[Union[str, bytes, Path, dict]], None] = None,
     force_molecular: bool = False,
     # force_bioelectric: bool = False,  # Experimental - disabled by default
     force_hypothesis_testing: bool = False,
@@ -1963,7 +1962,7 @@ async def _iceberg_protocol_async_original(
         print(
         "[STATUS] Executing CIM Stack Layer 0: Prompt Interpreter (Intent Recognition)..."
         )
-    cim_analysis = prompt_interpreter(cfg, initial_query, verbose=verbose)
+    cim_analysis = await prompt_interpreter(cfg, initial_query, verbose=verbose)
     reasoning_chain["prompt_interpreter"] = {
         "output": cim_analysis,
         "context": "CIM Analysis",
@@ -3149,7 +3148,7 @@ async def _iceberg_protocol_async_original(
         }
         
         # Unbounded Learning Engine - Learn Without Limits
-        from .agents import unbounded_learning_engine
+        from .protocol.execution.agents import unbounded_learning_engine
 
         unbounded_learning_results = unbounded_learning_engine.run(
         cfg, initial_query, context=cim_analysis, verbose=verbose
@@ -3418,21 +3417,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3503,21 +3502,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3588,21 +3587,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3673,21 +3672,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3758,21 +3757,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3843,21 +3842,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -3928,21 +3927,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4013,21 +4012,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4098,21 +4097,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4183,21 +4182,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4268,21 +4267,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4353,21 +4352,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4438,21 +4437,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4523,21 +4522,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4608,21 +4607,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4693,21 +4692,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4778,21 +4777,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4863,21 +4862,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -4948,21 +4947,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5033,21 +5032,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5118,21 +5117,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5203,21 +5202,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5288,21 +5287,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5373,21 +5372,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5458,21 +5457,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5543,21 +5542,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5628,21 +5627,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5713,21 +5712,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5798,21 +5797,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5883,21 +5882,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -5968,21 +5967,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6053,21 +6052,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6138,21 +6137,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6223,21 +6222,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6308,21 +6307,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6393,21 +6392,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6478,21 +6477,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6563,21 +6562,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6648,21 +6647,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6733,21 +6732,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6818,21 +6817,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6903,21 +6902,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -6988,21 +6987,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7073,21 +7072,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7158,21 +7157,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7243,21 +7242,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7328,21 +7327,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7413,21 +7412,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7498,21 +7497,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7583,21 +7582,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7668,21 +7667,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7753,21 +7752,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7838,21 +7837,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -7923,21 +7922,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8008,21 +8007,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8093,21 +8092,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8178,21 +8177,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8263,21 +8262,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8348,21 +8347,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8433,21 +8432,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8518,21 +8517,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8603,21 +8602,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8688,21 +8687,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8773,21 +8772,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8858,21 +8857,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -8943,21 +8942,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9028,21 +9027,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9113,21 +9112,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9198,21 +9197,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9283,21 +9282,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9368,21 +9367,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9453,21 +9452,21 @@ async def _iceberg_protocol_async_original(
             pass
 
     # Add field conditions to final report (feature-flagged)
-            try:
-            field_conditions = _get_field_conditions()
-            if field_conditions:
+    try:
+        field_conditions = _get_field_conditions()
+        if field_conditions:
             pass
         if hasattr(final_report, '__dict__'):
-                final_report.field_conditions = field_conditions
+            final_report.field_conditions = field_conditions
         elif isinstance(final_report, dict):
-                final_report["field_conditions"] = field_conditions
+            final_report["field_conditions"] = field_conditions
         else:
-                # For string reports, append as metadata section
-                field_section = f"\n\n## Field Conditions\n"
-                field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
-                field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
-                field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
-                final_report += field_section
+            # For string reports, append as metadata section
+            field_section = f"\n\n## Field Conditions\n"
+            field_section += f"- Earth Sync: {field_conditions.get('earth_sync', 0.0):.2f}\n"
+            field_section += f"- Human State: {field_conditions.get('human_state', 'unknown')}\n"
+            field_section += f"- Unified Field Strength: {field_conditions.get('unified_field_strength', 0.0):.2f}\n"
+            final_report += field_section
     except Exception as e:
         if verbose:
             pass
@@ -9482,4 +9481,16 @@ async def _iceberg_protocol_async_original(
             if "ui" in initial_query.lower() or "interface" in initial_query.lower() or "generate html" in initial_query.lower() or "macos app" in initial_query.lower():
                 visual_result = visual_architect.run(cfg, initial_query, verbose)
                 
-                # Store visual artifacts (use existing
+                # Store visual artifacts (use existing storage mechanism if needed)
+                pass
+
+        except Exception as e:
+            if verbose:
+                # print(f"Visual generation failed: {e}")
+                pass
+                
+    return final_report
+    return final_report
+
+# Expose main entry point
+run = _iceberg_protocol_async

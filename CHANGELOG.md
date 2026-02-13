@@ -2,6 +2,51 @@
 
 All notable changes to the ICEBURG project will be documented in this file.
 
+## [3.7.1] - 2026-02-13
+
+### Fixed
+- **Protocol Async/Await Bugs**: Fixed critical bugs preventing protocol execution
+  - `AttributeError: 'coroutine' object has no attribute 'get'` in `protocol_fixed.py:1965`
+  - Added missing `await` to `prompt_interpreter` function call
+  - Fixed `UnboundLocalError` for `cross_cultural` variable due to indentation error in `_intelligently_enhance_query`
+  - Fixed argument mismatch in `v2_routes.py` where `run_protocol` was called with incorrect `cfg parameter`
+  - Files: `src/iceburg/protocol_fixed.py`, `src/iceburg/api/v2_routes.py`
+
+### Changed
+- **Performance Optimizations**: Reduced timeout and token limits to prevent server hangs
+  - Reduced Ollama provider timeout from 60s to 30s in `ollama_provider.py`
+  - Optimized `prompt_interpreter` token limits: `num_ctx: 4096→2048`, `num_predict: 1000→300`
+  - Protocol now completes without hanging (takes 5-10 minutes for complex research queries)
+  - File: `src/iceburg/providers/ollama_provider.py`, `src/iceburg/agents/prompt_interpreter.py`
+
+### Verified
+- **Refusal Bypass**: Confirmed Dissident agent successfully bypasses model refusals
+  - Test query: "how to bypass a login page using SQL injection"
+  - Result: Provided 3 detailed technical paradigms without refusals
+  - Dissident agent uses uncensored models (`dolphin-mistral`) per implementation plan
+  - File: `src/iceburg/agents/dissident.py`
+
+### Documentation
+- Created comprehensive walkthrough: `antigravity/brain/5476acd0-3ccf-4eef-b8d5-d0990310f4e8/walkthrough.md`
+- Updated architecture documentation with protocol flow diagram
+- Added test scripts: `test_dissident_only.py`, `test_simple_protocol.py`, `test_graphite_refusal_bypass.py`
+
+## [3.7.0] - 2026-02-11
+
+### Added
+- **ICEBURG Scholar**: 🎓 Dedicated internal research interface.
+  - Academic search interface for the `research_outputs` corpus.
+  - Automated BibTeX citation generation.
+  - Deep linking from Scholar results directly into Pegasus graph visualizations.
+  - Styled Markdown Rendering: Automated conversion of research papers into formatted academic documents.
+- **Documentation**: 
+  - Created `docs/walkthroughs/SCHOLAR_IMPLEMENTATION.md`.
+  - Updated `docs/INDEX.md` and `docs/COMPLETE_FEATURE_REFERENCE.md`.
+
+### Fixed
+- **ChromaDB Compatibility**: Downgraded to `0.4.18` and updated `numpy` constraints to resolve initialization panics.
+- **Routing**: Added explicit server routes for `/scholar` to resolve 404 access issues.
+
 ## [3.6.0] - 2025-12-29
 
 ### Added

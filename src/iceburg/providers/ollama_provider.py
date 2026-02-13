@@ -6,7 +6,7 @@ import urllib.request
 
 
 class OllamaProvider:
-    def __init__(self, base_url: str = None, timeout_s: int = 60):
+    def __init__(self, base_url: str = None, timeout_s: int = 30):
         if base_url is None:
             base_url = f"http://{os.getenv('HOST', 'localhost')}:11434"
         self._base = base_url.rstrip("/")

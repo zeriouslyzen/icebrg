@@ -275,7 +275,7 @@ Analyze queries comprehensively, providing structured insights that enable optim
             analysis_prompt,
             system=system_prompt,
             temperature=0.2,
-            options={"num_ctx": 4096, "num_predict": 1000},
+            options={"num_ctx": 2048, "num_predict": 300},
             context_tag="PromptInterpreter"
         )
         

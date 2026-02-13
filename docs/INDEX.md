@@ -48,6 +48,7 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 - **[UX Architecture Assessment](architecture/UX_ARCHITECTURE_ASSESSMENT.md)** - Frontend architecture
 
 ### Component Analysis
+- **[Protocol Architecture v3.7.1](architecture/PROTOCOL_ARCHITECTURE_V3.7.1.md)** - 🆕 Updated protocol flow with async/await and timeout management
 - **[Agent Selection Flow](architecture/AGENT_SELECTION_FLOW_EXPLAINED.md)** - How agents are selected
 - **[Query Processing](architecture/QUERY_PROCESSING_ANALYSIS.md)** - How queries are processedprocessed
 - **[End-to-End Query Trace](architecture/END_TO_END_QUERY_TRACE.md)** - Complete query lifecycle
@@ -135,7 +136,7 @@ This is the master index for all ICEBURG documentation. Files are organized by c
 ### Research & Scholarly Tools
 - **[ICEBURG Scholar](../frontend/scholar.html)** - 🎓 Internal research metadata & scholarly search
 - **[Research Transduction Index](../src/iceburg/research/TRANSDUCTION_INDEX.md)** - ⚡ Persistent research tracking
-- **[Scholar Implementation Walkthrough](../.gemini/antigravity/brain/23ecc4f3-8d51-4a64-b4c1-968d889ffbba/walkthrough.md)** - 🚀 Detailed walkthrough of research features
+- **[Scholar Implementation Walkthrough](walkthroughs/SCHOLAR_IMPLEMENTATION.md)** - 🚀 Detailed walkthrough of research features
 
 ---
 
