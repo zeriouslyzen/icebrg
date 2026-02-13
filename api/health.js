@@ -1,10 +1,16 @@
-// Health check endpoint for Vercel
+// Vercel serverless function proxy for ICEBURG health endpoint
 export default async function handler(req, res) {
-  return res.status(200).json({
-    status: 'ok',
-    service: 'ICEBURG',
-    version: '2.0.0',
-    timestamp: new Date().toISOString()
-  });
+  const BACKEND_URL = process.env.ICEBURG_API_URL || 'http://localhost:8000';
+  
+  try {
+    const response = await fetch(`${BACKEND_URL}/v2/health`);
+    const data = await response.json();
+    return res.status(response.status).json(data);
+  } catch (error) {
+    return res.status(500).json({ 
+      error: 'Backend unreachable',
+      details: error.message,
+      target: BACKEND_URL 
+    });
+  }
 }
-

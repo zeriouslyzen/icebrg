@@ -2,20 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// Vercel serverless function proxy for ICEBURG encyclopedia endpoint
 export default async function handler(req, res) {
+  const BACKEND_URL = process.env.ICEBURG_API_URL || 'http://localhost:8000';
+  
   try {
-    // On Vercel, files are in the project root
-    // Try multiple possible paths for the data file
-    const possiblePaths = [
-      path.join(process.cwd(), 'data', 'celestial_encyclopedia.json'),
-      path.join(process.cwd(), '..', 'data', 'celestial_encyclopedia.json'),
-      path.join(__dirname, '..', '..', 'data', 'celestial_encyclopedia.json'),
-      path.join(process.cwd(), 'celestial_encyclopedia.json'),
-      // Vercel-specific paths
-      path.join('/var/task', 'data', 'celestial_encyclopedia.json'),
       path.join('/var/task', 'celestial_encyclopedia.json')
     ];
     
