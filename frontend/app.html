@@ -854,7 +854,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
   <!-- ICEBURG Unified Configuration -->
-  <script src="/config.js"></script>
+  <script type="module" src="/config.js"></script>
 
   <div id="app">
     <!-- Neural Network Background -->
@@ -1410,7 +1410,8 @@
             }
             </style>
 
-            <script>
+  <script type="module" src="/auth-check.js"></script>
+  <script type="module" src="/connection-bridge.js"></script>
             // RICH SELECT LOGIC
             function toggleRichSelect(id) {
               const container = document.getElementById(id);
