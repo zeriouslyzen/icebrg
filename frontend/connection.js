@@ -61,7 +61,7 @@ export async function sendQuery({
     onDone,
     onMessage,
 }) {
-    const API_URL = window.ICEBURG_API_URL || 'http://localhost:8000';
+    const API_URL = window.ICEBURG_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : `${window.location.protocol}//${window.location.hostname}:8000`);
     const conversationId = localStorage.getItem('iceburg_conversation_id') || 
         `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem('iceburg_conversation_id', conversationId);
@@ -153,7 +153,7 @@ export async function sendQuery({
  * @returns {Promise<Object>} Health status
  */
 export async function checkHealth() {
-    const API_URL = window.ICEBURG_API_URL || 'http://localhost:8000';
+    const API_URL = window.ICEBURG_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : `${window.location.protocol}//${window.location.hostname}:8000`);
     try {
         const response = await fetch(`${API_URL}/v2/health`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -169,7 +169,7 @@ export async function checkHealth() {
  * @returns {Promise<Object>} Provider info
  */
 export async function getProviders() {
-    const API_URL = window.ICEBURG_API_URL || 'http://localhost:8000';
+    const API_URL = window.ICEBURG_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : `${window.location.protocol}//${window.location.hostname}:8000`);
     try {
         const response = await fetch(`${API_URL}/v2/providers`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);

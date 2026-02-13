@@ -72,8 +72,8 @@ try {
     // import.meta not available (static file serving) - use empty env
     env = {};
 }
-const API_URL = env.VITE_API_URL || (isNetworkAccess ? `http://${networkIP}:8000/api/query` : 'http://localhost:8000/api/query');
-const WS_URL = env.VITE_WS_URL || (isNetworkAccess ? `ws://${networkIP}:8000/ws` : 'ws://localhost:8000/ws');
+const API_URL = env.VITE_API_URL || (isNetworkAccess ? `${window.location.protocol}//${networkIP}:8000/api/query` : 'http://localhost:8000/api/query');
+const WS_URL = env.VITE_WS_URL || (isNetworkAccess ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${networkIP}:8000/ws` : 'ws://localhost:8000/ws');
 
 // Always use HTTP/WS in development (never force HTTPS)
 const FINAL_API_URL = API_URL;

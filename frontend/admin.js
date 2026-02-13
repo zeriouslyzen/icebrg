@@ -354,7 +354,7 @@ function getChartOptions(yLabel) {
 // ============================================
 // Metrics
 // ============================================
-const API_BASE = 'http://localhost:8000';  // ICEBURG API server
+const API_BASE = `${window.location.protocol}//${window.location.hostname}:8000`;  // ICEBURG API server
 
 async function loadMetrics() {
     // Try to fetch from real API first
