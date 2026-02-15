@@ -1684,7 +1684,7 @@
               Claude (Anthropic)
             </label>
             <div class="settings-input-group">
-              <input type="password" id="apiKeyClaude" class="settings-input" placeholder="sk-ant-..."
+              <input type="text" id="apiKeyClaude" class="settings-input" placeholder="sk-ant-..." style="-webkit-text-security: disc;"
                 onchange="saveApiKey('claude', this.value)">
               <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyClaude')"
                 title="Show/Hide">
@@ -1708,7 +1708,7 @@
               GPT (OpenAI)
             </label>
             <div class="settings-input-group">
-              <input type="password" id="apiKeyGPT" class="settings-input" placeholder="sk-..."
+              <input type="text" id="apiKeyGPT" class="settings-input" placeholder="sk-..." style="-webkit-text-security: disc;"
                 onchange="saveApiKey('gpt', this.value)">
               <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyGPT')"
                 title="Show/Hide">
@@ -1730,7 +1730,7 @@
               Grok (xAI)
             </label>
             <div class="settings-input-group">
-              <input type="password" id="apiKeyGrok" class="settings-input" placeholder="xai-..."
+              <input type="text" id="apiKeyGrok" class="settings-input" placeholder="xai-..." style="-webkit-text-security: disc;"
                 onchange="saveApiKey('grok', this.value)">
               <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyGrok')"
                 title="Show/Hide">
