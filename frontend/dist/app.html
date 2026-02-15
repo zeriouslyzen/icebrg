@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Iceberg">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>Iceberg - Truth-Finding Civilization</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+
+  <!-- Theme toggle script - must be in head before body loads -->
+  <script>
+    // Light mode toggle - defined early so it's available for onchange handlers
+    function toggleLightMode(isLight) {
+      if (isLight) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('iceburg-theme', 'light');
+        console.log('Theme: Light mode enabled');
+      } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('iceburg-theme', 'dark');
+        console.log('Theme: Dark mode enabled');
+      }
+    }
+
+    // Load saved theme on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      var savedTheme = localStorage.getItem('iceburg-theme');
+      var themeToggle = document.getElementById('themeToggle');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.checked = true;
+      }
+
+      // Load hybrid mode state
+      var hybridMode = localStorage.getItem('hybridMode') === 'true';
+      var hybridToggle = document.getElementById('hybridModeToggle');
+      var apiKeysContainer = document.getElementById('apiKeysContainer');
+      if (hybridToggle) hybridToggle.checked = hybridMode;
+      if (apiKeysContainer) apiKeysContainer.style.display = hybridMode ? 'block' : 'none';
+
+      // Load saved API keys
+      loadApiKeys();
+    });
+
+    // API Key Management Functions
+    function saveApiKey(provider, value) {
+      // Simple obfuscation (NOT secure encryption, just basic protection from casual viewing)
+      var obfuscated = btoa(value);
+      localStorage.setItem('apiKey_' + provider, obfuscated);
+      console.log('API key saved for:', provider);
+    }
+
+    function loadApiKeys() {
+      var providers = ['gemini', 'claude', 'gpt', 'grok', 'deepseek'];
+      providers.forEach(function (provider) {
+        var stored = localStorage.getItem('apiKey_' + provider);
+        var input = document.getElementById('apiKey' + provider.charAt(0).toUpperCase() + provider.slice(1));
+        if (stored && input) {
+          try {
+            input.value = atob(stored);
+          } catch (e) {
+            console.warn('Failed to decode API key for:', provider);
+          }
+        }
+      });
+    }
+
+    function toggleKeyVisibility(inputId) {
+      var input = document.getElementById(inputId);
+      if (input) {
+        input.type = input.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    function getApiKey(provider) {
+      var stored = localStorage.getItem('apiKey_' + provider);
+      if (stored) {
+        try {
+          return atob(stored);
+        } catch (e) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function isHybridModeEnabled() {
+      return localStorage.getItem('hybridMode') === 'true';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/styles.css?v=20260212">
+  <link rel="stylesheet" href="/css/app-cleanup.css">
+  <style>
+    /* Mobile-specific styling for header buttons */
+    @media (max-width: 600px) {
+
+      .encyclopedia-link,
+      .wiki-link {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.7rem !important;
+        margin-right: 0.3rem !important;
+      }
+
+      .encyclopedia-link span,
+      .wiki-link span {
+        font-size: 0.7rem !important;
+      }
+
+      .app-header {
+        gap: 0.25rem;
+      }
+
+      .header-content {
+        margin-right: auto;
+      }
+    }
+
+    /* Cinematic Welcome Experience */
+    .welcome-experience {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      animation: welcomeFadeIn 1.2s ease-out 0.3s forwards;
+    }
+
+    @keyframes welcomeFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome-fade-in {
+      margin-bottom: 3rem;
+    }
+
+    .welcome-greeting {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #8BBFFF;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .welcome-dynamic {
+      font-size: 2.2rem;
+      font-weight: 300;
+      background: linear-gradient(135deg, #FFFFFF 0%, #E6F0FF 50%, #B8D4FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      min-height: 3rem;
+      letter-spacing: -0.02em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .welcome-dynamic .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 2rem;
+      background: #B8D4FF;
+      margin-left: 4px;
+      animation: cursorBlink 1s ease-in-out infinite;
+      vertical-align: middle;
+      box-shadow: 0 0 8px rgba(184, 212, 255, 0.6);
+    }
+
+    @keyframes cursorBlink {
+
+      0%,
+      50% {
+        opacity: 1;
+      }
+
+      51%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Deep Thinking Prompts - Premium Creative Style */
+    .thinking-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      max-width: 800px;
+      opacity: 0;
+      animation: promptsSlideIn 0.8s ease-out 2s forwards;
+      perspective: 1000px;
+    }
+
+    @keyframes promptsSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .thinking-prompts.fade-out {
+      animation: promptsFadeOut 0.6s ease-out forwards;
+    }
+
+    @keyframes promptsFadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+        pointer-events: none;
+      }
+    }
+
+    /* Individual chip - Glassmorphism with animated border */
+    .prompt-chip {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1.1rem;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.01em;
+      font-weight: 400;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        color 0.25s ease;
+      transform-style: preserve-3d;
+      animation: chipEntrance 0.6s ease-out backwards;
+    }
+
+    /* Staggered entrance for each chip */
+    .prompt-chip:nth-child(1) {
+      animation-delay: 2.1s;
+    }
+
+    .prompt-chip:nth-child(2) {
+      animation-delay: 2.2s;
+    }
+
+    .prompt-chip:nth-child(3) {
+      animation-delay: 2.3s;
+    }
+
+    .prompt-chip:nth-child(4) {
+      animation-delay: 2.4s;
+    }
+
+    .prompt-chip:nth-child(5) {
+      animation-delay: 2.5s;
+    }
+
+    @keyframes chipEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Animated gradient border */
+    .prompt-chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      padding: 1px;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(184, 212, 255, 0.1) 50%,
+          rgba(255, 255, 255, 0.05) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      transition: all 0.35s ease;
+    }
+
+    /* Subtle inner glow */
+    .prompt-chip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(184, 212, 255, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .prompt-chip:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(184, 212, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+    }
+
+    .prompt-chip:hover::before {
+      background: linear-gradient(135deg,
+          rgba(184, 212, 255, 0.5) 0%,
+          rgba(120, 180, 255, 0.3) 50%,
+          rgba(184, 212, 255, 0.2) 100%);
+    }
+
+    .prompt-chip:hover::after {
+      opacity: 1;
+    }
+
+    .prompt-chip:active {
+      transform: translateY(-2px) scale(1);
+      transition: transform 0.1s ease;
+    }
+
+    /* Icon styling with rotation on hover */
+    .prompt-icon {
+      width: 16px;
+      height: 16px;
+      stroke: rgba(184, 212, 255, 0.9);
+      filter: drop-shadow(0 0 4px rgba(184, 212, 255, 0.3));
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        stroke 0.25s ease,
+        filter 0.25s ease;
+    }
+
+    .prompt-chip:hover .prompt-icon {
+      transform: rotate(15deg) scale(1.1);
+      stroke: #FFFFFF;
+      filter: drop-shadow(0 0 8px rgba(184, 212, 255, 0.6));
+    }
+
+    /* Broken Ice Cracks Overlay */
+    .ice-cracks-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.7;
+    }
+
+    .ice-cracks-overlay svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.8));
+    }
+
+    /* Base group - no animation, individual paths animate */
+    .ice-crack-group {
+      opacity: 1;
+    }
+
+    /* Independent glimmer animations for each crack path */
+    .ice-crack-group path:nth-child(1) {
+      animation: glimmer1 6s ease-in-out infinite, crackForm 12s ease-out infinite;
+    }
+
+    .ice-crack-group path:nth-child(2) {
+      animation: glimmer2 8s ease-in-out infinite 0.5s;
+    }
+
+    .ice-crack-group path:nth-child(3) {
+      animation: glimmer3 7s ease-in-out infinite 1s;
+    }
+
+    .ice-crack-group path:nth-child(4) {
+      animation: glimmer1 9s ease-in-out infinite 1.5s;
+    }
+
+    .ice-crack-group path:nth-child(5) {
+      animation: glimmer2 5s ease-in-out infinite 2s, crackForm 15s ease-out infinite 3s;
+    }
+
+    .ice-crack-group path:nth-child(6) {
+      animation: glimmer3 10s ease-in-out infinite 2.5s;
+    }
+
+    .ice-crack-group path:nth-child(7) {
+      animation: glimmer1 7s ease-in-out infinite 3s;
+    }
+
+    .ice-crack-group path:nth-child(8) {
+      animation: glimmer2 6s ease-in-out infinite 3.5s;
+    }
+
+    .ice-crack-group path:nth-child(9) {
+      animation: glimmer3 8s ease-in-out infinite 4s, crackForm 18s ease-out infinite 6s;
+    }
+
+    .ice-crack-group path:nth-child(10) {
+      animation: glimmer1 11s ease-in-out infinite 0.8s;
+    }
+
+    .ice-crack-group path:nth-child(11) {
+      animation: glimmer2 9s ease-in-out infinite 1.2s;
+    }
+
+    .ice-crack-group path:nth-child(12) {
+      animation: glimmer3 6s ease-in-out infinite 1.8s;
+    }
+
+    .ice-crack-group path:nth-child(13) {
+      animation: glimmer1 8s ease-in-out infinite 2.2s;
+    }
+
+    .ice-crack-group path:nth-child(14) {
+      animation: glimmer2 7s ease-in-out infinite 2.8s, crackForm 20s ease-out infinite 8s;
+    }
+
+    .ice-crack-group path:nth-child(15) {
+      animation: glimmer3 10s ease-in-out infinite 3.2s;
+    }
+
+    .ice-crack-group path:nth-child(16) {
+      animation: glimmer1 5s ease-in-out infinite 3.8s;
+    }
+
+    .ice-crack-group path:nth-child(17) {
+      animation: glimmer2 9s ease-in-out infinite 4.2s;
+    }
+
+    .ice-crack-group path:nth-child(18) {
+      animation: glimmer3 7s ease-in-out infinite 4.8s;
+    }
+
+    /* Glimmer keyframes - different patterns */
+    @keyframes glimmer1 {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        filter: drop-shadow(0 0 2px rgba(200, 220, 255, 0.5));
+      }
+
+      40% {
+        opacity: 1.0;
+        filter: drop-shadow(0 0 6px rgba(200, 220, 255, 0.9));
+      }
+
+      60% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 4px rgba(200, 220, 255, 0.7));
+      }
+    }
+
+    @keyframes glimmer2 {
+
+      0%,
+      100% {
+        opacity: 0.5;
+        filter: drop-shadow(0 0 2px rgba(180, 200, 255, 0.5));
+      }
+
+      30% {
+        opacity: 0.85;
+        filter: drop-shadow(0 0 5px rgba(200, 220, 255, 0.8));
+      }
+
+      70% {
+        opacity: 1.0;
+        filter: drop-shadow(0 0 8px rgba(220, 240, 255, 1.0));
+      }
+    }
+
+    @keyframes glimmer3 {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        filter: drop-shadow(0 0 3px rgba(200, 220, 255, 0.6));
+      }
+
+      50% {
+        opacity: 0.95;
+        filter: drop-shadow(0 0 6px rgba(220, 240, 255, 0.9));
+      }
+    }
+
+    /* Slow crack forming animation - simulates ice fracturing */
+    @keyframes crackForm {
+      0% {
+        stroke-dasharray: 0 1000;
+        opacity: 0.3;
+      }
+
+      10% {
+        stroke-dasharray: 50 1000;
+        opacity: 0.7;
+      }
+
+      30% {
+        stroke-dasharray: 200 1000;
+        opacity: 0.9;
+      }
+
+      50% {
+        stroke-dasharray: 500 1000;
+        opacity: 0.8;
+      }
+
+      70% {
+        stroke-dasharray: 800 1000;
+        opacity: 0.7;
+      }
+
+      100% {
+        stroke-dasharray: 1000 1000;
+        opacity: 0.6;
+      }
+    }
+
+    /* Subtle parallax on scroll for depth feel */
+    @media (prefers-reduced-motion: no-preference) {
+      .ice-cracks-overlay svg {
+        transform: scale(1.05);
+        transition: transform 0.5s ease-out;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .welcome-dynamic {
+        font-size: 1.6rem;
+      }
+
+      .welcome-experience {
+        min-height: calc(100vh - 150px);
+        /* Account for fixed input bar */
+        height: auto;
+        padding: 1.5rem;
+        padding-bottom: 2rem;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .welcome-fade-in {
+        margin-bottom: 2rem;
+      }
+
+      .thinking-prompts {
+        gap: 0.6rem;
+        margin-top: 1rem;
+      }
+
+      .prompt-chip {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Glitch Loading Overlay */
+    .glitch-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
+    .glitch-loader.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    .glitch-text {
+      font-size: 3rem;
+      font-weight: 300;
+      color: #fff;
+      position: relative;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.1em;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: 'Iceberg';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-loader.active .glitch-text::before {
+      left: 2px;
+      text-shadow: -2px 0 #ff0040;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+    }
+
+    .glitch-loader.active .glitch-text::after {
+      left: -2px;
+      text-shadow: 2px 0 #00ffff;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim-1 {
+      0% {
+        clip-path: inset(40% 0 20% 0);
+        transform: translate(-2px, 2px);
+      }
+
+      20% {
+        clip-path: inset(10% 0 60% 0);
+        transform: translate(2px, -1px);
+      }
+
+      40% {
+        clip-path: inset(70% 0 5% 0);
+        transform: translate(-1px, 1px);
+      }
+
+      60% {
+        clip-path: inset(25% 0 45% 0);
+        transform: translate(1px, -2px);
+      }
+
+      80% {
+        clip-path: inset(55% 0 15% 0);
+        transform: translate(-2px, 0);
+      }
+
+      100% {
+        clip-path: inset(5% 0 80% 0);
+        transform: translate(0, 1px);
+      }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% {
+        clip-path: inset(85% 0 5% 0);
+        transform: translate(2px, -1px);
+      }
+
+      25% {
+        clip-path: inset(15% 0 65% 0);
+        transform: translate(-1px, 2px);
+      }
+
+      50% {
+        clip-path: inset(45% 0 35% 0);
+        transform: translate(1px, 0);
+      }
+
+      75% {
+        clip-path: inset(5% 0 75% 0);
+        transform: translate(-2px, -1px);
+      }
+
+      100% {
+        clip-path: inset(60% 0 20% 0);
+        transform: translate(0, 2px);
+      }
+    }
+
+    /* VHS tape lines effect */
+    .glitch-loader::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.03) 2px,
+          rgba(255, 255, 255, 0.03) 4px);
+      pointer-events: none;
+    }
+
+    .glitch-loader.active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 0%,
+          rgba(255, 255, 255, 0.05) 50%,
+          transparent 100%);
+      animation: vhs-scan 0.8s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes vhs-scan {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    /* Utility Helpers to replace inline styles */
+    .hidden-file-input, 
+    .hidden-select, 
+    .hidden-container {
+      display: none !important;
+    }
+
+    .sidebar-footer-spacer {
+      height: 2rem;
+    }
+
+    .settings-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .settings-micro-desc {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin: 0.25rem 0 0 0;
+    }
+
+    .settings-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .settings-no-margin {
+      margin: 0 !important;
+    }
+
+    .settings-keys-warning {
+      font-size: 0.65rem;
+      color: var(--text-tertiary);
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 200, 0, 0.1);
+      border-radius: 4px;
+      border-left: 2px solid rgba(255, 200, 0, 0.5);
+    }
+
+    .preview-line-1 { width: 80%; }
+    .preview-line-2 { width: 95%; }
+    .preview-line-3 { width: 60%; }
+    .preview-line-4 { width: 90%; }
+
+    .settings-icon-inline {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  </style>
+  <!-- Syntax highlighting and math rendering -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Three.js ES Module (replaces deprecated build/three.min.js) -->
+  <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/+esm"
+        }
+    }
+    </script>
+  <script type="module">
+    import * as THREE from 'three';
+    window.THREE = THREE;
+  </script>
+  <!-- Immediately unregister service workers in development -->
+  <script>
+    // Run immediately, before any other scripts
+    (function () {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister().then(function (success) {
+                if (success) {
+                  console.log('✅ Service Worker unregistered (development mode)');
+                }
+              });
+            }
+          });
+          // Also try to unregister by scope
+          navigator.serviceWorker.getRegistration().then(function (registration) {
+            if (registration) {
+              registration.unregister().then(function (success) {
+                if (success) {
+                  console.log('✅ Service Worker unregistered by scope');
+                }
+              });
+            }
+          });
+        }
+      }
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.27.0/dist/plotly.min.js"></script>
+  <!-- Core dependencies - browser-compatible versions -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@17.0.0/lib/marked.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <!-- ICEBURG Unified Configuration -->
+  <script src="/config.js"></script>
+
+  <div id="app">
+    <!-- Neural Network Background -->
+    <canvas id="neuralNetworkCanvas" class="neural-network-canvas"></canvas>
+
+    <!-- Broken Ice Effect Overlay -->
+    <div class="ice-cracks-overlay" aria-hidden="true">
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="iceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(200,220,255,0.9)" stop-opacity="1" />
+            <stop offset="100%" stop-color="rgba(255,255,255,0.6)" stop-opacity="1" />
+          </linearGradient>
+        </defs>
+        <!-- Main crack lines - visible but not distracting -->
+        <g class="ice-crack-group" stroke="url(#iceGradient)" stroke-width="0.8" fill="none">
+          <!-- Central crack system -->
+          <path d="M600,0 L580,120 L620,180 L590,280 L640,350 L610,450 L650,520 L600,600 L640,700 L610,800"
+            opacity="0.85" />
+          <path d="M590,280 L520,320 L480,380 L420,400" opacity="0.75" />
+          <path d="M590,280 L660,300 L720,340 L780,360" opacity="0.75" />
+          <path d="M610,450 L540,480 L490,530 L420,560" opacity="0.7" />
+          <path d="M610,450 L680,470 L740,510 L820,540" opacity="0.7" />
+
+          <!-- Left fracture system -->
+          <path d="M200,100 L220,200 L180,280 L240,360 L200,450 L250,540 L210,620 L260,720" opacity="0.75" />
+          <path d="M180,280 L100,320 L60,400" opacity="0.7" />
+          <path d="M240,360 L310,400 L380,420" opacity="0.7" />
+          <path d="M200,450 L130,500 L80,580" opacity="0.6" />
+
+          <!-- Right fracture system -->
+          <path d="M1000,50 L980,150 L1020,230 L970,320 L1010,410 L960,500 L1000,590 L950,700" opacity="0.75" />
+          <path d="M1020,230 L1080,280 L1140,300" opacity="0.7" />
+          <path d="M970,320 L900,370 L840,400" opacity="0.7" />
+          <path d="M960,500 L1040,550 L1120,580" opacity="0.6" />
+
+          <!-- Connecting hairline fractures -->
+          <path d="M380,420 L500,460 L540,480" opacity="0.6" stroke-width="1" />
+          <path d="M780,360 L740,510" opacity="0.55" stroke-width="1" />
+          <path d="M420,560 L490,530" opacity="0.55" stroke-width="1" />
+          <path d="M820,540 L740,510" opacity="0.55" stroke-width="1" />
+
+          <!-- Micro fractures for texture -->
+          <path d="M300,200 L340,240 L320,290" opacity="0.5" stroke-width="0.75" />
+          <path d="M850,180 L880,230 L860,280" opacity="0.5" stroke-width="0.75" />
+          <path d="M150,500 L190,540 L170,600" opacity="0.5" stroke-width="0.75" />
+          <path d="M1050,450 L1080,490 L1060,550" opacity="0.5" stroke-width="0.75" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Glitch Loading Overlay -->
+    <div class="glitch-loader" id="glitchLoader">
+      <div class="glitch-text">Iceberg</div>
+    </div>
+
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <!-- New Profile Section at Top -->
+        <div class="sidebar-user-section" id="sidebarUserSection">
+          <div class="user-profile-preview" id="userProfilePreview">
+            <div class="user-avatar-container">
+              <img src="/public/profile.png" class="user-avatar" id="userAvatar" alt="Danger">
+            </div>
+            <span class="user-name">Danger</span>
+            <button class="user-settings-trigger" id="userSettingsTrigger" aria-label="Profile Settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-view" id="sidebarNavView">
+          <div class="sidebar-header">
+          <button class="new-conversation-btn" id="newConversationBtn" aria-label="New conversation">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            New Chat
+          </button>
+        </div>
+        <div class="sidebar-search">
+          <input type="text" class="sidebar-search-input" id="sidebarSearchInput" placeholder="Search conversations..."
+            autocomplete="off" spellcheck="false">
+          <button class="sidebar-search-clear" id="sidebarSearchClear" aria-label="Clear search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="conversations-list" id="conversationsList">
+          <div class="conversation-item active" data-id="current">
+            <span class="conversation-title">Current Conversation</span>
+            <button class="conversation-delete" aria-label="Delete conversation">×</button>
+          </div>
+        </div>
+
+        <!-- System Modules Links -->
+        <div class="sidebar-section sidebar-section-container">
+          <h3 class="sidebar-section-title">
+            System Modules</h3>
+
+          <a href="/features" data-original-href="/features" class="features-link sidebar-link">
+            <svg class="feature-icon-primary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span>Applications</span>
+          </a>
+
+          <a href="/research" data-original-href="/research" class="research-link sidebar-link">
+            <svg class="feature-icon-research" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+            <span>Research Archives</span>
+          </a>
+
+          <a href="/encyclopedia.html" data-original-href="/encyclopedia.html" class="encyclopedia-link sidebar-link">
+            <svg class="feature-icon-primary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Encyclopedia</span>
+          </a>
+
+          <a href="/wiki" data-original-href="/wiki" class="wiki-link sidebar-link">
+            <svg class="feature-icon-primary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+              </path>
+            </svg>
+            <span>Wiki</span>
+            <svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </a>
+
+          <a href="/scholar.html" data-original-href="/scholar.html" class="sidebar-link">
+             <svg class="feature-icon-primary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l10 5.5-10 5.5-10-5.5z"></path>
+              <path d="M12 13v9"></path>
+              <path d="M22 7.5v9"></path>
+              <path d="M2 7.5v9"></path>
+            </svg>
+            <span>Scholar</span>
+          </a>
+
+
+          <a href="/pegasus.html" data-original-href="/pegasus.html" class="pegasus-link sidebar-link">
+            <svg class="feature-icon-pegasus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M5 12h2"></path>
+              <path d="M17 12h2"></path>
+              <path d="M12 5v2"></path>
+              <path d="M12 17v2"></path>
+              <path d="M5 5l2 2"></path>
+              <path d="M17 17l2 2"></path>
+              <path d="M5 19l2-2"></path>
+              <path d="M17 5l2-2"></path>
+            </svg>
+            <span>PEGASUS</span>
+            <span class="module-badge module-badge-pegasus">LOCKED</span>
+          </a>
+
+          <!-- NUCLEAR OPTION: Inline styles and forced navigation events for maximum reliability -->
+          <a href="/protocols" data-original-href="/protocols" class="sidebar-link">
+            <svg class="feature-icon-nuclear" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <span class="nuclear-title">Deep Protocols</span>
+            <span class="module-badge module-badge-nuclear">LOCKED</span>
+          </a>
+        </div>
+        <div class="sidebar-footer-spacer"></div> <!-- Extra space at bottom for scrolling -->
+        </div>
+
+        <!-- Profile Settings View -->
+        <div class="sidebar-view sidebar-view-hidden" id="sidebarSettingsView">
+          <div class="sidebar-settings-header">
+            <button class="back-to-nav-btn" id="backToNavBtn" aria-label="Back to navigation">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <h3>Profile Settings</h3>
+          </div>
+          <div class="sidebar-settings-content">
+            <div class="settings-avatar-edit">
+              <div class="user-avatar-container large">
+                <img src="/public/profile.png" class="user-avatar" alt="User Avatar">
+                <div class="avatar-edit-overlay">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profileNameInput">Name</label>
+              <div class="field-input-wrapper">
+                <input type="text" id="profileNameInput" value="Jack Danger" readonly class="sidebar-settings-input" title="User Name">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profileEmailInput">Email</label>
+              <div class="field-input-wrapper">
+                <input type="email" id="profileEmailInput" value="jack@iceburg.ai" readonly class="sidebar-settings-input" title="User Email">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            <div class="sidebar-settings-field">
+              <label for="profilePasswordInput">Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="profilePasswordInput" value="********" readonly class="sidebar-settings-input" title="User Password">
+                <button class="field-edit-btn">Edit</button>
+              </div>
+            </div>
+            
+            <button class="sidebar-settings-save">Save Changes</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-wrapper">
+        <header class="app-header">
+          <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+          <div class="header-content">
+            <h1 class="app-title">Iceberg</h1>
+          </div>
+
+          <button class="settings-toggle" id="settingsToggle" aria-label="Toggle settings">
+            <div class="pulsing-ball-icon"></div>
+          </button>
+        </header>
+
+        <main class="app-main">
+          <!-- Hidden controls for JS sync - actual UI moved to settings panel -->
+          <div class="controls-panel" id="controlsPanel">
+            <div class="control-group">
+              <select class="control-select" id="modeSelect" title="Select Mode"
+                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value)">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div class="control-group" id="agentGroup">
+              <select class="control-select" id="agentSelect" title="Select Agent">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div class="control-group" id="modelGroup">
+              <select class="control-select" id="modelSelect" title="Select Model">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+
+          <div class="chat-container" id="chatContainer">
+            <canvas id="meteorShowerCanvas" class="meteor-shower-canvas"></canvas>
+
+            <!-- Cinematic Welcome Experience -->
+            <div class="welcome-experience" id="welcomeExperience">
+              <div class="welcome-fade-in" id="welcomeFadeIn">
+                <p class="welcome-greeting">Welcome back</p>
+                <p class="welcome-dynamic" id="welcomeDynamic"></p>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Advanced Visualization Panels - REMOVED to reduce complexity -->
+      <!-- Charts are now included in main answer format -->
+
+      <div class="input-container">
+        <!-- Decorative Orbs -->
+        <div class="pulsing-ball-icon prompt-orb-left"></div>
+        <div class="pulsing-ball-icon prompt-orb-right"
+          onclick="event.stopPropagation(); document.getElementById('sidebarToggle').click()">
+        </div>
+
+        <div class="prompt-carousel" id="promptCarousel">
+          <div class="prompt-carousel-content" id="promptCarouselContent">
+            <!-- Prompts will be dynamically inserted here -->
+          </div>
+          <button class="prompt-carousel-prev" id="promptCarouselPrev" aria-label="Previous prompt">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button class="prompt-carousel-next" id="promptCarouselNext" aria-label="Next prompt">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="input-wrapper">
+          <button class="attach-button" id="attachButton" aria-label="Attach file" title="Attach file">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M13.5 5.5L6.5 12.5C5.67157 12.5 5 11.8284 5 11C5 10.1716 5.67157 9.5 6.5 9.5L12.5 3.5"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button class="voice-button" id="voiceButton" aria-label="Voice input" title="Voice input">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M9 2L11 2M9 18L11 18M2 9L6 9M14 9L18 9M6 6L4 4M16 4L14 6M14 14L16 16M4 16L6 14M10 5C7.79086 5 6 6.79086 6 9V11C6 13.2091 7.79086 15 10 15C12.2091 15 14 13.2091 14 11V9C14 6.79086 12.2091 5 10 5Z"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <input type="text" class="input-field" id="queryInput" placeholder="Ask Iceberg anything..."
+            autocomplete="off" spellcheck="false">
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.txt,.md,.py,.js,.ts,.json,.csv,.doc,.docx" class="hidden-file-input" title="Upload files">
+          <button class="send-button" id="sendButton" aria-label="Send message">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="attached-files" id="attachedFiles"></div>
+      </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+      <h2>Settings</h2>
+      <button class="settings-close" id="settingsClose" aria-label="Close settings">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+    <div class="settings-content">
+      <div class="settings-section">
+        <h3>Mode</h3>
+        <div class="settings-group">
+            <!-- MODE SELECTOR (Rich UI) -->
+            <div class="rich-select-container" id="modeRichSelect">
+              <!-- Native Select (Hidden but functional) -->
+              <select id="modeSelectSettings" class="hidden-select" title="Native Mode Select"                onchange="if(window.ICEBURG_WORKFLOW)window.ICEBURG_WORKFLOW.setProcessingMode(this.value); updateRichSelectDisplay('modeRichSelect', this); document.getElementById('modeSelect') && (document.getElementById('modeSelect').value = this.value)">
+                <!-- Dynamically populated -->
+              </select>
+
+              <!-- Custom Trigger -->
+              <div class="rich-select-trigger" onclick="toggleRichSelect('modeRichSelect')">
+                <div class="rich-select-value">
+                  <span class="rich-icon-slot"></span> <!-- Icon injected here -->
+                  <span class="rich-text-slot">Fast Mode</span>
+                </div>
+                <svg class="rich-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </div>
+
+              <!-- Custom Dropdown -->
+              <div class="rich-select-dropdown">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Agent</h3>
+        <div class="settings-group">
+            <!-- AGENT SELECTOR (Rich UI) -->
+            <div class="rich-select-container" id="agentRichSelect">
+               <select id="agentSelectSettings" class="hidden-select" title="Native Agent Select"
+                onchange="document.getElementById('agentSelect') && (document.getElementById('agentSelect').value = this.value); updateRichSelectDisplay('agentRichSelect', this);">
+                <!-- Dynamically populated -->
+              </select>
+
+               <!-- Custom Trigger -->
+              <div class="rich-select-trigger" onclick="toggleRichSelect('agentRichSelect')">
+                <div class="rich-select-value">
+                  <span class="rich-icon-slot"></span>
+                  <span class="rich-text-slot">Auto</span>
+                </div>
+                <svg class="rich-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </div>
+
+               <!-- Custom Dropdown -->
+               <div class="rich-select-dropdown">
+                 <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <style>
+            /* RICH SELECT CSS - SOMATIC DESIGN */
+            .rich-select-container {
+              position: relative;
+              font-family: 'Inter', sans-serif;
+              width: 100%;
+            }
+            .rich-select-trigger {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: var(--bg-elevated); /* Matches panel */
+              padding: 0.7rem 0.9rem;
+              border-radius: 8px;
+              border: 1px solid var(--border-primary);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              -webkit-user-select: none;
+              user-select: none;
+            }
+            .rich-select-trigger:hover {
+              border-color: rgba(255,255,255,0.3);
+              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .rich-select-value {
+              display: flex;
+              align-items: center;
+              gap: 0.6rem;
+              color: var(--text-primary);
+            }
+            .rich-icon-slot svg {
+              width: 16px;
+              height: 16px;
+              stroke: var(--text-secondary);
+            }
+            .rich-text-slot {
+              font-size: 0.9rem;
+              font-weight: 500;
+            }
+            .rich-chevron {
+              color: var(--text-tertiary);
+              transition: transform 0.2s;
+            }
+            .rich-select-container.open .rich-chevron {
+              transform: rotate(180deg);
+            }
+            
+            /* Dropdown */
+            .rich-select-dropdown {
+              position: absolute;
+              top: calc(100% + 6px);
+              left: 0;
+              width: 100%;
+              background: #0a0a0a; /* Deep black/dark */
+              border: 1px solid var(--border-primary);
+              border-radius: 8px;
+              z-index: 100;
+              max-height: 0;
+              opacity: 0;
+              overflow: hidden;
+              visibility: hidden;
+              box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+              transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .rich-select-container.open .rich-select-dropdown {
+              max-height: 350px;
+              opacity: 1;
+              visibility: visible;
+              overflow-y: auto;
+              padding: 0.4rem;
+            }
+            
+            /* Options */
+            .rich-option {
+              display: flex;
+              align-items: center;
+              gap: 0.8rem;
+              padding: 0.6rem 0.8rem;
+              cursor: pointer;
+              border-radius: 6px;
+              transition: background 0.15s;
+            }
+            .rich-option:hover {
+              background: rgba(255,255,255,0.08);
+            }
+            .rich-option.selected {
+              background: rgba(255,255,255,0.12);
+            }
+            .rich-option svg {
+              flex-shrink: 0;
+              stroke: var(--text-secondary);
+            }
+            .rich-option:hover svg {
+              stroke: #fff;
+            }
+            .rich-opt-text {
+              display: flex;
+              flex-direction: column;
+            }
+            .opt-title {
+              font-size: 0.85rem;
+              color: var(--text-primary);
+              font-weight: 500;
+            }
+            .opt-desc {
+              font-size: 0.7rem;
+              color: var(--text-tertiary);
+              margin-top: 1px;
+            }
+            .rich-group-label {
+              font-size: 0.65rem;
+              color: var(--text-tertiary);
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              padding: 0.4rem 0.8rem;
+              margin-top: 0.4rem;
+              border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            
+            /* Light Mode Support */
+            body.light-mode .rich-select-trigger {
+              background: #fff;
+              border-color: #ddd;
+            }
+            body.light-mode .rich-select-dropdown {
+              background: #fff;
+              border-color: #ddd;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            }
+            body.light-mode .rich-option:hover {
+              background: #f5f5f5;
+            }
+            body.light-mode .rich-option.selected {
+               background: #eee;
+            }
+            </style>
+
+
+  <script type="module" src="/connection-bridge.js"></script>
+  <script>
+            // RICH SELECT LOGIC
+            function toggleRichSelect(id) {
+              const container = document.getElementById(id);
+              // Close others
+              document.querySelectorAll('.rich-select-container').forEach(el => {
+                if(el.id !== id) el.classList.remove('open');
+              });
+              container.classList.toggle('open');
+            }
+            
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+              if(!e.target.closest('.rich-select-container')) {
+                document.querySelectorAll('.rich-select-container').forEach(el => el.classList.remove('open'));
+              }
+            });
+
+            function selectRichOption(containerId, value) {
+              const container = document.getElementById(containerId);
+              const nativeSelect = container.querySelector('select');
+              
+              // Update native select
+              nativeSelect.value = value;
+              nativeSelect.dispatchEvent(new Event('change')); // Trigger binding
+              
+              updateRichSelectDisplay(containerId, nativeSelect);
+              container.classList.remove('open');
+            }
+
+            function updateRichSelectDisplay(containerId, selectElement) {
+              const container = document.getElementById(containerId);
+              const selectedValue = selectElement.value;
+              
+              // Find the visual option that matches
+              const visualOption = container.querySelector(`.rich-option[data-value="${selectedValue}"]`);
+              if(visualOption) {
+                 // Copy icon and title
+                 const iconSlot = container.querySelector('.rich-icon-slot');
+                 const textSlot = container.querySelector('.rich-text-slot');
+                 
+                 const visualIcon = visualOption.querySelector('svg');
+                 if (visualIcon) {
+                   iconSlot.innerHTML = visualIcon.outerHTML;
+                 } else {
+                   // Fallback for emoji or text icons
+                   const iconText = visualOption.dataset.icon || '';
+                   iconSlot.textContent = iconText;
+                 }
+                 
+                 const title = visualOption.querySelector('.opt-title').textContent;
+                 textSlot.textContent = title;
+                 
+                 // Mark selected
+                 container.querySelectorAll('.rich-option').forEach(o => o.classList.remove('selected'));
+                 visualOption.classList.add('selected');
+              }
+            }
+
+            // DYNAMIC UI POPULATION FROM CONFIG
+            function renderConfigUI() {
+              const config = window.ICEBURG_CONFIG;
+              if (!config || !config.serverConfig) return;
+
+              const { models, mode_templates, agents } = config.serverConfig;
+
+              // 1. Populate Mode Selectors
+              const modeSelects = [document.getElementById('modeSelect'), document.getElementById('modeSelectSettings')];
+              const modeDropdown = document.querySelector('#modeRichSelect .rich-select-dropdown');
+              
+              if (mode_templates && modeDropdown) {
+                modeDropdown.innerHTML = '';
+                modeSelects.forEach(s => s && (s.innerHTML = ''));
+
+                Object.entries(mode_templates).forEach(([key, template]) => {
+                  // Native option
+                  modeSelects.forEach(s => {
+                    if (s) {
+                      const opt = document.createElement('option');
+                      opt.value = key;
+                      opt.textContent = template.name;
+                      s.appendChild(opt);
+                    }
+                  });
+
+                  // Rich option
+                  const richOpt = document.createElement('div');
+                  richOpt.className = 'rich-option';
+                  richOpt.dataset.value = key;
+                  richOpt.onclick = () => selectRichOption('modeRichSelect', key);
+                  
+                  // Icon fallback
+                  let iconHTML = template.icon || '⚡';
+                  if (iconHTML.includes('<svg')) {
+                    // It's an SVG string
+                  } else {
+                    iconHTML = `<span class="rich-emoji-icon">${iconHTML}</span>`;
+                  }
+
+                  richOpt.innerHTML = `
+                    ${iconHTML}
+                    <div class="rich-opt-text">
+                      <span class="opt-title">${template.name}</span>
+                      <span class="opt-desc">${template.description}</span>
+                    </div>
+                  `;
+                  modeDropdown.appendChild(richOpt);
+                });
+              }
+
+              // 2. Populate Agent Selectors
+              const agentSelects = [document.getElementById('agentSelect'), document.getElementById('agentSelectSettings')];
+              const agentDropdown = document.querySelector('#agentRichSelect .rich-select-dropdown');
+              
+              if (agents && agents.agentPresets && agentDropdown) {
+                agentDropdown.innerHTML = '';
+                agentSelects.forEach(s => s && (s.innerHTML = ''));
+
+                // Add "Auto" option
+                agentSelects.forEach(s => {
+                  if (s) {
+                    const opt = document.createElement('option');
+                    opt.value = 'auto';
+                    opt.textContent = 'Auto';
+                    s.appendChild(opt);
+                  }
+                });
+                
+                const autoOpt = document.createElement('div');
+                autoOpt.className = 'rich-option';
+                autoOpt.dataset.value = 'auto';
+                autoOpt.onclick = () => selectRichOption('agentRichSelect', 'auto');
+                autoOpt.innerHTML = `
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+                  <div class="rich-opt-text"><span class="opt-title">Auto</span><span class="opt-desc">Context Aware</span></div>
+                `;
+                agentDropdown.appendChild(autoOpt);
+
+                agents.agentPresets.forEach(agent => {
+                  agentSelects.forEach(s => {
+                    if (s) {
+                      const opt = document.createElement('option');
+                      opt.value = agent.agentId;
+                      opt.textContent = agent.title;
+                      s.appendChild(opt);
+                    }
+                  });
+
+                  const richOpt = document.createElement('div');
+                  richOpt.className = 'rich-option';
+                  richOpt.dataset.value = agent.agentId;
+                  richOpt.onclick = () => selectRichOption('agentRichSelect', agent.agentId);
+                  
+                  let iconHTML = agent.icon || '🤖';
+                  if (!iconHTML.includes('<svg')) {
+                    iconHTML = `<span class="rich-emoji-icon">${iconHTML}</span>`;
+                  }
+
+                  richOpt.innerHTML = `
+                    ${iconHTML}
+                    <div class="rich-opt-text">
+                      <span class="opt-title">${agent.title}</span>
+                      <span class="opt-desc">${agent.description}</span>
+                    </div>
+                  `;
+                  agentDropdown.appendChild(richOpt);
+                });
+              }
+
+              // 3. Populate Model Select
+              const modelSelect = document.getElementById('modelSelect');
+              if (modelSelect && models) {
+                modelSelect.innerHTML = '';
+                models.forEach(m => {
+                  const opt = document.createElement('option');
+                  opt.value = m.modelId;
+                  opt.textContent = m.name;
+                  if (m.isDefault) opt.selected = true;
+                  modelSelect.appendChild(opt);
+                });
+              }
+
+              // Update displays
+              updateRichSelectDisplay('modeRichSelect', document.getElementById('modeSelectSettings'));
+              updateRichSelectDisplay('agentRichSelect', document.getElementById('agentSelectSettings'));
+            }
+            
+            // Listen for config updates
+            window.addEventListener('iceburg-config-updated', () => {
+               console.log('🎨 UI: Config updated, re-rendering selectors...');
+               renderConfigUI();
+            });
+
+            // Init on load
+            document.addEventListener('DOMContentLoaded', () => {
+               if (window.ICEBURG_CONFIG) {
+                 renderConfigUI();
+               }
+            });
+            </script>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Brainwave State</h3>
+        <p class="settings-desc">
+          Orb light patterns inspired by mental states
+        </p>
+        <div class="settings-group">
+          <select class="settings-select" id="brainwaveSelect" title="Select Brainwave State"
+            onchange="document.body.setAttribute('data-brainwave', this.value); localStorage.setItem('brainwaveMode', this.value)">
+            <option value="auto">Auto (Adaptive)</option>
+            <option value="alpha" selected>Alpha - Relaxed Focus (Green/Yellow)</option>
+            <option value="theta">Theta - Creative Flow (Purple/Violet)</option>
+            <option value="delta">Delta - Deep Rest (Indigo)</option>
+            <option value="beta">Beta - Alert Focus (Orange)</option>
+            <option value="gamma">Gamma - Peak Performance (Gold/White)</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Appearance</h3>
+        <div class="settings-group">
+          <label class="settings-label" for="themeToggle">Light Mode</label>
+          <div class="theme-toggle-wrapper">
+            <input type="checkbox" id="themeToggle" class="theme-toggle-input" onchange="toggleLightMode(this.checked)">
+            <label for="themeToggle" class="theme-toggle-slider"></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Keys Section -->
+      <div class="settings-section">
+        <h3>API Keys</h3>
+        <p class="settings-desc">
+          Connect your own AI providers for enhanced capabilities
+        </p>
+
+        <!-- Hybrid Mode Toggle -->
+        <div class="settings-group settings-toggle-row">
+          <div>
+            <label class="settings-label settings-no-margin">Hybrid Mode</label>
+            <p class="settings-micro-desc">Use multiple AI providers together</p>
+          </div>
+          <div class="theme-toggle-wrapper">
+            <input type="checkbox" id="hybridModeToggle" class="theme-toggle-input" title="Toggle Hybrid Mode"
+              onchange="localStorage.setItem('hybridMode', this.checked); document.getElementById('apiKeysContainer').style.display = this.checked ? 'block' : 'none';">
+            <label for="hybridModeToggle" class="theme-toggle-slider"></label>
+          </div>
+        </div>
+
+        <!-- API Key Inputs Container -->
+        <div id="apiKeysContainer" class="hidden-container">
+          <!-- Gemini -->
+          <div class="settings-group">
+            <label class="settings-label" for="apiKeyGemini">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="settings-icon-inline">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+              </svg>
+              Gemini (Google)
+            </label>
+            <div class="settings-input-group">
+              <input type="password" id="apiKeyGemini" class="settings-input" placeholder="AIza..."
+                onchange="saveApiKey('gemini', this.value)">
+              <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyGemini')"
+                title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Claude -->
+          <div class="settings-group">
+            <label class="settings-label" for="apiKeyClaude">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="settings-icon-inline">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+              Claude (Anthropic)
+            </label>
+            <div class="settings-input-group">
+              <input type="text" id="apiKeyClaude" class="settings-input" placeholder="sk-ant-..." style="-webkit-text-security: disc;"
+                onchange="saveApiKey('claude', this.value)">
+              <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyClaude')"
+                title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- GPT -->
+          <div class="settings-group">
+            <label class="settings-label" for="apiKeyGPT">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="settings-icon-inline">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+              </svg>
+              GPT (OpenAI)
+            </label>
+            <div class="settings-input-group">
+              <input type="text" id="apiKeyGPT" class="settings-input" placeholder="sk-..." style="-webkit-text-security: disc;"
+                onchange="saveApiKey('gpt', this.value)">
+              <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyGPT')"
+                title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Grok -->
+          <div class="settings-group">
+            <label class="settings-label" for="apiKeyGrok">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="settings-icon-inline">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              Grok (xAI)
+            </label>
+            <div class="settings-input-group">
+              <input type="text" id="apiKeyGrok" class="settings-input" placeholder="xai-..." style="-webkit-text-security: disc;"
+                onchange="saveApiKey('grok', this.value)">
+              <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyGrok')"
+                title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- DeepSeek -->
+          <div class="settings-group">
+            <label class="settings-label" for="apiKeyDeepSeek">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="settings-icon-inline">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              DeepSeek
+            </label>
+            <div class="settings-input-group">
+              <input type="text" id="apiKeyDeepSeek" class="settings-input" placeholder="sk-..." style="-webkit-text-security: disc;"
+                onchange="saveApiKey('deepseek', this.value)">
+              <button type="button" class="settings-input-toggle" onclick="toggleKeyVisibility('apiKeyDeepSeek')"
+                title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p class="settings-keys-warning">
+            🔒 Keys are stored locally in your browser. For production security, use a backend proxy.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="settings-overlay" id="settingsOverlay"></div>
+
+  <!-- Paywall Modal -->
+<!-- Paywall Modal Removed -->
+
+  <div class="toast-container" id="toastContainer"></div>
+  </div>
+  <!-- astro_physiology_viz.js removed - visualizations now inline in main answer -->
+  <!-- astro_animated_streaming.js removed - not needed -->
+  <!-- SSE-only connection module (replaces WebSocket complexity) -->
+  <script type="module" src="/connection-bridge.js"></script>
+  <script type="module" src="/main.js?v=7"></script>
+  <script>
+    // === Cinimatic Welcome Experience ===
+    document.addEventListener('DOMContentLoaded', () => {
+      // === Cinematic Welcome Experience ===
+      initWelcomeExperience();
+
+      // === Hide Welcome When Typing ===
+      initHideWelcomeOnTyping();
+
+      // === Glitch Transition for Sidebar Links ===
+      initGlitchTransition();
+
+      // === Brainwave Mode ===
+      initBrainwaveMode();
+    });
+
+    // Initialize Brainwave Mode from localStorage
+    function initBrainwaveMode() {
+      const savedMode = localStorage.getItem('brainwaveMode') || 'alpha';
+      const select = document.getElementById('brainwaveSelect');
+
+      // Set the body attribute
+      if (savedMode !== 'auto') {
+        document.body.setAttribute('data-brainwave', savedMode);
+      }
+
+      // Update select to match
+      if (select) {
+        select.value = savedMode;
+      }
+    }
+
+    // Hide Welcome Experience when user starts typing
+    function initHideWelcomeOnTyping() {
+      const queryInput = document.getElementById('queryInput');
+      const welcomeExperience = document.getElementById('welcomeExperience');
+
+      if (!queryInput || !welcomeExperience) return;
+
+      let hasHidden = false;
+
+      queryInput.addEventListener('input', () => {
+        if (!hasHidden && queryInput.value.length > 0) {
+          hasHidden = true;
+          welcomeExperience.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+          welcomeExperience.style.opacity = '0';
+          welcomeExperience.style.transform = 'translateY(-20px)';
+
+          setTimeout(() => {
+            welcomeExperience.style.display = 'none';
+          }, 500);
+        }
+      });
+
+      // Also hide when form is submitted (send button clicked)
+      const sendButton = document.getElementById('sendButton');
+      if (sendButton) {
+        sendButton.addEventListener('click', () => {
+          if (!hasHidden) {
+            hasHidden = true;
+            welcomeExperience.style.transition = 'opacity 0.3s ease-out';
+            welcomeExperience.style.opacity = '0';
+            setTimeout(() => {
+              welcomeExperience.style.display = 'none';
+            }, 300);
+          }
+        });
+      }
+    }
+
+    // Glitch Transition for Page Navigation
+    function initGlitchTransition() {
+      const glitchLoader = document.getElementById('glitchLoader');
+      const sidebarLinks = document.querySelectorAll('.sidebar-link:not(.no-glitch)');
+
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('/') && !href.startsWith('//')) {
+            e.preventDefault();
+
+            // Show glitch loader
+            glitchLoader.classList.add('active');
+
+            // Navigate after animation
+            setTimeout(() => {
+              window.location.href = href;
+            }, 800);
+          }
+        });
+      });
+    }
+
+    // Welcome Experience - Typing Effect & Prompts
+    function initWelcomeExperience() {
+      const dynamicText = document.getElementById('welcomeDynamic');
+      const thinkingPrompts = document.getElementById('thinkingPrompts');
+      const promptChips = document.querySelectorAll('.prompt-chip');
+      const userInput = document.getElementById('userInput');
+
+      if (!dynamicText) return;
+
+      // Time-dynamic messages
+      const hour = new Date().getHours();
+      let messages;
+
+      if (hour < 12) {
+        messages = [
+          "What shall we explore this morning?",
+          "A new day of discovery awaits"
+        ];
+      } else if (hour < 18) {
+        messages = [
+          "What questions are calling you?",
+          "Ready to dive deeper?"
+        ];
+      } else {
+        messages = [
+          "What's on your mind tonight?",
+          "The quiet hours of insight"
+        ];
+      }
+
+      // Pick a random message
+      const message = messages[Math.floor(Math.random() * messages.length)];
+
+      // Typing effect
+      let charIndex = 0;
+      const cursor = document.createElement('span');
+      cursor.className = 'typing-cursor';
+      dynamicText.appendChild(cursor);
+
+      function typeChar() {
+        if (charIndex < message.length) {
+          dynamicText.insertBefore(
+            document.createTextNode(message[charIndex]),
+            cursor
+          );
+          charIndex++;
+          setTimeout(typeChar, 50 + Math.random() * 40);
+        } else {
+          // Remove cursor after typing complete
+          setTimeout(() => {
+            cursor.style.animation = 'none';
+            cursor.style.opacity = '0';
+          }, 2000);
+        }
+      }
+
+      // Start typing after fade-in completes
+      setTimeout(typeChar, 1200);
+
+      // Prompt chip click handlers
+      promptChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const promptText = chip.getAttribute('data-prompt');
+
+          // Populate the input field
+          if (userInput) {
+            userInput.value = promptText;
+            userInput.focus();
+
+            // Trigger input event for any listeners
+            userInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+
+          // Fade out all prompts
+          if (thinkingPrompts) {
+            thinkingPrompts.classList.add('fade-out');
+          }
+
+          // Scroll to input
+          userInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      });
+    }
+
+    // Hide welcome when chat starts
+    function hideWelcomeExperience() {
+      const welcomeExp = document.getElementById('welcomeExperience');
+      if (welcomeExp) {
+        welcomeExp.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        welcomeExp.style.opacity = '0';
+        welcomeExp.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          welcomeExp.style.display = 'none';
+        }, 500);
+      }
+    }
+  </script>
+  </body>
+
+</html>
