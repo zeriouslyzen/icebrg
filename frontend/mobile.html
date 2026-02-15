@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Iceburg Secretary</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --accent-color: #00ffaa; /* Iceburg Green */
+            --text-color: #ffffff;
+            --secondary-text: #888888;
+        }
+
+        * {
+            box-sizing: border_box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        /* Ambient Background */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150vw;
+            height: 150vw;
+            background: radial-gradient(circle, rgba(0, 255, 170, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Header / Status */
+        .status-bar {
+            position: absolute;
+            top: max(20px, env(safe-area-inset-top));
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            opacity: 0.7;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary-text);
+            border-radius: 50%;
+            margin-right: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .status-dot.active {
+            background-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Main Orb / Visualizer */
+        .orb-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .orb-core {
+            width: 80px;
+            height: 80px;
+            background: var(--text-color);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Listening State */
+        body[data-state="listening"] .orb-core {
+            background: var(--accent-color);
+            box-shadow: 0 0 50px var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        body[data-state="listening"] .orb-container {
+            animation: breathe 3s infinite ease-in-out;
+        }
+
+        /* Processing/Thinking State */
+        body[data-state="thinking"] .orb-core {
+            background: #00aaff;
+            box-shadow: 0 0 50px #00aaff;
+            animation: pulse-fast 1s infinite alternate;
+        }
+
+        body[data-state="thinking"] .orb-container {
+            animation: spin 4s infinite linear;
+        }
+
+        /* Speaking State */
+        body[data-state="speaking"] .orb-core {
+            background: #ff0055;
+            box-shadow: 0 0 50px #ff0055;
+            transform: scale(1.2);
+        }
+
+        /* Ripple Waves */
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        body[data-state="listening"] .ripple {
+            animation: ripple-out 2s infinite cubic-bezier(0, 0.2, 0.8, 1);
+        }
+        
+        body[data-state="listening"] .ripple:nth-child(2) { animation-delay: 0.5s; }
+        body[data-state="listening"] .ripple:nth-child(3) { animation-delay: 1s; }
+
+
+        /* Dynamic Transcript */
+        .transcript-container {
+            position: absolute;
+            bottom: max(100px, calc(env(safe-area-inset-bottom) + 80px));
+            width: 80%;
+            text-align: center;
+            z-index: 10;
+            min-height: 60px;
+        }
+
+        .transcript-text {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--text-color);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        
+        .transcript-text.interim {
+            color: var(--secondary-text);
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: max(30px, env(safe-area-inset-bottom));
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 20;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-btn.mic-btn.active {
+            background: var(--accent-color);
+            color: black;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes ripple-out {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        
+        @keyframes pulse-fast {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body data-state="idle">
+
+    <div class="ambient-glow"></div>
+
+    <div class="status-bar">
+        <span class="status-dot" id="connectionDot"></span>
+        <span id="statusText">Disconnected</span>
+    </div>
+
+    <!-- Central Interactive Element -->
+    <div class="orb-container" id="mainOrb">
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <div class="orb-core"></div>
+    </div>
+
+    <!-- Live Transcript -->
+    <div class="transcript-container">
+        <div id="transcript" class="transcript-text">Tap to speak...</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="control-btn" id="settingsBtn">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+            </svg>
+        </button>
+        <button class="control-btn mic-btn" id="micBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+        </button>
+         <button class="control-btn" id="textBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- WebLLM Import -->
+    <script type="module">
+        import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
+
+        // Global State
+        const state = {
+            isListening: false,
+            isThinking: false,
+            isSpeaking: false,
+            engine: null,
+            modelLoaded: false
+        };
+
+        const DOM = {
+            body: document.body,
+            transcript: document.getElementById('transcript'),
+            statusText: document.getElementById('statusText'),
+            connectionDot: document.getElementById('connectionDot'),
+            micBtn: document.getElementById('micBtn'),
+            mainOrb: document.getElementById('mainOrb')
+        };
+
+        // --- Speech Recognition Setup (Web Speech API) ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false; // Single command for now
+            recognition.lang = 'en-US';
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                setState('listening');
+            };
+
+            recognition.onend = () => {
+                if (state.isListening && !state.isThinking) {
+                    recognition.start(); // Auto-restart if we meant to keep listening
+                } else if (!state.isThinking) {
+                    setState('idle');
+                }
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                const isFinal = event.results[0].isFinal;
+
+                DOM.transcript.textContent = transcript;
+                DOM.transcript.classList.toggle('interim', !isFinal);
+
+                if (isFinal) {
+                    handleUserCommand(transcript);
+                }
+            };
+        } else {
+            DOM.transcript.textContent = "Speech recognition not supported anywhere.";
+        }
+
+        // --- Core Logic ---
+        
+        function setState(newState) {
+            state.currentState = newState;
+            DOM.body.setAttribute('data-state', newState);
+            
+            if (newState === 'listening') {
+                state.isListening = true;
+                DOM.micBtn.classList.add('active');
+                DOM.statusText.textContent = "Listening...";
+                DOM.connectionDot.className = "status-dot active";
+            } else if (newState === 'thinking') {
+                state.isListening = false;
+                state.isThinking = true;
+                DOM.micBtn.classList.remove('active');
+                DOM.statusText.textContent = "Processing...";
+                DOM.connectionDot.style.backgroundColor = "#00aaff";
+            } else if (newState === 'speaking') {
+                state.isThinking = false;
+                state.isSpeaking = true;
+                DOM.statusText.textContent = "Speaking...";
+                DOM.connectionDot.style.backgroundColor = "#ff0055";
+            } else { // Idle
+                state.isListening = false;
+                state.isThinking = false;
+                state.isSpeaking = false;
+                DOM.micBtn.classList.remove('active');
+                DOM.statusText.textContent = state.modelLoaded ? "Ready" : "Offline";
+                DOM.connectionDot.className = "status-dot";
+                if(state.modelLoaded) DOM.connectionDot.classList.add('active');
+            }
+        }
+
+        async function handleUserCommand(text) {
+            setState('thinking');
+            
+            // Temporary Logic until WebLLM is fully wired
+            setTimeout(() => {
+                const response = "I heard you say: " + text + ". I am currently running in lightweight mode.";
+                speak(response);
+            }, 1000);
+        }
+
+        function speak(text) {
+            setState('speaking');
+            DOM.transcript.textContent = text;
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.onend = () => {
+                setState('idle');
+            };
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // --- Interaction ---
+        DOM.mainOrb.addEventListener('click', toggleListening);
+        DOM.micBtn.addEventListener('click', toggleListening);
+
+        function toggleListening() {
+            if (state.isListening) {
+                recognition.stop();
+                setState('idle');
+            } else {
+                try {
+                    recognition.start();
+                } catch(e) { console.warn("Recognition already started"); }
+            }
+        }
+
+        // --- Initialization ---
+        // Auto-detect WebGPU
+        if (navigator.gpu) {
+            DOM.statusText.textContent = "Initializing GPU...";
+            // Placeholder for WebLLM init
+            setTimeout(() => {
+                state.modelLoaded = true;
+                DOM.statusText.textContent = "GPU Ready";
+                DOM.connectionDot.classList.add('active');
+            }, 1000);
+        } else {
+            DOM.statusText.textContent = "GPU Unsupported";
+        }
+
+    </script>
+</body>
+</html>
