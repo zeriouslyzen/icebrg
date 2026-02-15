@@ -125,7 +125,7 @@ async function handleSendMessage() {
     
     try {
         let fullResponse = "";
-        const chunks = await engine.chat.completion({
+        const chunks = await engine.chat.completions.create({
             messages: messages,
             stream: true,
         });
