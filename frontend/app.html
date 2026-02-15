@@ -1799,6 +1799,17 @@
       initBrainwaveMode();
     });
 
+    // Safety timeout: Ensure loading screen is removed even if JS hangs
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const glitchLoader = document.getElementById('glitchLoader');
+            if (glitchLoader && glitchLoader.classList.contains('active')) {
+                console.warn('Forcing loader removal after timeout');
+                glitchLoader.classList.remove('active');
+            }
+        }, 2000); // 2 second max load time
+    });
+
     // Initialize Brainwave Mode from localStorage
     function initBrainwaveMode() {
       const savedMode = localStorage.getItem('brainwaveMode') || 'alpha';
@@ -1933,7 +1944,17 @@
       }
 
       // Start typing after fade-in completes
-      setTimeout(typeChar, 1200);
+      const hasVisited = sessionStorage.getItem('iceburg_visited');
+      if (hasVisited) {
+          // Skip animation, show immediately
+          dynamicText.textContent = message;
+          // Ensure loader is gone
+          const welcomeExperience = document.getElementById('welcomeExperience');
+          if(welcomeExperience) welcomeExperience.style.opacity = '1';
+      } else {
+          sessionStorage.setItem('iceburg_visited', 'true');
+          setTimeout(typeChar, 1200);
+      }
 
       // Prompt chip click handlers
       promptChips.forEach(chip => {
