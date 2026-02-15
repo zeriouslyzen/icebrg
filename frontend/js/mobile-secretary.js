@@ -70,7 +70,7 @@ async function loadEngine() {
             {
                 "model": "https://huggingface.co/mlc-ai/Phi-3-mini-4k-instruct-q4f16_1-MLC",
                 "model_id": "Phi-3-mini-4k-instruct-q4f16_1",
-                "model_lib": "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/phi-3-mini-4k-instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
+                "model_lib": "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/web-llm-models/v0_2_80/Phi-3-mini-4k-instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
                 "vram_required_MB": 3800,
                 "low_resource_required": false,
             }
