@@ -118,18 +118,10 @@ async function handleSendMessage() {
         const finalTps = (tokenCount / finalElapsed).toFixed(1);
         DOM.newsTicker.innerText = `COMPLETE // ${finalTps} TPS // ${tokenCount} TOKENS`;
         
-        // Save to history (without the injected RAG blob to keep history clean? Or keep it?)
-        // Usually better to keep what was actually sent, but for display we might want to hide it.
-        // For now, simple push.
+        // Save to history
         messages.push({ role: "assistant", content: fullResponse });
         
     } catch (err) {
-        removeThinking(thinkingId);
-        addSystemMessage(`Generation Error: ${err.message}`);
-    } finally {
-        isGenerating = false;
-    }
-}
         removeThinking(thinkingId);
         addSystemMessage(`Generation Error: ${err.message}`);
     } finally {
