@@ -24,7 +24,62 @@ let messages = [
 
 // ... (Init logic)
 
-    // 3. Generate Stream
+// --- Messaging Logic ---
+async function handleSendMessage() {
+    const text = DOM.userInput.value.trim();
+    if (!text || isGenerating) return;
+    
+    // Clear Input
+    DOM.userInput.value = '';
+    DOM.userInput.style.height = 'auto';
+    
+    // 1. Add User Message
+    addMessage(text, 'user');
+    messages.push({ role: "user", content: text });
+    
+    // 2. Check Engine Status
+    if (!engine) {
+        addSystemMessage("Engine not ready. Please wait...");
+        return;
+    }
+
+    // 3. RAG/Search Check
+    // If text starts with "search:" or "research:", we hit the mainframe first
+    const searchMatch = text.match(/^(?:search|research|find|lookup):\s*(.+)/i);
+    let injectedContext = "";
+    
+    if (searchMatch) {
+         const query = searchMatch[1];
+         addSystemMessage(`ACCESSING MAINFRAME ARCHIVES FOR: "${query.toUpperCase()}"...`);
+         DOM.newsTicker.innerText = "SYSTEM // CONNECTING TO MAINFRAME // SECURE LINK ESTABLISHED";
+         
+         try {
+             // Fetch from our new server endpoint
+             const response = await fetch('/api/mobile/context', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ query: query, limit: 3 })
+             });
+             
+             const data = await response.json();
+             
+             if (data.found) {
+                 injectedContext = `\n\n[SYSTEM INTELLIGENCE FROM MAINFRAME]:\n${data.context}\n\nINSTRUCTION: Use the above intelligent report to answer the user's query about "${query}". Summarize key findings.`;
+                 addSystemMessage("INTELLIGENCE RETRIEVED. TRANSFERRING TO LOCAL MODEL...");
+                 
+                 // Inject invisible system context for this turn
+                 // We append it to the last user message effectively
+                 messages[messages.length - 1].content += injectedContext;
+             } else {
+                 addSystemMessage("NO RECORDS FOUND IN MAINFRAME.");
+             }
+         } catch (e) {
+             addSystemMessage("CONNECTION ERROR: COULD NOT REACH MAINFRAME.");
+             console.error(e);
+         }
+    }
+
+    // 4. Generate Stream
     isGenerating = true;
     const thinkingId = addThinking();
     
@@ -46,26 +101,35 @@ let messages = [
         for await (const chunk of chunks) {
             const content = chunk.choices[0]?.delta?.content || "";
             fullResponse += content;
-            tokenCount++; // Approximation
+            tokenCount++; 
             
             // Update Metrics
             const elapsed = (performance.now() - startTime) / 1000;
             const tps = (tokenCount / elapsed).toFixed(1);
-            DOM.newsTicker.innerText = `GENERATING // ${tps} TOKENS/SEC // ${(elapsed).toFixed(1)}s`;
+            DOM.newsTicker.innerText = `GENERATING // ${tps} TPS // ${(elapsed).toFixed(1)}s`;
             
+            // Render basic markdown/newlines
             msgContentDiv.innerHTML = fullResponse.replace(/\n/g, '<br>') + '<div class="msg-decorator"></div>';
             scrollToBottom();
         }
         
-        // Final TPS
+        // Final Metrics
         const finalElapsed = (performance.now() - startTime) / 1000;
         const finalTps = (tokenCount / finalElapsed).toFixed(1);
         DOM.newsTicker.innerText = `COMPLETE // ${finalTps} TPS // ${tokenCount} TOKENS`;
         
-        // Save to history
+        // Save to history (without the injected RAG blob to keep history clean? Or keep it?)
+        // Usually better to keep what was actually sent, but for display we might want to hide it.
+        // For now, simple push.
         messages.push({ role: "assistant", content: fullResponse });
         
     } catch (err) {
+        removeThinking(thinkingId);
+        addSystemMessage(`Generation Error: ${err.message}`);
+    } finally {
+        isGenerating = false;
+    }
+}
         removeThinking(thinkingId);
         addSystemMessage(`Generation Error: ${err.message}`);
     } finally {
