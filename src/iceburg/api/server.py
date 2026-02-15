@@ -7,7 +7,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Requ
 from fastapi.staticfiles import StaticFiles
 from starlette.websockets import WebSocketState
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
 from typing import Dict, Any, List, Optional
 import json
 import asyncio
@@ -85,6 +85,14 @@ app = FastAPI(
     description="Ultimate Truth-Finding AI Civilization API",
     version="2.0.0"
 )
+
+@app.get("/app")
+async def read_app():
+    return FileResponse('frontend/app.html')
+
+@app.get("/config.js")
+async def read_config():
+    return FileResponse('frontend/public/config.js')
 
 # Security middleware (must be added first)
 app.add_middleware(SecurityHeadersMiddleware)
