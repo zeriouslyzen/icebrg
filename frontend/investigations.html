@@ -455,7 +455,7 @@
                     <option value="archived">Archived</option>
                     <option value="flagged">Flagged</option>
                 </select>
-                <button class="new-investigation-btn" onclick="window.location.href='/app.html'">
+                <button class="new-investigation-btn" onclick="window.location.href='/app'">
                     + New Investigation
                 </button>
             </div>
@@ -605,7 +605,7 @@
                 document.getElementById('modalContent').innerHTML = renderMarkdown(inv.dossier_markdown || inv.executive_summary);
 
                 document.getElementById('continueBtn').onclick = () => {
-                    window.location.href = `/app.html?investigation=${id}`;
+                    window.location.href = `/app?investigation=${id}`;
                 };
 
                 document.getElementById('downloadPdfBtn').onclick = () => downloadPdf(id);

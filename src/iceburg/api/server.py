@@ -397,6 +397,14 @@ try:
 except Exception as e:
     logger.warning(f"Could not register V2 API routes: {e}")
 
+# Mobile RAG routes (Context retrieval for on-device AI)
+try:
+    from .mobile_routes import router as mobile_router
+    app.include_router(mobile_router)
+    logger.info("✅ Mobile RAG routes registered (/api/mobile/context)")
+except Exception as e:
+    logger.warning(f"Could not register Mobile API routes: {e}")
+
 # WebSocket connections
 active_connections: List[WebSocket] = []
 # Track connection metadata for debugging
@@ -5227,6 +5235,38 @@ try:
             return FileResponse(str(frontend_dir / "research_defence.html"))
 
     if frontend_dir.exists():
+        # Extensionless routes (clean URLs) -> serve corresponding .html
+        def _add_page_route(path: str, filename: str):
+            fp = frontend_dir / filename
+            if fp.exists():
+                @app.get(f"/{path}")
+                async def _serve(_fp=fp):
+                    from fastapi.responses import FileResponse
+                    return FileResponse(str(_fp))
+                _serve.__name__ = f"serve_{path.replace('/', '_')}"
+
+        for _path, _file in [
+            ("features", "features.html"),
+            ("research", "research.html"),
+            ("encyclopedia", "encyclopedia.html"),
+            ("wiki", "wiki.html"),
+            ("pegasus", "pegasus.html"),
+            ("protocols", "protocols.html"),
+            ("study", "study.html"),
+            ("dossier", "dossier.html"),
+            ("admin", "admin.html"),
+            ("matrix", "matrix.html"),
+            ("mobile", "mobile.html"),
+            ("civilization", "civilization.html"),
+            ("investigations", "investigations.html"),
+            ("entity", "entity.html"),
+        ]:
+            _add_page_route(_path, _file)
+
+        _add_page_route("colossus", "colossus/index.html")
+        _add_page_route("colossus/graph", "colossus/graph.html")
+        _add_page_route("colossus/entity", "colossus/entity.html")
+
         @app.get("/scholar")
         @app.get("/scholar.html")
         async def scholar_interface():

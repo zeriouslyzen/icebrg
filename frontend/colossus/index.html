@@ -594,10 +594,10 @@
                     <span class="logo-text">COLOSSUS</span>
                 </div>
                 <nav class="nav">
-                    <a href="/colossus/index.html" class="nav-item active">OVERVIEW</a>
-                    <a href="/colossus/graph.html" class="nav-item">GRAPH</a>
-                    <a href="/entity.html" class="nav-item">ENTITIES</a>
-                    <a href="/matrix.html" class="nav-item">MATRIX</a>
+                    <a href="/colossus" class="nav-item active">OVERVIEW</a>
+                    <a href="/colossus/graph" class="nav-item">GRAPH</a>
+                    <a href="/entity" class="nav-item">ENTITIES</a>
+                    <a href="/matrix" class="nav-item">MATRIX</a>
                 </nav>
             </div>
             <div class="header-center">
@@ -650,15 +650,15 @@
                     </div>
                     <div class="panel-body">
                         <div class="quick-actions">
-                            <a href="/colossus/graph.html" class="action-card">
+                            <a href="/colossus/graph" class="action-card">
                                 <div class="action-title">GRAPH VIEW</div>
                                 <div class="action-desc">Network visualization</div>
                             </a>
-                            <a href="/entity.html" class="action-card">
+                            <a href="/entity" class="action-card">
                                 <div class="action-title">SEARCH</div>
                                 <div class="action-desc">Entity lookup</div>
                             </a>
-                            <a href="/matrix.html" class="action-card">
+                            <a href="/matrix" class="action-card">
                                 <div class="action-title">MATRIX</div>
                                 <div class="action-desc">Data crawler</div>
                             </a>
@@ -689,7 +689,7 @@
                     <span class="center-title">RECENT ENTITY ACTIVITY</span>
                     <div class="center-actions">
                         <button class="btn" onclick="refreshData()">REFRESH</button>
-                        <a href="/colossus/graph.html" class="btn primary">OPEN GRAPH</a>
+                        <a href="/colossus/graph" class="btn primary">OPEN GRAPH</a>
                     </div>
                 </div>
                 <div class="data-table-container">
@@ -827,7 +827,7 @@
 
                 if (data.results && data.results.length > 0) {
                     document.getElementById('centralNodes').innerHTML = data.results.map(entity => `
-                        <a href="/colossus/graph.html?id=${entity.id}" class="entity-item">
+                        <a href="/colossus/graph?id=${entity.id}" class="entity-item">
                             <div class="entity-icon">${entity.type.charAt(0).toUpperCase()}</div>
                             <div class="entity-info">
                                 <div class="entity-name">${truncate(entity.name, 22)}</div>
@@ -843,7 +843,7 @@
                             entity.sanctions_count > 2 ? 'high' :
                                 entity.sanctions_count > 0 ? 'medium' : 'low';
                         return `
-                            <tr onclick="window.location='/colossus/graph.html?id=${entity.id}'" style="cursor: pointer;">
+                            <tr onclick="window.location='/colossus/graph?id=${entity.id}'" style="cursor: pointer;">
                                 <td class="name">${truncate(entity.name, 28)}</td>
                                 <td class="mono">${entity.type.toUpperCase()}</td>
                                 <td class="mono">--</td>
@@ -873,7 +873,7 @@
                 if (data.results && data.results.length > 0) {
                     document.getElementById('highRiskCount').textContent = data.count;
                     document.getElementById('highRiskList').innerHTML = data.results.map(entity => `
-                        <a href="/colossus/graph.html?id=${entity.id}" class="entity-item">
+                        <a href="/colossus/graph?id=${entity.id}" class="entity-item">
                             <div class="entity-icon" style="border-color: var(--critical);">${entity.sanctions_count || 0}</div>
                             <div class="entity-info">
                                 <div class="entity-name">${truncate(entity.name, 20)}</div>
@@ -891,7 +891,7 @@
         function executeSearch() {
             const query = document.getElementById('searchInput').value.trim();
             if (query) {
-                window.location.href = `/colossus/graph.html?search=${encodeURIComponent(query)}`;
+                window.location.href = `/colossus/graph?search=${encodeURIComponent(query)}`;
             }
         }
 
